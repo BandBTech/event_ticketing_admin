@@ -3,17 +3,22 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Globe, ChevronRight, Plus } from "lucide-react";
+import LanguageButton from "../LanguageButton/LanguageButton";
 
 interface NavbarProps {
   title: string;
   addMessage: string;
+  handleOpen: () => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ title, addMessage }) => {
+const Navbar: React.FC<NavbarProps> = ({ title, addMessage, handleOpen }) => {
   const [searchQuery, setSearchQuery] = useState("");
+    const [language, setLanguage] = useState("English");
+  
+    const languages = ["English", "Japanese", "Italian", "Danish"];
 
   const handleCreateEvent = () => {
-    // Handle create event logic here
+    handleOpen();
   };
 
   return (
@@ -26,7 +31,7 @@ const Navbar: React.FC<NavbarProps> = ({ title, addMessage }) => {
 {addMessage && (
           <button
           type="button"
-          onClick={handleCreateEvent}
+          onClick={handleOpen}
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors"
         >
           <Plus className="h-4 w-4" />
@@ -34,11 +39,19 @@ const Navbar: React.FC<NavbarProps> = ({ title, addMessage }) => {
         </button>
 )}
 
-        <div className="flex items-center space-x-2 text-gray-600">
+        {/* <div className="flex items-center space-x-2 text-gray-600">
           <Globe className="h-4 w-4" />
           <span className="text-sm">English</span>
           <ChevronRight className="h-3 w-3" />
-        </div>
+        </div> */}
+
+              <div className="flex items-center space-x-2 text-gray-600">
+        <LanguageButton
+          languages={languages}
+          selectedLanguage={language}
+          onSelectLanguage={setLanguage}
+        />
+      </div>
       </div>
     </nav>
   );

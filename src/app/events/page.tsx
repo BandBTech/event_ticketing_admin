@@ -14,6 +14,7 @@ import {
   Globe,
 } from "lucide-react";
 import Navbar from "../components/Navbar/Navbar";
+import {redirect} from 'next/navigation';
 
 interface Event {
   id: number;
@@ -24,42 +25,47 @@ interface Event {
   tags: string[];
   status: "ON SALE" | "SALE ON HOLD" | null;
   gradient: string;
+  imageUrl: string;
 }
 
 const EventsPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
+
   const events: Event[] = [
     {
       id: 1,
-      title: "Kathmandu Music Festival 2025",
+      title: "The Edge Band Live in Bhaktapur",
       date: "2025-08-12",
       time: "09:00 AM",
       location: "Kathmandu, Nepal",
       tags: ["Music", "Concert", "Festival"],
       status: "ON SALE",
       gradient: "bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800",
+      imageUrl: "https://cdn.prod.website-files.com/6364d88dd010ce5c6f8aa8fc/666b429e40ba692f84edb4f9_bhaktapur-durbar-square.jpg",
     },
     {
       id: 2,
-      title: "Kathmandu Music Festival 2025",
+      title: "John Chamling Rai And Daju Vai Band Live Event",
       date: "2025-08-12",
       time: "09:00 AM",
       location: "Kathmandu, Nepal",
       tags: ["Music", "Concert", "Festival"],
       status: "SALE ON HOLD",
       gradient: "bg-gradient-to-br from-purple-600 via-pink-600 to-purple-800",
+      imageUrl: "https://www.theo2.co.uk/assets/img/John-The-Locals-1-ed1097b480.png",
     },
     {
       id: 3,
-      title: "Kathmandu Music Festival 2025",
+      title: "Dashain Music Jatra",
       date: "2025-08-12",
       time: "09:00 AM",
       location: "Kathmandu, Nepal",
       tags: ["Music", "Concert", "Festival"],
       status: null,
       gradient: "bg-gradient-to-br from-blue-500 via-indigo-600 to-blue-800",
+      imageUrl: "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGV2ZW50fGVufDB8fDB8fHww",
     },
     {
       id: 4,
@@ -71,6 +77,7 @@ const EventsPage: React.FC = () => {
       status: null,
       gradient:
         "bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800",
+        imageUrl: "https://cdn.prod.website-files.com/6364d88dd010ce5c6f8aa8fc/666b429e40ba692f84edb4f9_bhaktapur-durbar-square.jpg",
     },
     {
       id: 5,
@@ -81,6 +88,7 @@ const EventsPage: React.FC = () => {
       tags: ["Music", "Concert", "Festival"],
       status: null,
       gradient: "bg-gradient-to-br from-red-600 via-pink-600 to-purple-700",
+      imageUrl: "https://www.theo2.co.uk/assets/img/John-The-Locals-1-ed1097b480.png",
     },
     {
       id: 6,
@@ -91,11 +99,12 @@ const EventsPage: React.FC = () => {
       tags: ["Music", "Concert", "Festival"],
       status: null,
       gradient: "bg-gradient-to-br from-green-500 via-lime-600 to-green-700",
+      imageUrl: "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGV2ZW50fGVufDB8fDB8fHww",
     },
   ];
 
   const handleCreateEvent = () => {
-    console.log("Create new event");
+    redirect('/events/createevent')
   };
 
   const handleViewDetail = (eventId: number) => {
@@ -107,55 +116,63 @@ const EventsPage: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 bg-gray-50 min-h-screen ml-64">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 ml-64">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
-        <Navbar title="Events" addMessage="Create Event" />
+      <div className="">
+        <Navbar title="Events" addMessage="Create Event" handleOpen={handleCreateEvent}/>
+      </div>
 
-        {/* Search and Filter */}
-        <div className="mt-4 flex items-center space-x-4">
-          <div className="relative flex-1 max-w-md">
+
+      {/* Events Grid */}
+      <div className="px-6 py-4">
+        {/* search and filter  */}
+      <div className=" border-b border-gray-200 pb-6 px-4">
+        <div className="mt-4 flex items-center justify-between space-x-4">
+          <div className="relative flex-1 max-w-md shadow-xl">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <input
               type="text"
               placeholder="Search events..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
 
-          <button className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+          <button className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors shadow-xl">
             <Filter className="h-4 w-4 text-gray-500" />
             <span className="text-gray-700">Filter events</span>
           </button>
         </div>
       </div>
-
-      {/* Events Grid */}
-      <div className="p-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* main content  */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
           {events.map((event) => (
             <div
               key={event.id}
               className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
             >
               {/* Event Image with Gradient */}
-              <div className={`h-40 ${event.gradient} relative`}>
-                {event.status && (
-                  <div className="absolute top-3 left-3">
-                    <span
-                      className={`px-2 py-1 rounded text-xs font-medium ${
-                        event.status === "ON SALE"
-                          ? "bg-green-500 text-white"
-                          : "bg-orange-500 text-white"
-                      }`}
-                    >
-                      {event.status}
-                    </span>
-                  </div>
-                )}
-              </div>
+<div className="h-40 relative overflow-hidden">
+  <img 
+    src={event.imageUrl}
+    alt="Event"
+    className="w-full h-full object-cover"
+  />
+  {event.status && (
+    <div className="absolute top-3 left-3">
+      <span
+        className={`px-2 py-1 rounded text-xs font-medium ${
+          event.status === "ON SALE"
+            ? "bg-green-500 text-white"
+            : "bg-orange-500 text-white"
+        }`}
+      >
+        {event.status}
+      </span>
+    </div>
+  )}
+</div>
 
               {/* Event Content */}
               <div className="p-4">
