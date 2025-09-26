@@ -1,18 +1,19 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { 
-  Plus, 
-  Search, 
-  Filter, 
-  Calendar, 
-  MapPin, 
+import React, { useState } from "react";
+import {
+  Plus,
+  Search,
+  Filter,
+  Calendar,
+  MapPin,
   ArrowRight,
   Edit,
   ChevronLeft,
   ChevronRight,
-  Globe
-} from 'lucide-react';
+  Globe,
+} from "lucide-react";
+import Navbar from "../components/Navbar/Navbar";
 
 interface Event {
   id: number;
@@ -21,79 +22,80 @@ interface Event {
   time: string;
   location: string;
   tags: string[];
-  status: 'ON SALE' | 'SALE ON HOLD' | null;
+  status: "ON SALE" | "SALE ON HOLD" | null;
   gradient: string;
 }
 
 const EventsPage: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
   const events: Event[] = [
     {
       id: 1,
-      title: 'Kathmandu Music Festival 2025',
-      date: '2025-08-12',
-      time: '09:00 AM',
-      location: 'Kathmandu, Nepal',
-      tags: ['Music', 'Concert', 'Festival'],
-      status: 'ON SALE',
-      gradient: 'bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800'
+      title: "Kathmandu Music Festival 2025",
+      date: "2025-08-12",
+      time: "09:00 AM",
+      location: "Kathmandu, Nepal",
+      tags: ["Music", "Concert", "Festival"],
+      status: "ON SALE",
+      gradient: "bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800",
     },
     {
       id: 2,
-      title: 'Kathmandu Music Festival 2025',
-      date: '2025-08-12',
-      time: '09:00 AM',
-      location: 'Kathmandu, Nepal',
-      tags: ['Music', 'Concert', 'Festival'],
-      status: 'SALE ON HOLD',
-      gradient: 'bg-gradient-to-br from-purple-600 via-pink-600 to-purple-800'
+      title: "Kathmandu Music Festival 2025",
+      date: "2025-08-12",
+      time: "09:00 AM",
+      location: "Kathmandu, Nepal",
+      tags: ["Music", "Concert", "Festival"],
+      status: "SALE ON HOLD",
+      gradient: "bg-gradient-to-br from-purple-600 via-pink-600 to-purple-800",
     },
     {
       id: 3,
-      title: 'Kathmandu Music Festival 2025',
-      date: '2025-08-12',
-      time: '09:00 AM',
-      location: 'Kathmandu, Nepal',
-      tags: ['Music', 'Concert', 'Festival'],
+      title: "Kathmandu Music Festival 2025",
+      date: "2025-08-12",
+      time: "09:00 AM",
+      location: "Kathmandu, Nepal",
+      tags: ["Music", "Concert", "Festival"],
       status: null,
-      gradient: 'bg-gradient-to-br from-blue-500 via-indigo-600 to-blue-800'
+      gradient: "bg-gradient-to-br from-blue-500 via-indigo-600 to-blue-800",
     },
     {
       id: 4,
-      title: 'Kathmandu Music Festival 2025',
-      date: '2025-08-12',
-      time: '09:00 AM',
-      location: 'Kathmandu, Nepal',
-      tags: ['Music', 'Concert', 'Festival'],
+      title: "Kathmandu Music Festival 2025",
+      date: "2025-08-12",
+      time: "09:00 AM",
+      location: "Kathmandu, Nepal",
+      tags: ["Music", "Concert", "Festival"],
       status: null,
-      gradient: 'bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800'
+      gradient:
+        "bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800",
     },
     {
       id: 5,
-      title: 'Kathmandu Music Festival 2025',
-      date: '2025-08-12',
-      time: '09:00 AM',
-      location: 'Kathmandu, Nepal',
-      tags: ['Music', 'Concert', 'Festival'],
+      title: "Kathmandu Music Festival 2025",
+      date: "2025-08-12",
+      time: "09:00 AM",
+      location: "Kathmandu, Nepal",
+      tags: ["Music", "Concert", "Festival"],
       status: null,
-      gradient: 'bg-gradient-to-br from-red-600 via-pink-600 to-purple-700'
+      gradient: "bg-gradient-to-br from-red-600 via-pink-600 to-purple-700",
     },
     {
       id: 6,
-      title: 'Kathmandu Music Festival 2025',
-      date: '2025-08-12',
-      time: '09:00 AM',
-      location: 'Kathmandu, Nepal',
-      tags: ['Music', 'Concert', 'Festival'],
+      title: "Kathmandu Music Festival 2025",
+      date: "2025-08-12",
+      time: "09:00 AM",
+      location: "Kathmandu, Nepal",
+      tags: ["Music", "Concert", "Festival"],
       status: null,
-      gradient: 'bg-gradient-to-br from-green-500 via-lime-600 to-green-700'
-    }
+      gradient: "bg-gradient-to-br from-green-500 via-lime-600 to-green-700",
+    },
   ];
 
   const handleCreateEvent = () => {
-    console.log('Create new event');
+    console.log("Create new event");
   };
 
   const handleViewDetail = (eventId: number) => {
@@ -105,30 +107,10 @@ const EventsPage: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 bg-gray-50 min-h-screen">
+    <div className="flex-1 bg-gray-50 min-h-screen ml-64">
       {/* Header */}
       <div className="bg-white border-b border-gray-200 px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <h1 className="text-2xl font-semibold text-gray-900">Events</h1>
-          </div>
-          
-          <div className="flex items-center space-x-3">
-            <button
-              onClick={handleCreateEvent}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors"
-            >
-              <Plus className="h-4 w-4" />
-              <span className="font-medium">Create New Event</span>
-            </button>
-            
-            <div className="flex items-center space-x-2 text-gray-600">
-              <Globe className="h-4 w-4" />
-              <span className="text-sm">English</span>
-              <ChevronRight className="h-3 w-3" />
-            </div>
-          </div>
-        </div>
+        <Navbar title="Events" addMessage="Create Event" />
 
         {/* Search and Filter */}
         <div className="mt-4 flex items-center space-x-4">
@@ -142,7 +124,7 @@ const EventsPage: React.FC = () => {
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
-          
+
           <button className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
             <Filter className="h-4 w-4 text-gray-500" />
             <span className="text-gray-700">Filter events</span>
@@ -154,16 +136,21 @@ const EventsPage: React.FC = () => {
       <div className="p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {events.map((event) => (
-            <div key={event.id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div
+              key={event.id}
+              className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
+            >
               {/* Event Image with Gradient */}
               <div className={`h-40 ${event.gradient} relative`}>
                 {event.status && (
                   <div className="absolute top-3 left-3">
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${
-                      event.status === 'ON SALE' 
-                        ? 'bg-green-500 text-white' 
-                        : 'bg-orange-500 text-white'
-                    }`}>
+                    <span
+                      className={`px-2 py-1 rounded text-xs font-medium ${
+                        event.status === "ON SALE"
+                          ? "bg-green-500 text-white"
+                          : "bg-orange-500 text-white"
+                      }`}
+                    >
                       {event.status}
                     </span>
                   </div>
@@ -193,7 +180,9 @@ const EventsPage: React.FC = () => {
                 <div className="space-y-2 mb-4">
                   <div className="flex items-center text-sm text-gray-600">
                     <Calendar className="h-4 w-4 mr-2" />
-                    <span>{event.date} {event.time}</span>
+                    <span>
+                      {event.date} {event.time}
+                    </span>
                   </div>
                   <div className="flex items-center text-sm text-gray-600">
                     <MapPin className="h-4 w-4 mr-2" />
@@ -210,9 +199,9 @@ const EventsPage: React.FC = () => {
                     <span>View Detail</span>
                     <ArrowRight className="h-3 w-3 ml-1" />
                   </button>
-                  
+
                   <button
-                    aria-label='Edit Event'
+                    aria-label="Edit Event"
                     onClick={() => handleEditEvent(event.id)}
                     className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
                   >
@@ -233,7 +222,7 @@ const EventsPage: React.FC = () => {
             <ChevronLeft className="h-4 w-4 mr-1" />
             <span>Previous</span>
           </button>
-          
+
           <div className="flex space-x-1">
             {[1, 2, 3].map((page) => (
               <button
@@ -241,15 +230,15 @@ const EventsPage: React.FC = () => {
                 onClick={() => setCurrentPage(page)}
                 className={`px-3 py-2 rounded-md text-sm ${
                   currentPage === page
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-700 hover:bg-gray-100'
+                    ? "bg-blue-600 text-white"
+                    : "text-gray-700 hover:bg-gray-100"
                 } transition-colors`}
               >
                 {page}
               </button>
             ))}
           </div>
-          
+
           <button
             onClick={() => setCurrentPage(currentPage + 1)}
             className="flex items-center px-3 py-2 text-gray-500 hover:text-gray-700 transition-colors"

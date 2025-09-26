@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Globe } from 'lucide-react';
+import React, { useState } from "react";
+import { Globe, ChevronDown } from "lucide-react";
 
 interface LanguageButtonProps {
   languages: string[]; // List of languages to display
@@ -22,7 +22,7 @@ const LanguageButton: React.FC<LanguageButtonProps> = ({
 
   return (
     <div className="relative inline-block text-left">
-      <button
+      {/* <button
         onClick={toggleDropdown}
         className="inline-flex justify-center w-full px-4 py-2  text-gray-700 font-medium rounded-md focus:outline-none border-1"
       >
@@ -41,7 +41,16 @@ const LanguageButton: React.FC<LanguageButtonProps> = ({
             clipRule="evenodd"
           />
         </svg>
-      </button>
+      </button> */}
+
+      <div
+        onClick={toggleDropdown}
+        className="flex items-center space-x-2 text-gray-600 cursor-pointer"
+      >
+        <Globe className="h-4 w-4" />
+        <span className="text-sm font-medium">{selectedLanguage}</span>
+        <ChevronDown className="h-3 w-3" />
+      </div>
 
       {isOpen && (
         <div className="absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
@@ -51,7 +60,9 @@ const LanguageButton: React.FC<LanguageButtonProps> = ({
                 key={language}
                 onClick={() => handleSelect(language)}
                 className={`block w-full text-left px-2 py-1 text-sm ${
-                  language === selectedLanguage ? 'bg-blue-100 text-blue-900' : 'text-gray-700'
+                  language === selectedLanguage
+                    ? "bg-blue-100 text-blue-900"
+                    : "text-gray-700"
                 } hover:bg-blue-200`}
               >
                 {language}

@@ -1,14 +1,44 @@
-// src/components/Navbar/Navbar.tsx
-import Link from "next/link";
+"use client";
 
-const Navbar: React.FC = () => {
+import React, { useState } from "react";
+import Link from "next/link";
+import { Globe, ChevronRight, Plus } from "lucide-react";
+
+interface NavbarProps {
+  title: string;
+  addMessage: string;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ title, addMessage }) => {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleCreateEvent = () => {
+    // Handle create event logic here
+  };
+
   return (
     <nav className="bg-white text-black p-4 space-x-4 flex justify-between">
-      <div>Good Evening John Doe !</div>
-      <div className="flex gap-10">
+      <div className="flex items-center space-x-4">
+        <h1 className="text-2xl font-semibold text-gray-900">{title}</h1>
+      </div>
 
-      <h1>Create New Event</h1>
-      <h1>English</h1>
+      <div className="flex items-center space-x-3 gap-4">
+{addMessage && (
+          <button
+          type="button"
+          onClick={handleCreateEvent}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors"
+        >
+          <Plus className="h-4 w-4" />
+          <span className="font-medium">{addMessage}</span>
+        </button>
+)}
+
+        <div className="flex items-center space-x-2 text-gray-600">
+          <Globe className="h-4 w-4" />
+          <span className="text-sm">English</span>
+          <ChevronRight className="h-3 w-3" />
+        </div>
       </div>
     </nav>
   );
