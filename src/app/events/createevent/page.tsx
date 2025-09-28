@@ -47,7 +47,7 @@ const EventForm: React.FC = () => {
                 <input
                   type="text"
                   placeholder="Enter title for the event"
-                  className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
                 />
               </div>
               
@@ -57,7 +57,7 @@ const EventForm: React.FC = () => {
                 <input
                   type="text"
                   placeholder="e.g. Music, Concert, Festival"
-                  className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
                 />
               </div>
             </div>
@@ -68,7 +68,7 @@ const EventForm: React.FC = () => {
               <textarea
                 placeholder="Tell what makes your event special"
                 rows={4}
-                className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-gray-700"
               />
             </div>
           </div>
@@ -94,7 +94,7 @@ const EventForm: React.FC = () => {
                 <input
                   type="text"
                   placeholder="Enter name of venue"
-                  className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
                 />
               </div>
               
@@ -105,7 +105,7 @@ const EventForm: React.FC = () => {
                   <input
                     type="text"
                     placeholder="Enter venue location"
-                    className="w-full px-3 py-2 pr-8 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="text-gray-700 w-full px-3 py-2 pr-8 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                   <MapPin className="w-4 h-4 text-gray-400 absolute right-3 top-2.5" />
                 </div>
@@ -117,7 +117,7 @@ const EventForm: React.FC = () => {
                 <input
                   type="text"
                   placeholder="e.g. 5000"
-                  className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="text-gray-700 w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -128,7 +128,7 @@ const EventForm: React.FC = () => {
                 <label className="block text-xs font-medium text-gray-700 mb-2">Timezone</label>
                 <div className="relative">
                   <select 
-                    className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white"
+                    className="text-gray-700 w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white"
                     aria-label="Select timezone"
                     title="Select timezone"
                   >
@@ -144,7 +144,7 @@ const EventForm: React.FC = () => {
                 <input
                   type="text"
                   placeholder="MM/DD/YYYY HH:mm aa"
-                  className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="text-gray-700 w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
               
@@ -154,7 +154,7 @@ const EventForm: React.FC = () => {
                 <input
                   type="text"
                   placeholder="MM/DD/YYYY HH:mm aa"
-                  className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="text-gray-700 w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -181,7 +181,7 @@ const EventForm: React.FC = () => {
                 <input
                   type="text"
                   placeholder="Enter name of venue"
-                  className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="text-gray-700 w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
               
@@ -202,7 +202,7 @@ const EventForm: React.FC = () => {
                   <input
                     type="text"
                     placeholder="e.g. 100"
-                    className="flex-1 px-3 py-2 border border-gray-200 rounded-r-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="text-gray-700 flex-1 px-3 py-2 border border-gray-200 rounded-r-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
               </div>
@@ -213,7 +213,7 @@ const EventForm: React.FC = () => {
                 <input
                   type="text"
                   placeholder="e.g. 100"
-                  className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="text-gray-700 w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -225,7 +225,7 @@ const EventForm: React.FC = () => {
                 <input
                   type="text"
                   placeholder="Enter GST in percentage"
-                  className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="text-gray-700 w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
               
@@ -235,7 +235,7 @@ const EventForm: React.FC = () => {
                 <input
                   type="text"
                   placeholder="MM/DD/YYYY HH:mm aa"
-                  className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="text-gray-700 w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
               
@@ -245,7 +245,7 @@ const EventForm: React.FC = () => {
                 <input
                   type="text"
                   placeholder="MM/DD/YYYY HH:mm aa"
-                  className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="text-gray-700 w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
             </div>

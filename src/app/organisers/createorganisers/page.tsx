@@ -73,7 +73,7 @@ export default function AddOrganizerPage() {
                       <input
                         type="text"
                         placeholder="Enter organizer name"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="text-gray-700 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </div>
 
@@ -81,7 +81,7 @@ export default function AddOrganizerPage() {
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Organizer Type
                       </label>
-                      <select title='Organizer Type' className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                      <select title='Organizer Type' className="text-gray-700 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         <option value="">Select organizer type</option>
                         <option value="individual">Individual</option>
                         <option value="company">Company/Organization</option>
@@ -97,7 +97,7 @@ export default function AddOrganizerPage() {
                   <textarea
                     placeholder="Tell about the organizer's background and experience"
                     rows={4}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="text-gray-700 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
               </div>
@@ -126,7 +126,7 @@ export default function AddOrganizerPage() {
                       <input
                         type="email"
                         placeholder="Enter email address"
-                        className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="text-gray-700 w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </div>
                   </div>
@@ -140,7 +140,7 @@ export default function AddOrganizerPage() {
                       <input
                         type="tel"
                         placeholder="Enter phone number"
-                        className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="text-gray-700 w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </div>
                   </div>
@@ -154,7 +154,7 @@ export default function AddOrganizerPage() {
                       <input
                         type="url"
                         placeholder="https://example.com"
-                        className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="text-gray-700 w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </div>
                   </div>
@@ -163,7 +163,7 @@ export default function AddOrganizerPage() {
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Experience
                     </label>
-                    <select title='Experience' className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <select title='Experience' className="text-gray-700 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                       <option value="">Select experience</option>
                       <option value="0-1">0-1 years</option>
                       <option value="2-5">2-5 years</option>
@@ -182,7 +182,7 @@ export default function AddOrganizerPage() {
                     <textarea
                       placeholder="Enter complete address"
                       rows={2}
-                      className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="text-gray-700 w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
                 </div>
@@ -195,7 +195,7 @@ export default function AddOrganizerPage() {
                     <input
                       type="text"
                       placeholder="Enter city"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="text-gray-700 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
 
@@ -203,7 +203,7 @@ export default function AddOrganizerPage() {
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Country
                     </label>
-                    <select title='Country' className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <select title='Country' className="text-gray-700 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                       <option value="Nepal">Nepal</option>
                       <option value="India">India</option>
                       <option value="USA">USA</option>
@@ -237,7 +237,7 @@ export default function AddOrganizerPage() {
                       <input
                         type="text"
                         placeholder="Enter company name"
-                        className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="text-gray-700 w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </div>
                   </div>
@@ -251,7 +251,7 @@ export default function AddOrganizerPage() {
                       <input
                         type="text"
                         placeholder="Enter contact person"
-                        className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="text-gray-700 w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </div>
                   </div>
@@ -263,7 +263,7 @@ export default function AddOrganizerPage() {
                     <input
                       type="text"
                       placeholder="Enter registration number"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="text-gray-700 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
 
@@ -274,7 +274,7 @@ export default function AddOrganizerPage() {
                     <input
                       type="text"
                       placeholder="e.g. Music, Concert, Festival"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="text-gray-700 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
                 </div>
