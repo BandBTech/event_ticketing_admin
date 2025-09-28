@@ -17,17 +17,21 @@ import {
   Mail
 } from 'lucide-react';
 import Navbar from '@/app/components/Navbar/Navbar';
+import { redirect } from 'next/navigation';
 
 const OrganisersPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 
+  const handleCreateOrganisers = () => {
+    redirect('/organisers/createorganisers');
+  }
   // Sample organizer data
   const organisers = [
     {
       id: 1,
       name: 'Event Masters Nepal',
-      avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop',
+      avatar: 'https://cdn-icons-png.flaticon.com/512/1999/1999105.png',
       coverImage: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&h=300&fit=crop',
       location: 'Kathmandu, Nepal',
       rating: 4.8,
@@ -44,7 +48,7 @@ const OrganisersPage: React.FC = () => {
     {
       id: 2,
       name: 'Himalayan Events Co.',
-      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop',
+      avatar: 'https://cdn-icons-png.flaticon.com/512/1999/1999105.png',
       coverImage: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&h=300&fit=crop',
       location: 'Pokhara, Nepal',
       rating: 4.6,
@@ -61,7 +65,7 @@ const OrganisersPage: React.FC = () => {
     {
       id: 3,
       name: 'Tech Conference Nepal',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop',
+      avatar: 'https://cdn-icons-png.flaticon.com/512/1999/1999105.png',
       coverImage: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&h=300&fit=crop',
       location: 'Lalitpur, Nepal',
       rating: 4.9,
@@ -78,7 +82,7 @@ const OrganisersPage: React.FC = () => {
     {
       id: 4,
       name: 'Cultural Heritage Events',
-      avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b042?w=400&h=400&fit=crop',
+      avatar: 'https://cdn-icons-png.flaticon.com/512/1999/1999105.png',
       coverImage: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=600&h=300&fit=crop',
       location: 'Bhaktapur, Nepal',
       rating: 4.7,
@@ -95,7 +99,7 @@ const OrganisersPage: React.FC = () => {
     {
       id: 5,
       name: 'Sports Arena Nepal',
-      avatar: 'https://images.unsplash.com/photo-1542178243-bc20204b769f?w=400&h=400&fit=crop',
+      avatar: 'https://cdn-icons-png.flaticon.com/512/1999/1999105.png',
       coverImage: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=600&h=300&fit=crop',
       location: 'Kathmandu, Nepal',
       rating: 4.5,
@@ -112,7 +116,7 @@ const OrganisersPage: React.FC = () => {
     {
       id: 6,
       name: 'Artistic Vision Events',
-      avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop',
+      avatar: 'https://cdn-icons-png.flaticon.com/512/1999/1999105.png',
       coverImage: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&h=300&fit=crop',
       location: 'Kathmandu, Nepal',
       rating: 4.4,
@@ -149,7 +153,7 @@ const OrganisersPage: React.FC = () => {
         </div>
       </div> */}
       <div>
-        <Navbar title="Organisers" addMessage="Add New Organiser" handleOpen={() => {}} />
+        <Navbar title="Organisers" addMessage="Add New Organiser" handleOpen={() => {redirect('/organisers/createorganisers');}} />
       </div>
 
 

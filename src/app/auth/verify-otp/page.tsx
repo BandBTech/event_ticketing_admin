@@ -1,11 +1,11 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import {redirect} from 'next/navigation';
+import { redirect } from 'next/navigation';
 
 const VerifyOTPPage: React.FC = () => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const inputRefs = useRef<HTMLInputElement[]>([]);
 
   const handleInputChange = (index: number, value: string) => {
     if (value.length > 1) return; // Only allow single digit
@@ -31,7 +31,7 @@ const VerifyOTPPage: React.FC = () => {
     e.preventDefault();
     const otpCode = otp.join('');
     console.log('OTP verification:', otpCode);
-    redirect('/auth/change-password')
+    redirect('/auth/change-password');
   };
 
   const handleResendEmail = () => {
@@ -49,7 +49,7 @@ const VerifyOTPPage: React.FC = () => {
           <p className="text-sm text-gray-500 leading-relaxed">
             We sent a reset link to <br />
             <span className="text-gray-700">your.example@email.com</span> <br />
-            enter 6 digit code that mentioned in <br />
+            Enter the 6-digit code mentioned in <br />
             the email
           </p>
         </div>
@@ -60,7 +60,9 @@ const VerifyOTPPage: React.FC = () => {
             {otp.map((digit, index) => (
               <input
                 key={index}
-                // ref={(el) => (inputRefs.current[index] = el)}
+                ref={(el) => {
+                  if (el) inputRefs.current[index] = el;
+                }}
                 type="text"
                 inputMode="numeric"
                 maxLength={1}
@@ -76,7 +78,7 @@ const VerifyOTPPage: React.FC = () => {
           {/* Verify OTP Button */}
           <button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-4 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-4 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer"
           >
             Verify OTP
           </button>
@@ -88,7 +90,7 @@ const VerifyOTPPage: React.FC = () => {
               <button
                 type="button"
                 onClick={handleResendEmail}
-                className="text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                className="text-blue-600 hover:text-blue-700 font-medium transition-colors cursor-pointer"
               >
                 Resend email
               </button>

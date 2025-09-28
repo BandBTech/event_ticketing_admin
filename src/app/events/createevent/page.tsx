@@ -12,7 +12,7 @@ const EventForm: React.FC = () => {
 
 
   return (
-    <div className="max-w-2xl mx-auto bg-white ml-64">
+    <div className=" mx-auto bg-white ml-64">
         {/* header  */}
         <div>
             <Navbar title="Create Event" addMessage='' handleOpen={() => {}}/>

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Eye, EyeOff, Mail, Key, ChevronDown, X } from 'lucide-react';
+import { redirect } from 'next/navigation';
 
 const RegisterPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -36,6 +37,7 @@ const RegisterPage: React.FC = () => {
 
   const handleSignInAsOrganizer = () => {
     console.log('Navigate to sign in as organizer');
+    redirect('/auth/login')
   };
 
   return (
@@ -44,7 +46,7 @@ const RegisterPage: React.FC = () => {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-2xl font-semibold text-gray-900 mb-1">
-            Register <span className="text-blue-600 text-sm font-medium">as Organizer</span>
+            Register <span className="text-blue-600 text-sm font-medium">as Admin</span>
           </h1>
         </div>
 
@@ -154,7 +156,7 @@ const RegisterPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-4 flex items-center"
+                className="absolute inset-y-0 right-0 pr-4 flex items-center cursor-pointer"
               >
                 {showPassword ? (
                   <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors" />
@@ -186,7 +188,7 @@ const RegisterPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute inset-y-0 right-0 pr-4 flex items-center"
+                className="absolute inset-y-0 right-0 pr-4 flex items-center cursor-pointer"
               >
                 {showConfirmPassword ? (
                   <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors" />
@@ -200,7 +202,7 @@ const RegisterPage: React.FC = () => {
           {/* Get Started Button */}
           <button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-4 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-4 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center cursor-pointer"
           >
             Get Started
             <svg className="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -215,9 +217,9 @@ const RegisterPage: React.FC = () => {
               <button
                 type="button"
                 onClick={handleSignInAsOrganizer}
-                className="text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                className="text-blue-600 hover:text-blue-700 font-medium transition-colors cursor-pointer"
               >
-                Sign in as Organizer
+                Sign in as Admin
               </button>
             </span>
           </div>
@@ -230,14 +232,14 @@ const RegisterPage: React.FC = () => {
             understood our{' '}
             <button
               type="button"
-              className="text-blue-600 hover:text-blue-700 transition-colors"
+              className="text-blue-600 hover:text-blue-700 transition-colors cursor-pointer"
             >
               terms and conditions
             </button>
             {' '}and{' '}
             <button
               type="button"
-              className="text-blue-600 hover:text-blue-700 transition-colors"
+              className="text-blue-600 hover:text-blue-700 transition-colors cursor-pointer"
             >
               privacy policy
             </button>
