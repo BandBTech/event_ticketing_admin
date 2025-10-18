@@ -10,7 +10,7 @@ const AuthNavbar: React.FC = () => {
   const languages = ["English", "Japanese", "Italian", "Danish"];
   return (
     <nav className="bg-white text-black flex justify-between py-2 px-4 items-center">
-      <div className="font-bold text-blue-500">Mero Ticket</div>
+      <div className="font-bold text-blue-500">Timro Ticket</div>
 
       <div className="">
         <LanguageButton

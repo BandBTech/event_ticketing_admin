@@ -11,10 +11,9 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ title, addMessage, handleOpen }) => {
-    const [language, setLanguage] = useState("English");
-  
-    const languages = ["English", "Japanese", "Italian", "Danish"];
+  const [language, setLanguage] = useState("English");
 
+  const languages = ["English", "Japanese", "Italian", "Danish"];
 
   return (
     <nav className="bg-white text-black p-4 space-x-4 flex justify-between">
@@ -23,16 +22,16 @@ const Navbar: React.FC<NavbarProps> = ({ title, addMessage, handleOpen }) => {
       </div>
 
       <div className="flex items-center space-x-3 gap-4">
-{addMessage && (
+        {addMessage && (
           <button
-          type="button"
-          onClick={handleOpen}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors"
-        >
-          <Plus className="h-4 w-4" />
-          <span className="font-medium">{addMessage}</span>
-        </button>
-)}
+            type="button"
+            onClick={handleOpen}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors"
+          >
+            <Plus className="h-4 w-4" />
+            <span className="font-medium">{addMessage}</span>
+          </button>
+        )}
 
         {/* <div className="flex items-center space-x-2 text-gray-600">
           <Globe className="h-4 w-4" />
@@ -40,13 +39,13 @@ const Navbar: React.FC<NavbarProps> = ({ title, addMessage, handleOpen }) => {
           <ChevronRight className="h-3 w-3" />
         </div> */}
 
-              <div className="flex items-center space-x-2 text-gray-600">
-        <LanguageButton
-          languages={languages}
-          selectedLanguage={language}
-          onSelectLanguage={setLanguage}
-        />
-      </div>
+        <div className="flex items-center space-x-2 text-gray-600">
+          <LanguageButton
+            languages={languages}
+            selectedLanguage={language}
+            onSelectLanguage={setLanguage}
+          />
+        </div>
       </div>
     </nav>
   );

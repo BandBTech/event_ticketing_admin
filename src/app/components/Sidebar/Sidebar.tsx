@@ -122,7 +122,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         <div className="p-6 border-b border-gray-100 flex items-center justify-between">
           {!isCollapsed && (
             <h1 className="text-xl font-semibold text-blue-600 transition-opacity duration-300">
-              E-Ticket
+              Timro-Ticket
             </h1>
           )}
           <button

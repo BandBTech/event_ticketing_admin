@@ -2,26 +2,38 @@
 
 import React, { useState } from 'react';
 import { Eye, EyeOff, Mail, Key } from 'lucide-react';
-import {redirect} from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import { login } from '@/app/services/authService';
+import toast from 'react-hot-toast';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
+  const [error, setError] = useState('');
+  const router = useRouter();
 
   const handleRedirectForgotPassword = () => {
-    redirect('/auth/forgot-password')
+    router.push('/auth/forgot-password')
   };
 
   const handleRedirectRegister = () => {
-    redirect('/auth/register')
+    router.push('/auth/register')
   }
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log('Login attempt:', { email, password, rememberMe });
-    redirect('/dashboard')
+    setError('');
+
+    try {
+      const data = await login({ email, password });
+      localStorage.setItem('token', data.token);
+      toast.success('Login successful');
+      router.push('/dashboard');
+    } catch (err: any) {
+      toast.error('Login failed');
+      setError(err.message);
+    }
   };
 
   return (
