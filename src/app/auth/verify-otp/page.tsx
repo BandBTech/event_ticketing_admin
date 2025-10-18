@@ -86,7 +86,7 @@ const VerifyOTPPage: React.FC = () => {
           {/* Resend Email Link */}
           <div className="text-center">
             <span className="text-sm text-gray-600">
-              Haven't got the email yet?{' '}
+              Haven&apos;t got the email yet?{' '}
               <button
                 type="button"
                 onClick={handleResendEmail}

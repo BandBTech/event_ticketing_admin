@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  event_ticketing_admin:
+    build: .
+
+    container_name: event_ticketing_admin-app
+    ports:
+      - "4003:3000"
+    restart: unless-stopped
+
+    environment:
+      - NODE_ENV=production
+
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

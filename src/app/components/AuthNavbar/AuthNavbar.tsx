@@ -2,7 +2,6 @@
 
 // src/components/Navbar/Navbar.tsx
 import React, { useState } from "react";
-import Link from "next/link";
 import LanguageButton from "@/app/components/LanguageButton/LanguageButton";
 
 const AuthNavbar: React.FC = () => {

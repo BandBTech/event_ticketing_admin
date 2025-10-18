@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
-import { Globe, ChevronRight, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import LanguageButton from "../LanguageButton/LanguageButton";
 
 interface NavbarProps {
@@ -12,14 +11,10 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ title, addMessage, handleOpen }) => {
-  const [searchQuery, setSearchQuery] = useState("");
     const [language, setLanguage] = useState("English");
   
     const languages = ["English", "Japanese", "Italian", "Danish"];
 
-  const handleCreateEvent = () => {
-    handleOpen();
-  };
 
   return (
     <nav className="bg-white text-black p-4 space-x-4 flex justify-between">

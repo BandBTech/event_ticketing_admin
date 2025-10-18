@@ -3,8 +3,6 @@
 import React, { useState } from "react";
 import {
   Save,
-  Eye,
-  EyeOff,
   Bell,
   CreditCard,
   Users,
@@ -97,7 +95,6 @@ const AdminSettingsPage: React.FC = () => {
     apiKeyRotation: 30,
   });
 
-  const [showApiKey, setShowApiKey] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<ActiveTab>("general");
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("");
 
@@ -133,37 +130,9 @@ const AdminSettingsPage: React.FC = () => {
     { id: "api", label: "API", icon: Users },
   ];
 
-  const renderToggleSwitch = (
-    checked: boolean,
-    onChange: (checked: boolean) => void,
-    disabled: boolean = false
-  ): any => (
-    <label className="relative inline-flex items-center cursor-pointer">
-      <input
-        type="checkbox"
-        checked={checked}
-        onChange={(e) => onChange(e.target.checked)}
-        disabled={disabled}
-        className="sr-only"
-        title="Toggle switch"
-      />
-      <div
-        className={`w-11 h-6 rounded-full ${
-          checked ? "bg-blue-600" : "bg-gray-200"
-        } relative transition-colors duration-200 ease-in-out ${
-          disabled ? "opacity-50 cursor-not-allowed" : ""
-        }`}
-      >
-        <div
-          className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform duration-200 ease-in-out ${
-            checked ? "transform translate-x-5" : ""
-          }`}
-        ></div>
-      </div>
-    </label>
-  );
 
-  const renderTabContent = (): any => {
+
+const renderTabContent = (): React.ReactNode => {
     switch (activeTab) {
       case "general":
         return (

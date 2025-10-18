@@ -1,15 +1,19 @@
 'use client';
 
 import React from 'react';
-import { Globe, ChevronDown, Calendar, Clock, Users } from 'lucide-react';
+import { Calendar, Clock, Users } from 'lucide-react';
 import Navbar from '../components/Navbar/Navbar';
 
 const AdminDashboard: React.FC = () => {
+  const handleOpen = () => {
+  console.log("Open modal clicked!");
+};
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 ml-64">
       {/* Header */}
       <div className="">
-          <Navbar title="Admin Dashboard" addMessage=''/>
+          <Navbar title="Admin Dashboard" addMessage='' handleOpen={handleOpen}/>
       </div>
 
       {/* Main Content */}
@@ -72,7 +76,7 @@ const AdminDashboard: React.FC = () => {
               </div>
               <p className="text-gray-500 font-medium">No events awaiting approval</p>
               <p className="text-sm text-gray-400">
-                When organizers submit events for review, they'll appear here
+                When organizers submit events for review, they&apos;ll appear here
               </p>
             </div>
           </div>

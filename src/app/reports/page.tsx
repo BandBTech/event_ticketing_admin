@@ -4,14 +4,9 @@ import React, { useState } from "react";
 import {
   Download,
   Calendar,
-  TrendingUp,
-  TrendingDown,
   Users,
   Ticket,
   DollarSign,
-  BarChart3,
-  PieChart,
-  FileText,
   Filter,
   RefreshCw,
   Eye,
@@ -20,7 +15,6 @@ import {
   ArrowUpRight,
   ArrowDownRight,
 } from "lucide-react";
-import Navbar from "../components/Navbar/Navbar";
 
 const ReportsPage: React.FC = () => {
   const [dateRange, setDateRange] = useState("last-30-days");
