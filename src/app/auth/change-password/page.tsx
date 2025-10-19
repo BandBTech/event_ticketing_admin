@@ -3,25 +3,44 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, Key } from 'lucide-react';
 import { redirect } from 'next/navigation';
+import {resetPassword} from '@/app/services/authService';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 const ChangePasswordPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (password !== confirmPassword) {
-      alert('Passwords do not match');
-      return;
-    }
-    
-    // Handle password update logic here
-    console.log('Password update:', { password });
-    redirect('/auth/login')
+  const passwordResetEmail = localStorage.getItem('passwordResetEmail') || '';
+  const otpCode = localStorage.getItem('otpCode') || '';
+
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setLoading(true);
+  const payload = {
+    email_token: passwordResetEmail,
+    reset_token: otpCode,
+    new_password: password,
+    confirm_password: confirmPassword
   };
+
+  try {
+    const data: any = await resetPassword({ ...payload });
+    toast.success(data.message);
+    localStorage.setItem("passwordResetEmail", passwordResetEmail);
+    router.push(`/auth/login`);
+  } catch (error) {
+    console.error('Error changing password:', error);
+    toast.error('Failed to reset password');
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const handleReturnToLogin = () => {
     // Handle navigation back to login page

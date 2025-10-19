@@ -205,6 +205,8 @@ const OrganisersPage: React.FC = () => {
                 <Image
                   src={organiser.avatar}
                   alt={organiser.name}
+  width={50}
+  height={50}
                   className="w-full h-full object-cover"
                 />
                 {organiser.verified && (
@@ -223,6 +225,8 @@ const OrganisersPage: React.FC = () => {
                   <Image
                     src={organiser.avatar}
                     alt={organiser.name}
+                    width={50}
+                    height={50}
                     className="w-16 h-16 rounded-full border-4 border-white object-cover"
                   />
                 </div>

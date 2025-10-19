@@ -1,14 +1,19 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import { toast } from 'react-hot-toast';
+import { verifyOtp } from '@/app/services/authService';
 
 const VerifyOTPPage: React.FC = () => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const inputRefs = useRef<HTMLInputElement[]>([]);
+  const [loading, setLoading] = useState(false);
+  const passwordResetEmail = localStorage.getItem('passwordResetEmail') || '';
+  const router = useRouter();
 
   const handleInputChange = (index: number, value: string) => {
-    if (value.length > 1) return; // Only allow single digit
+    if (value.length > 1) return;
 
     const newOtp = [...otp];
     newOtp[index] = value;
@@ -27,11 +32,27 @@ const VerifyOTPPage: React.FC = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const otpCode = otp.join('');
-    console.log('OTP verification:', otpCode);
-    redirect('/auth/change-password');
+    localStorage.setItem("otpCode", otpCode);
+    setLoading(true);
+
+    const payload = { 
+      identifier : passwordResetEmail,
+      otp_code : otpCode,
+      otp_type : 'password_reset'
+     };
+    try {
+      const data: any = await verifyOtp({ ...payload });
+      toast.success(data.message);
+      localStorage.setItem("passwordResetEmail", passwordResetEmail);
+      router.push(`/auth/change-password`);
+    } catch {
+      toast.error("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleResendEmail = () => {
@@ -48,7 +69,7 @@ const VerifyOTPPage: React.FC = () => {
           </h1>
           <p className="text-sm text-gray-500 leading-relaxed">
             We sent a reset link to <br />
-            <span className="text-gray-700">your.example@email.com</span> <br />
+            <span className="text-gray-700">{passwordResetEmail}</span> <br />
             Enter the 6-digit code mentioned in <br />
             the email
           </p>
@@ -80,7 +101,7 @@ const VerifyOTPPage: React.FC = () => {
             type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-4 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer"
           >
-            Verify OTP
+            {loading ? 'Verifying...' : 'Verify OTP'}
           </button>
 
           {/* Resend Email Link */}

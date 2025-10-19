@@ -164,6 +164,8 @@ const EventsPage: React.FC = () => {
                 <Image
                   src={event.imageUrl}
                   alt="Event photo"
+                    height={50}
+                    width={50}
                   className="w-full h-full object-cover"
                 />
 

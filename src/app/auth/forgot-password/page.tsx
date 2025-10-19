@@ -1,24 +1,43 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { Mail } from 'lucide-react';
-import {redirect} from 'next/navigation';
+import React, { useState } from "react";
+import { Mail } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { forgotPassword } from "@/app/services/authService";
+import { toast } from "react-hot-toast";
 
 const ForgotPasswordPage: React.FC = () => {
-  const [email, setEmail] = useState('');
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle forgot password logic here
-    console.log('Reset password for:', email);
-    redirect('/auth/verify-otp')
+    setLoading(true);
+
+    try {
+      const data: any = await forgotPassword({ email });
+      toast.success(data.message);
+      localStorage.setItem("passwordResetEmail", email);
+      router.push(`/auth/verify-otp`);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast.error(err.message);
+        setError(err.message);
+      } else {
+        toast.error(error || "Something went wrong");
+        setError("Unexpected error occurred");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleReturnToLogin = () => {
     // Handle navigation back to login page
-    console.log('Return to login page');
+    console.log("Return to login page");
   };
-
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -33,7 +52,10 @@ const ForgotPasswordPage: React.FC = () => {
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Email Field */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-900 mb-3">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-900 mb-3"
+            >
               Email
             </label>
             <div className="relative">
@@ -57,7 +79,7 @@ const ForgotPasswordPage: React.FC = () => {
             type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-4 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer"
           >
-            Reset Password
+            {loading ? "Loading..." : "Reset Password"}
           </button>
 
           {/* Return to Login Link */}

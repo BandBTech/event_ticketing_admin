@@ -1,46 +1,49 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { Eye, EyeOff, Mail, Key } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { login } from '@/app/services/authService';
-import toast from 'react-hot-toast';
+import React, { useState } from "react";
+import { Eye, EyeOff, Mail, Key } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { login } from "@/app/services/authService";
+import toast from "react-hot-toast";
 
 const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
-  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const router = useRouter();
 
   const handleRedirectForgotPassword = () => {
-    router.push('/auth/forgot-password')
+    router.push("/auth/forgot-password");
   };
 
   const handleRedirectRegister = () => {
-    router.push('/auth/register')
-  }
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setError('');
+    router.push("/auth/register");
+  };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
 
-  try {
-    const data = await login({ email, password });
-    localStorage.setItem('token', data.token);
-    toast.success('Login successful');
-    router.push('/dashboard');
-  } catch (err: unknown) {
-    if (err instanceof Error) {
-      toast.error(err.message);
-      setError(err.message);
-    } else {
-      toast.error('Something went wrong');
-      setError('Unexpected error occurred');
+    try {
+      const data = await login({ email, password });
+      localStorage.setItem("token", data.token);
+      toast.success(data.message);
+      router.push("/dashboard");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast.error(err.message);
+        setError(err.message);
+      } else {
+        toast.error(error || "Something went wrong");
+        setError("Unexpected error occurred");
+      }
+    } finally {
+      setLoading(false);
     }
-  }
-};
-
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -48,14 +51,18 @@ const handleSubmit = async (e: React.FormEvent) => {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-2xl font-semibold text-gray-900 mb-1">
-            Login <span className="text-blue-600 text-sm font-medium">as Admin</span>
+            Login{" "}
+            <span className="text-blue-600 text-sm font-medium">as Admin</span>
           </h1>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Email Field */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-900 mb-3">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-900 mb-3"
+            >
               Email
             </label>
             <div className="relative">
@@ -76,7 +83,10 @@ const handleSubmit = async (e: React.FormEvent) => {
 
           {/* Password Field */}
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-900 mb-3">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-900 mb-3"
+            >
               Password
             </label>
             <div className="relative">
@@ -84,7 +94,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                 <Key className="h-5 w-5 text-gray-400" />
               </div>
               <input
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword ? "text" : "password"}
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -116,7 +126,10 @@ const handleSubmit = async (e: React.FormEvent) => {
                 onChange={(e) => setRememberMe(e.target.checked)}
                 className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 cursor-pointer"
               />
-              <label htmlFor="remember-me" className="ml-3 text-sm font-medium text-gray-900">
+              <label
+                htmlFor="remember-me"
+                className="ml-3 text-sm font-medium text-gray-900"
+              >
                 Remember Me
               </label>
             </div>
@@ -134,13 +147,13 @@ const handleSubmit = async (e: React.FormEvent) => {
             type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-4 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer"
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
 
           {/* Sign Up Link */}
           <div className="text-center">
             <span className="text-sm text-gray-600">
-              Don&apos;t have an account?{' '}
+              Don&apos;t have an account?{" "}
               <button
                 type="button"
                 className="text-blue-600 hover:text-blue-700 font-medium transition-colors cursor-pointer"

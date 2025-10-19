@@ -13,6 +13,7 @@ interface ForgotPasswordPayload {
 
 interface LoginResponse {
   token: string;
+  message: string;
   user: {
     id: string;
     name: string;
@@ -21,13 +22,16 @@ interface LoginResponse {
 }
 
 interface ResetPasswordPayload {
-  token: string;
-  newPassword: string;
+  confirm_password: string;
+  email_token: string;
+  new_password: string;
+  reset_token: string;
 }
 
 interface VerifyOtpPayload {
-  email: string;
-  otp: string;
+  identifier: string;
+  otp_code: string;
+  otp_type: string;
 }
 
 export async function login(payload: LoginPayload): Promise<LoginResponse> {
@@ -38,14 +42,42 @@ export async function login(payload: LoginPayload): Promise<LoginResponse> {
 }
 
 // Example for future signup
-interface SignupPayload {
-  name: string;
+interface RegisterPayload {
+  first_name: string;
+  last_name: string;
   email: string;
+  phone: string;
   password: string;
 }
 
-export async function signup(payload: SignupPayload): Promise<LoginResponse> {
-  return apiClient('https://sandbox.timroticket.com/api/v1/auth/signup', {
+export interface Role {
+  id: string;
+  name: string;
+  description: string;
+}
+
+export interface UserData {
+  id: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  phone: string;
+  is_email_verified: boolean;
+  roles: Role[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface RegisterResponse {
+  success: boolean;
+  message: string;
+  data: UserData;
+  timestamp: string;
+  request_id: string;
+}
+
+export async function register(payload: RegisterPayload): Promise<RegisterResponse> {
+  return apiClient(API_ENDPOINTS.SIGNUP, {
     method: 'POST',
     body: JSON.stringify(payload),
   });
@@ -53,7 +85,7 @@ export async function signup(payload: SignupPayload): Promise<LoginResponse> {
 
 // FORGOT PASSWORD
 export async function forgotPassword(payload: ForgotPasswordPayload) {
-  return apiClient('https://sandbox.timroticket.com/api/v1/auth/forgot-password', {
+  return apiClient(API_ENDPOINTS.FORGOT_PASSWORD, {
     method: 'POST',
     body: JSON.stringify(payload),
   });
@@ -61,7 +93,7 @@ export async function forgotPassword(payload: ForgotPasswordPayload) {
 
 // RESET PASSWORD
 export async function resetPassword(payload: ResetPasswordPayload) {
-  return apiClient('https://sandbox.timroticket.com/api/v1/auth/reset-password', {
+  return apiClient(API_ENDPOINTS.RESET_PASSWORD, {
     method: 'POST',
     body: JSON.stringify(payload),
   });
@@ -69,7 +101,7 @@ export async function resetPassword(payload: ResetPasswordPayload) {
 
 // VERIFY OTP
 export async function verifyOtp(payload: VerifyOtpPayload) {
-  return apiClient('https://sandbox.timroticket.com/api/v1/auth/verify-otp', {
+  return apiClient(API_ENDPOINTS.VERIFY_OTP, {
     method: 'POST',
     body: JSON.stringify(payload),
   });
