@@ -21,20 +21,27 @@ const LoginPage: React.FC = () => {
   const handleRedirectRegister = () => {
     router.push('/auth/register')
   }
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setError('');
 
-    try {
-      const data = await login({ email, password });
-      localStorage.setItem('token', data.token);
-      toast.success('Login successful');
-      router.push('/dashboard');
-    } catch (err: any) {
-      toast.error('Login failed');
+  try {
+    const data = await login({ email, password });
+    localStorage.setItem('token', data.token);
+    toast.success('Login successful');
+    router.push('/dashboard');
+  } catch (err: unknown) {
+    // ✅ Type-safe error handling
+    if (err instanceof Error) {
+      toast.error(err.message);
       setError(err.message);
+    } else {
+      toast.error('Something went wrong');
+      setError('Unexpected error occurred');
     }
-  };
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">

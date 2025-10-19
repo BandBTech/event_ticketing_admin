@@ -202,9 +202,9 @@ const OrganisersPage: React.FC = () => {
             >
               {/* Cover Image */}
               <div className="relative h-32 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">
-                <img
-                  src={organiser.coverImage}
-                  alt={`${organiser.name} cover`}
+                <Image
+                  src={organiser.avatar}
+                  alt={organiser.name}
                   className="w-full h-full object-cover"
                 />
                 {organiser.verified && (

@@ -1,8 +1,8 @@
-// lib/apiClient.ts
-export async function apiClient(
+// src/lib/apiClient.ts
+export async function apiClient<TResponse>(
   endpoint: string,
   options: RequestInit = {}
-): Promise<any> {
+): Promise<TResponse> {
   // Get token from localStorage (client-side only)
   const token =
     typeof window !== 'undefined' ? localStorage.getItem('token') : null;
@@ -16,11 +16,12 @@ export async function apiClient(
     },
   });
 
-  const data = await res.json();
+  // Try parsing JSON safely
+  const data = await res.json().catch(() => ({}));
 
   if (!res.ok) {
-    throw new Error(data.message || 'API request failed');
+    throw new Error((data as { message?: string }).message || 'API request failed');
   }
 
-  return data;
+  return data as TResponse;
 }
