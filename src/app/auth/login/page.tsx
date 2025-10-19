@@ -31,7 +31,6 @@ const handleSubmit = async (e: React.FormEvent) => {
     toast.success('Login successful');
     router.push('/dashboard');
   } catch (err: unknown) {
-    // ✅ Type-safe error handling
     if (err instanceof Error) {
       toast.error(err.message);
       setError(err.message);

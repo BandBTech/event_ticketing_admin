@@ -51,6 +51,50 @@ const RegisterPage: React.FC = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Name Field */}
+          <div>
+            {/* First Name Field  */}
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-900 mb-3">
+              First Name
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <Mail className="h-5 w-5 text-gray-400" />
+              </div>
+              <input
+                type="first_name"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter business email address"
+                className="block w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                required
+              />
+            </div>
+          </div>
+          {/* Last Name Field  */}
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-900 mb-3">
+              Last Name
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <Mail className="h-5 w-5 text-gray-400" />
+              </div>
+              <input
+                type="last_name"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter business email address"
+                className="block w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                required
+              />
+            </div>
+          </div>
+
+          </div>
           {/* Email Field */}
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-900 mb-3">
