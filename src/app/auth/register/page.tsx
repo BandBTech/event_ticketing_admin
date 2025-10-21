@@ -54,7 +54,8 @@ const RegisterPage: React.FC = () => {
     try {
       const res = await register(payload);
       toast.success(res.message);
-      router.push("/auth/login");
+      localStorage.setItem("registrationEmail", payload.email);
+      router.push("/auth/register/verify-otp");
     } catch (err: unknown) {
       if (err instanceof Error) toast.error(err.message);
       else toast.error("Something went wrong");
