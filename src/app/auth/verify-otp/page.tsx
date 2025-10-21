@@ -1,16 +1,23 @@
-'use client';
+"use client";
 
-import React, { useState, useRef } from 'react';
-import { useRouter } from 'next/navigation';
-import { toast } from 'react-hot-toast';
-import { verifyOtp } from '@/app/services/authService';
+import React, { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
+import { verifyOtp } from "@/app/services/authService";
 
 const VerifyOTPPage: React.FC = () => {
-  const [otp, setOtp] = useState(['', '', '', '', '', '']);
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const inputRefs = useRef<HTMLInputElement[]>([]);
   const [loading, setLoading] = useState(false);
-  const passwordResetEmail = localStorage.getItem('passwordResetEmail') || '';
   const router = useRouter();
+
+  const [passwordResetEmail, setPasswordResetEmail] = useState("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setPasswordResetEmail(localStorage.getItem("passwordResetEmail") || "");
+    }
+  }, []);
 
   const handleInputChange = (index: number, value: string) => {
     if (value.length > 1) return;
@@ -19,32 +26,34 @@ const VerifyOTPPage: React.FC = () => {
     newOtp[index] = value;
     setOtp(newOtp);
 
-    // Auto-focus next input
     if (value && index < 5) {
       inputRefs.current[index + 1]?.focus();
     }
   };
 
   const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
-    // Handle backspace
-    if (e.key === 'Backspace' && !otp[index] && index > 0) {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
   };
 
+  interface VerifyOTPResponse {
+    message: string;
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const otpCode = otp.join('');
+    const otpCode = otp.join("");
     localStorage.setItem("otpCode", otpCode);
     setLoading(true);
 
-    const payload = { 
-      identifier : passwordResetEmail,
-      otp_code : otpCode,
-      otp_type : 'password_reset'
-     };
+    const payload = {
+      identifier: passwordResetEmail,
+      otp_code: otpCode,
+      otp_type: "password_reset",
+    };
     try {
-      const data: any = await verifyOtp({ ...payload });
+      const data = (await verifyOtp({ ...payload })) as VerifyOTPResponse;
       toast.success(data.message);
       localStorage.setItem("passwordResetEmail", passwordResetEmail);
       router.push(`/auth/change-password`);
@@ -56,7 +65,7 @@ const VerifyOTPPage: React.FC = () => {
   };
 
   const handleResendEmail = () => {
-    console.log('Resend email clicked');
+    console.log("Resend email clicked");
   };
 
   return (
@@ -101,13 +110,13 @@ const VerifyOTPPage: React.FC = () => {
             type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-4 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer"
           >
-            {loading ? 'Verifying...' : 'Verify OTP'}
+            {loading ? "Verifying..." : "Verify OTP"}
           </button>
 
           {/* Resend Email Link */}
           <div className="text-center">
             <span className="text-sm text-gray-600">
-              Haven&apos;t got the email yet?{' '}
+              Haven&apos;t got the email yet?{" "}
               <button
                 type="button"
                 onClick={handleResendEmail}

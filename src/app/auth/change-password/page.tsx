@@ -1,51 +1,62 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { Eye, EyeOff, Key } from 'lucide-react';
-import { redirect } from 'next/navigation';
-import {resetPassword} from '@/app/services/authService';
-import toast from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect } from "react";
+import { Eye, EyeOff, Key } from "lucide-react";
+import { redirect } from "next/navigation";
+import { resetPassword } from "@/app/services/authService";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const ChangePasswordPage: React.FC = () => {
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const passwordResetEmail = localStorage.getItem('passwordResetEmail') || '';
-  const otpCode = localStorage.getItem('otpCode') || '';
+  const [passwordResetEmail, setPasswordResetEmail] = useState("");
+  const [otpCode, setOtpCode] = useState("");
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setLoading(true);
-  const payload = {
-    email_token: passwordResetEmail,
-    reset_token: otpCode,
-    new_password: password,
-    confirm_password: confirmPassword
-  };
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setPasswordResetEmail(localStorage.getItem("passwordResetEmail") || "");
+      setOtpCode(localStorage.getItem("otpCode") || "");
+    }
+  }, []);
 
-  try {
-    const data: any = await resetPassword({ ...payload });
-    toast.success(data.message);
-    localStorage.setItem("passwordResetEmail", passwordResetEmail);
-    router.push(`/auth/login`);
-  } catch (error) {
-    console.error('Error changing password:', error);
-    toast.error('Failed to reset password');
-  } finally {
-    setLoading(false);
+  interface ResetPasswordResponse {
+    message: string;
   }
-};
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    const payload = {
+      email_token: passwordResetEmail,
+      reset_token: otpCode,
+      new_password: password,
+      confirm_password: confirmPassword,
+    };
 
+    try {
+      const data = (await resetPassword({
+        ...payload,
+      })) as ResetPasswordResponse;
+      toast.success(data.message);
+      localStorage.setItem("passwordResetEmail", passwordResetEmail);
+      router.push(`/auth/login`);
+    } catch (error) {
+      console.error("Error changing password:", error);
+      toast.error("Failed to reset password");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleReturnToLogin = () => {
     // Handle navigation back to login page
-    console.log('Return to login page');
-    redirect('/auth/login')
+    console.log("Return to login page");
+    redirect("/auth/login");
   };
 
   return (
@@ -65,7 +76,10 @@ const handleSubmit = async (e: React.FormEvent) => {
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Password Field */}
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-900 mb-3">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-900 mb-3"
+            >
               Password
             </label>
             <div className="relative">
@@ -73,7 +87,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                 <Key className="h-5 w-5 text-gray-400" />
               </div>
               <input
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword ? "text" : "password"}
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -97,7 +111,10 @@ const handleSubmit = async (e: React.FormEvent) => {
 
           {/* Confirm Password Field */}
           <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-900 mb-3">
+            <label
+              htmlFor="confirmPassword"
+              className="block text-sm font-medium text-gray-900 mb-3"
+            >
               Confirm Password
             </label>
             <div className="relative">
@@ -105,7 +122,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                 <Key className="h-5 w-5 text-gray-400" />
               </div>
               <input
-                type={showConfirmPassword ? 'text' : 'password'}
+                type={showConfirmPassword ? "text" : "password"}
                 id="confirmPassword"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
@@ -132,7 +149,7 @@ const handleSubmit = async (e: React.FormEvent) => {
             type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-4 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
-            Update Password
+            {loading ? "Updating Password..." : "Update Password"}
           </button>
 
           {/* Return to Login Link */}
