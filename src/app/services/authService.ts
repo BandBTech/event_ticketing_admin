@@ -106,6 +106,12 @@ export async function verifyOtp(payload: VerifyOtpPayload) {
     body: JSON.stringify(payload),
   });
 }
+// GET PROFILE
+export async function getProfile() {
+  return apiClient(API_ENDPOINTS.GET_PROFILE, {
+    method: 'GET',
+  });
+}
 
 
 

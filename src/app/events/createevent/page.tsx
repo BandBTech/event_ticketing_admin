@@ -3,12 +3,21 @@
 import React, { useState } from 'react';
 import { ChevronDown, Upload, MapPin, Plus } from 'lucide-react';
 import Navbar from '@/app/components/Navbar/Navbar';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 const EventForm: React.FC = () => {
   const [eventDetailsOpen, setEventDetailsOpen] = useState(true);
   const [venueScheduleOpen, setVenueScheduleOpen] = useState(true);
   const [ticketingOpen, setTicketingOpen] = useState(true);
   const [discountsOpen, setDiscountsOpen] = useState(true);
+  const router = useRouter();
+
+  const handleCreateEvent = () => {
+    // Handle event creation logic here
+    toast.success('Event created successfully');
+    router.push('/events');
+  };
 
 
   return (
@@ -288,7 +297,9 @@ const EventForm: React.FC = () => {
           <button className="px-6 py-2 border border-gray-200 text-gray-700 rounded-md text-sm hover:bg-gray-50">
             Save as draft
           </button>
-          <button className="px-6 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700">
+          <button 
+          onClick={handleCreateEvent}
+          className="px-6 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700">
             Create Event
           </button>
         </div>
