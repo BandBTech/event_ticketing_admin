@@ -14,6 +14,10 @@ import { redirect } from "next/navigation";
 import { register } from "@/app/services/authService";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import "react-phone-number-input/style.css";
+import PhoneInput from "react-phone-number-input";
+import flags from 'react-phone-number-input/flags'
+
 const RegisterPage: React.FC = () => {
   const [countryCode, setCountryCode] = useState("JP(+81)");
   const [phone, setPhone] = useState("");
@@ -70,8 +74,8 @@ const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 w-full max-w-md">
+    <div className="w-full max-w-md bg-white flex items-center justify-center p-4 mb-5">
+      <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 w-full max-w-md">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-2xl font-semibold text-gray-900 mb-1">
@@ -105,7 +109,7 @@ const RegisterPage: React.FC = () => {
                       firstName: e.target.value,
                     }))
                   }
-                  placeholder="Enter First Name"
+                  placeholder="John"
                   className="block w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                   required
                 />
@@ -133,7 +137,7 @@ const RegisterPage: React.FC = () => {
                       lastName: e.target.value,
                     }))
                   }
-                  placeholder="Enter Last Name"
+                  placeholder="Doe"
                   className="block w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                   required
                 />
