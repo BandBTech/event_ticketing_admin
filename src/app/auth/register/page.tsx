@@ -74,13 +74,13 @@ const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full max-w-md bg-white flex items-center justify-center p-4 mb-5">
+    <div className="w-full max-w-md bg-white flex items-center justify-center my-5 rounded-2xl">
       <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 w-full max-w-md">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-2xl font-semibold text-gray-900 mb-1">
+          <h1 className="text-4xl font-semibold text-gray-900 mb-1">
             Register{" "}
-            <span className="text-blue-600 text-sm font-medium">as Admin</span>
+            <span className="text-blue-600 text-[16px] font-medium">as Admin</span>
           </h1>
         </div>
 
@@ -91,7 +91,7 @@ const RegisterPage: React.FC = () => {
             <div>
               <label
                 htmlFor="first_name"
-                className="block text-sm font-medium text-gray-900 mb-3"
+                className="block text-sm font-semibold text-gray-900 mb-3"
               >
                 First Name
               </label>
@@ -119,7 +119,7 @@ const RegisterPage: React.FC = () => {
             <div>
               <label
                 htmlFor="last_name"
-                className="block text-sm font-medium text-gray-900 mb-3"
+                className="block text-sm font-semibold text-gray-900 mb-3"
               >
                 Last Name
               </label>
@@ -148,7 +148,7 @@ const RegisterPage: React.FC = () => {
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-900 mb-3"
+              className="block text-sm font-semibold text-gray-900 mb-3"
             >
               Email
             </label>
@@ -177,7 +177,7 @@ const RegisterPage: React.FC = () => {
           <div>
             <label
               htmlFor="phone"
-              className="block text-sm font-medium text-gray-900 mb-3"
+              className="block text-sm font-semibold text-gray-900 mb-3"
             >
               Contact Number
             </label>
@@ -248,7 +248,7 @@ const RegisterPage: React.FC = () => {
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-900 mb-3"
+              className="block text-sm font-semibold text-gray-900 mb-3"
             >
               Password
             </label>
@@ -288,7 +288,7 @@ const RegisterPage: React.FC = () => {
           <div>
             <label
               htmlFor="confirmPassword"
-              className="block text-sm font-medium text-gray-900 mb-3"
+              className="block text-sm font-semibold text-gray-900 mb-3"
             >
               Confirm Password
             </label>
@@ -352,7 +352,7 @@ const RegisterPage: React.FC = () => {
               <button
                 type="button"
                 onClick={handleSignInAsOrganizer}
-                className="text-blue-600 hover:text-blue-700 font-medium transition-colors cursor-pointer"
+                className="text-blue-600 hover:text-blue-700 font-semibold transition-colors cursor-pointer"
               >
                 Sign in as Admin
               </button>

@@ -69,12 +69,12 @@ const VerifyOTPPage: React.FC = () => {
   };
 
   return (
-    <div className="bg-gray-50 flex items-center justify-center p-4">
+    <div className="bg-gray-50 flex items-center justify-center">
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 w-full max-w-md">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-2xl font-semibold text-gray-900 mb-4">
-            Check your email
+          <h1 className="text-4xl font-poppins font-semibold text-gray-900 mb-4">
+            Verify your email
           </h1>
           <p className="text-sm text-gray-500 leading-relaxed">
             We sent a reset link to <br />

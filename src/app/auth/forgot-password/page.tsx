@@ -43,15 +43,15 @@ const ForgotPasswordPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full max-w-md bg-white flex items-center justify-center p-4">
+    <div className="w-full max-w-md bg-white flex items-center justify-center rounded-2xl">
       <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 w-full max-w-md">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-2xl font-semibold text-gray-900">
+        <div className="mb-8 text-left">
+          <h1 className="text-4xl font-poppins font-semibold text-gray-900">
             Forgot Password
           </h1>
-          <p className="text-gray-500 text-sm mt-1">
-            Enter your registered email to reset your password.
+          <p className="text-gray-500 text-md mt-1">
+            Enter your email to receive a password reset code
           </p>
         </div>
 
@@ -60,9 +60,9 @@ const ForgotPasswordPage: React.FC = () => {
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-900 mb-3"
+              className="block text-sm font-semibold text-gray-900 mb-3"
             >
-              Email
+              Email Address
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -75,7 +75,7 @@ const ForgotPasswordPage: React.FC = () => {
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setEmail(e.target.value)
                 }
-                placeholder="Enter registered email address"
+                placeholder="Enter email address"
                 className="block w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                 required
               />

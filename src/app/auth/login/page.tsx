@@ -46,13 +46,13 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full max-w-md bg-white flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 w-full max-w-md">
+    <div className="w-full max-w-md bg-white flex items-center justify-center rounded-2xl">
+      <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 w-full">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-2xl font-semibold text-gray-900 mb-1">
+          <h1 className="text-4xl font-poppins font-semibold text-gray-900 mb-1">
             Login{" "}
-            <span className="text-blue-600 text-sm font-medium">as Admin</span>
+            <span className="text-blue-600 text-[16px] font-medium">as Admin</span>
           </h1>
         </div>
 
@@ -61,7 +61,7 @@ const LoginPage: React.FC = () => {
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-900 mb-3"
+              className="block text-sm font-semibold text-gray-900 mb-3"
             >
               Email
             </label>
@@ -85,7 +85,7 @@ const LoginPage: React.FC = () => {
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-900 mb-3"
+              className="block text-sm font-semibold text-gray-900 mb-3"
             >
               Password
             </label>
@@ -128,14 +128,14 @@ const LoginPage: React.FC = () => {
               />
               <label
                 htmlFor="remember-me"
-                className="ml-3 text-sm font-medium text-gray-900"
+                className="ml-3 text-sm font-semibold text-gray-900"
               >
                 Remember Me
               </label>
             </div>
             <button
               type="button"
-              className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors cursor-pointer"
+              className="text-sm text-blue-600 hover:text-blue-700 font-semibold transition-colors cursor-pointer"
               onClick={handleRedirectForgotPassword}
             >
               Forgot Password?
@@ -156,7 +156,7 @@ const LoginPage: React.FC = () => {
               Don&apos;t have an account?{" "}
               <button
                 type="button"
-                className="text-blue-600 hover:text-blue-700 font-medium transition-colors cursor-pointer"
+                className="text-blue-600 hover:text-blue-700 font-semibold transition-colors cursor-pointer"
                 onClick={handleRedirectRegister}
               >
                 Sign up here.
