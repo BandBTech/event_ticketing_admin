@@ -46,6 +46,7 @@ const RegisterPage: React.FC = () => {
     e.preventDefault();
     setLoading(true);
     const payload = {
+      country_code: countryCode,
       email: formData.email,
       first_name: formData.firstName,
       last_name: formData.lastName,
@@ -57,7 +58,11 @@ const RegisterPage: React.FC = () => {
       const res = await register(payload);
       toast.success(res.message);
       localStorage.setItem("registrationEmail", payload.email);
-      router.push("/auth/register/verify-otp");
+      router.push(
+        `/auth/register/verify-otp?email=${encodeURIComponent(
+          payload.email
+        )}&type=registration`
+      );
     } catch (err: unknown) {
       if (err instanceof Error) toast.error(err.message);
       else toast.error("Something went wrong");
@@ -78,7 +83,9 @@ const RegisterPage: React.FC = () => {
         <div className="mb-8">
           <h1 className="text-4xl font-semibold text-gray-900 mb-1">
             Register{" "}
-            <span className="text-blue-600 text-[16px] font-medium">as Admin</span>
+            <span className="text-blue-600 text-[16px] font-medium">
+              as Admin
+            </span>
           </h1>
         </div>
 

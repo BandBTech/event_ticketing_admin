@@ -23,8 +23,11 @@ const ForgotPasswordPage: React.FC = () => {
     try {
       const data = (await forgotPassword({ email })) as ForgotPasswordResponse;
       toast.success(data.message);
-      localStorage.setItem("passwordResetEmail", email);
-      router.push(`/auth/verify-otp`);
+            router.push(
+        `/auth/verify-otp?email=${encodeURIComponent(
+          email
+        )}&type=password_reset`
+      );
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast.error(err.message);

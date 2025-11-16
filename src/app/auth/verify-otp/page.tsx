@@ -4,20 +4,15 @@ import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { verifyOtp } from "@/app/services/authService";
+import { useSearchParams } from "next/navigation";
 
 const VerifyOTPPage: React.FC = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const inputRefs = useRef<HTMLInputElement[]>([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-
-  const [passwordResetEmail, setPasswordResetEmail] = useState("");
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setPasswordResetEmail(localStorage.getItem("passwordResetEmail") || "");
-    }
-  }, []);
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email");
 
   const handleInputChange = (index: number, value: string) => {
     if (value.length > 1) return;
@@ -48,14 +43,13 @@ const VerifyOTPPage: React.FC = () => {
     setLoading(true);
 
     const payload = {
-      identifier: passwordResetEmail,
+      identifier: email ?? "",
       otp_code: otpCode,
       otp_type: "password_reset",
     };
     try {
       const data = (await verifyOtp({ ...payload })) as VerifyOTPResponse;
       toast.success(data.message);
-      localStorage.setItem("passwordResetEmail", passwordResetEmail);
       router.push(`/auth/change-password`);
     } catch {
       toast.error("Something went wrong");
@@ -78,7 +72,7 @@ const VerifyOTPPage: React.FC = () => {
           </h1>
           <p className="text-md text-gray-500 leading-relaxed">
             Enter the 6-digit code sent to <br />
-            <span className="text-gray-700 font-semibold">{passwordResetEmail}</span> <br />
+            <span className="text-gray-700 font-semibold">{email}</span> <br />
           </p>
         </div>
 
@@ -123,7 +117,9 @@ const VerifyOTPPage: React.FC = () => {
                 Resend
               </button>
             </span>
-            <span className="text-sm text-gray-500">Check your spam folder if you don&apos;t see the email</span>
+            <span className="text-sm text-gray-500">
+              Check your spam folder if you don&apos;t see the email
+            </span>
           </div>
         </form>
       </div>

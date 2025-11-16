@@ -4,12 +4,15 @@ import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { verifyOtp } from "@/app/services/authService";
+import { useSearchParams } from "next/navigation";
 
 const VerifyOTPPage: React.FC = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const inputRefs = useRef<HTMLInputElement[]>([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+    const searchParams = useSearchParams();
+    const email = searchParams.get("email");
 
   const [passwordResetEmail, setPasswordResetEmail] = useState("");
 
@@ -48,7 +51,7 @@ const VerifyOTPPage: React.FC = () => {
     setLoading(true);
 
     const payload = {
-      identifier: passwordResetEmail,
+      identifier: email ?? "",
       otp_code: otpCode,
       otp_type: "registration",
     };
@@ -69,18 +72,16 @@ const VerifyOTPPage: React.FC = () => {
   };
 
   return (
-    <div className="bg-gray-50 flex items-center justify-center">
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 w-full max-w-md">
+    <div className="w-full max-w-md bg-white flex items-center justify-center rounded-2xl">
+      <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 w-full max-w-md">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-poppins font-semibold text-gray-900 mb-4">
             Verify your email
           </h1>
-          <p className="text-sm text-gray-500 leading-relaxed">
-            We sent a reset link to <br />
-            <span className="text-gray-700">{passwordResetEmail}</span> <br />
-            Enter the 6-digit code mentioned in <br />
-            the email
+          <p className="text-md text-gray-500 leading-relaxed">
+            Enter the 6-digit code sent to <br />
+            <span className="text-gray-700 font-semibold">{email}</span> <br />
           </p>
         </div>
 
@@ -114,16 +115,19 @@ const VerifyOTPPage: React.FC = () => {
           </button>
 
           {/* Resend Email Link */}
-          <div className="text-center">
+          <div className="text-center grid">
             <span className="text-sm text-gray-600">
               Haven&apos;t got the email yet?{" "}
               <button
                 type="button"
                 onClick={handleResendEmail}
-                className="text-blue-600 hover:text-blue-700 font-medium transition-colors cursor-pointer"
+                className="text-blue-600 hover:text-blue-700 font-semibold transition-colors cursor-pointer"
               >
-                Resend email
+                Resend
               </button>
+            </span>
+            <span className="text-sm text-gray-500">
+              Check your spam folder if you don&apos;t see the email
             </span>
           </div>
         </form>
