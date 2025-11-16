@@ -15,8 +15,6 @@ import { register } from "@/app/services/authService";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import "react-phone-number-input/style.css";
-import PhoneInput from "react-phone-number-input";
-import flags from 'react-phone-number-input/flags'
 
 const RegisterPage: React.FC = () => {
   const [countryCode, setCountryCode] = useState("JP(+81)");

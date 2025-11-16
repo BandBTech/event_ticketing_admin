@@ -12,10 +12,8 @@ import {
   ChevronsRight,
   ChevronRight,
   LogOut,
-  X,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { getProfile } from "@/app/services/authService";
 
 interface SidebarProps {
   activeItem?: string;

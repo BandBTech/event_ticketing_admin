@@ -123,7 +123,7 @@ const VerifyOTPPage: React.FC = () => {
                 Resend
               </button>
             </span>
-            <span className="text-sm text-gray-500">Check your spam folder if you don't see the email</span>
+            <span className="text-sm text-gray-500">Check your spam folder if you don&apos;t see the email</span>
           </div>
         </form>
       </div>
