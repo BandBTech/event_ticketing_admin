@@ -9,19 +9,7 @@ import { login } from "@/app/services/authService";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-const createLoginSchema = (t: (key: string, fallback?: string) => string) =>
-  z.object({
-    email: z
-      .string()
-      .min(1, t("Email is required"))
-      .email(t("Invalid email address")),
-    password: z
-      .string()
-      .min(6, t("Password is too short"))
-      .max(100, t("Password is too long")),
-    rememberMe: z.boolean(),
-  });
+import { createLoginSchema } from "@/app/lib/validations/authValidation";
 
 const LoginPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -93,19 +81,21 @@ const LoginPage: React.FC = () => {
             >
               Email
             </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Mail className="h-5 w-5 text-gray-400" />
+            <div>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Mail className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  type="email"
+                  id="email"
+                  {...form.register("email")}
+                  placeholder="Enter email address"
+                  className="block w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                />
               </div>
-              <input
-                type="email"
-                id="email"
-                {...form.register("email")}
-                placeholder="Enter email address"
-                className="block w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-              />
               {form.formState.errors.email && (
-                <p className="text-red-500 text-sm mt-1">
+                <p className="text-red-500 text-sm mt-2 ml-4">
                   {form.formState.errors.email.message}
                 </p>
               )}
@@ -120,19 +110,21 @@ const LoginPage: React.FC = () => {
             >
               Password
             </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Key className="h-5 w-5 text-gray-400" />
+            <div>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Key className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  {...form.register("password")}
+                  placeholder="••••••••••••"
+                  className="block w-full pl-12 pr-12 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                />
               </div>
-              <input
-                type={showPassword ? "text" : "password"}
-                id="password"
-                {...form.register("password")}
-                placeholder="••••••••••••"
-                className="block w-full pl-12 pr-12 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-              />
               {form.formState.errors.password && (
-                <p className="text-red-500 text-sm mt-1">
+                <p className="text-red-500 text-sm mt-2 ml-4">
                   {form.formState.errors.password.message}
                 </p>
               )}

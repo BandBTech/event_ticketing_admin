@@ -19,32 +19,7 @@ import "react-phone-number-input/style.css";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "next-i18next";
-
-const createRegisterSchema = (t: (key: string, fallback?: string) => string) =>
-  z
-    .object({
-      firstName: z.string().min(1, t("First name is required")),
-      lastName: z.string().min(1, t("Last name is required")),
-      email: z
-        .string()
-        .min(1, t("Email is required"))
-        .email(t("Invalid email address")),
-      phone: z
-        .string()
-        .min(7, t("Phone number is too short"))
-        .max(15, t("Phone number is too long")),
-      password: z
-        .string()
-        .min(6, t("Password is too short"))
-        .max(100, t("Password is too long")),
-      confirmPassword: z.string(),
-      countryCode: z.string().min(1),
-      rememberMe: z.boolean().optional(),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-      message: t("Passwords must match"),
-      path: ["confirmPassword"],
-    });
+import { createRegisterSchema } from "@/app/lib/validations/authValidation";
 
 const RegisterPage: React.FC = () => {
   const [countryCode, setCountryCode] = useState("JP(+81)");
@@ -141,19 +116,21 @@ const RegisterPage: React.FC = () => {
               >
                 First Name
               </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <UserRound className="h-5 w-5 text-gray-400" />
+              <div>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <UserRound className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <input
+                    type="first_name"
+                    id="first_name"
+                    {...form.register("firstName")}
+                    placeholder="John"
+                    className="block w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                  />
                 </div>
-                <input
-                  type="first_name"
-                  id="first_name"
-                  {...form.register("firstName")}
-                  placeholder="John"
-                  className="block w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                />
                 {form.formState.errors.firstName && (
-                  <p className="text-red-500 text-sm mt-1">
+                  <p className="text-red-500 text-sm mt-2 ml-4">
                     {form.formState.errors.firstName.message}
                   </p>
                 )}
@@ -167,17 +144,19 @@ const RegisterPage: React.FC = () => {
               >
                 Last Name
               </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <UserRound className="h-5 w-5 text-gray-400" />
+              <div>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <UserRound className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <input
+                    {...form.register("lastName")}
+                    placeholder="Doe"
+                    className="block w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                  />
                 </div>
-                <input
-                  {...form.register("lastName")}
-                  placeholder="Doe"
-                  className="block w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                />
                 {form.formState.errors.lastName && (
-                  <p className="text-red-500 text-sm">
+                  <p className="text-red-500 text-sm mt-2 ml-4">
                     {form.formState.errors.lastName.message}
                   </p>
                 )}
@@ -192,17 +171,19 @@ const RegisterPage: React.FC = () => {
             >
               Email
             </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Mail className="h-5 w-5 text-gray-400" />
+            <div>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Mail className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  {...form.register("email")}
+                  placeholder="Enter email"
+                  className="block w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                />
               </div>
-              <input
-                {...form.register("email")}
-                placeholder="Enter email"
-                className="block w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-              />
               {form.formState.errors.email && (
-                <p className="text-red-500 text-sm">
+                <p className="text-red-500 text-sm mt-2 ml-4">
                   {form.formState.errors.email.message}
                 </p>
               )}
@@ -261,10 +242,10 @@ const RegisterPage: React.FC = () => {
                     const numericValue = e.target.value.replace(/\D/g, "");
                     form.setValue("phone", numericValue);
                   }}
-                  className="block w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                  className="block w-full pl-4 pr-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                 />
                 {form.formState.errors.phone && (
-                  <p className="text-red-500 text-sm">
+                  <p className="text-red-500 text-sm mt-2 ml-4">
                     {form.formState.errors.phone.message}
                   </p>
                 )}
@@ -291,18 +272,20 @@ const RegisterPage: React.FC = () => {
             >
               Password
             </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Key className="h-5 w-5 text-gray-400" />
+            <div>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Key className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  {...form.register("password")}
+                  placeholder="••••••••••••"
+                  className="block w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                />
               </div>
-              <input
-                type={showPassword ? "text" : "password"}
-                {...form.register("password")}
-                placeholder="••••••••••••"
-                className="block w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-              />
               {form.formState.errors.password && (
-                <p className="text-red-500 text-sm">
+                <p className="text-red-500 text-sm mt-2 ml-4">
                   {form.formState.errors.password.message}
                 </p>
               )}
@@ -329,18 +312,20 @@ const RegisterPage: React.FC = () => {
             >
               Confirm Password
             </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Key className="h-5 w-5 text-gray-400" />
+            <div>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Key className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  {...form.register("confirmPassword")}
+                  placeholder="••••••••••••"
+                  className="block w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                />
               </div>
-              <input
-                type={showConfirmPassword ? "text" : "password"}
-                {...form.register("confirmPassword")}
-                placeholder="••••••••••••"
-                className="block w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-              />
               {form.formState.errors.confirmPassword && (
-                <p className="text-red-500 text-sm">
+                <p className="text-red-500 text-sm mt-2 ml-4">
                   {form.formState.errors.confirmPassword.message}
                 </p>
               )}

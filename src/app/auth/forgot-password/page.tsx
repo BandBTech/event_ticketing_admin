@@ -5,27 +5,46 @@ import { Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { forgotPassword } from "@/app/services/authService";
 import { toast } from "react-hot-toast";
-
-interface ForgotPasswordResponse {
-  message: string;
-}
+import { createForgotPasswordSchema } from "@/app/lib/validations/authValidation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { useTranslation } from "next-i18next";
 
 const ForgotPasswordPage: React.FC = () => {
   const router = useRouter();
-  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const { t } = useTranslation();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const translate = (key: string, fallback?: string) =>
+    t(key, { defaultValue: fallback });
+
+  const forgotPasswordSchema = createForgotPasswordSchema(translate);
+  type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
+
+  const form = useForm<ForgotPasswordFormData>({
+    resolver: zodResolver(forgotPasswordSchema),
+    defaultValues: {
+      email: "",
+    },
+    mode: "onBlur",
+  });
+
+  interface ForgotPasswordResponse {
+    message: string;
+  }
+
+  const handleSubmit = async (data: ForgotPasswordFormData) => {
     setLoading(true);
-
     try {
-      const data = (await forgotPassword({ email })) as ForgotPasswordResponse;
-      toast.success(data.message);
+      const res = (await forgotPassword({
+        email: data.email,
+      })) as ForgotPasswordResponse;
+      toast.success(res.message);
       router.push(
         `/auth/verify-otp?email=${encodeURIComponent(
-          email
+          data.email
         )}&type=password_reset`
       );
     } catch (err: unknown) {
@@ -58,7 +77,7 @@ const ForgotPasswordPage: React.FC = () => {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
           <div>
             <label
               htmlFor="email"
@@ -66,21 +85,24 @@ const ForgotPasswordPage: React.FC = () => {
             >
               Email Address
             </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Mail className="h-5 w-5 text-gray-400" />
+            <div>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Mail className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  type="email"
+                  id="email"
+                  {...form.register("email")}
+                  placeholder="Enter email address"
+                  className="block w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                />
               </div>
-              <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setEmail(e.target.value)
-                }
-                placeholder="Enter email address"
-                className="block w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                required
-              />
+              {form.formState.errors.email && (
+                <p className="text-red-500 text-sm mt-2 ml-4">
+                  {form.formState.errors.email.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -101,10 +123,6 @@ const ForgotPasswordPage: React.FC = () => {
               Return to login page
             </button>
           </div>
-
-          {error && (
-            <p className="text-red-500 text-sm text-center mt-2">{error}</p>
-          )}
         </form>
       </div>
     </div>
