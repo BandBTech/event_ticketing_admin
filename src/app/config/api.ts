@@ -7,4 +7,5 @@ export const API_ENDPOINTS = {
   VERIFY_OTP: `${API_BASE_URL}/auth/verify-otp`,
   RESET_PASSWORD: `${API_BASE_URL}/auth/reset-password`,
   GET_PROFILE: `${API_BASE_URL}/auth/profile`,
+  RESEND_OTP: `${API_BASE_URL}/auth/send-otp`,
 };

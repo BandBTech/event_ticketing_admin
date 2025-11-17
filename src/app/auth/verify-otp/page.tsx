@@ -1,15 +1,17 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { verifyOtp } from "@/app/services/authService";
 import { useSearchParams } from "next/navigation";
+import { resendOTP } from "@/app/services/authService";
 
-const VerifyOTPPage: React.FC = () => {
+const VerifyOTPPageContent: React.FC = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const inputRefs = useRef<HTMLInputElement[]>([]);
   const [loading, setLoading] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
@@ -35,6 +37,9 @@ const VerifyOTPPage: React.FC = () => {
   interface VerifyOTPResponse {
     message: string;
   }
+  interface ResendOTPResponse {
+    message: string;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,16 +55,34 @@ const VerifyOTPPage: React.FC = () => {
     try {
       const data = (await verifyOtp({ ...payload })) as VerifyOTPResponse;
       toast.success(data.message);
-      router.push(`/auth/change-password`);
+      router.push(
+        `/auth/change-password?email=${encodeURIComponent(
+          email ?? ""
+        )}&type=password_reset`
+      );
     } catch {
       toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }
   };
+  const handleResendEmail = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setResendLoading(true);
 
-  const handleResendEmail = () => {
-    console.log("Resend email clicked");
+    const payload = {
+      identifier: email ?? "",
+      otp_type: "password_reset",
+    };
+
+    try {
+      const data = (await resendOTP({ ...payload })) as ResendOTPResponse;
+      toast.success(data.message);
+    } catch {
+      toast.error("Something went wrong");
+    } finally {
+      setResendLoading(false);
+    }
   };
 
   return (
@@ -114,7 +137,7 @@ const VerifyOTPPage: React.FC = () => {
                 onClick={handleResendEmail}
                 className="text-blue-600 hover:text-blue-700 font-semibold transition-colors cursor-pointer"
               >
-                Resend
+                {resendLoading ? "Resending" : "Resend"}
               </button>
             </span>
             <span className="text-sm text-gray-500">
@@ -127,4 +150,11 @@ const VerifyOTPPage: React.FC = () => {
   );
 };
 
-export default VerifyOTPPage;
+
+export default function VerifyOTPPage() {
+  return (
+    <Suspense fallback="Loading...">
+      <VerifyOTPPageContent />
+    </Suspense>
+  );
+}

@@ -23,7 +23,7 @@ const ForgotPasswordPage: React.FC = () => {
     try {
       const data = (await forgotPassword({ email })) as ForgotPasswordResponse;
       toast.success(data.message);
-            router.push(
+      router.push(
         `/auth/verify-otp?email=${encodeURIComponent(
           email
         )}&type=password_reset`
@@ -59,7 +59,6 @@ const ForgotPasswordPage: React.FC = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Email Field */}
           <div>
             <label
               htmlFor="email"
@@ -85,7 +84,6 @@ const ForgotPasswordPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Reset Password Button */}
           <button
             type="submit"
             disabled={loading}
@@ -94,7 +92,6 @@ const ForgotPasswordPage: React.FC = () => {
             {loading ? "Loading..." : "Reset Password"}
           </button>
 
-          {/* Return to Login Link */}
           <div className="text-center">
             <button
               type="button"
@@ -105,7 +102,6 @@ const ForgotPasswordPage: React.FC = () => {
             </button>
           </div>
 
-          {/* Error Message */}
           {error && (
             <p className="text-red-500 text-sm text-center mt-2">{error}</p>
           )}

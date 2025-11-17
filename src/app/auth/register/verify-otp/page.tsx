@@ -1,26 +1,20 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { verifyOtp } from "@/app/services/authService";
+import { resendOTP } from "@/app/services/authService";
 import { useSearchParams } from "next/navigation";
 
-const VerifyOTPPage: React.FC = () => {
+const VerifyOTPPageContent: React.FC = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const inputRefs = useRef<HTMLInputElement[]>([]);
   const [loading, setLoading] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
   const router = useRouter();
-    const searchParams = useSearchParams();
-    const email = searchParams.get("email");
-
-  const [passwordResetEmail, setPasswordResetEmail] = useState("");
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setPasswordResetEmail(localStorage.getItem("registrationEmail") || "");
-    }
-  }, []);
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email");
 
   const handleInputChange = (index: number, value: string) => {
     if (value.length > 1) return;
@@ -43,6 +37,9 @@ const VerifyOTPPage: React.FC = () => {
   interface VerifyOTPResponse {
     message: string;
   }
+  interface ResendOTPResponse {
+    message: string;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,7 +55,6 @@ const VerifyOTPPage: React.FC = () => {
     try {
       const data = (await verifyOtp({ ...payload })) as VerifyOTPResponse;
       toast.success(data.message);
-      localStorage.setItem("passwordResetEmail", passwordResetEmail);
       router.push(`/auth/login`);
     } catch {
       toast.error("Something went wrong");
@@ -66,9 +62,22 @@ const VerifyOTPPage: React.FC = () => {
       setLoading(false);
     }
   };
+  const handleResendEmail = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setResendLoading(true);
 
-  const handleResendEmail = () => {
-    console.log("Resend email clicked");
+    const payload = {
+      identifier: email ?? "",
+      otp_type: "registration",
+    };
+    try {
+      const data = (await resendOTP({ ...payload })) as ResendOTPResponse;
+      toast.success(data.message);
+    } catch {
+      toast.error("Something went wrong");
+    } finally {
+      setResendLoading(false);
+    }
   };
 
   return (
@@ -86,7 +95,6 @@ const VerifyOTPPage: React.FC = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* OTP Input Fields */}
           <div className="flex justify-between space-x-3">
             {otp.map((digit, index) => (
               <input
@@ -106,7 +114,6 @@ const VerifyOTPPage: React.FC = () => {
             ))}
           </div>
 
-          {/* Verify OTP Button */}
           <button
             type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-4 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer"
@@ -114,7 +121,6 @@ const VerifyOTPPage: React.FC = () => {
             {loading ? "Verifying..." : "Verify OTP"}
           </button>
 
-          {/* Resend Email Link */}
           <div className="text-center grid">
             <span className="text-sm text-gray-600">
               Haven&apos;t got the email yet?{" "}
@@ -123,7 +129,7 @@ const VerifyOTPPage: React.FC = () => {
                 onClick={handleResendEmail}
                 className="text-blue-600 hover:text-blue-700 font-semibold transition-colors cursor-pointer"
               >
-                Resend
+                {resendLoading ? "Resendiing..." : "Resend"}
               </button>
             </span>
             <span className="text-sm text-gray-500">
@@ -136,4 +142,10 @@ const VerifyOTPPage: React.FC = () => {
   );
 };
 
-export default VerifyOTPPage;
+export default function VerifyOTPPage() {
+  return (
+    <Suspense fallback="Loading...">
+      <VerifyOTPPageContent />
+    </Suspense>
+  );
+}

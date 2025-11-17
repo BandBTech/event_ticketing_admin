@@ -34,6 +34,11 @@ interface VerifyOtpPayload {
   otp_type: string;
 }
 
+interface ResendOtpPayload {
+  identifier: string;
+  otp_type: string;
+}
+
 export async function login(payload: LoginPayload): Promise<LoginResponse> {
   return apiClient(API_ENDPOINTS.LOGIN, {
     method: 'POST',
@@ -86,6 +91,13 @@ export async function register(payload: RegisterPayload): Promise<RegisterRespon
 // FORGOT PASSWORD
 export async function forgotPassword(payload: ForgotPasswordPayload) {
   return apiClient(API_ENDPOINTS.FORGOT_PASSWORD, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+// RESEND OTP
+export async function resendOTP(payload: ResendOtpPayload) {
+  return apiClient(API_ENDPOINTS.RESEND_OTP, {
     method: 'POST',
     body: JSON.stringify(payload),
   });

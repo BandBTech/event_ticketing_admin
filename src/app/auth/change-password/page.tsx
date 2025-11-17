@@ -1,26 +1,27 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { Eye, EyeOff, Key } from "lucide-react";
 import { redirect } from "next/navigation";
 import { resetPassword } from "@/app/services/authService";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
-const ChangePasswordPage: React.FC = () => {
+const ChangePasswordContent: React.FC = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email");
 
-  const [passwordResetEmail, setPasswordResetEmail] = useState("");
   const [otpCode, setOtpCode] = useState("");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setPasswordResetEmail(localStorage.getItem("passwordResetEmail") || "");
       setOtpCode(localStorage.getItem("otpCode") || "");
     }
   }, []);
@@ -32,7 +33,7 @@ const ChangePasswordPage: React.FC = () => {
     e.preventDefault();
     setLoading(true);
     const payload = {
-      email_token: passwordResetEmail,
+      email_token: email ?? "",
       reset_token: otpCode,
       new_password: password,
       confirm_password: confirmPassword,
@@ -43,7 +44,6 @@ const ChangePasswordPage: React.FC = () => {
         ...payload,
       })) as ResetPasswordResponse;
       toast.success(data.message);
-      localStorage.setItem("passwordResetEmail", passwordResetEmail);
       router.push(`/auth/login`);
     } catch (error) {
       console.error("Error changing password:", error);
@@ -54,8 +54,6 @@ const ChangePasswordPage: React.FC = () => {
   };
 
   const handleReturnToLogin = () => {
-    // Handle navigation back to login page
-    console.log("Return to login page");
     redirect("/auth/login");
   };
 
@@ -69,12 +67,14 @@ const ChangePasswordPage: React.FC = () => {
           </h1>
           <p className="text-md text-gray-500 leading-relaxed">
             Set a new password for
-            <span className="text-gray-700 font-semibold ml-2">{passwordResetEmail}</span> <br />
+            <span className="text-gray-700 font-semibold ml-2">
+              {email}
+            </span>{" "}
+            <br />
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Password Field */}
           <div>
             <label
               htmlFor="password"
@@ -109,7 +109,6 @@ const ChangePasswordPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Confirm Password Field */}
           <div>
             <label
               htmlFor="confirmPassword"
@@ -144,7 +143,6 @@ const ChangePasswordPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Update Password Button */}
           <button
             type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-4 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer"
@@ -152,7 +150,6 @@ const ChangePasswordPage: React.FC = () => {
             {loading ? "Updating Password..." : "Update Password"}
           </button>
 
-          {/* Return to Login Link */}
           <div className="text-center">
             <button
               type="button"
@@ -168,4 +165,10 @@ const ChangePasswordPage: React.FC = () => {
   );
 };
 
-export default ChangePasswordPage;
+export default function ChangePasswordPage() {
+  return (
+    <Suspense fallback="Loading...">
+      <ChangePasswordContent />
+    </Suspense>
+  );
+}
