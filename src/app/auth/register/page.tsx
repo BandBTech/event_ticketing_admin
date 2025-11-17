@@ -14,7 +14,37 @@ import { redirect } from "next/navigation";
 import { register } from "@/app/services/authService";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import * as z from "zod";
 import "react-phone-number-input/style.css";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useTranslation } from "next-i18next";
+
+const createRegisterSchema = (t: (key: string, fallback?: string) => string) =>
+  z
+    .object({
+      firstName: z.string().min(1, t("First name is required")),
+      lastName: z.string().min(1, t("Last name is required")),
+      email: z
+        .string()
+        .min(1, t("Email is required"))
+        .email(t("Invalid email address")),
+      phone: z
+        .string()
+        .min(7, t("Phone number is too short"))
+        .max(15, t("Phone number is too long")),
+      password: z
+        .string()
+        .min(6, t("Password is too short"))
+        .max(100, t("Password is too long")),
+      confirmPassword: z.string(),
+      countryCode: z.string().min(1),
+      rememberMe: z.boolean().optional(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t("Passwords must match"),
+      path: ["confirmPassword"],
+    });
 
 const RegisterPage: React.FC = () => {
   const [countryCode, setCountryCode] = useState("JP(+81)");
@@ -23,15 +53,15 @@ const RegisterPage: React.FC = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showCountryDropdown, setShowCountryDropdown] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const router = useRouter();
-  const [formData, setFormData] = useState({
-    email: "",
-    firstName: "",
-    lastName: "",
-    phone: "",
-    password: "",
-    confirmPassword: "",
-  });
+  const { t } = useTranslation();
+
+  const translate = (key: string, fallback?: string) =>
+    t(key, { defaultValue: fallback });
+
+  const registerSchema = createRegisterSchema(translate);
+  type RegisterFormData = z.infer<typeof registerSchema>;
 
   const countryCodes = [
     "JP(+81)",
@@ -42,30 +72,42 @@ const RegisterPage: React.FC = () => {
     "AU(+61)",
   ];
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const form = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      countryCode,
+      password: "",
+      confirmPassword: "",
+    },
+    mode: "onBlur",
+  });
+
+  const handleSubmit = async (data: RegisterFormData) => {
     setLoading(true);
+
     const payload = {
-      country_code: countryCode,
-      email: formData.email,
-      first_name: formData.firstName,
-      last_name: formData.lastName,
-      phone: formData.phone,
-      password: formData.password,
+      country_code: data.countryCode,
+      email: data.email,
+      first_name: data.firstName,
+      last_name: data.lastName,
+      phone: data.phone,
+      password: data.password,
     };
 
     try {
       const res = await register(payload);
       toast.success(res.message);
-      localStorage.setItem("registrationEmail", payload.email);
       router.push(
         `/auth/register/verify-otp?email=${encodeURIComponent(
-          payload.email
+          data.email
         )}&type=registration`
       );
-    } catch (err: unknown) {
-      if (err instanceof Error) toast.error(err.message);
-      else toast.error("Something went wrong");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -89,7 +131,7 @@ const RegisterPage: React.FC = () => {
           </h1>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
           {/* Name Field */}
           <div className="flex gap-5">
             {/* First Name Field  */}
@@ -106,18 +148,16 @@ const RegisterPage: React.FC = () => {
                 </div>
                 <input
                   type="first_name"
-                  id="email"
-                  value={formData.firstName}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      firstName: e.target.value,
-                    }))
-                  }
+                  id="first_name"
+                  {...form.register("firstName")}
                   placeholder="John"
                   className="block w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                  required
                 />
+                {form.formState.errors.firstName && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {form.formState.errors.firstName.message}
+                  </p>
+                )}
               </div>
             </div>
             {/* Last Name Field  */}
@@ -133,19 +173,15 @@ const RegisterPage: React.FC = () => {
                   <UserRound className="h-5 w-5 text-gray-400" />
                 </div>
                 <input
-                  type="last_name"
-                  id="last_name"
-                  value={formData.lastName}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      lastName: e.target.value,
-                    }))
-                  }
+                  {...form.register("lastName")}
                   placeholder="Doe"
                   className="block w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                  required
                 />
+                {form.formState.errors.lastName && (
+                  <p className="text-red-500 text-sm">
+                    {form.formState.errors.lastName.message}
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -162,19 +198,15 @@ const RegisterPage: React.FC = () => {
                 <Mail className="h-5 w-5 text-gray-400" />
               </div>
               <input
-                type="email"
-                id="email"
-                value={formData.email}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    email: e.target.value,
-                  }))
-                }
-                placeholder="Enter business email address"
+                {...form.register("email")}
+                placeholder="Enter email"
                 className="block w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                required
               />
+              {form.formState.errors.email && (
+                <p className="text-red-500 text-sm">
+                  {form.formState.errors.email.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -208,6 +240,7 @@ const RegisterPage: React.FC = () => {
                         type="button"
                         onClick={() => {
                           setCountryCode(code);
+                          form.setValue("countryCode", code);
                           setShowCountryDropdown(false);
                         }}
                         className="w-full text-left px-3 py-2 hover:bg-gray-50 first:rounded-t-xl last:rounded-b-xl flex items-center"
@@ -222,19 +255,21 @@ const RegisterPage: React.FC = () => {
 
               <div className="flex-1 relative">
                 <input
-                  type="tel"
-                  id="phone"
-                  value={formData.phone}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      phone: e.target.value,
-                    }))
-                  }
+                  {...form.register("phone")}
                   placeholder="XX-XXX-XXX"
-                  className="block w-full px-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                  required
+                  value={form.watch("phone")}
+                  onChange={(e) => {
+                    const numericValue = e.target.value.replace(/\D/g, "");
+                    form.setValue("phone", numericValue);
+                  }}
+                  className="block w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                 />
+                {form.formState.errors.phone && (
+                  <p className="text-red-500 text-sm">
+                    {form.formState.errors.phone.message}
+                  </p>
+                )}
+
                 {phone && (
                   <button
                     type="button"
@@ -263,18 +298,16 @@ const RegisterPage: React.FC = () => {
               </div>
               <input
                 type={showPassword ? "text" : "password"}
-                id="password"
-                value={formData.password}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    password: e.target.value,
-                  }))
-                }
+                {...form.register("password")}
                 placeholder="••••••••••••"
-                className="block w-full pl-12 pr-12 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                required
+                className="block w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
               />
+              {form.formState.errors.password && (
+                <p className="text-red-500 text-sm">
+                  {form.formState.errors.password.message}
+                </p>
+              )}
+
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
@@ -303,18 +336,16 @@ const RegisterPage: React.FC = () => {
               </div>
               <input
                 type={showConfirmPassword ? "text" : "password"}
-                id="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    confirmPassword: e.target.value,
-                  }))
-                }
+                {...form.register("confirmPassword")}
                 placeholder="••••••••••••"
-                className="block w-full pl-12 pr-12 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                required
+                className="block w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
               />
+              {form.formState.errors.confirmPassword && (
+                <p className="text-red-500 text-sm">
+                  {form.formState.errors.confirmPassword.message}
+                </p>
+              )}
+
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}

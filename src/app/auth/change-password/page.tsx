@@ -2,23 +2,43 @@
 
 import React, { useState, useEffect, Suspense } from "react";
 import { Eye, EyeOff, Key } from "lucide-react";
-import { redirect } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { resetPassword } from "@/app/services/authService";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
-import { useSearchParams } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+
+const createChangePasswordSchema = () =>
+  z
+    .object({
+      password: z
+        .string()
+        .min(6, "Password must be at least 6 characters")
+        .max(100, "Password is too long"),
+      confirmPassword: z
+        .string()
+        .min(6, "Password must be at least 6 characters")
+        .max(100, "Password is too long"),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: "Passwords must match",
+      path: ["confirmPassword"],
+    });
+
+type ChangePasswordFormData = z.infer<
+  ReturnType<typeof createChangePasswordSchema>
+>;
 
 const ChangePasswordContent: React.FC = () => {
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
 
   const [otpCode, setOtpCode] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -26,55 +46,52 @@ const ChangePasswordContent: React.FC = () => {
     }
   }, []);
 
+  const form = useForm<ChangePasswordFormData>({
+    resolver: zodResolver(createChangePasswordSchema()),
+    defaultValues: { password: "", confirmPassword: "" },
+    mode: "onBlur",
+  });
+
   interface ResetPasswordResponse {
     message: string;
   }
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    const payload = {
-      email_token: email ?? "",
-      reset_token: otpCode,
-      new_password: password,
-      confirm_password: confirmPassword,
-    };
 
+  const onSubmit = async (data: ChangePasswordFormData) => {
+    setLoading(true);
     try {
-      const data = (await resetPassword({
-        ...payload,
+      const res = (await resetPassword({
+        email_token: email ?? "",
+        reset_token: otpCode,
+        new_password: data.password,
+        confirm_password: data.confirmPassword,
       })) as ResetPasswordResponse;
-      toast.success(data.message);
-      router.push(`/auth/login`);
-    } catch (error) {
-      console.error("Error changing password:", error);
+      toast.success(res.message);
+      router.push("/auth/login");
+    } catch (err) {
+      console.error(err);
       toast.error("Failed to reset password");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleReturnToLogin = () => {
-    redirect("/auth/login");
-  };
+  const handleReturnToLogin = () => router.push("/auth/login");
 
   return (
     <div className="w-full max-w-md bg-white flex items-center justify-center rounded-2xl">
       <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 w-full max-w-md">
-        {/* Header */}
         <div className="mb-8 text-left">
           <h1 className="text-4xl font-poppins font-semibold text-gray-900 mb-2">
             Reset Password
           </h1>
           <p className="text-md text-gray-500 leading-relaxed">
             Set a new password for
-            <span className="text-gray-700 font-semibold ml-2">
-              {email}
-            </span>{" "}
-            <br />
+            <span className="text-gray-700 font-semibold ml-2">{email}</span>
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          {/* New Password */}
           <div>
             <label
               htmlFor="password"
@@ -89,26 +106,30 @@ const ChangePasswordContent: React.FC = () => {
               <input
                 type={showPassword ? "text" : "password"}
                 id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                {...form.register("password")}
                 placeholder="••••••••••••"
                 className="block w-full pl-12 pr-12 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                required
               />
+              {form.formState.errors.password && (
+                <p className="text-red-500 text-sm mt-1">
+                  {form.formState.errors.password.message}
+                </p>
+              )}
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute inset-y-0 right-0 pr-4 flex items-center"
               >
                 {showPassword ? (
-                  <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer" />
+                  <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600 cursor-pointer" />
                 ) : (
-                  <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer" />
+                  <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600 cursor-pointer" />
                 )}
               </button>
             </div>
           </div>
 
+          {/* Confirm Password */}
           <div>
             <label
               htmlFor="confirmPassword"
@@ -123,21 +144,24 @@ const ChangePasswordContent: React.FC = () => {
               <input
                 type={showConfirmPassword ? "text" : "password"}
                 id="confirmPassword"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                {...form.register("confirmPassword")}
                 placeholder="••••••••••••"
                 className="block w-full pl-12 pr-12 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                required
               />
+              {form.formState.errors.confirmPassword && (
+                <p className="text-red-500 text-sm mt-1">
+                  {form.formState.errors.confirmPassword.message}
+                </p>
+              )}
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 className="absolute inset-y-0 right-0 pr-4 flex items-center"
               >
                 {showConfirmPassword ? (
-                  <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer" />
+                  <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600 cursor-pointer" />
                 ) : (
-                  <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer" />
+                  <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600 cursor-pointer" />
                 )}
               </button>
             </div>
@@ -145,7 +169,8 @@ const ChangePasswordContent: React.FC = () => {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-4 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer"
+            disabled={loading}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-4 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer disabled:opacity-50"
           >
             {loading ? "Updating Password..." : "Update Password"}
           </button>

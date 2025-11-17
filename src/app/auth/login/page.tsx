@@ -1,43 +1,73 @@
 "use client";
 
 import React, { useState } from "react";
+import * as z from "zod";
+import { useTranslation } from "next-i18next";
 import { Eye, EyeOff, Mail, Key } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { login } from "@/app/services/authService";
 import toast from "react-hot-toast";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const createLoginSchema = (t: (key: string, fallback?: string) => string) =>
+  z.object({
+    email: z
+      .string()
+      .min(1, t("Email is required"))
+      .email(t("Invalid email address")),
+    password: z
+      .string()
+      .min(6, t("Password is too short"))
+      .max(100, t("Password is too long")),
+    rememberMe: z.boolean(),
+  });
 
 const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const { t } = useTranslation();
   const router = useRouter();
+
+  const translate = (key: string, fallback?: string) =>
+    t(key, { defaultValue: fallback });
+
+  const loginSchema = createLoginSchema(translate);
+  type LoginFormData = z.infer<typeof loginSchema>;
 
   const handleRedirectForgotPassword = () => {
     router.push("/auth/forgot-password");
   };
 
+  const form = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      rememberMe: false,
+    },
+    mode: "onBlur",
+  });
+
   const handleRedirectRegister = () => {
     router.push("/auth/register");
   };
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (data: LoginFormData) => {
     setLoading(true);
     setError("");
 
     try {
-      const data = await login({ email, password });
-      localStorage.setItem("token", data.token);
-      toast.success(data.message);
+      const response = await login(data);
+      localStorage.setItem("token", response.token);
+      toast.success(response.message);
       router.push("/dashboard");
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast.error(err.message);
         setError(err.message);
       } else {
-        toast.error(error || "Something went wrong");
+        toast.error("Something went wrong");
         setError("Unexpected error occurred");
       }
     } finally {
@@ -52,11 +82,13 @@ const LoginPage: React.FC = () => {
         <div className="mb-8">
           <h1 className="text-4xl font-poppins font-semibold text-gray-900 mb-1">
             Login{" "}
-            <span className="text-blue-600 text-[16px] font-medium">as Admin</span>
+            <span className="text-blue-600 text-[16px] font-medium">
+              as Admin
+            </span>
           </h1>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
           {/* Email Field */}
           <div>
             <label
@@ -72,12 +104,15 @@ const LoginPage: React.FC = () => {
               <input
                 type="email"
                 id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                {...form.register("email")}
                 placeholder="Enter email address"
                 className="block w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                required
               />
+              {form.formState.errors.email && (
+                <p className="text-red-500 text-sm mt-1">
+                  {form.formState.errors.email.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -96,12 +131,16 @@ const LoginPage: React.FC = () => {
               <input
                 type={showPassword ? "text" : "password"}
                 id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                {...form.register("password")}
                 placeholder="••••••••••••"
                 className="block w-full pl-12 pr-12 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                required
               />
+              {form.formState.errors.password && (
+                <p className="text-red-500 text-sm mt-1">
+                  {form.formState.errors.password.message}
+                </p>
+              )}
+
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
@@ -122,10 +161,10 @@ const LoginPage: React.FC = () => {
               <input
                 type="checkbox"
                 id="remember-me"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
+                {...form.register("rememberMe")}
                 className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 cursor-pointer"
               />
+
               <label
                 htmlFor="remember-me"
                 className="ml-3 text-sm font-semibold text-gray-900"
