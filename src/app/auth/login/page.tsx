@@ -26,7 +26,6 @@ const createLoginSchema = (t: (key: string, fallback?: string) => string) =>
 const LoginPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const { t } = useTranslation();
   const router = useRouter();
 
@@ -55,7 +54,6 @@ const LoginPage: React.FC = () => {
   };
   const handleSubmit = async (data: LoginFormData) => {
     setLoading(true);
-    setError("");
 
     try {
       const response = await login(data);
@@ -65,10 +63,8 @@ const LoginPage: React.FC = () => {
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast.error(err.message);
-        setError(err.message);
       } else {
         toast.error("Something went wrong");
-        setError("Unexpected error occurred");
       }
     } finally {
       setLoading(false);
