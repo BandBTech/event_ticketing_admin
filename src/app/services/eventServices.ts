@@ -59,8 +59,8 @@ interface PendingOrganizersAPIOrganizer {
   updated_at: string;
 }
 
-export const getOrganizers = async (): Promise<APIResponse> => {
-  return apiClient(API_ENDPOINTS.GET_ORGANIZERS, {
+export const getEvents = async (): Promise<APIResponse> => {
+  return apiClient(API_ENDPOINTS.GET_EVENTS, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -69,9 +69,9 @@ export const getOrganizers = async (): Promise<APIResponse> => {
   });
 };
 
-export const getPendingOrganizers =
+export const getPendingEvents =
   async (): Promise<PendingOrganizersAPIResponse> => {
-    return apiClient(API_ENDPOINTS.GET_PENDING_ORGANIZERS, {
+    return apiClient(API_ENDPOINTS.GET_PENDING_EVENTS, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

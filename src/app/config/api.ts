@@ -16,8 +16,11 @@ export const API_ENDPOINTS = {
 
   // Organizers
   GET_ORGANIZERS: `${API_BASE_URL}/admin/organizers`,
+  GET_PENDING_ORGANIZERS: `${API_BASE_URL}/admin/organizers/pending`,
 
   // Events
+  GET_EVENTS: `${API_BASE_URL}/admin/events`,
+  GET_PENDING_EVENTS: `${API_BASE_URL}/admin/events/pending`,
 
   // Payouts
 };

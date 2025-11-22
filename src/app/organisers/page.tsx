@@ -59,8 +59,6 @@ const OrganisersPage: React.FC = () => {
     loadData();
   }, []);
 
-  console.log(data?.data.organizers);
-
   function getInitials(firstName: string, lastName: string) {
     const first = firstName?.[0] || "";
     const last = lastName?.[0] || "";
