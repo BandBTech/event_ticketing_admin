@@ -5,7 +5,7 @@ export async function apiClient<TResponse>(
 ): Promise<TResponse> {
   // Get token from localStorage (client-side only)
   const token =
-    typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
 
   const res = await fetch(endpoint, {
     ...options,

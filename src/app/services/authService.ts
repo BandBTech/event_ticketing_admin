@@ -1,6 +1,6 @@
 // services/authService.ts
-import { apiClient } from '@/app/lib/apiClient';
-import { API_ENDPOINTS } from '@/app/config/api';
+import { apiClient } from "@/app/lib/apiClient";
+import { API_ENDPOINTS } from "@/app/config/api";
 
 interface LoginPayload {
   email: string;
@@ -12,13 +12,14 @@ interface ForgotPasswordPayload {
 }
 
 interface LoginResponse {
-  token: string;
+  success: boolean;
   message: string;
-  user: {
-    id: string;
-    name: string;
-    email: string;
+  data: {
+    access_token: string;
+    refresh_token: string;
   };
+  timestamp: string;
+  request_id: string;
 }
 
 interface ResetPasswordPayload {
@@ -41,7 +42,7 @@ interface ResendOtpPayload {
 
 export async function login(payload: LoginPayload): Promise<LoginResponse> {
   return apiClient(API_ENDPOINTS.LOGIN, {
-    method: 'POST',
+    method: "POST",
     body: JSON.stringify(payload),
   });
 }
@@ -81,9 +82,11 @@ export interface RegisterResponse {
   request_id: string;
 }
 
-export async function register(payload: RegisterPayload): Promise<RegisterResponse> {
+export async function register(
+  payload: RegisterPayload
+): Promise<RegisterResponse> {
   return apiClient(API_ENDPOINTS.SIGNUP, {
-    method: 'POST',
+    method: "POST",
     body: JSON.stringify(payload),
   });
 }
@@ -91,14 +94,14 @@ export async function register(payload: RegisterPayload): Promise<RegisterRespon
 // FORGOT PASSWORD
 export async function forgotPassword(payload: ForgotPasswordPayload) {
   return apiClient(API_ENDPOINTS.FORGOT_PASSWORD, {
-    method: 'POST',
+    method: "POST",
     body: JSON.stringify(payload),
   });
 }
 // RESEND OTP
 export async function resendOTP(payload: ResendOtpPayload) {
   return apiClient(API_ENDPOINTS.RESEND_OTP, {
-    method: 'POST',
+    method: "POST",
     body: JSON.stringify(payload),
   });
 }
@@ -106,7 +109,7 @@ export async function resendOTP(payload: ResendOtpPayload) {
 // RESET PASSWORD
 export async function resetPassword(payload: ResetPasswordPayload) {
   return apiClient(API_ENDPOINTS.RESET_PASSWORD, {
-    method: 'POST',
+    method: "POST",
     body: JSON.stringify(payload),
   });
 }
@@ -114,18 +117,13 @@ export async function resetPassword(payload: ResetPasswordPayload) {
 // VERIFY OTP
 export async function verifyOtp(payload: VerifyOtpPayload) {
   return apiClient(API_ENDPOINTS.VERIFY_OTP, {
-    method: 'POST',
+    method: "POST",
     body: JSON.stringify(payload),
   });
 }
 // GET PROFILE
 export async function getProfile() {
   return apiClient(API_ENDPOINTS.GET_PROFILE, {
-    method: 'GET',
+    method: "GET",
   });
 }
-
-
-
-
-

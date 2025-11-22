@@ -45,7 +45,9 @@ const LoginPage: React.FC = () => {
 
     try {
       const response = await login(data);
-      localStorage.setItem("token", response.token);
+      console.log(response);
+      localStorage.setItem("access_token", response.data.access_token);
+      localStorage.setItem("refresh_token", response.data.refresh_token);
       toast.success(response.message);
       router.push("/dashboard");
     } catch (err: unknown) {
