@@ -3,7 +3,10 @@
 import React, { useState, useEffect } from "react";
 import { Calendar, Clock, Users } from "lucide-react";
 import Navbar from "../components/Navbar/Navbar";
-import { getPendingOrganizers } from "../services/organizerService";
+import {
+  getPendingOrganizers,
+  approveOrganizer,
+} from "../services/organizerService";
 import { getPendingEvents } from "../services/eventServices";
 
 const AdminDashboard: React.FC = () => {
@@ -36,10 +39,23 @@ const AdminDashboard: React.FC = () => {
   }
 
   const [pendingData, setPendingData] = useState<APIResponse | null>(null);
+  const [organizerToModify, setOrganizerToModify] =
+    useState<APIOrganizer | null>(null);
   const [pendingEventsData, setPendingEventsData] =
     useState<APIResponse | null>(null);
   const handleOpen = () => {
     console.log("Open modal clicked!");
+  };
+  console.log("organizerToModify", organizerToModify);
+
+  const handleApprove = async (organizerId: string) => {
+    try {
+      (await approveOrganizer(organizerId)) as APIResponse;
+      const res = await getPendingOrganizers();
+      setPendingData(res);
+    } catch (error) {
+      console.error("Error approving organizer:", error);
+    }
   };
 
   useEffect(() => {
@@ -162,7 +178,12 @@ const AdminDashboard: React.FC = () => {
                       <button className="px-4 py-2 text-sm font-medium text-red-600 bg-white border border-red-300 rounded-md hover:bg-red-50 transition-colors cursor-pointer w-full sm:w-auto">
                         <span className="mr-2">X</span> REJECT
                       </button>
-                      <button className="px-4 py-2 text-sm font-medium text-green-700 bg-green-200 rounded-md hover:bg-green-300 hover:text-green-800 transition-colors flex items-center gap-2 cursor-pointer w-full sm:w-auto justify-center">
+                      <button
+                        onClick={() => {
+                          handleApprove(organizer.id);
+                          setOrganizerToModify(organizer)}}
+                        className="px-4 py-2 text-sm font-medium text-green-700 bg-green-200 rounded-md hover:bg-green-300 hover:text-green-800 transition-colors flex items-center gap-2 cursor-pointer w-full sm:w-auto justify-center"
+                      >
                         <svg
                           className="w-4 h-4"
                           fill="none"

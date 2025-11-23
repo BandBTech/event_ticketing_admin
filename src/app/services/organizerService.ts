@@ -79,3 +79,15 @@ export const getPendingOrganizers =
       },
     });
   };
+
+export const approveOrganizer = async (
+  id: string
+): Promise<PendingOrganizersAPIResponse> => {
+  return apiClient(API_ENDPOINTS.APPROVE_ORGANIZERS(id), {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${access_token}`,
+    },
+  });
+};
