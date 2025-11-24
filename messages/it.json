@@ -1,0 +1,181 @@
+{
+  "common": {
+    "loading": "Caricamento...",
+    "error": "Qualcosa è andato storto",
+    "search": "Cerca",
+    "filter": "Filtro",
+    "clear": "Cancella",
+    "viewDetails": "Vedi Dettagli",
+    "edit": "Modifica",
+    "loadMore": "Carica Altri Eventi",
+    "noResults": "Nessun evento trovato",
+    "tryAgain": "Prova ad aggiustare i criteri di ricerca o controlla più tardi per nuovi eventi.",
+    "cancelButton": "Cancellare"
+  },
+  "navigation": {
+    "events": "Eventi",
+    "categories": "Categorie",
+    "about": "Chi Siamo",
+    "contact": "Contatti",
+    "signIn": "Accedi",
+    "organizeEvent": "Organizza Evento"
+  },
+  "hero": {
+    "badge": "La Piattaforma Eventi Premier del Nepal",
+    "title": "Scopri Eventi Fantastici in Nepal",
+    "subtitle": "Dai festival musicali elettrizzanti alle conferenze ispiratrici, trova e prenota biglietti per gli eventi più emozionanti che si svolgono in tutto il Nepal.",
+    "searchPlaceholder": "Cerca eventi, luoghi o località...",
+    "stats": {
+      "events": "Eventi Elencati",
+      "tickets": "Biglietti Venduti",
+      "cities": "Città Coperte"
+    }
+  },
+  "sections": {
+    "featuredEvents": {
+      "title": "Eventi in Evidenza",
+      "subtitle": "Non perdere questi eventi popolari"
+    },
+    "upcomingEvents": {
+      "title": "Eventi Prossimi",
+      "searchResults": "Risultati di Ricerca",
+      "eventsFound": "eventi trovati",
+      "clearFilters": "Cancella Filtri"
+    },
+    "cta": {
+      "title": "Pronto a Creare il Tuo Evento?",
+      "subtitle": "Unisciti a migliaia di organizzatori di eventi che si fidano della nostra piattaforma per gestire i loro eventi.",
+      "organizeEvent": "Organizza Evento",
+      "learnMore": "Scopri di Più"
+    }
+  },
+  "footer": {
+    "description": "La piattaforma di biglietteria eventi premier del Nepal. Scopri eventi fantastici, connettiti con la tua comunità e crea esperienze indimenticabili.",
+    "contact": {
+      "email": "info@timroticket.com",
+      "phone": "+977-1-4567890",
+      "address": "Kathmandu, Nepal"
+    },
+    "links": {
+      "company": {
+        "title": "Azienda",
+        "aboutUs": "Chi Siamo",
+        "howItWorks": "Come Funziona",
+        "careers": "Carriere",
+        "press": "Stampa"
+      },
+      "organizers": {
+        "title": "Organizzatori",
+        "createEvent": "Crea Evento",
+        "pricing": "Prezzi",
+        "eventManagement": "Gestione Eventi",
+        "analytics": "Analisi"
+      },
+      "support": {
+        "title": "Supporto",
+        "helpCenter": "Centro Aiuto",
+        "contactSupport": "Contatta Supporto",
+        "eventGuidelines": "Linee Guida Eventi",
+        "refundPolicy": "Politica Rimborsi"
+      },
+      "legal": {
+        "title": "Legale",
+        "privacyPolicy": "Politica Privacy",
+        "termsOfService": "Termini di Servizio",
+        "cookiePolicy": "Politica Cookie",
+        "security": "Sicurezza"
+      }
+    },
+    "newsletter": {
+      "title": "Rimani Aggiornato",
+      "subtitle": "Ricevi notifiche su nuovi eventi e offerte esclusive.",
+      "placeholder": "Inserisci la tua email"
+    },
+    "copyright": "© 2025 Timro-Ticket. Tutti i diritti riservati.",
+    "madeIn": "Fatto con ❤️ in Nepal"
+  },
+  "events": {
+    "from": "Da",
+    "ticketsLeft": "biglietti rimasti",
+    "soldOut": "Esaurito",
+    "priceTBA": "Prezzo da Annunciare"
+  },
+  "languages": {
+    "en": "English",
+    "ja": "日本語",
+    "it": "Italiano"
+  },
+  "auth": {
+    "login": {
+      "title": "Accedi",
+      "subtitle": "come amministratore",
+      "email": "Email",
+      "password": "Password",
+      "emailPlaceholder": "Inserisci indirizzo email",
+      "passwordPlaceholder": "••••••••••••",
+      "rememberMe": "Ricordami",
+      "forgotPassword": "Password Dimenticata?",
+      "loginButton": "Accedi",
+      "signingIn": "Accesso in corso...",
+      "noAccount": "Non hai un account?",
+      "signUpHere": "Registrati qui.",
+      "validation": {
+        "emailRequired": "Email è richiesta",
+        "emailInvalid": "Inserisci un indirizzo email valido",
+        "passwordRequired": "Password è richiesta",
+        "passwordTooShort": "La password deve essere di almeno 6 caratteri",
+        "passwordTooLong": "La password è troppo lunga"
+      },
+      "errors": {
+        "invalidCredentials": "Email o password non validi. Prova: attendee@example.com / password123",
+        "loginFailed": "Accesso fallito. Riprova."
+      },
+      "showPassword": "Mostra password",
+      "hidePassword": "Nascondi password"
+    },
+    "signup": {
+      "phonePlaceholder": "Inserisci un numero di contatto valido",
+      "validation": {
+        "phoneRequired": "Il numero di contatto è obbligatorio",
+        "firstNameRequired": "Il nome è obbligatorio",
+        "firstNameTooLong": "Il nome è troppo lungo",
+        "firstNameTooShort": "Il nome deve contenere almeno 2 caratteri",
+        "lastNameTooShort": "Il cognome deve contenere almeno 2 caratteri"
+      },
+      "setPassword": "Crea una password sicura per"
+    },
+    "resetPassword": {
+      "subtitle": "Imposta una nuova password per"
+    },
+    "verifyOTP": {
+      "otpValidity": "Il codice scadrà automaticamente dopo 10 minuti."
+    }
+  },
+  "settings": {
+    "security": {
+      "title": "Impostazioni di sicurezza",
+      "subtitle": "Gestisci la tua password e l'autenticazione",
+      "changePassword": "Cambiare la password",
+      "currentPassword": "password attuale",
+      "currentPasswordPlaceholder": "Inserisci la password attuale",
+      "newPassword": "Nuova parola d'ordine",
+      "newPasswordPlaceholder": "Inserisci la nuova password",
+      "confirmPassword": "Conferma nuova password",
+      "confirmPasswordPlaceholder": "Immettere nuovamente la nuova password",
+      "updating": "Aggiornamento...",
+      "updateButton": "Aggiorna password"
+    },
+    "title": "Impostazioni",
+    "menu": {
+      "profile": "Profilo",
+      "profileDesc": "Gestisci le tue informazioni personali",
+      "security": "Sicurezza",
+      "securityDesc": "Password e autenticazione",
+      "notifications": "Notifiche",
+      "notificationsDesc": "E-mail e notifiche push",
+      "billing": "Fatturazione",
+      "billingDesc": "Gestisci i tuoi metodi di pagamento",
+      "ticketsDesc": "Visualizza i biglietti per i tuoi eventi"
+    }
+  }
+}

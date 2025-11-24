@@ -1,201 +1,324 @@
 "use client";
 
-import React, { useState } from "react";
-import * as z from "zod";
-import { useTranslation } from "next-i18next";
-import { Eye, EyeOff, Mail, Key } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { login } from "@/app/services/authService";
-import toast from "react-hot-toast";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createLoginSchema } from "@/app/lib/validations/authValidation";
+import * as z from "zod";
+import {
+  EyeIcon,
+  EnvelopeIcon,
+  KeyIcon,
+  EyeClosedIcon,
+} from "@phosphor-icons/react/dist/ssr";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useLanguageStore } from "@/store/languageStore";
+import { useTranslation } from "@/hooks/useTranslation";
+import { useAuthStore } from "@/store/authStore";
+import { AuthError } from "@/lib/authService";
+import { toast } from "@/lib/toast";
+import { cn } from "@/lib/utils";
+import { tokenManager } from "@/lib/tokenManager";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { createValidationHelpers } from "@/lib/validation";
 
-const LoginPage: React.FC = () => {
+// Create validation schema with translations
+const createLoginSchema = (t: (key: string, fallback?: string) => string) => {
+  const v = createValidationHelpers(t);
+
+  return z.object({
+    email: z.string().min(1, v.required("Email")).email(v.email("Email")),
+    password: z
+      .string()
+      .min(1, v.required("Password"))
+      .min(8, v.minLength("Password", 8))
+      .max(100, v.maxLength("Password", 100))
+      .regex(/[A-Z]/, v.passwordUppercase())
+      .regex(/[a-z]/, v.passwordLowercase())
+      .regex(/[0-9]/, v.passwordNumber()),
+    rememberMe: z.boolean(),
+  });
+};
+
+export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const { t } = useTranslation();
   const router = useRouter();
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
+  const { login, isLoading, clearError } = useAuthStore();
 
-  const translate = (key: string, fallback?: string) =>
-    t(key, { defaultValue: fallback });
+  const [loginError, setLoginError] = useState("");
 
-  const loginSchema = createLoginSchema(translate);
+  const loginSchema = createLoginSchema(t);
   type LoginFormData = z.infer<typeof loginSchema>;
 
-  const handleRedirectForgotPassword = () => {
-    router.push("/auth/forgot-password");
-  };
+  // Check for saved credentials on component mount
+  const savedCredentials = tokenManager.getSavedCredentials();
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
-      password: "",
-      rememberMe: false,
+      email: savedCredentials?.email || "",
+      password: savedCredentials?.password || "",
+      rememberMe: tokenManager.hasCredentialsSaved(),
     },
     mode: "onBlur",
   });
 
-  const handleRedirectRegister = () => {
-    router.push("/auth/register");
-  };
-  const handleSubmit = async (data: LoginFormData) => {
-    setLoading(true);
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = form;
+
+  const rememberMe = watch("rememberMe") ?? false;
+
+  const onSubmit = async (data: LoginFormData) => {
+    setLoginError("");
+    clearError();
 
     try {
-      const response = await login(data);
-      console.log(response);
-      localStorage.setItem("access_token", response.data.access_token);
-      localStorage.setItem("refresh_token", response.data.refresh_token);
-      toast.success(response.message);
-      router.push("/dashboard");
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        toast.error(err.message);
+      // Call real API login with remember me preference
+      await login(
+        {
+          email: data.email,
+          password: data.password,
+        },
+        data.rememberMe
+      );
+
+      // Save or clear credentials based on Remember Me
+      if (data.rememberMe) {
+        tokenManager.saveCredentials(data.email, data.password);
       } else {
-        toast.error("Something went wrong");
+        tokenManager.clearCredentials();
       }
-    } finally {
-      setLoading(false);
+
+      // Show success toast
+      toast.success("auth.toast.loginSuccess", "Welcome back!");
+
+      // Redirect to homepage
+      router.push("/dashboard");
+    } catch (error) {
+      console.error("Login failed:", error);
+
+      // Handle different error types and show toast
+      if (error instanceof AuthError) {
+        switch (error.code) {
+          case "UNAUTHORIZED":
+            toast.error(
+              "auth.toast.invalidCredentials",
+              "Invalid email or password"
+            );
+            break;
+          case "NETWORK_ERROR":
+            toast.error(
+              "auth.toast.networkError",
+              "Network error. Please check your connection."
+            );
+            break;
+          default:
+            toast.error(
+              "auth.toast.loginError",
+              error.message || "Login failed. Please try again."
+            );
+        }
+      } else {
+        toast.error("auth.toast.loginError", "Login failed. Please try again.");
+      }
     }
   };
 
   return (
-    <div className="w-full max-w-md bg-white flex items-center justify-center rounded-2xl">
-      <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 w-full">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-poppins font-semibold text-gray-900 mb-1">
-            Login{" "}
-            <span className="text-blue-600 text-[16px] font-medium">
-              as Admin
-            </span>
-          </h1>
+    <div className="min-h-screen relative flex flex-col items-center justify-center px-4 py-8 sm:py-20">
+      <div className="w-full max-w-[480px] relative z-10">
+        {/* Login Card - Glassmorphic design matching Figma */}
+        <div className="relative">
+          <div className="glass-login-card rounded-2xl p-4 sm:p-6">
+            <div className="space-y-6 p-2 sm:p-3">
+              {/* Header */}
+              <div className="space-y-1">
+                <div className="flex flex-col sm:flex-row items-baseline gap-1">
+                  <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900 font-poppins">
+                    {t("auth.login.title")}
+                  </h1>
+                  <span className="text-sm font-medium text-blue-500">
+                    {t("auth.login.subtitle")}
+                  </span>
+                </div>
+              </div>
+
+              {/* Login Error */}
+              {loginError && (
+                <div className="p-3 rounded-lg bg-destructive/5 border border-destructive/20">
+                  <p className="text-sm text-destructive font-medium">
+                    {loginError} Error text
+                  </p>
+                </div>
+              )}
+
+              {/* Form */}
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+                {/* Email Field */}
+                <div className="space-y-2">
+                  <label
+                    htmlFor="email"
+                    className="text-sm font-medium text-gray-900 block"
+                  >
+                    {t("auth.login.email")}
+                  </label>
+                  <div className="relative">
+                    <div
+                      className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded-full"
+                      aria-hidden="true"
+                    >
+                      <EnvelopeIcon
+                        weight="duotone"
+                        size={24}
+                        className="text-gray-600"
+                      />
+                    </div>
+                    <Input
+                      id="email"
+                      type="email"
+                      autoComplete="email"
+                      placeholder={t("auth.login.emailPlaceholder")}
+                      className={cn(
+                        "h-12 pl-16 pr-4 login-input",
+                        errors.email && "border-destructive"
+                      )}
+                      {...register("email")}
+                    />
+                  </div>
+                  {errors.email && (
+                    <p
+                      className="text-sm text-destructive font-medium"
+                      role="alert"
+                    >
+                      {errors.email.message}
+                    </p>
+                  )}
+                </div>
+
+                {/* Password Field */}
+                <div className="space-y-2">
+                  <label
+                    htmlFor="password"
+                    className="text-sm font-medium text-gray-900 block"
+                  >
+                    {t("auth.login.password")}
+                  </label>
+                  <div className="relative">
+                    <div
+                      className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded-full"
+                      aria-hidden="true"
+                    >
+                      <KeyIcon
+                        weight="duotone"
+                        size={24}
+                        className="text-gray-600"
+                      />
+                    </div>
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      autoComplete="current-password"
+                      placeholder={t("auth.login.passwordPlaceholder")}
+                      className={cn(
+                        "h-12 pl-16 pr-16 login-input",
+                        errors.password && "border-destructive"
+                      )}
+                      {...register("password")}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      aria-label={
+                        showPassword
+                          ? t("auth.login.hidePassword")
+                          : t("auth.login.showPassword")
+                      }
+                      className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 transition-colors"
+                    >
+                      {showPassword ? (
+                        <EyeIcon
+                          weight="duotone"
+                          size={24}
+                          className="text-gray-600"
+                        />
+                      ) : (
+                        <EyeClosedIcon
+                          weight="duotone"
+                          size={24}
+                          className="text-gray-600"
+                        />
+                      )}
+                    </button>
+                  </div>
+                  {errors.password && (
+                    <p
+                      className="text-sm text-destructive font-medium"
+                      role="alert"
+                    >
+                      {errors.password.message}
+                    </p>
+                  )}
+                </div>
+
+                {/* Remember Me & Forgot Password */}
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
+                  <div className="flex items-center space-x-3">
+                    <Checkbox
+                      id="remember-me"
+                      checked={rememberMe}
+                      onCheckedChange={(checked) =>
+                        setValue("rememberMe", !!checked)
+                      }
+                      className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
+                    />
+                    <label
+                      htmlFor="remember-me"
+                      className="text-sm font-medium text-gray-900 cursor-pointer"
+                    >
+                      {t("auth.login.rememberMe")}
+                    </label>
+                  </div>
+
+                  <Link
+                    href="/auth/forgot-password"
+                    className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
+                  >
+                    {t("auth.login.forgotPassword")}
+                  </Link>
+                </div>
+
+                {/* Login Button */}
+                <div className="space-y-4">
+                  <Button
+                    type="submit"
+                    disabled={isLoading}
+                    className={cn(
+                      "w-full h-12 rounded-lg font-medium transition-all duration-200",
+                      "bg-blue-600 hover:bg-blue-700 text-white",
+                      "shadow-lg hover:shadow-xl",
+                      "disabled:opacity-50 disabled:cursor-not-allowed",
+                      isLoading && "animate-pulse"
+                    )}
+                  >
+                    {isLoading
+                      ? t("auth.login.signingIn")
+                      : t("auth.login.loginButton")}
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
-
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-          {/* Email Field */}
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-semibold text-gray-900 mb-3"
-            >
-              Email
-            </label>
-            <div>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  type="email"
-                  id="email"
-                  {...form.register("email")}
-                  placeholder="Enter email address"
-                  className="block w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                />
-              </div>
-              {form.formState.errors.email && (
-                <p className="text-red-500 text-sm mt-2 ml-4">
-                  {form.formState.errors.email.message}
-                </p>
-              )}
-            </div>
-          </div>
-
-          {/* Password Field */}
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-semibold text-gray-900 mb-3"
-            >
-              Password
-            </label>
-            <div>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Key className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  type={showPassword ? "text" : "password"}
-                  id="password"
-                  {...form.register("password")}
-                  placeholder="••••••••••••"
-                  className="block w-full pl-12 pr-12 py-4 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                />
-              </div>
-              {form.formState.errors.password && (
-                <p className="text-red-500 text-sm mt-2 ml-4">
-                  {form.formState.errors.password.message}
-                </p>
-              )}
-
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-4 flex items-center cursor-pointer"
-              >
-                {showPassword ? (
-                  <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors" />
-                ) : (
-                  <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors" />
-                )}
-              </button>
-            </div>
-          </div>
-
-          {/* Remember Me and Forgot Password */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                id="remember-me"
-                {...form.register("rememberMe")}
-                className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 cursor-pointer"
-              />
-
-              <label
-                htmlFor="remember-me"
-                className="ml-3 text-sm font-semibold text-gray-900"
-              >
-                Remember Me
-              </label>
-            </div>
-            <button
-              type="button"
-              className="text-sm text-blue-600 hover:text-blue-700 font-semibold transition-colors cursor-pointer"
-              onClick={handleRedirectForgotPassword}
-            >
-              Forgot Password?
-            </button>
-          </div>
-
-          {/* Login Button */}
-          <button
-            type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-4 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer"
-          >
-            {loading ? "Logging in..." : "Login"}
-          </button>
-
-          {/* Sign Up Link */}
-          <div className="text-center">
-            <span className="text-sm text-gray-600">
-              Don&apos;t have an account?{" "}
-              <button
-                type="button"
-                className="text-blue-600 hover:text-blue-700 font-semibold transition-colors cursor-pointer"
-                onClick={handleRedirectRegister}
-              >
-                Sign up here.
-              </button>
-            </span>
-          </div>
-        </form>
       </div>
     </div>
   );
-};
-
-export default LoginPage;
+}

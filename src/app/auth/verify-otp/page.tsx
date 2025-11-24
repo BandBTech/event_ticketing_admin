@@ -1,160 +1,286 @@
 "use client";
 
-import React, { useState, useRef, Suspense } from "react";
-import { useRouter } from "next/navigation";
-import { toast } from "react-hot-toast";
-import { verifyOtp } from "@/app/services/authService";
-import { useSearchParams } from "next/navigation";
-import { resendOTP } from "@/app/services/authService";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { ArrowLeftIcon } from "@phosphor-icons/react/dist/ssr";
+import { Button } from "@/components/ui/button";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+import { useLanguageStore } from "@/store/languageStore";
+import { useTranslation } from "@/hooks/useTranslation";
+import { authService, AuthError } from "@/lib/authService";
+import { useAuthStore } from "@/store/authStore";
+import { toast } from "@/lib/toast";
+import { cn } from "@/lib/utils";
 
-const VerifyOTPPageContent: React.FC = () => {
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-  const inputRefs = useRef<HTMLInputElement[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [resendLoading, setResendLoading] = useState(false);
-  const router = useRouter();
+function VerifyOTPContent() {
   const searchParams = useSearchParams();
-  const email = searchParams.get("email");
+  const router = useRouter();
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
+  const { login } = useAuthStore();
 
-  const handleInputChange = (index: number, value: string) => {
-    if (value.length > 1) return;
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [otpType, setOtpType] = useState("registration");
+  const [otp, setOtp] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isResending, setIsResending] = useState(false);
+  const [resendTimer, setResendTimer] = useState(60);
 
-    const newOtp = [...otp];
-    newOtp[index] = value;
-    setOtp(newOtp);
+  useEffect(() => {
+    const emailParam = searchParams.get("email");
+    const passwordParam = searchParams.get("password");
+    const typeParam = searchParams.get("type") || "registration";
 
-    if (value && index < 5) {
-      inputRefs.current[index + 1]?.focus();
+    if (!emailParam) {
+      router.push("/auth/signup");
+      return;
     }
-  };
 
-  const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
-    if (e.key === "Backspace" && !otp[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus();
+    setEmail(emailParam);
+    setPassword(passwordParam || "");
+    setOtpType(typeParam);
+  }, [searchParams, router]);
+
+  // Countdown timer for OTP resend
+  useEffect(() => {
+    if (resendTimer > 0) {
+      const timer = setTimeout(() => setResendTimer(resendTimer - 1), 1000);
+      return () => clearTimeout(timer);
     }
-  };
+  }, [resendTimer]);
 
-  interface VerifyOTPResponse {
-    message: string;
-  }
-  interface ResendOTPResponse {
-    message: string;
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const otpCode = otp.join("");
-    localStorage.setItem("otpCode", otpCode);
-    setLoading(true);
-
-    const payload = {
-      identifier: email ?? "",
-      otp_code: otpCode,
-      otp_type: "password_reset",
-    };
-    try {
-      const data = (await verifyOtp({ ...payload })) as VerifyOTPResponse;
-      toast.success(data.message);
-      router.push(
-        `/auth/change-password?email=${encodeURIComponent(
-          email ?? ""
-        )}&type=password_reset`
+  const handleVerify = async () => {
+    if (otp.length < 6) {
+      setError(
+        t(
+          "auth.verifyOTP.errors.otpIncomplete",
+          "Please enter the complete 6-digit code"
+        )
       );
-    } catch {
-      toast.error("Something went wrong");
-    } finally {
-      setLoading(false);
+      return;
     }
-  };
-  const handleResendEmail = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setResendLoading(true);
 
-    const payload = {
-      identifier: email ?? "",
-      otp_type: "password_reset",
-    };
+    setIsLoading(true);
+    setError("");
 
     try {
-      const data = (await resendOTP({ ...payload })) as ResendOTPResponse;
-      toast.success(data.message);
-    } catch {
-      toast.error("Something went wrong");
+      // Verify OTP
+      await authService.verifyOTP({
+        identifier: email,
+        otp_code: otp,
+        otp_type: otpType,
+      });
+
+      // Show success toast
+      toast.success("auth.toast.otpVerified", "Email verified successfully!");
+
+      // Handle different OTP types
+      if (otpType === "password_reset") {
+        // For password reset, redirect to reset password page
+        router.push(
+          `/auth/reset-password?email=${encodeURIComponent(
+            email
+          )}&otp=${encodeURIComponent(otp)}`
+        );
+      } else if (password) {
+        // For registration, auto-login
+        await login({
+          email,
+          password,
+        });
+        router.push("/");
+      } else {
+        // Fallback to homepage
+        router.push("/");
+      }
+    } catch (err) {
+
+      // Show error toast
+      if (err instanceof AuthError) {
+        console.log(err.message)
+        toast.error(
+          err.message || "Invalid OTP. Please try again."
+        );
+      } else {
+        toast.error("auth.toast.serverError", "Invalid OTP. Please try again.");
+      }
+      setOtp(""); // Clear OTP on error
     } finally {
-      setResendLoading(false);
+      setIsLoading(false);
+    }
+  };
+
+  const handleResendOTP = async () => {
+    setIsResending(true);
+    setError("");
+
+    try {
+      await authService.sendOTP({
+        identifier: email,
+        otp_type: otpType,
+      });
+
+      setError("");
+      // Show success toast
+      toast.success("auth.toast.otpResent", "New code sent to your email");
+
+      // Restart 1-minute timer
+      setResendTimer(60);
+    } catch (err) {
+      // Show error toast
+      toast.error(
+        "auth.toast.serverError",
+        err instanceof Error ? err.message : "Failed to resend OTP. Please try again."
+      );
+    } finally {
+      setIsResending(false);
     }
   };
 
   return (
-    <div className="w-full max-w-md bg-white flex items-center justify-center rounded-2xl">
-      <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 w-full max-w-md">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-poppins font-semibold text-gray-900 mb-4">
-            Verify your email
-          </h1>
-          <p className="text-md text-gray-500 leading-relaxed">
-            Enter the 6-digit code sent to <br />
-            <span className="text-gray-700 font-semibold">{email}</span> <br />
-          </p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* OTP Input Fields */}
-          <div className="flex justify-between space-x-3">
-            {otp.map((digit, index) => (
-              <input
-                key={index}
-                ref={(el) => {
-                  if (el) inputRefs.current[index] = el;
-                }}
-                type="text"
-                inputMode="numeric"
-                maxLength={1}
-                value={digit}
-                onChange={(e) => handleInputChange(index, e.target.value)}
-                onKeyDown={(e) => handleKeyDown(index, e)}
-                className="w-12 h-12 border border-gray-200 rounded-lg text-center text-lg font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                placeholder="•"
-              />
-            ))}
-          </div>
-
-          {/* Verify OTP Button */}
-          <button
-            type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-4 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer"
-          >
-            {loading ? "Verifying..." : "Verify OTP"}
-          </button>
-
-          {/* Resend Email Link */}
-          <div className="text-center grid">
-            <span className="text-sm text-gray-600">
-              Haven&apos;t got the email yet?{" "}
+    <div className="min-h-screen relative flex flex-col items-center justify-center px-4 py-8 sm:py-20">
+      <div className="w-full max-w-[410px] relative z-10">
+        <div className="relative">
+          <div className="glass-login-card rounded-2xl p-4 sm:p-6">
+            <div className="space-y-6 p-2 sm:p-3">
+              {/* Back Button */}
               <button
-                type="button"
-                onClick={handleResendEmail}
-                className="text-blue-600 hover:text-blue-700 font-semibold transition-colors cursor-pointer"
+                onClick={() => router.back()}
+                className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600 transition-colors cursor-pointer"
               >
-                {resendLoading ? "Resending" : "Resend"}
+                <ArrowLeftIcon size={16} />
+                {t("auth.verifyOTP.back", "Back")}
               </button>
-            </span>
-            <span className="text-sm text-gray-500">
-              Check your spam folder if you don&apos;t see the email
-            </span>
+
+              {/* Header */}
+              <div className="space-y-2">
+                <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900 font-poppins">
+                  {t("auth.verifyOTP.title", "Verify Your Email")}
+                </h1>
+                <p className="text-sm text-gray-600">
+                  {t(
+                    "auth.verifyOTP.subtitle",
+                    "Enter the 6-digit code sent to"
+                  )}
+                  <br />
+                  <strong>{email}</strong>
+                  <br />
+                  {t(
+                    "auth.verifyOTP.otpValidity",
+                    "The code will expire in 10 minutes."
+                  )}
+                </p>
+              </div>
+
+              {/* Error Message */}
+              {error && (
+                <div className="p-3 rounded-lg bg-destructive/5 border border-destructive/20">
+                  <p className="text-sm text-destructive">{error}</p>
+                </div>
+              )}
+
+              {/* OTP Input */}
+              <div className="space-y-6">
+                <div className="flex justify-center">
+                  <InputOTP maxLength={6} value={otp} onChange={setOtp}>
+                    <InputOTPGroup>
+                      <InputOTPSlot
+                        index={0}
+                        className="h-14 w-14 text-lg"
+                      />
+                      <InputOTPSlot
+                        index={1}
+                        className="h-14 w-14 text-lg"
+                      />
+                      <InputOTPSlot
+                        index={2}
+                        className="h-14 w-14 text-lg"
+                      />
+                      <InputOTPSlot
+                        index={3}
+                        className="h-14 w-14 text-lg"
+                      />
+                      <InputOTPSlot
+                        index={4}
+                        className="h-14 w-14 text-lg"
+                      />
+                      <InputOTPSlot
+                        index={5}
+                        className="h-14 w-14 text-lg"
+                      />
+                    </InputOTPGroup>
+                  </InputOTP>
+                </div>
+
+                {/* Verify Button */}
+                <Button
+                  onClick={handleVerify}
+                  disabled={isLoading || otp.length < 6}
+                  className={cn(
+                    "w-full h-12 rounded-lg font-medium transition-all duration-200",
+                    "bg-blue-600 hover:bg-blue-700 text-white",
+                    "shadow-lg hover:shadow-xl",
+                    "disabled:opacity-50 disabled:cursor-not-allowed",
+                    isLoading && "animate-pulse"
+                  )}
+                >
+                  {isLoading
+                    ? t("auth.verifyOTP.verifying", "Verifying...")
+                    : t("auth.verifyOTP.verifyButton", "Verify Email")}
+                </Button>
+              </div>
+
+              {/* Resend OTP */}
+              <div className="text-center space-y-2">
+                <p className="text-sm text-gray-600">
+                  {t(
+                    "auth.verifyOTP.didntReceive",
+                    "Didn't receive the code?"
+                  )}{" "}
+                  <button
+                    type="button"
+                    onClick={handleResendOTP}
+                    disabled={isResending || resendTimer > 0}
+                    className="font-medium cursor-pointer text-primary hover:text-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isResending
+                      ? t("auth.verifyOTP.resending", "Resending...")
+                      : resendTimer > 0
+                        ? `Resend in ${resendTimer}s`
+                        : t("auth.verifyOTP.resend", "Resend")}
+                  </button>
+                </p>
+                <p className="text-xs text-gray-500">
+                  {t(
+                    "auth.verifyOTP.checkSpam",
+                    "Check your spam folder if you don't see the email"
+                  )}
+                </p>
+              </div>
+            </div>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
-};
-
+}
 
 export default function VerifyOTPPage() {
   return (
-    <Suspense fallback="Loading...">
-      <VerifyOTPPageContent />
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          Loading...
+        </div>
+      }
+    >
+      <VerifyOTPContent />
     </Suspense>
   );
 }

@@ -2,7 +2,7 @@
 "use client";
 
 import "@/app/globals.css";
-import { Toaster } from "react-hot-toast";
+import { Toaster } from "@/components/ui/sonner";
 import { I18nextProvider } from "react-i18next";
 import i18n from "../app/lib/i18n";
 import Providers from "@/app/providers/QueryProviders";
@@ -19,7 +19,7 @@ export default function RootLayout({
           <Providers>
             <main>
               {children}
-              <Toaster position="top-right" reverseOrder={false} />
+              <Toaster closeButton offset={{ top: "18px", right: "16px" }} />
             </main>
           </Providers>
         </I18nextProvider>
