@@ -289,7 +289,11 @@ const Sidebar: React.FC<SidebarProps> = ({
         </>
       )}
 
-      {showAdminProfile && <AdminProfileModal />}
+      {showAdminProfile && 
+      <AdminProfileModal 
+      setShowAdminProfile={setShowAdminProfile}
+      profileData={profileData}
+      />}
     </>
   );
 };
