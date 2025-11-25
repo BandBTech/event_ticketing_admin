@@ -15,13 +15,13 @@ import {
 } from "lucide-react";
 import Navbar from "@/app/components/Navbar/Navbar";
 import { redirect } from "next/navigation";
-import { getOrganizers } from "../services/organizerService";
+import { OrganizerService } from "@/lib/organizerService";
 
 const OrganisersPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
-  interface APIOrganizer {
+  interface Organizer {
     id: string;
     email: string;
     first_name: string;
@@ -40,20 +40,18 @@ const OrganisersPage: React.FC = () => {
     updated_at: string;
   }
 
-  interface APIResponse {
-    success: boolean;
-    message: string;
-    data: {
-      limit: number;
-      organizers: APIOrganizer[];
-    };
+  interface OrganizerListResponse {
+    limit: number;
+    page: number;
+    total: number;
+    organizers: Organizer[];
   }
 
-  const [data, setData] = useState<APIResponse | null>(null);
+  const [data, setData] = useState<OrganizerListResponse | null>(null);
 
   useEffect(() => {
     async function loadData() {
-      const res = await getOrganizers();
+      const res = await OrganizerService.getOrganizers();
       setData(res);
     }
     loadData();
@@ -102,7 +100,7 @@ const OrganisersPage: React.FC = () => {
 
         {/* profile card  */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {data?.data.organizers.map((organiser) => (
+          {data?.organizers.map((organiser) => (
             <div
               key={organiser.id}
               className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow"

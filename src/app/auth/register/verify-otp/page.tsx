@@ -3,8 +3,6 @@
 import React, { useState, useRef, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { verifyOtp } from "@/app/services/authService";
-import { resendOTP } from "@/app/services/authService";
 import { useSearchParams } from "next/navigation";
 
 const VerifyOTPPageContent: React.FC = () => {
@@ -34,12 +32,6 @@ const VerifyOTPPageContent: React.FC = () => {
     }
   };
 
-  interface VerifyOTPResponse {
-    message: string;
-  }
-  interface ResendOTPResponse {
-    message: string;
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,14 +39,12 @@ const VerifyOTPPageContent: React.FC = () => {
     localStorage.setItem("otpCode", otpCode);
     setLoading(true);
 
-    const payload = {
-      identifier: email ?? "",
-      otp_code: otpCode,
-      otp_type: "registration",
-    };
+    // const payload = {
+    //   identifier: email ?? "",
+    //   otp_code: otpCode,
+    //   otp_type: "registration",
+    // };
     try {
-      const data = (await verifyOtp({ ...payload })) as VerifyOTPResponse;
-      toast.success(data.message);
       router.push(`/auth/login`);
     } catch {
       toast.error("Something went wrong");
@@ -66,13 +56,11 @@ const VerifyOTPPageContent: React.FC = () => {
     e.preventDefault();
     setResendLoading(true);
 
-    const payload = {
-      identifier: email ?? "",
-      otp_type: "registration",
-    };
+    // const payload = {
+    //   identifier: email ?? "",
+    //   otp_type: "registration",
+    // };
     try {
-      const data = (await resendOTP({ ...payload })) as ResendOTPResponse;
-      toast.success(data.message);
     } catch {
       toast.error("Something went wrong");
     } finally {

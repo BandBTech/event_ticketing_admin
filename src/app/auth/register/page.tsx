@@ -11,7 +11,6 @@ import {
   UserRound,
 } from "lucide-react";
 import { redirect } from "next/navigation";
-import { register } from "@/app/services/authService";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import * as z from "zod";
@@ -71,10 +70,10 @@ const RegisterPage: React.FC = () => {
       phone: data.phone,
       password: data.password,
     };
+    console.log("payload", payload);
+    
 
     try {
-      const res = await register(payload);
-      toast.success(res.message);
       router.push(
         `/auth/register/verify-otp?email=${encodeURIComponent(
           data.email

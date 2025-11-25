@@ -14,21 +14,13 @@ import {
   LogOut,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { getProfile } from "@/app/services/authService";
+import { authService } from "@/lib/authService";
 import AdminProfileModal from "@/app/components/AdminProfileModal";
 
 interface SidebarProps {
   activeItem?: string;
   onItemClick?: (item: string) => void;
   defaultCollapsed?: boolean;
-}
-
-interface UserProfileResponse {
-  success: boolean;
-  message: string;
-  data: UserProfile;
-  timestamp: string;
-  request_id: string;
 }
 
 export interface UserProfile {
@@ -53,20 +45,16 @@ const Sidebar: React.FC<SidebarProps> = ({
   const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showAdminProfile, setShowAdminProfile] = useState(false);
-  const [profileData, setProfileData] = useState<UserProfileResponse | null>(
-    null
-  );
+  const [profileData, setProfileData] = useState<UserProfile | null>(null);
   const router = useRouter();
 
   useEffect(() => {
     async function loadData() {
-      const res = (await getProfile()) as UserProfileResponse;
+      const res = (await authService.getProfile()) as UserProfile;
       setProfileData(res);
     }
     loadData();
   }, []);
-
-  console.log("profileData", profileData);
 
   useEffect(() => {
     setIsClient(true);
@@ -243,8 +231,8 @@ const Sidebar: React.FC<SidebarProps> = ({
             {!isCollapsed && (
               <div className="flex min-w-0 transition-opacity duration-300 items-center justify-between gap-5">
                 <p className="text-sm font-medium text-gray-900 truncate">
-                  <span className="mr-1">{profileData?.data.first_name}</span>
-                  <span>{profileData?.data.last_name}</span>
+                  <span className="mr-1">{profileData?.first_name}</span>
+                  <span>{profileData?.last_name}</span>
                 </p>
                 <ChevronRight className="h-5 w-5 text-gray-600" />
               </div>
@@ -267,11 +255,11 @@ const Sidebar: React.FC<SidebarProps> = ({
           >
             <div className="px-4 py-3 border-b border-gray-100">
               <p className="text-sm font-semibold text-gray-900">
-                <span className="mr-1">{profileData?.data.first_name}</span>
-                <span>{profileData?.data.last_name}</span>
+                <span className="mr-1">{profileData?.first_name}</span>
+                <span>{profileData?.last_name}</span>
               </p>
               <p className="text-xs text-gray-500 mt-0.5">
-                {profileData?.data.email}
+                {profileData?.email}
               </p>
             </div>
 
