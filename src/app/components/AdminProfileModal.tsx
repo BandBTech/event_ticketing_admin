@@ -24,31 +24,35 @@ interface AdminData {
 }
 interface AdminProfileModalProps {
   setShowAdminProfile: (show: boolean) => void;
-  profileData: any;
+  profileData: AdminData | null;
 }
 
 export default function AdminProfileModal({
   setShowAdminProfile,
   profileData,
 }: AdminProfileModalProps) {
-  const [isEditing, setIsEditing] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-  console.log("profileData", profileData);
 
-  const initialAdminData: AdminData = {
-    id: profileData.id,
-    email: profileData.email,
-    first_name: profileData.first_name,
-    last_name: profileData.last_name,
-    phone: profileData.phone,
-    country_code: profileData.country_code,
-    is_email_verified: profileData.is_email_verified,
-    created_at: profileData.created_at,
-    updated_at: profileData.updated_at,
+  const emptyAdmin: AdminData = {
+    id: "",
+    email: "",
+    first_name: "",
+    last_name: "",
+    phone: "",
+    country_code: "",
+    is_email_verified: false,
+    created_at: "",
+    updated_at: "",
   };
 
-  const [adminData, setAdminData] = useState<AdminData>(initialAdminData);
-  const [editedData, setEditedData] = useState<AdminData>(initialAdminData);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const initialData: AdminData = profileData ?? emptyAdmin;
+
+  const [adminData, setAdminData] = useState<AdminData>(initialData);
+  const [editedData, setEditedData] = useState<AdminData>(initialData);
+
+  if (!profileData) return null;
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -74,7 +78,6 @@ export default function AdminProfileModal({
     try {
       await authService.updateProfile(editedData);
 
-      // Update the admin data with edited data
       setAdminData({
         ...editedData,
         updated_at: new Date().toISOString(),
@@ -84,7 +87,6 @@ export default function AdminProfileModal({
       setIsEditing(false);
     } catch (error) {
       console.error("Failed to save profile:", error);
-      // You might want to show an error message here
     } finally {
       setIsSaving(false);
     }

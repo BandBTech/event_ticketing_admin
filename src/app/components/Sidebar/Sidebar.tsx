@@ -97,6 +97,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       localStorage.removeItem("activeItem");
       localStorage.removeItem("sidebarCollapsed");
     }
+    authService.logout();
     router.push("/auth/login");
   };
 
