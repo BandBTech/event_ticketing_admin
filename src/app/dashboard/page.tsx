@@ -4,7 +4,9 @@ import React, { useState, useEffect } from "react";
 import { Calendar, Clock, Users } from "lucide-react";
 import Navbar from "../components/Navbar/Navbar";
 import { OrganizerService } from "@/lib/organizerService";
+import { EventService } from "@/lib/eventServices";
 import { toast } from "sonner";
+import { Event } from "@/types/event";
 
 const AdminDashboard: React.FC = () => {
   interface Organizer {
@@ -36,8 +38,12 @@ const AdminDashboard: React.FC = () => {
   const [pendingData, setPendingData] = useState<OrganizerListResponse | null>(
     null
   );
+  const [pendingEventsData, setPendingEnventsData] = useState<Event | null>(
+    null
+  );
   const handleOpen = () => {
     console.log("Open modal clicked!");
+    console.log("pending event data", pendingEventsData);
   };
 
   const [rejectModal, setRejectModal] = useState<{
@@ -90,10 +96,12 @@ const AdminDashboard: React.FC = () => {
   useEffect(() => {
     async function loadData() {
       const res = await OrganizerService.getPendingOrganizers();
+      const res2 = await EventService.getPendingtEvent();
       setPendingData(res);
+      setPendingEnventsData(res2);
     }
     loadData();
-  }, []);
+  }, []);  
 
   function getInitials(firstName: string, lastName: string) {
     const first = firstName?.[0] || "";
@@ -252,6 +260,103 @@ const AdminDashboard: React.FC = () => {
                   </p>
                   <p className="text-sm text-gray-400">
                     When organizers submit for registration, they&apos;ll appear
+                    here
+                  </p>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Organizers Awaiting Approval Section */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100/50 mt-10">
+          <div className="p-6 border-b border-gray-100">
+            <h2 className="text-lg font-semibold text-gray-900">
+              Events awaiting approval
+            </h2>
+          </div>
+
+          {/* Data Embedded State */}
+          <div className="p-6">
+            {organizers.length == 100 ? (
+              <div className="space-y-4">
+                {/* {events.map((event) => (
+                  <div
+                    key={event.id}
+                    className="flex flex-col sm:flex-row items-center sm:items-start gap-4 p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow"
+                  >
+                    <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gray-300 text-white font-semibold text-lg flex-shrink-0">
+                      {getInitials(organizer.first_name, organizer.last_name)}
+                    </div>
+
+                    <div className="flex-1 min-w-0 text-center sm:text-left">
+                      <h3 className="text-base font-semibold text-gray-900 truncate">
+                        {organizer.first_name} {organizer.last_name}
+                      </h3>
+                      {organizer.roles[0]?.name && (
+                        <p className="text-sm text-gray-600 truncate">
+                          {organizer.roles[0]?.name}
+                        </p>
+                      )}
+                      {organizer.roles[0].description && (
+                        <p className="text-xs text-gray-500 truncate">
+                          {organizer.roles[0]?.description}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 flex-shrink-0 mt-2 sm:mt-0">
+                      <button
+                        onClick={() =>
+                          setRejectModal({
+                            open: true,
+                            organizerId: organizer.id,
+                          })
+                        }
+                        className="px-4 py-2 text-sm font-medium text-red-600 bg-white border border-red-300 rounded-md hover:bg-red-50 transition-colors cursor-pointer w-full sm:w-auto"
+                      >
+                        <span className="mr-2">X</span> REJECT
+                      </button>
+                      <button
+                        onClick={() =>
+                          setAcceptModal({
+                            open: true,
+                            organizerId: organizer.id,
+                          })
+                        }
+                        className="px-4 py-2 text-sm font-medium text-green-700 bg-green-200 rounded-md hover:bg-green-300 hover:text-green-800 transition-colors flex items-center gap-2 cursor-pointer w-full sm:w-auto justify-center"
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                        ACCEPT
+                      </button>
+                    </div>
+                  </div>
+                ))} */}
+              </div>
+            ) : (
+              <>
+                {/* Empty state  */}
+                <div className="text-center space-y-3">
+                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto">
+                    <Calendar className="h-8 w-8 text-gray-400" />
+                  </div>
+                  <p className="text-gray-500 font-medium">
+                    No events awaiting approval
+                  </p>
+                  <p className="text-sm text-gray-400">
+                    When events submit for registration, they&apos;ll appear
                     here
                   </p>
                 </div>
