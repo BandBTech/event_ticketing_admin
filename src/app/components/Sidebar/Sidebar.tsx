@@ -240,61 +240,61 @@ const Sidebar: React.FC<SidebarProps> = ({
             )}
           </button>
         </div>
+        {showProfileMenu && (
+          <>
+            <div
+              className="fixed inset-0 z-40"
+              onClick={() => setShowProfileMenu(false)}
+            />
+
+            <div
+              className={`absolute z-50 bg-white rounded-lg shadow-lg border border-gray-200 py-2 ${
+                isCollapsed ? "left-16 bottom-10" : "left-44 bottom-10"
+              } w-56`}
+            >
+              <div className="px-4 py-3 border-b border-gray-100">
+                <p className="text-sm font-semibold text-gray-900">
+                  <span className="mr-1">{profileData?.first_name}</span>
+                  <span>{profileData?.last_name}</span>
+                </p>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  {profileData?.email}
+                </p>
+              </div>
+
+              <div className="py-1">
+                <button
+                  onClick={() => {
+                    setShowAdminProfile(true);
+                    console.log("Navigate to profile");
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  <User className="h-4 w-4 text-gray-600" />
+                  <span>Profile</span>
+                </button>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setShowProfileMenu(false);
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 transition-colors cursor-pointer"
+                >
+                  <LogOut className="h-4 w-4 text-blue-600" />
+                  <span>Sign Out</span>
+                </button>
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
-      {showProfileMenu && (
-        <>
-          <div
-            className="fixed inset-0 z-40"
-            onClick={() => setShowProfileMenu(false)}
-          />
-
-          <div
-            className={`absolute z-50 bg-white rounded-lg shadow-lg border border-gray-200 py-2 ${
-              isCollapsed ? "left-16 bottom-10" : "left-44 bottom-10"
-            } w-56`}
-          >
-            <div className="px-4 py-3 border-b border-gray-100">
-              <p className="text-sm font-semibold text-gray-900">
-                <span className="mr-1">{profileData?.first_name}</span>
-                <span>{profileData?.last_name}</span>
-              </p>
-              <p className="text-xs text-gray-500 mt-0.5">
-                {profileData?.email}
-              </p>
-            </div>
-
-            <div className="py-1">
-              <button
-                onClick={() => {
-                  setShowAdminProfile(true);
-                  console.log("Navigate to profile");
-                }}
-                className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-              >
-                <User className="h-4 w-4 text-gray-600" />
-                <span>Profile</span>
-              </button>
-              <button
-                onClick={() => {
-                  handleLogout();
-                  setShowProfileMenu(false);
-                }}
-                className="w-full flex items-center gap-3 px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 transition-colors cursor-pointer"
-              >
-                <LogOut className="h-4 w-4 text-blue-600" />
-                <span>Sign Out</span>
-              </button>
-            </div>
-          </div>
-        </>
+      {showAdminProfile && (
+        <AdminProfileModal
+          setShowAdminProfile={setShowAdminProfile}
+          profileData={profileData}
+        />
       )}
-
-      {showAdminProfile && 
-      <AdminProfileModal 
-      setShowAdminProfile={setShowAdminProfile}
-      profileData={profileData}
-      />}
     </>
   );
 };

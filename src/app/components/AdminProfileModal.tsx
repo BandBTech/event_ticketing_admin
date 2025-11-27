@@ -1,14 +1,10 @@
 import { useState } from "react";
-import {
-  X,
-  Mail,
-  Phone,
-  CheckCircle,
-  User,
-  Save,
-} from "lucide-react";
+import { X, Mail, Phone, CheckCircle, User, Save } from "lucide-react";
 import { authService } from "@/lib/authService";
+import type { Country } from "react-phone-number-input";
 import { toast } from "sonner";
+import { PhoneInput } from "@/components/ui/phone-input";
+import { parsePhoneNumber } from "react-phone-number-input";
 
 interface AdminData {
   id: string;
@@ -30,7 +26,6 @@ export default function AdminProfileModal({
   setShowAdminProfile,
   profileData,
 }: AdminProfileModalProps) {
-
   const emptyAdmin: AdminData = {
     id: "",
     email: "",
@@ -50,6 +45,7 @@ export default function AdminProfileModal({
 
   const [adminData, setAdminData] = useState<AdminData>(initialData);
   const [editedData, setEditedData] = useState<AdminData>(initialData);
+  const defaultCountry = "NP";
 
   if (!profileData) return null;
 
@@ -58,6 +54,35 @@ export default function AdminProfileModal({
       ...prev,
       [field]: value,
     }));
+  };
+
+  const handlePhoneChange = (value: string | undefined) => {
+    if (!value) {
+      setEditedData((prev) => ({
+        ...prev,
+        phone: "",
+        country_code: "",
+      }));
+      return;
+    }
+
+    try {
+      const phoneNumber = parsePhoneNumber(value);
+      if (phoneNumber) {
+        setEditedData((prev) => ({
+          ...prev,
+          phone: phoneNumber.nationalNumber,
+          country_code: phoneNumber.countryCallingCode,
+        }));
+      } else {
+        setEditedData((prev) => ({
+          ...prev,
+          phone: value,
+        }));
+      }
+    } catch (error) {
+      console.error("Failed to save profile:", error);
+    }
   };
 
   const handleSave = async () => {
@@ -75,6 +100,7 @@ export default function AdminProfileModal({
       setIsEditing(false);
     } catch (error) {
       console.error("Failed to save profile:", error);
+      toast.error("Failed to update profile");
     } finally {
       setIsSaving(false);
     }
@@ -94,6 +120,38 @@ export default function AdminProfileModal({
     window.location.reload();
   };
 
+  // Format phone number for display
+  const getFormattedPhone = (data: AdminData) => {
+    if (data.country_code && data.phone) {
+      return `+${data.country_code}${data.phone}`;
+    }
+    return data.phone;
+  };
+
+  // Get country code from phone number
+  const getCountryFromPhone = (data: AdminData): Country | undefined => {
+    try {
+      const fullNumber = getFormattedPhone(data);
+      if (fullNumber) {
+        const phoneNumber = parsePhoneNumber(fullNumber);
+        return phoneNumber?.country;
+      }
+    } catch (error) {
+      console.error("Error parsing phone number:", error);
+    }
+    return undefined;
+  };
+
+  // Function to get flag emoji from country code
+  const getFlagEmoji = (countryCode: Country | undefined) => {
+    if (!countryCode) return null;
+    const codePoints = countryCode
+      .toUpperCase()
+      .split("")
+      .map((char) => 127397 + char.charCodeAt(0));
+    return String.fromCodePoint(...codePoints);
+  };
+
   return (
     <div className="fixed inset-0 bg-gray/50 backdrop-blur-md shadow-2xl flex items-center justify-center p-4 z-50 animate-fadeIn">
       {/* Modal Content */}
@@ -108,7 +166,9 @@ export default function AdminProfileModal({
             <X size={20} />
           </button>
 
-          <h1 className="text-2xl font-bold text-gray-900 mb-6">Admin Profile</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-6">
+            Admin Profile
+          </h1>
 
           <div className="flex items-center space-x-4">
             <div className="w-16 h-16 bg-gray-100 border border-gray-300 rounded-full flex items-center justify-center">
@@ -157,51 +217,48 @@ export default function AdminProfileModal({
             <Mail className="text-gray-500 mt-1 flex-shrink-0" size={18} />
             <div className="flex-1">
               <p className="text-sm text-gray-500 font-medium">Email Address</p>
-                <div className="flex items-center space-x-2">
-                  <p className="text-gray-900">{adminData.email}</p>
-                  {adminData.is_email_verified && (
-                    <CheckCircle className="text-gray-600" size={14} />
-                  )}
-                </div>
+              <div className="flex items-center space-x-2">
+                <p className="text-gray-900">{adminData.email}</p>
+                {adminData.is_email_verified && (
+                  <CheckCircle className="text-gray-600" size={14} />
+                )}
+              </div>
               {adminData.is_email_verified && !isEditing && (
                 <p className="text-xs text-gray-500 mt-1">Verified</p>
               )}
             </div>
           </div>
 
-          {/* Phone */}
+          {/* Contact Number */}
           <div className="flex items-start space-x-3">
             <Phone className="text-gray-500 mt-1 flex-shrink-0" size={18} />
             <div className="flex-1">
-              <p className="text-sm text-gray-500 font-medium">Phone Number</p>
+              <p className="text-sm text-gray-500 font-medium mb-2">
+                Contact Number
+              </p>
               {isEditing ? (
-                <div className="flex space-x-2 mt-1">
-                  <input
-                    type="text"
-                    value={editedData.country_code}
-                    onChange={(e) =>
-                      handleInputChange("country_code", e.target.value)
-                    }
-                    className="w-20 text-gray-900 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-400"
-                    placeholder="+1"
-                  />
-                  <input
-                    type="tel"
-                    value={editedData.phone}
-                    onChange={(e) => handleInputChange("phone", e.target.value)}
-                    className="flex-1 text-gray-900 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-400"
-                    placeholder="Phone number"
-                  />
-                </div>
+                <PhoneInput
+                  value={getFormattedPhone(editedData)}
+                  onChange={handlePhoneChange}
+                  defaultCountry={defaultCountry}
+                  placeholder="Enter phone number"
+                  className="w-full"
+                  required
+                />
               ) : (
-                <p className="text-gray-900">
-                  {adminData.country_code && adminData.phone
-                    ? `${adminData.country_code} ${adminData.phone}`
-                    : adminData.phone || "Not provided"}
-                </p>
+                <div className="flex items-center space-x-2">
+                  {getCountryFromPhone(adminData) && (
+                    <span className="text-2xl leading-none">
+                      {getFlagEmoji(getCountryFromPhone(adminData))}
+                    </span>
+                  )}
+                  <p className="text-gray-900">
+                    {getFormattedPhone(adminData) || "Not provided"}
+                  </p>
+                </div>
               )}
             </div>
-          </div>      
+          </div>
         </div>
 
         {/* Footer */}
