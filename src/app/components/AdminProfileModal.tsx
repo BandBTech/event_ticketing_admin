@@ -3,7 +3,6 @@ import {
   X,
   Mail,
   Phone,
-  Calendar,
   CheckCircle,
   User,
   Save,
@@ -53,17 +52,6 @@ export default function AdminProfileModal({
   const [editedData, setEditedData] = useState<AdminData>(initialData);
 
   if (!profileData) return null;
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
 
   const handleInputChange = (field: keyof AdminData, value: string) => {
     setEditedData((prev) => ({
@@ -115,10 +103,12 @@ export default function AdminProfileModal({
           <button
             aria-label="Close Modal"
             onClick={() => setShowAdminProfile(false)}
-            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 rounded p-1 transition-colors"
+            className="absolute top-2 right-4 text-gray-400 hover:text-gray-600 rounded p-1 transition-colors"
           >
             <X size={20} />
           </button>
+
+          <h1 className="text-2xl font-bold text-gray-900 mb-6">Admin Profile</h1>
 
           <div className="flex items-center space-x-4">
             <div className="w-16 h-16 bg-gray-100 border border-gray-300 rounded-full flex items-center justify-center">
@@ -126,7 +116,7 @@ export default function AdminProfileModal({
             </div>
             <div>
               {isEditing ? (
-                <div className="max-w-mdspace-y-2">
+                <div className="max-w-md space-y-2">
                   <div className="flex space-x-2">
                     <input
                       type="text"
@@ -161,28 +151,18 @@ export default function AdminProfileModal({
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-4">
+        <div className="p-6 space-y-4 mt-4">
           {/* Email */}
           <div className="flex items-start space-x-3">
             <Mail className="text-gray-500 mt-1 flex-shrink-0" size={18} />
             <div className="flex-1">
               <p className="text-sm text-gray-500 font-medium">Email Address</p>
-              {isEditing ? (
-                <input
-                  type="email"
-                  value={editedData.email}
-                  onChange={(e) => handleInputChange("email", e.target.value)}
-                  className="w-full text-gray-900 border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-gray-400"
-                  placeholder="Email"
-                />
-              ) : (
                 <div className="flex items-center space-x-2">
                   <p className="text-gray-900">{adminData.email}</p>
                   {adminData.is_email_verified && (
                     <CheckCircle className="text-gray-600" size={14} />
                   )}
                 </div>
-              )}
               {adminData.is_email_verified && !isEditing && (
                 <p className="text-xs text-gray-500 mt-1">Verified</p>
               )}
@@ -221,42 +201,7 @@ export default function AdminProfileModal({
                 </p>
               )}
             </div>
-          </div>
-
-          {/* Divider */}
-          <div className="border-t border-gray-200 my-4"></div>
-
-          {/* Created At */}
-          <div className="flex items-start space-x-3">
-            <Calendar className="text-gray-500 mt-1 flex-shrink-0" size={18} />
-            <div className="flex-1">
-              <p className="text-sm text-gray-500 font-medium">
-                Account Created
-              </p>
-              <p className="text-gray-900 text-sm">
-                {formatDate(adminData.created_at)}
-              </p>
-            </div>
-          </div>
-
-          {/* Updated At */}
-          <div className="flex items-start space-x-3">
-            <Calendar className="text-gray-500 mt-1 flex-shrink-0" size={18} />
-            <div className="flex-1">
-              <p className="text-sm text-gray-500 font-medium">Last Updated</p>
-              <p className="text-gray-900 text-sm">
-                {formatDate(adminData.updated_at)}
-              </p>
-            </div>
-          </div>
-
-          {/* User ID */}
-          <div className="bg-gray-50 border border-gray-200 rounded p-3 mt-4">
-            <p className="text-xs text-gray-500 font-medium mb-1">User ID</p>
-            <p className="text-xs text-gray-700 font-mono break-all">
-              {adminData.id}
-            </p>
-          </div>
+          </div>      
         </div>
 
         {/* Footer */}
