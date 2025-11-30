@@ -56,10 +56,10 @@ const AdminDashboard: React.FC = () => {
   }>({ open: false });
   const [adminRemark, setAdminRemark] = useState("");
 
-  const handleApprove = async (organizerId: string, admin_remark: string) => {
+  const handleApprove = async (organizerId: string) => {
     const payload = {
       organizerId,
-      admin_remark,
+      admin_remark: "approved by admin",
       status: "approved",
     };
 
@@ -221,12 +221,11 @@ const AdminDashboard: React.FC = () => {
                         <span className="mr-2">X</span> REJECT
                       </button>
                       <button
-                        onClick={() =>
-                          setAcceptModal({
-                            open: true,
-                            organizerId: organizer.id,
-                          })
-                        }
+                  onClick={async () => {
+                    if (!acceptModal.organizerId) return;
+                    await handleApprove(acceptModal.organizerId);
+                    setAdminRemark("");
+                  }}
                         className="px-4 py-2 text-sm font-medium text-green-700 bg-green-200 rounded-md hover:bg-green-300 hover:text-green-800 transition-colors flex items-center gap-2 cursor-pointer w-full sm:w-auto justify-center"
                       >
                         <svg
@@ -395,7 +394,7 @@ const AdminDashboard: React.FC = () => {
                 <button
                   onClick={async () => {
                     if (!acceptModal.organizerId) return;
-                    await handleApprove(acceptModal.organizerId, adminRemark);
+                    await handleApprove(acceptModal.organizerId);
                     setAcceptModal({ open: false });
                     setAdminRemark("");
                   }}
