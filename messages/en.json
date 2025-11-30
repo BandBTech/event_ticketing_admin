@@ -300,7 +300,8 @@
       "logoutSuccess": "You have been logged out",
       "invalidCredentials": "Invalid email or password",
       "networkError": "Network error. Please check your connection.",
-      "serverError": "Something went wrong. Please try again."
+      "serverError": "Something went wrong. Please try again.",
+      "passwordChangedLogin": "Please login with your new password."
     }
   },
   "settings": {

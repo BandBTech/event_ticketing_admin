@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { authService } from "@/lib/authService";
-import AdminProfileModal from "@/app/components/AdminProfileModal";
+
 
 interface SidebarProps {
   activeItem?: string;
@@ -44,7 +44,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   const [isClient, setIsClient] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
-  const [showAdminProfile, setShowAdminProfile] = useState(false);
+
   const [profileData, setProfileData] = useState<UserProfile | null>(null);
   const router = useRouter();
 
@@ -265,8 +265,8 @@ const Sidebar: React.FC<SidebarProps> = ({
               <div className="py-1">
                 <button
                   onClick={() => {
-                    setShowAdminProfile(true);
-                    console.log("Navigate to profile");
+                    router.push("/settings/profile");
+                    setShowProfileMenu(false);
                   }}
                   className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                 >
@@ -289,12 +289,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         )}
       </div>
 
-      {showAdminProfile && (
-        <AdminProfileModal
-          setShowAdminProfile={setShowAdminProfile}
-          profileData={profileData}
-        />
-      )}
+
     </>
   );
 };
