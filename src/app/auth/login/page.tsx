@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -25,19 +25,14 @@ import { useRouter } from "next/navigation";
 import { createValidationHelpers } from "@/lib/validation";
 
 // Create validation schema with translations
-const createLoginSchema = (t: (key: string, fallback?: string) => string) => {
+const createLoginSchema = (
+  t: (key: string, fallback?: string) => string
+) => {
   const v = createValidationHelpers(t);
 
   return z.object({
     email: z.string().min(1, v.required("Email")).email(v.email("Email")),
-    password: z
-      .string()
-      .min(1, v.required("Password"))
-      .min(8, v.minLength("Password", 8))
-      .max(100, v.maxLength("Password", 100))
-      .regex(/[A-Z]/, v.passwordUppercase())
-      .regex(/[a-z]/, v.passwordLowercase())
-      .regex(/[0-9]/, v.passwordNumber()),
+    password: z.string().min(1, v.required("Password")),
     rememberMe: z.boolean(),
   });
 };
@@ -47,24 +42,27 @@ export default function LoginPage() {
   const router = useRouter();
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
-  const { login, isLoading, clearError } = useAuthStore();
+  const { login, isLoading, clearError, isAuthenticated } = useAuthStore();
 
   const [loginError, setLoginError] = useState("");
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/dashboard");
+    }
+  }, [isAuthenticated, router]);
 
   const loginSchema = createLoginSchema(t);
   type LoginFormData = z.infer<typeof loginSchema>;
 
-  // Check for saved credentials on component mount
-  const savedCredentials = tokenManager.getSavedCredentials();
-
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: savedCredentials?.email || "",
-      password: savedCredentials?.password || "",
-      rememberMe: tokenManager.hasCredentialsSaved(),
+      email: "",
+      password: "",
+      rememberMe: false,
     },
-    mode: "onBlur",
+    mode: "onChange",
   });
 
   const {
@@ -91,28 +89,19 @@ export default function LoginPage() {
         data.rememberMe
       );
 
-      // Save or clear credentials based on Remember Me
-      if (data.rememberMe) {
-        tokenManager.saveCredentials(data.email, data.password);
-      } else {
-        tokenManager.clearCredentials();
-      }
-
       // Show success toast
       toast.success("auth.toast.loginSuccess", "Welcome back!");
 
       // Redirect to homepage
       router.push("/dashboard");
     } catch (error) {
-      console.error("Login failed:", error);
-
       // Handle different error types and show toast
       if (error instanceof AuthError) {
         switch (error.code) {
           case "UNAUTHORIZED":
             toast.error(
-              "auth.toast.invalidCredentials",
-              "Invalid email or password"
+              "",
+              error.message || "Invalid email or password"
             );
             break;
           case "NETWORK_ERROR":

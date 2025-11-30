@@ -9,7 +9,7 @@ import {
   EyeIcon,
   KeyIcon,
   EyeClosedIcon,
-  ArrowLeftIcon,
+  // ArrowLeftIcon,
 } from "@phosphor-icons/react/dist/ssr";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,6 +21,8 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createValidationHelpers } from "@/lib/validation";
+import { PasswordRequirements } from "@/app/components/PasswordRequirements";
+
 
 // Create validation schema - OTP is no longer needed as it's verified in previous step
 const createResetPasswordSchema = (
@@ -38,7 +40,7 @@ const createResetPasswordSchema = (
         .regex(/[A-Z]/, v.passwordUppercase())
         .regex(/[a-z]/, v.passwordLowercase())
         .regex(/[0-9]/, v.passwordNumber()),
-      confirmPassword: z.string(),
+      confirmPassword: z.string().min(1, v.required("Confirm Password")),
     })
     .refine((data) => data.newPassword === data.confirmPassword, {
       message: v.passwordMatch(),
@@ -83,7 +85,7 @@ function ResetPasswordContent() {
       newPassword: "",
       confirmPassword: "",
     },
-    mode: "onBlur",
+    mode: "onChange",
   });
 
   const {
@@ -115,10 +117,8 @@ function ResetPasswordContent() {
       // Redirect to login immediately
       router.push("/auth/login");
     } catch (err) {
-      console.log(typeof err);
       // Show error toast
       if (err instanceof AuthError) {
-        console.error("Password reset failed:", err, err.message, err.details);
         toast.error(
           "auth.toast.serverError",
           err.message || "Failed to reset password. Please try again."
@@ -130,6 +130,7 @@ function ResetPasswordContent() {
         );
       }
     } finally {
+      sessionStorage.removeItem('password_reset_email');
       setIsLoading(false);
     }
   };
@@ -141,13 +142,13 @@ function ResetPasswordContent() {
           <div className="glass-login-card rounded-2xl p-4 sm:p-6">
             <div className="space-y-6 p-2 sm:p-3">
               {/* Back Button */}
-              <Link
+              {/* <Link
                 href="/forgot-password"
                 className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600 transition-colors"
               >
                 <ArrowLeftIcon size={16} />
                 {t("auth.resetPassword.back", "Back")}
-              </Link>
+              </Link> */}
 
               {/* Header */}
               <div className="space-y-2">
@@ -182,7 +183,10 @@ function ResetPasswordContent() {
                   )}
 
                   {/* Form */}
-                  <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                    <form
+                      onSubmit={handleSubmit(onSubmit)}
+                      className="space-y-6"
+                    >
                     {/* New Password Field */}
                     <div className="space-y-2">
                       <label
@@ -239,11 +243,21 @@ function ResetPasswordContent() {
                           )}
                         </button>
                       </div>
-                      {errors.newPassword && (
-                        <p className="text-sm text-destructive" role="alert">
-                          {errors.newPassword.message}
-                        </p>
-                      )}
+                        {errors.newPassword &&
+                          errors.newPassword.message !== "Invalid input" &&
+                          // Filter out messages that are already covered by PasswordRequirements
+                          !errors.newPassword.message?.includes("must be at least 8 characters") &&
+                          !errors.newPassword.message?.includes("uppercase and one lowercase") &&
+                          !errors.newPassword.message?.includes("special character") &&
+                          !errors.newPassword.message?.includes("numeric digit") && (
+                            <p
+                              className="text-sm text-destructive"
+                              role="alert"
+                            >
+                              {errors.newPassword.message}
+                            </p>
+                          )}
+                        <PasswordRequirements password={form.watch("newPassword")} />
                     </div>
 
                     {/* Confirm Password Field */}
@@ -342,7 +356,7 @@ function ResetPasswordContent() {
                   {/* Back to Login */}
                   <div className="text-center">
                     <Link
-                      href="/login"
+                        href="/auth/login"
                       className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
                     >
                       {t("auth.resetPassword.backToLogin", "Back to login")}

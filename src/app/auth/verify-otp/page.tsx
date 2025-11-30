@@ -16,6 +16,7 @@ import { useAuthStore } from "@/store/authStore";
 import { toast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 
+
 function VerifyOTPContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -75,6 +76,7 @@ function VerifyOTPContent() {
         identifier: email,
         otp_code: otp,
         otp_type: otpType,
+
       });
 
       // Show success toast
@@ -103,9 +105,10 @@ function VerifyOTPContent() {
 
       // Show error toast
       if (err instanceof AuthError) {
-        console.log(err.message)
         toast.error(
-          err.message || "Invalid OTP. Please try again."
+          "",
+          err.message || "Invalid OTP. Please try again.",
+          err.details
         );
       } else {
         toast.error("auth.toast.serverError", "Invalid OTP. Please try again.");
@@ -134,10 +137,11 @@ function VerifyOTPContent() {
       setResendTimer(60);
     } catch (err) {
       // Show error toast
-      toast.error(
-        "auth.toast.serverError",
-        err instanceof Error ? err.message : "Failed to resend OTP. Please try again."
-      );
+      if (err instanceof AuthError) {
+        toast.error("", err.message || "Failed to resend OTP. Please try again.", err.details);
+      } else {
+        toast.error("", "Failed to resend OTP. Please try again.");
+      }
     } finally {
       setIsResending(false);
     }
@@ -151,7 +155,15 @@ function VerifyOTPContent() {
             <div className="space-y-6 p-2 sm:p-3">
               {/* Back Button */}
               <button
-                onClick={() => router.back()}
+                onClick={() => {
+                  if (otpType === 'password_reset') {
+                    // Save email to sessionStorage for forgot-password page
+                    sessionStorage.setItem('password_reset_email', email);
+                    router.push('/forgot-password');
+                  } else {
+                    router.push('/signup');
+                  }
+                }}
                 className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600 transition-colors cursor-pointer"
               >
                 <ArrowLeftIcon size={16} />
@@ -232,7 +244,7 @@ function VerifyOTPContent() {
                 >
                   {isLoading
                     ? t("auth.verifyOTP.verifying", "Verifying...")
-                    : t("auth.verifyOTP.verifyButton", "Verify Email")}
+                    : t("auth.verifyOTP.verifyButton", "Verify OTP")}
                 </Button>
               </div>
 

@@ -16,7 +16,7 @@ export class AuthError extends Error {
     message: string,
     public code: string,
     public status?: number,
-    public details?: unknown
+    public details?: string
   ) {
     super(message);
     this.name = 'AuthError';
@@ -306,14 +306,13 @@ class AuthService {
     email: string;
     password: string;
   }): Promise<{ user: UserProfileResponse; message?: string }> {
-    const response = await apiRequest<UserProfileResponse & { message?: string }>('/auth/admin/set-password', {
-      method: 'POST',
-      body: JSON.stringify(data),
+    const response = await api.post<AuthApiResponse<UserProfileResponse>>('/auth/organizer/set-password', data, {
+      returnFullResponse: true,
     });
-    
+
     return {
-      user: response,
-      message: 'message' in response ? response.message : undefined
+      user: response.data,
+      message: response.message
     };
   }
 

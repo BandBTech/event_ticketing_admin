@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -48,13 +48,27 @@ export default function ForgotPasswordPage() {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = form;
+
+  // Populate email from sessionStorage if user navigated back
+  useEffect(() => {
+    const savedEmail = sessionStorage.getItem('password_reset_email');
+    if (savedEmail) {
+      setValue('email', savedEmail);
+      // Clear it after reading to avoid stale data
+      sessionStorage.removeItem('password_reset_email');
+    }
+  }, []);
 
   const onSubmit = async (data: ForgotPasswordFormData) => {
     setIsLoading(true);
 
     try {
       await authService.requestPasswordReset(data.email);
+
+      // Save email to sessionStorage for potential back navigation
+      sessionStorage.setItem('password_reset_email', data.email);
 
       // Show success toast
       toast.success(
@@ -69,14 +83,11 @@ export default function ForgotPasswordPage() {
         )}&type=password_reset`
       );
     } catch (err) {
-      console.error("Password reset request failed:", err);
-
-      const errorMessage = err instanceof AuthError
-        ? (err.message || "Failed to send reset email. Please try again.")
-        : "Failed to send reset email. Please try again later.";
-
-      // Show error toast
-      toast.error(errorMessage);
+      if (err instanceof AuthError) {
+        toast.error("", err.message || "Failed to send reset email. Please try again later.", err.details);
+      } else {
+        toast.error("", "Failed to send reset email. Please try again later.");
+      }
 
       setIsLoading(false);
     }
@@ -89,13 +100,13 @@ export default function ForgotPasswordPage() {
             <div className="glass-login-card rounded-2xl p-4 sm:p-6">
               <div className="space-y-8 p-2 sm:p-3">
                 {/* Back Button */}
-                <Link
+              {/* <Link
                   href="/auth/login"
                   className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600 transition-colors"
                 >
                   <ArrowLeftIcon size={16} />
                   {t("auth.forgotPassword.backToLogin", "Back to login")}
-                </Link>
+                </Link> */}
 
                 {/* Header */}
                 <div className="space-y-2">

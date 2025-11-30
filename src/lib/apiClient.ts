@@ -6,7 +6,7 @@
 import { tokenManager } from './tokenManager';
 import { AuthError } from './authService';
 import { toast } from './toast';
-// import { useLanguageStore } from '@/store/languageStore';
+import { useLanguageStore } from '@/store/languageStore';
 
 // API Configuration
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://sandbox.timroticket.com/api/v1';
@@ -31,7 +31,8 @@ export interface ApiRequestConfig extends RequestInit {
   showErrorToast?: boolean;
   successMessage?: string;
   errorMessage?: string;
-  // translateResponse?: boolean; 
+  translateResponse?: boolean; // If true, tries to translate API response message
+  returnFullResponse?: boolean; // If true, returns full response including message
 }
 
 /**
@@ -48,7 +49,8 @@ export async function apiRequest<T>(
     showErrorToast = true, // Show errors by default
     successMessage,
     errorMessage,
-    // translateResponse = false,
+    translateResponse = false,
+    returnFullResponse = false,
     headers = {},
     ...restConfig
   } = config;
@@ -57,9 +59,14 @@ export async function apiRequest<T>(
 
   // Prepare headers
   const requestHeaders: Record<string, string> = {
-    'Content-Type': 'application/json',
     ...headers as Record<string, string>,
   };
+
+  // Only set Content-Type if not already set and body is not FormData
+  // FormData should not have Content-Type set manually (browser sets it with boundary)
+  if (!requestHeaders['Content-Type'] && !(restConfig.body instanceof FormData)) {
+    requestHeaders['Content-Type'] = 'application/json';
+  }
 
   // Add auth token if required
   if (requiresAuth) {
@@ -138,6 +145,11 @@ export async function apiRequest<T>(
       const responseMessage = data?.message;
       const displayMessage = successMessage || responseMessage || 'Success';
       toast.success('api.success', displayMessage);
+
+      if (returnFullResponse) {
+        return data as T;
+      }
+
     }
 
     // Return successful response data
@@ -218,7 +230,8 @@ async function refreshAccessToken(): Promise<string> {
     const tokens = data.data || data;
 
     // Update tokens
-    tokenManager.setTokens(tokens.access_token, tokens.refresh_token);
+    const rememberMe = tokenManager.isRememberMeEnabled();
+    tokenManager.setTokens(tokens.access_token, tokens.refresh_token, rememberMe);
 
     // Notify all waiting requests
     onTokenRefreshed(tokens.access_token);
@@ -263,4 +276,15 @@ export const api = {
 
   delete: <T>(endpoint: string, config?: ApiRequestConfig) =>
     apiRequest<T>(endpoint, { ...config, method: 'DELETE' }),
+
+  /**
+   * PUT request with FormData support (multipart/form-data)
+   * The apiRequest function automatically handles Content-Type for FormData
+   */
+  putFormData: <T>(endpoint: string, formData: FormData, config?: ApiRequestConfig) =>
+    apiRequest<T>(endpoint, {
+      ...config,
+      method: 'PUT',
+      body: formData,
+    }),
 };

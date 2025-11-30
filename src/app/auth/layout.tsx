@@ -6,7 +6,7 @@ export default function AuthsLayout({ children }: { children: React.ReactNode })
   return (
     <div className="min-h-screen bg-white text-gray-900 flex flex-col ">
       <AuthNavbar />
-      <main className="flex-1 flex items-center justify-center bg-gray-100">{children}</main>
+      <main className="flex-1 items-center justify-center bg-gray-100">{children}</main>
       <AuthFooter />
     </div>
   )

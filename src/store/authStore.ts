@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { authService, AuthError } from '@/lib/authService';
 import { tokenManager } from '@/lib/tokenManager';
-import { AuthUser, LoginRequest } from '@/types/auth';
+import { AuthUser, LoginRequest, Role } from '@/types/auth';
 
 interface AuthStore {
   // State
@@ -45,10 +45,13 @@ export const useAuthStore = create<AuthStore>()(
             email: profile.email,
             firstName: profile.first_name,
             lastName: profile.last_name,
-            phone: profile.phone,
+            phone: profile?.phone?.startsWith("+")
+              ? profile?.phone
+              : (profile?.country_code && profile?.phone ? profile.country_code + profile.phone : profile?.phone),
+            countryCode: profile.country_code,
             isEmailVerified: profile.is_email_verified,
             organization: profile.organization,
-            roles: [], // Profile endpoint doesn't return roles in the API doc
+            roles: profile.roles || [],
           };
 
           set({
@@ -86,8 +89,9 @@ export const useAuthStore = create<AuthStore>()(
             error: null,
           });
           return result;
-        } catch (error) {
-          console.error('Logout error:', error);
+        } catch {
+          // Ensure tokens are cleared even if the API call fails
+          tokenManager.clearTokens();
           set({
             user: null,
             isAuthenticated: false,
@@ -110,10 +114,12 @@ export const useAuthStore = create<AuthStore>()(
             email: profile.email,
             firstName: profile.first_name,
             lastName: profile.last_name,
-            phone: profile.phone,
+            phone: profile?.phone?.startsWith("+")
+              ? profile?.phone
+              : (profile?.country_code && profile?.phone ? profile.country_code + profile.phone : profile?.phone),
             isEmailVerified: profile.is_email_verified,
             organization: profile.organization,
-            roles: [],
+            roles: profile.roles || [],
           };
 
           set({
@@ -146,20 +152,22 @@ export const useAuthStore = create<AuthStore>()(
       // Check authentication status on app load
       checkAuth: () => {
         const hasTokens = tokenManager.hasTokens();
-        const isAuth = authService.isAuthenticated();
+        // We don't check isAuth (expiry) here because we want to allow the profile fetch
+        // to trigger a token refresh if the access token is expired but refresh token is valid.
 
-        if (hasTokens && isAuth) {
+        if (hasTokens) {
           // Set loading while fetching profile
           set({ isLoading: true });
           
           // Try to fetch profile
           get().fetchProfile().catch(() => {
-            // If profile fetch fails, clear everything
+            // If profile fetch fails (e.g. refresh token also expired), clear everything
             set({
               user: null,
               isAuthenticated: false,
               isLoading: false,
             });
+            tokenManager.clearTokens();
           });
         } else {
           // Clear invalid tokens
