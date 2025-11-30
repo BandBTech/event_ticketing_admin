@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { authService } from "@/lib/authService";
+import { useAuthStore } from "@/store/authStore";
 
 
 interface SidebarProps {
@@ -47,6 +48,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   const [profileData, setProfileData] = useState<UserProfile | null>(null);
   const router = useRouter();
+  const { logout } = useAuthStore();
 
   useEffect(() => {
     async function loadData() {
@@ -92,12 +94,12 @@ const Sidebar: React.FC<SidebarProps> = ({
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     if (typeof window !== "undefined") {
       localStorage.removeItem("activeItem");
       localStorage.removeItem("sidebarCollapsed");
     }
-    authService.logout();
+    await logout();
     router.push("/auth/login");
   };
 
