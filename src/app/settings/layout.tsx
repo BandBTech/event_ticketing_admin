@@ -7,7 +7,8 @@ import {
   CreditCardIcon,
   BellIcon,
   ShieldCheckIcon,
-  UsersIcon
+  UsersIcon,
+  TicketIcon
 } from "@phosphor-icons/react/dist/ssr";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -35,7 +36,7 @@ const menuItems = [
   {
     href: "/settings/tickets",
     label: "Tickets",
-    icon: CreditCardIcon,
+    icon: TicketIcon,
   },
   {
     href: "/settings/payments",
@@ -71,7 +72,7 @@ export default function SettingsLayout({
   return (
     <div className="flex min-h-screen">
       <Sidebar />
-      <main className="flex-1 bg-gray-50">
+      <main className="flex-1 bg-gray-50 ml-64">
         <div className="container mx-auto py-8 px-4 max-w-6xl">
           <div className="flex flex-col md:flex-row gap-8">
             {/* Settings Sidebar */}
@@ -83,7 +84,7 @@ export default function SettingsLayout({
                 <nav className="space-y-1">
                   {menuItems.map((item) => {
                     const Icon = item.icon;
-                    const isActive = pathname === item.href;
+                    const isActive = pathname === `${item.href}/`;
 
                     return (
                       <Link
