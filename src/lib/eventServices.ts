@@ -1,9 +1,6 @@
 import { api } from './apiClient';
 import { Event } from '@/types/event';
 
-const accessToken =
-  typeof window !== "undefined" ? localStorage.getItem("access_token") : null;  
-
 /**
  * Event Service
  * Handles all public event-related API calls
@@ -70,9 +67,7 @@ export class EventService {
    */
   static async getPendingtEvent(): Promise<Event> {
     return await api.get<Event>(`/admin/events/pending`, {
-              headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+      requiresAuth: true
     });
   }
 

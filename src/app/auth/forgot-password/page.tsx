@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { EnvelopeIcon, ArrowLeftIcon } from "@phosphor-icons/react/dist/ssr";
+import { EnvelopeIcon } from "@phosphor-icons/react/dist/ssr";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLanguageStore } from "@/store/languageStore";
@@ -59,7 +59,7 @@ export default function ForgotPasswordPage() {
       // Clear it after reading to avoid stale data
       sessionStorage.removeItem('password_reset_email');
     }
-  }, []);
+  }, [setValue]);
 
   const onSubmit = async (data: ForgotPasswordFormData) => {
     setIsLoading(true);

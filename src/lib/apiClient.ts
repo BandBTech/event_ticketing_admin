@@ -6,7 +6,6 @@
 import { tokenManager } from './tokenManager';
 import { AuthError } from './authService';
 import { toast } from './toast';
-import { useLanguageStore } from '@/store/languageStore';
 
 // API Configuration
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://sandbox.timroticket.com/api/v1';
@@ -31,7 +30,6 @@ export interface ApiRequestConfig extends RequestInit {
   showErrorToast?: boolean;
   successMessage?: string;
   errorMessage?: string;
-  translateResponse?: boolean; // If true, tries to translate API response message
   returnFullResponse?: boolean; // If true, returns full response including message
 }
 
@@ -49,7 +47,6 @@ export async function apiRequest<T>(
     showErrorToast = true, // Show errors by default
     successMessage,
     errorMessage,
-    translateResponse = false,
     returnFullResponse = false,
     headers = {},
     ...restConfig
@@ -228,6 +225,7 @@ async function refreshAccessToken(): Promise<string> {
 
     const data = await response.json();
     const tokens = data.data || data;
+    
 
     // Update tokens
     const rememberMe = tokenManager.isRememberMeEnabled();

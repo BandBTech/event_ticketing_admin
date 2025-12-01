@@ -1,14 +1,9 @@
 import { api } from './apiClient';
 import { API_ENDPOINTS } from '@/app/config/api';
 
-const accessToken =
-  typeof window !== "undefined" ? localStorage.getItem("access_token") : null;  
-
 /**
  * Organizer Types
  */
-// Each role assigned to an organizer
-
 interface Organizer {
   id: string;
   email: string;
@@ -35,51 +30,38 @@ interface OrganizerListResponse {
   organizers: Organizer[];
 }
 
+interface ApproveOrganizerResponse {
+  success: boolean;
+  message: string;
+}
 
 export class OrganizerService {
-  /**
-   * Get all organizers
-   */
-  static async getOrganizers(): Promise<Promise<OrganizerListResponse>> {
+  static async getOrganizers(): Promise<OrganizerListResponse> {
     return await api.get(API_ENDPOINTS.GET_ORGANIZERS, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+      requiresAuth: true,
     });
   }
 
-  /**
-   * Get pending organizers
-   */
   static async getPendingOrganizers(): Promise<OrganizerListResponse> {
     return await api.get(API_ENDPOINTS.GET_PENDING_ORGANIZERS, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+      requiresAuth: true,
     });
   }
 
-  /**
-   * Approve a pending organizer
-   */
 static async approveOrganizer(payload: {
   organizerId: string;
   admin_remark: string;
   status: string;
-}): Promise<Response> {
-  return await api.put(
+}): Promise<ApproveOrganizerResponse> {
+  return await api.put<ApproveOrganizerResponse>(
     API_ENDPOINTS.APPROVE_ORGANIZERS(payload.organizerId),
     {
       admin_remark: payload.admin_remark,
       status: payload.status,
     },
     {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+      requiresAuth: true,
     }
   );
 }
-
-
 }
