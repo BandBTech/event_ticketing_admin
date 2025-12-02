@@ -221,11 +221,7 @@ const AdminDashboard: React.FC = () => {
                         <span className="mr-2">X</span> REJECT
                       </button>
                       <button
-                  onClick={async () => {
-                    if (!acceptModal.organizerId) return;
-                    await handleApprove(acceptModal.organizerId);
-                    setAdminRemark("");
-                  }}
+                      onClick={() => handleApprove(organizer.id)}
                         className="px-4 py-2 text-sm font-medium text-green-700 bg-green-200 rounded-md hover:bg-green-300 hover:text-green-800 transition-colors flex items-center gap-2 cursor-pointer w-full sm:w-auto justify-center"
                       >
                         <svg
