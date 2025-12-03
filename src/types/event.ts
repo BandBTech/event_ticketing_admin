@@ -2,19 +2,26 @@ export interface Event {
   id: string;
   title: string;
   description: string;
-  imageUrl: string;
-  bannerImageUrl?: string;
-  venue: Venue;
-  startDate: string;
-  endDate: string;
-  categories: EventCategory[];
-  ticketTypes: TicketType[];
-  status: EventStatus;
-  organizerId: string;
-  maxTicketsPerOrder: number;
-  allowReEntry: boolean;
-  createdAt: string;
-  updatedAt: string;
+  banner_image: string;
+  category: string[];
+  venue_name: string;
+  address: string;
+  location: string;
+  start_date: string;
+  end_date: string;  
+  timezone: string;
+  capacity: number;
+  available: number;
+  price: number;
+  commission_rate: number;
+  status: "pending" | "approved" | "rejected";
+  sales_status: "active" | "inactive" | "soldout";
+  is_featured: boolean;
+  is_cancelled: boolean;
+  organizer_id: string;
+  admin_remark: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Venue {

@@ -8,6 +8,8 @@ import { EventService } from "@/lib/eventServices";
 import { toast } from "sonner";
 import { Event } from "@/types/event";
 import { useRouter } from "next/navigation";
+import { useEventStore } from "@/store/eventStore";
+import { PendingEvent } from "@/types/pendingEvents";
 
 const AdminDashboard: React.FC = () => {
   interface Organizer {
@@ -44,14 +46,13 @@ const AdminDashboard: React.FC = () => {
   }
 
   const router = useRouter();
+  const setSelectedEvent = useEventStore((state) => state.setSelectedEvent);
 
   const [pendingData, setPendingData] = useState<OrganizerListResponse | null>(
     null
   );
   const [pendingEventsData, setPendingEnventsData] =
     useState<EventResponse | null>(null);
-
-  console.log("pending event data", pendingEventsData);
 
   const handleOpen = () => {
     console.log("Open modal clicked!");
@@ -64,10 +65,10 @@ const AdminDashboard: React.FC = () => {
   }>({ open: false });
   const [adminRemark, setAdminRemark] = useState("");
 
-const handleViewEvent = (event: Event) => {
-  sessionStorage.setItem('selectedEvent', JSON.stringify(event));
-  router.push(`/events/eventdetails`);
-};
+  const handleViewEvent = (event: PendingEvent) => {
+    setSelectedEvent(event);
+    router.push(`/events/eventdetails`);
+  };
 
   const handleApprove = async (organizerId: string) => {
     const payload = {
@@ -316,7 +317,7 @@ const handleViewEvent = (event: Event) => {
 
                     <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 flex-shrink-0 mt-2 sm:mt-0">
                       <button
-                         onClick={() => handleViewEvent(event)}
+                        onClick={() => handleViewEvent(event)}
                         className="px-4 py-2 text-sm font-medium text-blue-600 bg-white border border-blue-300 rounded-md hover:bg-blue-50 transition-colors cursor-pointer w-full sm:w-auto"
                       >
                         <span className="mr-2 flex justify-around items-center gap-1">
@@ -326,9 +327,7 @@ const handleViewEvent = (event: Event) => {
                           <span>VIEW EVENT</span>
                         </span>
                       </button>
-                      <button
-                        className="px-4 py-2 text-sm font-medium text-red-600 bg-white border border-red-300 rounded-md hover:bg-red-50 transition-colors cursor-pointer w-full sm:w-auto"
-                      >
+                      <button className="px-4 py-2 text-sm font-medium text-red-600 bg-white border border-red-300 rounded-md hover:bg-red-50 transition-colors cursor-pointer w-full sm:w-auto">
                         <span className="mr-2">X</span> REJECT
                       </button>
                       <button
