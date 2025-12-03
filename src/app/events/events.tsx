@@ -15,7 +15,7 @@ import Image from "next/image";
 import { events as eventsData } from "./eventsData";
 import Link from "next/link";
 
-export interface Tiers{
+export interface Tiers {
   id: string;
   tier_name: string;
   price: number;
@@ -42,10 +42,30 @@ export interface Event {
   banner_image: string;
   price: number;
 }
+export interface EventDetails {
+  id: string;
+  title: string;
+  date: string;
+  time: string;
+  venue_name: string;
+  address: string;
+  capacity: number;
+  timezone: string;
+  start_date: string;
+  end_date: string;
+  status: "ON SALE" | "UPCOMING" | "SOLD OUT" | string;
+  tiers: Tiers[];
+  tags: string[];
+  description: string;
+  banner_image: string;
+  price: number;
+  category: [];
+  commission_rate: number;
+}
 
 const events: Event[] = eventsData as Event[];
 
-export const addEvent = (event: Omit<Event, 'id'>): Event => {
+export const addEvent = (event: Omit<Event, "id">): Event => {
   const newEvent: Event = {
     ...event,
     id: Math.random().toString(36).substr(2, 9),
@@ -55,14 +75,13 @@ export const addEvent = (event: Omit<Event, 'id'>): Event => {
 };
 
 export const getEventById = (id: string): Event | undefined => {
-  return events.find(event => event.id === id);
+  return events.find((event) => event.id === id);
 };
 
 export default function Events() {
   const [search, setSearch] = useState("");
   return (
     <div className="flex-1 px-6 py-4">
-  
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center w-full max-w-md relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -98,10 +117,10 @@ export default function Events() {
               <span
                 className={`flex items-center gap-1 absolute top-2 left-2 text-xs font-semibold px-3 py-1 rounded-full text-white ${
                   event.status === "ON SALE"
-                  ? "bg-gradient-to-r from-green-500 to-emerald-400" 
-                  : event.status === "SOLD OUT"
-                  ? "bg-gradient-to-r from-red-500 to-red-400"
-                  : "bg-gradient-to-r from-yellow-500 to-amber-400"
+                    ? "bg-gradient-to-r from-green-500 to-emerald-400"
+                    : event.status === "SOLD OUT"
+                    ? "bg-gradient-to-r from-red-500 to-red-400"
+                    : "bg-gradient-to-r from-yellow-500 to-amber-400"
                 }`}
               >
                 {event.status === "ON SALE" && (
@@ -112,7 +131,9 @@ export default function Events() {
             </div>
 
             {/* Content */}
-            <div className="p-4 space-y-3 flex flex-col flex-1"> {/* Added flex flex-col flex-1 */}
+            <div className="p-4 space-y-3 flex flex-col flex-1">
+              {" "}
+              {/* Added flex flex-col flex-1 */}
               {/* Tags */}
               <div className="flex text-gray-700 flex-wrap gap-2">
                 {event.tags.map((tag) => (
@@ -124,12 +145,10 @@ export default function Events() {
                   </span>
                 ))}
               </div>
-
               {/* Title */}
               <h3 className="text-lg font-semibold text-gray-900">
                 {event.title}
               </h3>
-
               {/* Date & Location */}
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <Calendar className="w-4 h-4" />
@@ -139,9 +158,8 @@ export default function Events() {
                 <MapPin className="w-4 h-4" />
                 {event.address}
               </div>
-
               {/* Actions */}
-              <div className="mt-auto pt-3"> 
+              <div className="mt-auto pt-3">
                 <div className="my-4 border-t border-gray-300" />
                 <div className="flex justify-between items-center">
                   <Link
@@ -150,7 +168,10 @@ export default function Events() {
                   >
                     View Detail <ArrowRight className="w-4 h-4" />
                   </Link>
-                  <button aria-label="pencil line" className="p-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 hover:shadow-lg">
+                  <button
+                    aria-label="pencil line"
+                    className="p-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 hover:shadow-lg"
+                  >
                     <PencilLine className="w-4 h-4" />
                   </button>
                 </div>

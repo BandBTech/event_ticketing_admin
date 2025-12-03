@@ -29,6 +29,13 @@ export interface PaginatedResponse<T> {
   };
 }
 
+interface EventResponse {
+  events: Event[];
+  limit: number;
+  page: number;
+  total: number;
+}
+
 export class EventService {
   /**
    * Get all approved public events with pagination and filters
@@ -65,8 +72,8 @@ export class EventService {
   /**
    * Get pending event
    */
-  static async getPendingtEvent(): Promise<Event> {
-    return await api.get<Event>(`/admin/events/pending`, {
+  static async getPendingtEvent(): Promise<EventResponse> {
+    return await api.get<EventResponse>(`/admin/events/pending`, {
       requiresAuth: true
     });
   }

@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Calendar, Clock, Users } from "lucide-react";
+import { Calendar, Clock, Users, ExternalLink } from "lucide-react";
 import Navbar from "../components/Navbar/Navbar";
 import { OrganizerService } from "@/lib/organizerService";
 import { EventService } from "@/lib/eventServices";
 import { toast } from "sonner";
 import { Event } from "@/types/event";
+import { useRouter } from "next/navigation";
 
 const AdminDashboard: React.FC = () => {
   interface Organizer {
@@ -35,12 +36,23 @@ const AdminDashboard: React.FC = () => {
     organizers: Organizer[];
   }
 
+  interface EventResponse {
+    events: Event[];
+    limit: number;
+    page: number;
+    total: number;
+  }
+
+  const router = useRouter();
+
   const [pendingData, setPendingData] = useState<OrganizerListResponse | null>(
     null
   );
-  const [pendingEventsData, setPendingEnventsData] = useState<Event | null>(
-    null
-  );
+  const [pendingEventsData, setPendingEnventsData] =
+    useState<EventResponse | null>(null);
+
+  console.log("pending event data", pendingEventsData);
+
   const handleOpen = () => {
     console.log("Open modal clicked!");
     console.log("pending event data", pendingEventsData);
@@ -50,11 +62,12 @@ const AdminDashboard: React.FC = () => {
     open: boolean;
     organizerId?: string;
   }>({ open: false });
-  const [acceptModal, setAcceptModal] = useState<{
-    open: boolean;
-    organizerId?: string;
-  }>({ open: false });
   const [adminRemark, setAdminRemark] = useState("");
+
+const handleViewEvent = (event: Event) => {
+  sessionStorage.setItem('selectedEvent', JSON.stringify(event));
+  router.push(`/events/eventdetails`);
+};
 
   const handleApprove = async (organizerId: string) => {
     const payload = {
@@ -101,7 +114,7 @@ const AdminDashboard: React.FC = () => {
       setPendingEnventsData(res2);
     }
     loadData();
-  }, []);  
+  }, []);
 
   function getInitials(firstName: string, lastName: string) {
     const first = firstName?.[0] || "";
@@ -110,6 +123,7 @@ const AdminDashboard: React.FC = () => {
   }
 
   const organizers = pendingData?.organizers || [];
+  const events = pendingEventsData?.events || [];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 ml-64">
@@ -221,7 +235,7 @@ const AdminDashboard: React.FC = () => {
                         <span className="mr-2">X</span> REJECT
                       </button>
                       <button
-                      onClick={() => handleApprove(organizer.id)}
+                        onClick={() => handleApprove(organizer.id)}
                         className="px-4 py-2 text-sm font-medium text-green-700 bg-green-200 rounded-md hover:bg-green-300 hover:text-green-800 transition-colors flex items-center gap-2 cursor-pointer w-full sm:w-auto justify-center"
                       >
                         <svg
@@ -273,52 +287,57 @@ const AdminDashboard: React.FC = () => {
 
           {/* Data Embedded State */}
           <div className="p-6">
-            {organizers.length == 100 ? (
+            {events.length > 0 ? (
               <div className="space-y-4">
-                {/* {events.map((event) => (
+                {events.map((event) => (
                   <div
                     key={event.id}
                     className="flex flex-col sm:flex-row items-center sm:items-start gap-4 p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow"
                   >
                     <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gray-300 text-white font-semibold text-lg flex-shrink-0">
-                      {getInitials(organizer.first_name, organizer.last_name)}
+                      {getInitials("Test", "Test")}
                     </div>
 
                     <div className="flex-1 min-w-0 text-center sm:text-left">
                       <h3 className="text-base font-semibold text-gray-900 truncate">
-                        {organizer.first_name} {organizer.last_name}
+                        {event.title}
                       </h3>
-                      {organizer.roles[0]?.name && (
+                      {/* {organizer.roles[0]?.name && (
                         <p className="text-sm text-gray-600 truncate">
                           {organizer.roles[0]?.name}
                         </p>
-                      )}
-                      {organizer.roles[0].description && (
+                      )} */}
+                      {event?.description && (
                         <p className="text-xs text-gray-500 truncate">
-                          {organizer.roles[0]?.description}
+                          {event?.description}
                         </p>
                       )}
                     </div>
 
                     <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 flex-shrink-0 mt-2 sm:mt-0">
                       <button
-                        onClick={() =>
-                          setRejectModal({
-                            open: true,
-                            organizerId: organizer.id,
-                          })
-                        }
+                         onClick={() => handleViewEvent(event)}
+                        className="px-4 py-2 text-sm font-medium text-blue-600 bg-white border border-blue-300 rounded-md hover:bg-blue-50 transition-colors cursor-pointer w-full sm:w-auto"
+                      >
+                        <span className="mr-2 flex justify-around items-center gap-1">
+                          <span>
+                            <ExternalLink className="h-4 w-4" />
+                          </span>
+                          <span>VIEW EVENT</span>
+                        </span>
+                      </button>
+                      <button
                         className="px-4 py-2 text-sm font-medium text-red-600 bg-white border border-red-300 rounded-md hover:bg-red-50 transition-colors cursor-pointer w-full sm:w-auto"
                       >
                         <span className="mr-2">X</span> REJECT
                       </button>
                       <button
-                        onClick={() =>
-                          setAcceptModal({
-                            open: true,
-                            organizerId: organizer.id,
-                          })
-                        }
+                        // onClick={() =>
+                        //   setAcceptModal({
+                        //     open: true,
+                        //     organizerId: organizer.id,
+                        //   })
+                        // }
                         className="px-4 py-2 text-sm font-medium text-green-700 bg-green-200 rounded-md hover:bg-green-300 hover:text-green-800 transition-colors flex items-center gap-2 cursor-pointer w-full sm:w-auto justify-center"
                       >
                         <svg
@@ -338,7 +357,7 @@ const AdminDashboard: React.FC = () => {
                       </button>
                     </div>
                   </div>
-                ))} */}
+                ))}
               </div>
             ) : (
               <>
@@ -360,49 +379,6 @@ const AdminDashboard: React.FC = () => {
           </div>
         </div>
       </div>
-
-      {acceptModal.open && (
-        <>
-          <div
-            className="fixed inset-0 bg-black/30 z-40"
-            onClick={() => setAcceptModal({ open: false })}
-          />
-
-          <div className="fixed z-50 inset-0 flex items-center justify-center">
-            <div className="bg-white rounded-lg shadow-lg w-96 p-6 relative">
-              <h2 className="text-lg font-semibold mb-4">Accept Organizer</h2>
-
-              <textarea
-                className="w-full p-2 border border-gray-300 rounded-md mb-4"
-                placeholder="Enter reason for approval..."
-                value={adminRemark}
-                onChange={(e) => setAdminRemark(e.target.value)}
-              />
-
-              <div className="flex justify-end gap-3">
-                <button
-                  onClick={() => setAcceptModal({ open: false })}
-                  className="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300"
-                >
-                  Cancel
-                </button>
-
-                <button
-                  onClick={async () => {
-                    if (!acceptModal.organizerId) return;
-                    await handleApprove(acceptModal.organizerId);
-                    setAcceptModal({ open: false });
-                    setAdminRemark("");
-                  }}
-                  className="px-4 py-2 rounded-md bg-green-600 text-white hover:bg-green-700"
-                >
-                  Accept
-                </button>
-              </div>
-            </div>
-          </div>
-        </>
-      )}
       {rejectModal.open && (
         <>
           <div
