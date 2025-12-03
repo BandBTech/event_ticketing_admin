@@ -161,17 +161,17 @@ export default function AddOrganizerPage() {
                     placeholder="Enter First Name"
                     className={cn(
                       "h-12 pl-16 pr-4 login-input",
-                      errors.email && "border-destructive"
+                      errors.firstName && "border-destructive"
                     )}
                     {...basicInfoForm.register("firstName")}
                   />
                 </div>
-                {errors.email && (
+                {errors.firstName && (
                   <p
                     className="text-sm text-destructive font-medium"
                     role="alert"
                   >
-                    {errors.email.message}
+                    {errors.firstName.message}
                   </p>
                 )}
               </div>
@@ -203,17 +203,17 @@ export default function AddOrganizerPage() {
                     placeholder="Enter Last Name"
                     className={cn(
                       "h-12 pl-16 pr-4 login-input",
-                      errors.email && "border-destructive"
+                      errors.lastName && "border-destructive"
                     )}
                     {...basicInfoForm.register("lastName")}
                   />
                 </div>
-                {errors.email && (
+                {errors.lastName && (
                   <p
                     className="text-sm text-destructive font-medium"
                     role="alert"
                   >
-                    {errors.email.message}
+                    {errors.lastName.message}
                   </p>
                 )}
               </div>
@@ -300,7 +300,7 @@ export default function AddOrganizerPage() {
                         ? t("auth.login.hidePassword")
                         : t("auth.login.showPassword")
                     }
-                    className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 transition-colors cursor-pointer"
                   >
                     {showPassword ? (
                       <EyeIcon
@@ -356,7 +356,7 @@ export default function AddOrganizerPage() {
                 )}
               />
               {basicInfoForm.formState.errors.phone && (
-                <p className="text-sm text-destructive">
+                <p className="text-sm text-destructive font-medium">
                   {basicInfoForm.formState.errors.phone.message}
                 </p>
               )}
@@ -364,13 +364,13 @@ export default function AddOrganizerPage() {
             {/* Action Buttons */}
             <div className="px-6 py-4 bg-gray-50 rounded-b-lg">
               <div className="flex items-center justify-between">
-                <button className="px-6 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                <button className="px-6 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
                   Cancel
                 </button>
                 <div className="flex space-x-3">
                   <button
                     type="submit"
-                    className="px-6 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+                    className="px-6 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
                   >
                     Create Organizer
                   </button>
