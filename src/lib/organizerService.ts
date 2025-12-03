@@ -36,6 +36,41 @@ interface ApproveOrganizerResponse {
 }
 
 export class OrganizerService {
+
+  /**
+   * Create new organizer from admin
+   */
+static async createOrganizer({
+  email,
+  password,
+  first_name,
+  last_name,
+  phone,
+  country_code,
+}: {
+  email: string;
+  password: string;
+  first_name: string;
+  last_name: string;
+  phone: string;
+  country_code?: string;
+}): Promise<void> {
+  await api.post<void>(API_ENDPOINTS.CREATE_ORGANIZERS, {
+    email,
+    password,
+    first_name,
+    last_name,
+    phone,
+    country_code,
+  },
+  {
+    requiresAuth: true,
+  }
+
+);
+}
+
+
   static async getOrganizers(): Promise<OrganizerListResponse> {
     return await api.get(API_ENDPOINTS.GET_ORGANIZERS, {
       requiresAuth: true,
