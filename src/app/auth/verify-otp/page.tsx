@@ -159,9 +159,7 @@ function VerifyOTPContent() {
                   if (otpType === 'password_reset') {
                     // Save email to sessionStorage for forgot-password page
                     sessionStorage.setItem('password_reset_email', email);
-                    router.push('/forgot-password');
-                  } else {
-                    router.push('/signup');
+                    router.push('/auth/forgot-password');
                   }
                 }}
                 className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600 transition-colors cursor-pointer"
