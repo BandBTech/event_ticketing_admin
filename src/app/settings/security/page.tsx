@@ -136,9 +136,9 @@ export default function SecuritySettingsPage() {
           </div>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* Current Password */}
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             <label htmlFor="currentPassword" className="text-sm font-medium text-gray-900 block">
               {t('settings.security.currentPassword', 'Current Password')}
             </label>
@@ -175,7 +175,7 @@ export default function SecuritySettingsPage() {
           </div>
 
           {/* New Password */}
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             <label htmlFor="newPassword" className="text-sm font-medium text-gray-900 block">
               {t('settings.security.newPassword', 'New Password')}
             </label>
@@ -219,7 +219,7 @@ export default function SecuritySettingsPage() {
           </div>
 
           {/* Confirm Password */}
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             <label htmlFor="confirmPassword" className="text-sm font-medium text-gray-900 block">
               {t('settings.security.confirmPassword', 'Confirm New Password')}
             </label>

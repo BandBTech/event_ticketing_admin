@@ -28,11 +28,11 @@ export default function PaymentsSettingsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 font-poppins">Payment Settings</h1>
-          <p className="text-sm text-gray-600 mt-1">Manage payment gateways and fees</p>
+          <p className="text-sm text-gray-600">Manage payment gateways and fees</p>
         </div>
         <button
           onClick={handleSave}

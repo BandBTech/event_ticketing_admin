@@ -28,11 +28,11 @@ export default function SystemSecuritySettingsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 font-poppins">System Security</h1>
-          <p className="text-sm text-gray-600 mt-1">Configure system-wide security settings</p>
+          <p className="text-sm text-gray-600">Configure system-wide security settings</p>
         </div>
         <button
           onClick={handleSave}
@@ -56,7 +56,7 @@ export default function SystemSecuritySettingsPage() {
       </div>
 
       <div className="glass-card rounded-xl p-6">
-        <div className="space-y-6">
+        <div className="space-y-4">
           <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
             <div>
               <h3 className="font-medium text-gray-900">Two-Factor Authentication</h3>

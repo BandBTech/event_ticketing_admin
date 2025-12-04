@@ -29,11 +29,11 @@ export default function GeneralSettingsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 font-poppins">General Settings</h1>
-          <p className="text-sm text-gray-600 mt-1">Manage your site&apos;s general configuration</p>
+          <p className="text-sm text-gray-600">Manage your site&apos;s general configuration</p>
         </div>
         <button
           onClick={handleSave}
