@@ -36,6 +36,11 @@ interface EventResponse {
   total: number;
 }
 
+interface ApproveEventResponse {
+  success: boolean;
+  message: string;
+}
+
 export class EventService {
   /**
    * Get all approved public events with pagination and filters
@@ -145,4 +150,25 @@ export class EventService {
     
     return await api.get<PaginatedResponse<Event>>(endpoint);
   }
-}
+
+
+  static async approveEvent(payload: {
+    eventId: string;
+    admin_remark: string;
+    status: string;
+    commission_rate: number;
+  }): Promise<ApproveEventResponse> {
+    return await api.put<ApproveEventResponse>(
+      `/admin/events/${payload.eventId}/approval`, 
+      {
+        admin_remark: payload.admin_remark,
+        status: payload.status,
+        commission_rate: payload.commission_rate
+      },
+      {
+        requiresAuth: true,
+      }
+    );
+  }
+  }
+

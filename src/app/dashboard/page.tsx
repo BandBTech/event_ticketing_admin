@@ -10,6 +10,7 @@ import { Event } from "@/types/event";
 import { useRouter } from "next/navigation";
 import { useEventStore } from "@/store/eventStore";
 import { PendingEvent } from "@/types/pendingEvents";
+import PopupModal from "./components/PopupModal";
 
 const AdminDashboard: React.FC = () => {
   interface Organizer {
@@ -63,6 +64,14 @@ const AdminDashboard: React.FC = () => {
     open: boolean;
     organizerId?: string;
   }>({ open: false });
+  const [rejectEventModal, setRejectEventModal] = useState<{
+    open: boolean;
+    eventId?: string;
+  }>({ open: false });
+  const [acceptEventModal, setAcceptEventModal] = useState<{
+    open: boolean;
+    eventId?: string;
+  }>({ open: false });
   const [adminRemark, setAdminRemark] = useState("");
 
   const handleViewEvent = (event: PendingEvent) => {
@@ -102,6 +111,49 @@ const AdminDashboard: React.FC = () => {
       // Refresh list
       const res = await OrganizerService.getPendingOrganizers();
       setPendingData(res);
+    } catch (error) {
+      console.error("Error rejecting organizer:", error);
+    }
+  };
+  const handleEventReject = async (eventId: string, admin_remark: string) => {
+    const payload = {
+      eventId,
+      admin_remark,
+      status: "rejected",
+      commission_rate: 0,
+    };
+
+    try {
+      await EventService.approveEvent(payload);
+      toast.success("Organizer rejected successfully!");
+
+      // Refresh list
+      const res = await EventService.getPendingtEvent();
+      setPendingEnventsData(res);
+    } catch (error) {
+      console.error("Error rejecting organizer:", error);
+    }
+  };
+
+  const handleEventAccept = async (
+    eventId: string,
+    admin_remark: string,
+    commission_rate: number
+  ) => {
+    const payload = {
+      eventId,
+      admin_remark,
+      commission_rate,
+      status: "approved",
+    };
+
+    try {
+      await EventService.approveEvent(payload);
+      toast.success("Organizer rejected successfully!");
+
+      // Refresh list
+      const res = await EventService.getPendingtEvent();
+      setPendingEnventsData(res);
     } catch (error) {
       console.error("Error rejecting organizer:", error);
     }
@@ -278,7 +330,7 @@ const AdminDashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Organizers Awaiting Approval Section */}
+        {/* Events Awaiting Approval Section */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100/50 mt-10">
           <div className="p-6 border-b border-gray-100">
             <h2 className="text-lg font-semibold text-gray-900">
@@ -309,9 +361,12 @@ const AdminDashboard: React.FC = () => {
                         </p>
                       )} */}
                       {event?.description && (
-                        <p className="text-xs text-gray-500 truncate">
-                          {event?.description}
-                        </p>
+                        <p
+                          className="text-xs text-gray-500 max-w-md line-clamp-2"
+                          dangerouslySetInnerHTML={{
+                            __html: event.description,
+                          }}
+                        />
                       )}
                     </div>
 
@@ -327,16 +382,24 @@ const AdminDashboard: React.FC = () => {
                           <span>VIEW EVENT</span>
                         </span>
                       </button>
-                      <button className="px-4 py-2 text-sm font-medium text-red-600 bg-white border border-red-300 rounded-md hover:bg-red-50 transition-colors cursor-pointer w-full sm:w-auto">
+                      <button
+                        onClick={() =>
+                          setRejectEventModal({
+                            open: true,
+                            eventId: event.id,
+                          })
+                        }
+                        className="px-4 py-2 text-sm font-medium text-red-600 bg-white border border-red-300 rounded-md hover:bg-red-50 transition-colors cursor-pointer w-full sm:w-auto"
+                      >
                         <span className="mr-2">X</span> REJECT
                       </button>
                       <button
-                        // onClick={() =>
-                        //   setAcceptModal({
-                        //     open: true,
-                        //     organizerId: organizer.id,
-                        //   })
-                        // }
+                        onClick={() =>
+                          setAcceptEventModal({
+                            open: true,
+                            eventId: event.id,
+                          })
+                        }
                         className="px-4 py-2 text-sm font-medium text-green-700 bg-green-200 rounded-md hover:bg-green-300 hover:text-green-800 transition-colors flex items-center gap-2 cursor-pointer w-full sm:w-auto justify-center"
                       >
                         <svg
@@ -384,40 +447,70 @@ const AdminDashboard: React.FC = () => {
             className="fixed inset-0 bg-black/30 z-40"
             onClick={() => setRejectModal({ open: false })}
           />
+          <PopupModal
+            title="Reject Organizer"
+            isApprove={false}
+            showCommissionInput={false}
+            onCancel={() => setRejectEventModal({ open: false })}
+            onConfirm={async () => {
+              if (!rejectModal.organizerId) return;
+              await handleReject(rejectModal.organizerId, adminRemark);
+              setRejectModal({ open: false });
+              setAdminRemark("");
+            }}
+          />
+        </>
+      )}
+      {rejectEventModal.open && (
+        <>
+          <div
+            className="fixed inset-0 bg-black/30 z-40"
+            onClick={() => setRejectEventModal({ open: false })}
+          />
+          <PopupModal
+            title="Reject Event"
+            isApprove={false}
+            showCommissionInput={false}
+            onCancel={() => setRejectEventModal({ open: false })}
+            onConfirm={async (data) => {
+              if (!rejectEventModal.eventId) return;
+              await handleEventReject(
+                rejectEventModal.eventId,
+                data.adminRemark
+              );
+              setRejectEventModal({ open: false });
+            }}
+          />
+        </>
+      )}
+      {acceptEventModal.open && (
+        <>
+          <div
+            className="fixed inset-0 bg-black/30 z-40"
+            onClick={() => setRejectEventModal({ open: false })}
+          />
+          <PopupModal
+            title="Approve Event"
+            isApprove={true}
+            showCommissionInput={true}
+            onCancel={() => setAcceptEventModal({ open: false })}
+            onConfirm={async (data) => {
+              if (!acceptEventModal.eventId) return; // ✅ Use acceptEventModal
 
-          <div className="fixed z-50 inset-0 flex items-center justify-center">
-            <div className="bg-white rounded-lg shadow-lg w-96 p-6 relative">
-              <h2 className="text-lg font-semibold mb-4">Reject Organizer</h2>
+              // ✅ Validate commission rate for approval
+              if (!data.commissionRate) {
+                toast.error("Commission rate is required for approval");
+                return;
+              }
 
-              <textarea
-                className="w-full p-2 border border-gray-300 rounded-md mb-4"
-                placeholder="Enter reason for rejection..."
-                value={adminRemark}
-                onChange={(e) => setAdminRemark(e.target.value)}
-              />
-
-              <div className="flex justify-end gap-3">
-                <button
-                  onClick={() => setRejectModal({ open: false })}
-                  className="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300"
-                >
-                  Cancel
-                </button>
-
-                <button
-                  onClick={async () => {
-                    if (!rejectModal.organizerId) return;
-                    await handleReject(rejectModal.organizerId, adminRemark);
-                    setRejectModal({ open: false });
-                    setAdminRemark("");
-                  }}
-                  className="px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700"
-                >
-                  Reject
-                </button>
-              </div>
-            </div>
-          </div>
+              await handleEventAccept(
+                acceptEventModal.eventId, // ✅ Use acceptEventModal
+                data.adminRemark,
+                data.commissionRate // ✅ Now guaranteed to be string
+              );
+              setAcceptEventModal({ open: false }); // ✅ Close acceptEventModal
+            }}
+          />
         </>
       )}
     </div>
