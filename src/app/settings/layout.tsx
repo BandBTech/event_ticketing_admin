@@ -16,6 +16,7 @@ import { usePathname } from "next/navigation";
 import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
 import Sidebar from "@/app/components/Sidebar/Sidebar";
+import { ProtectedRoute } from "@/components/providers/ProtectedRoute";
 
 const menuItems = [
   {
@@ -70,11 +71,12 @@ export default function SettingsLayout({
   const { t } = useTranslation(locale);
 
   return (
-    <div className="flex min-h-screen">
-      <Sidebar />
-      <main className="flex-1 bg-gray-50 ml-64">
-        <div className="container mx-auto py-8 px-4 max-w-6xl">
-          <div className="flex flex-col md:flex-row gap-8">
+    <ProtectedRoute>
+      <div className="flex min-h-screen">
+        <Sidebar />
+        <main className="flex-1 bg-gray-50 ml-64">
+          <div className="container mx-auto py-8 px-4 max-w-6xl">
+            <div className="flex flex-col md:flex-row gap-8">
             {/* Settings Sidebar */}
             <aside className="w-full md:w-64 flex-shrink-0">
               <div className="rounded-xl">
@@ -113,5 +115,7 @@ export default function SettingsLayout({
         </div>
       </main>
     </div>
+    </ProtectedRoute>
   );
 }
+
