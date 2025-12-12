@@ -112,15 +112,15 @@ const EventsPage: React.FC = () => {
   };
 
   const handleViewDetail = (eventId: number) => {
-    console.log(`View detail for event ${eventId}`);
+    // View event detail handler
   };
 
   const handleEditEvent = (eventId: number) => {
-    console.log(`Edit event ${eventId}`);
+    // Edit event handler
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 ml-64">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
       {/* Header */}
       <div className="">
         <Navbar

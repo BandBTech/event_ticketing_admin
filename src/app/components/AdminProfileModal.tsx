@@ -81,7 +81,7 @@ export default function AdminProfileModal({
         }));
       }
     } catch (error) {
-      console.error("Failed to save profile:", error);
+      // Error handled silently
     }
   };
 
@@ -99,7 +99,7 @@ export default function AdminProfileModal({
 
       setIsEditing(false);
     } catch (error) {
-      console.error("Failed to save profile:", error);
+      // Error handled silently
       toast.error("Failed to update profile");
     } finally {
       setIsSaving(false);
@@ -137,7 +137,7 @@ export default function AdminProfileModal({
         return phoneNumber?.country;
       }
     } catch (error) {
-      console.error("Error parsing phone number:", error);
+      // Error handled silently
     }
     return undefined;
   };

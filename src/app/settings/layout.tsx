@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense, useState } from "react";
 import {
   UserIcon,
   LockKeyIcon,
@@ -15,7 +16,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
-import Sidebar from "@/app/components/Sidebar/Sidebar";
+import { AppSidebar } from "@/components/layout/app-sidebar";
+import DashboardHeader from "@/components/layout/dashboard-header";
 import { ProtectedRoute } from "@/components/providers/ProtectedRoute";
 
 const menuItems = [
@@ -69,53 +71,63 @@ export default function SettingsLayout({
   const pathname = usePathname();
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
+  const [collapsed, setCollapsed] = useState(false);
 
   return (
     <ProtectedRoute>
-      <div className="flex min-h-screen">
-        <Sidebar />
-        <main className="flex-1 bg-gray-50 ml-64">
-          <div className="container mx-auto py-8 px-4 max-w-6xl">
-            <div className="flex flex-col md:flex-row gap-8">
-            {/* Settings Sidebar */}
-            <aside className="w-full md:w-64 flex-shrink-0">
-              <div className="rounded-xl">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4 px-2">
-                  {t('settings.title', 'Settings')}
-                </h2>
-                <nav className="space-y-1">
-                  {menuItems.map((item) => {
-                    const Icon = item.icon;
-                    const isActive = pathname === `${item.href}/`;
+      <div className="flex h-screen overflow-hidden bg-gray-50/50">
+        <AppSidebar
+          collapsed={collapsed}
+          onToggle={() => setCollapsed(!collapsed)}
+        />
+        <div className="flex flex-1 flex-col">
+          <header className="flex h-16 shrink-0 items-center gap-4 border-b bg-white px-6">
+            <Suspense fallback={<div className="flex-1" />}>
+              <DashboardHeader />
+            </Suspense>
+          </header>
+          <main className="flex-1 overflow-y-auto">
+            <div className="container mx-auto py-8 px-4 max-w-6xl">
+              <div className="flex flex-col md:flex-row gap-8">
+                {/* Settings Sidebar */}
+                <aside className="w-full md:w-64 shrink-0">
+                  <div className="rounded-xl">
+                    <h2 className="text-lg font-semibold text-gray-900 mb-4 px-2">
+                      {t('settings.title', 'Settings')}
+                    </h2>
+                    <nav className="space-y-1">
+                      {menuItems.map((item) => {
+                        const Icon = item.icon;
+                        const isActive = pathname === `${item.href}/`;
 
-                    return (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        className={cn(
-                          'flex cursor-pointer items-center gap-3 px-4 py-3 rounded-lg transition-colors',
-                          'hover:bg-gray-100',
-                          isActive && 'bg-blue-50 text-blue-600 font-medium'
-                        )}
-                      >
-                        <Icon size={20} weight={isActive ? 'fill' : 'duotone'} />
-                        <span className="text-base">{item.label}</span>
-                      </Link>
-                    );
-                  })}
-                </nav>
+                        return (
+                          <Link
+                            key={item.href}
+                            href={item.href}
+                            className={cn(
+                              'flex cursor-pointer items-center gap-3 px-4 py-3 rounded-lg transition-colors',
+                              'hover:bg-gray-100',
+                              isActive && 'bg-blue-50 text-blue-600 font-medium'
+                            )}
+                          >
+                            <Icon size={20} weight={isActive ? 'fill' : 'duotone'} />
+                            <span className="text-base">{item.label}</span>
+                          </Link>
+                        );
+                      })}
+                    </nav>
+                  </div>
+                </aside>
+
+                {/* Content Area */}
+                <div className="flex-1">
+                  {children}
+                </div>
               </div>
-            </aside>
-
-            {/* Content Area */}
-            <div className="flex-1">
-              {children}
             </div>
-          </div>
+          </main>
         </div>
-      </main>
-    </div>
+      </div>
     </ProtectedRoute>
   );
 }
-

@@ -31,7 +31,7 @@ export default function EventDetailsPage() {
         } else {
         }
       } catch (error) {
-        console.error("Error loading event:", error);
+        // Error handled silently
       } finally {
       }
     };
@@ -45,7 +45,7 @@ export default function EventDetailsPage() {
   };
   return (
     <>
-      <div className="flex flex-col min-h-screen ml-64">
+      <div className="flex flex-col min-h-screen">
         <div className="flex-grow p-6 space-y-6">
           {/* Event Title + Actions */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between">

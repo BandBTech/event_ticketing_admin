@@ -125,7 +125,7 @@ export default function ProfileSettingsPage() {
       toast.success('settings.toast.profileUpdated', 'Profile updated successfully!');
       setIsEditing(false);
     } catch (error) {
-      console.error('Profile update failed:', error);
+      // Error handled silently
       if (error instanceof AuthError) {
         toast.error('settings.toast.updateFailed', error.message || 'Failed to update profile');
       } else {

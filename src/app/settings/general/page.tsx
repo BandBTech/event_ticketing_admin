@@ -23,7 +23,7 @@ export default function GeneralSettingsPage() {
       setSaveStatus("saved");
       setTimeout(() => setSaveStatus(""), 2000);
     } catch (error) {
-      console.error("Failed to save settings:", error);
+      // Error handled silently
       setSaveStatus("");
     }
   };

@@ -236,3 +236,6 @@
 .border-destructive.PhoneInput > input {
   border-color: var(--color-destructive);
 }
+button {
+  cursor: pointer;
+}

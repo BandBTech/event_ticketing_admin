@@ -10,6 +10,7 @@ interface AuthStore {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
+  _hasHydrated: boolean;
 
   // Actions
   login: (credentials: LoginRequest, rememberMe?: boolean) => Promise<void>;
@@ -17,6 +18,7 @@ interface AuthStore {
   fetchProfile: () => Promise<void>;
   clearError: () => void;
   checkAuth: () => void;
+  setHasHydrated: (state: boolean) => void;
 }
 
 export const useAuthStore = create<AuthStore>()(
@@ -27,6 +29,10 @@ export const useAuthStore = create<AuthStore>()(
       isAuthenticated: false,
       isLoading: false,
       error: null,
+      _hasHydrated: false,
+
+      // Hydration setter
+      setHasHydrated: (state: boolean) => set({ _hasHydrated: state }),
 
       // Login action
       login: async (credentials: LoginRequest, rememberMe: boolean = false) => {
@@ -187,6 +193,10 @@ export const useAuthStore = create<AuthStore>()(
         user: state.user,
         isAuthenticated: state.isAuthenticated,
       }),
+      // Called when hydration from localStorage completes
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
     }
   )
 );

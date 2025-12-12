@@ -114,7 +114,7 @@ export default function AddOrganizerPage() {
   } = basicInfoForm;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 ml-64">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
       <div>
         <Navbar title="Create Organiser" addMessage="" handleOpen={() => {}} />
       </div>

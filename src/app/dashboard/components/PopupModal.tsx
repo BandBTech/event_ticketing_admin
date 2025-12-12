@@ -20,12 +20,23 @@ const PopupModal = ({
 }: PopupModalProps) => {
   const [commissionRate, setCommissionRate] = useState<string>("10");
   const [adminRemark, setAdminRemark] = useState("");
+  const [commissionError, setCommissionError] = useState("");
 
   const handleConfirm = () => {
+    // Validate commission rate for approval
+    if (showCommissionInput) {
+      const rate = parseFloat(commissionRate);
+      if (!commissionRate || isNaN(rate) || rate < 0 || rate > 100) {
+        setCommissionError("Commission rate must be between 0 and 100");
+        return;
+      }
+      setCommissionError("");
+    }
+
     onConfirm?.({
       commissionRate:
         showCommissionInput && commissionRate
-          ? parseFloat(commissionRate) // ✅ Convert to number here
+          ? parseFloat(commissionRate)
           : undefined,
       adminRemark,
     });
@@ -67,15 +78,23 @@ const PopupModal = ({
                 step="0.01"
                 min="0"
                 max="100"
-                className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${commissionError ? 'border-red-500' : 'border-gray-200'
+                  }`}
                 placeholder="10%"
                 value={commissionRate}
-                onChange={(e) => setCommissionRate(e.target.value)}
+                onChange={(e) => {
+                  setCommissionRate(e.target.value);
+                  setCommissionError("");
+                }}
               />
-              <p className="text-xs text-gray-500 flex items-center gap-1">
-                <span className="inline-block w-1 h-1 bg-gray-400 rounded-full" />
-                Commission rate is always in percentage
-              </p>
+              {commissionError ? (
+                <p className="text-xs text-red-500">{commissionError}</p>
+              ) : (
+                  <p className="text-xs text-gray-500 flex items-center gap-1">
+                    <span className="inline-block w-1 h-1 bg-gray-400 rounded-full" />
+                    Commission rate is always in percentage
+                  </p>
+              )}
             </div>
           )}
 

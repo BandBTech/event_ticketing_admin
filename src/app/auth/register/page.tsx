@@ -70,7 +70,7 @@ const RegisterPage: React.FC = () => {
       phone: data.phone,
       password: data.password,
     };
-    console.log("payload", payload);
+
     
 
     try {
@@ -87,7 +87,7 @@ const RegisterPage: React.FC = () => {
   };
 
   const handleSignInAsOrganizer = () => {
-    console.log("Navigate to sign in as organizer");
+    // Navigate to login
     redirect("/auth/login");
   };
 

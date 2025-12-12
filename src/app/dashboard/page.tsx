@@ -56,8 +56,7 @@ const AdminDashboard: React.FC = () => {
     useState<EventResponse | null>(null);
 
   const handleOpen = () => {
-    console.log("Open modal clicked!");
-    console.log("pending event data", pendingEventsData);
+    // Modal open handler
   };
 
   const [rejectModal, setRejectModal] = useState<{
@@ -94,7 +93,7 @@ const AdminDashboard: React.FC = () => {
       const res = await OrganizerService.getPendingOrganizers();
       setPendingData(res);
     } catch (error) {
-      console.error("Error approving organizer:", error);
+      // Error handled by toast
     }
   };
   const handleReject = async (organizerId: string, admin_remark: string) => {
@@ -112,7 +111,7 @@ const AdminDashboard: React.FC = () => {
       const res = await OrganizerService.getPendingOrganizers();
       setPendingData(res);
     } catch (error) {
-      console.error("Error rejecting organizer:", error);
+      // Error handled by toast
     }
   };
   const handleEventReject = async (eventId: string, admin_remark: string) => {
@@ -125,13 +124,14 @@ const AdminDashboard: React.FC = () => {
 
     try {
       await EventService.approveEvent(payload);
-      toast.success("Organizer rejected successfully!");
+      toast.success("Event rejected successfully!");
 
       // Refresh list
       const res = await EventService.getPendingtEvent();
       setPendingEnventsData(res);
     } catch (error) {
-      console.error("Error rejecting organizer:", error);
+      const message = error instanceof Error ? error.message : "Failed to reject event";
+      toast.error(message);
     }
   };
 
@@ -149,13 +149,14 @@ const AdminDashboard: React.FC = () => {
 
     try {
       await EventService.approveEvent(payload);
-      toast.success("Organizer rejected successfully!");
+      toast.success("Event approved successfully!");
 
       // Refresh list
       const res = await EventService.getPendingtEvent();
       setPendingEnventsData(res);
     } catch (error) {
-      console.error("Error rejecting organizer:", error);
+      const message = error instanceof Error ? error.message : "Failed to approve event";
+      toast.error(message);
     }
   };
 
@@ -179,12 +180,7 @@ const AdminDashboard: React.FC = () => {
   const events = pendingEventsData?.events || [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 ml-64">
-      {/* Header */}
-      <div className="">
-        <Navbar title="Admin Dashboard" addMessage="" handleOpen={handleOpen} />
-      </div>
-
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
       {/* Main Content */}
       <div className="p-6">
         {/* Stats Cards */}
