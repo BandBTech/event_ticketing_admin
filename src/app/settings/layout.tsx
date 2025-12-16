@@ -9,7 +9,8 @@ import {
   BellIcon,
   ShieldCheckIcon,
   UsersIcon,
-  TicketIcon
+  TicketIcon,
+  ShieldCheckeredIcon
 } from "@phosphor-icons/react/dist/ssr";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -60,6 +61,11 @@ const menuItems = [
     href: "/settings/api",
     label: "API",
     icon: UsersIcon,
+  },
+  {
+    href: "/settings/permission",
+    label: "Permission",
+    icon: ShieldCheckeredIcon,
   },
 ];
 
