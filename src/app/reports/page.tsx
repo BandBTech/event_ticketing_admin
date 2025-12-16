@@ -1,58 +1,299 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
-  Download,
-  Calendar,
+  CalendarBlank,
   Users,
   Ticket,
-  DollarSign,
-  Filter,
-  RefreshCw,
+  CurrencyDollar,
+  Funnel,
   Eye,
-  Globe,
-  ChevronDown,
+  CaretDown,
   ArrowUpRight,
   ArrowDownRight,
-} from "lucide-react";
+  TrendUp,
+  DownloadSimple,
+  ArrowsClockwise,
+  ChartBar as ChartBarIcon,
+  Pulse,
+} from "@phosphor-icons/react";
 
-const ReportsPage: React.FC = () => {
+// Stat Card Component
+function StatCard({
+  title,
+  value,
+  change,
+  trend,
+  icon: Icon,
+  color,
+}: {
+  title: string;
+  value: string;
+  change: string;
+  trend: "up" | "down";
+  icon: React.ElementType;
+  color: "green" | "blue" | "orange" | "purple";
+}) {
+  const colorClasses = {
+    green: {
+      bg: "bg-emerald-50",
+      icon: "text-emerald-600",
+      gradient: "from-emerald-500 to-teal-500",
+    },
+    blue: {
+      bg: "bg-blue-50",
+      icon: "text-blue-600",
+      gradient: "from-blue-500 to-indigo-500",
+    },
+    orange: {
+      bg: "bg-orange-50",
+      icon: "text-orange-600",
+      gradient: "from-orange-500 to-amber-500",
+    },
+    purple: {
+      bg: "bg-purple-50",
+      icon: "text-purple-600",
+      gradient: "from-purple-500 to-pink-500",
+    },
+  };
+
+  const classes = colorClasses[color];
+
+  return (
+    <div className="bg-white rounded-xl border border-gray-100 p-6 hover:shadow-lg transition-all duration-300 group">
+      <div className="flex items-center justify-between mb-4">
+        <div className={`p-3 rounded-xl ${classes.bg} group-hover:scale-110 transition-transform`}>
+          <Icon weight="duotone" className={`w-6 h-6 ${classes.icon}`} />
+        </div>
+        <div
+          className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${trend === "up"
+            ? "bg-emerald-50 text-emerald-700"
+            : "bg-red-50 text-red-700"
+            }`}
+        >
+          {trend === "up" ? (
+            <ArrowUpRight weight="bold" className="w-3.5 h-3.5" />
+          ) : (
+            <ArrowDownRight weight="bold" className="w-3.5 h-3.5" />
+          )}
+          {change}
+        </div>
+      </div>
+      <h3 className="text-2xl font-bold text-gray-900 mb-1">{value}</h3>
+      <p className="text-sm text-gray-500">{title}</p>
+    </div>
+  );
+}
+
+// Chart Bar Component
+function ChartBar({
+  height,
+  label,
+  value,
+  color,
+}: {
+  height: number;
+  label: string;
+  value: string;
+  color: string;
+}) {
+  return (
+    <div className="flex-1 flex flex-col items-center group">
+      <div className="w-full relative h-48 flex items-end">
+        <div
+          className={`w-full ${color} rounded-t-lg transition-all duration-500 group-hover:opacity-80`}
+          style={{ height: `${height}%` }}
+        >
+          <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-900 text-white text-xs px-2 py-1 rounded whitespace-nowrap">
+            {value}
+          </div>
+        </div>
+      </div>
+      <span className="text-xs text-gray-500 mt-2 font-medium">{label}</span>
+    </div>
+  );
+}
+
+// Table Row Component for Events
+function EventTableRow({
+  event,
+  index,
+  onView,
+}: {
+  event: {
+    id: number;
+    name: string;
+    organizer: string;
+    ticketsSold: number;
+    revenue: string;
+    conversionRate: string;
+    status: string;
+  };
+  index: number;
+  onView: () => void;
+}) {
+  return (
+    <tr className="hover:bg-gray-50/50 transition-colors group">
+      <td className="px-6 py-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-lg bg-linear-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-semibold text-sm">
+            {index + 1}
+          </div>
+          <div>
+            <p className="text-sm font-medium text-gray-900">{event.name}</p>
+            <p className="text-xs text-gray-500">{event.organizer}</p>
+          </div>
+        </div>
+      </td>
+      <td className="px-6 py-4">
+        <div className="flex items-center gap-2">
+          <Ticket weight="duotone" className="w-4 h-4 text-gray-400" />
+          <span className="text-sm font-medium text-gray-900">
+            {event.ticketsSold.toLocaleString()}
+          </span>
+        </div>
+      </td>
+      <td className="px-6 py-4">
+        <span className="text-sm font-semibold text-gray-900">
+          {event.revenue}
+        </span>
+      </td>
+      <td className="px-6 py-4">
+        <div className="flex items-center gap-2">
+          <div className="w-16 h-2 bg-gray-100 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-emerald-500 rounded-full"
+              style={{ width: event.conversionRate }}
+            />
+          </div>
+          <span className="text-sm text-gray-600">{event.conversionRate}</span>
+        </div>
+      </td>
+      <td className="px-6 py-4">
+        <span
+          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${event.status === "Live"
+            ? "bg-emerald-100 text-emerald-700"
+            : "bg-gray-100 text-gray-700"
+            }`}
+        >
+          <span
+            className={`w-1.5 h-1.5 rounded-full ${event.status === "Live" ? "bg-emerald-500 animate-pulse" : "bg-gray-400"
+              }`}
+          />
+          {event.status}
+        </span>
+      </td>
+      <td className="px-6 py-4">
+        <button
+          onClick={onView}
+          className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+        >
+          <Eye weight="duotone" className="w-4 h-4" />
+        </button>
+      </td>
+    </tr>
+  );
+}
+
+// Transaction Row Component
+function TransactionRow({
+  transaction,
+}: {
+  transaction: {
+    id: string;
+    event: string;
+    customer: string;
+    amount: string;
+    tickets: number;
+    status: string;
+    date: string;
+    paymentMethod: string;
+  };
+}) {
+  return (
+    <tr className="hover:bg-gray-50/50 transition-colors">
+      <td className="px-6 py-4">
+        <span className="text-sm font-mono text-blue-600 bg-blue-50 px-2 py-1 rounded">
+          {transaction.id}
+        </span>
+      </td>
+      <td className="px-6 py-4">
+        <p className="text-sm text-gray-900 truncate max-w-[200px]">
+          {transaction.event}
+        </p>
+      </td>
+      <td className="px-6 py-4">
+        <p className="text-sm text-gray-900">{transaction.customer}</p>
+      </td>
+      <td className="px-6 py-4">
+        <span className="text-sm font-semibold text-gray-900">
+          {transaction.amount}
+        </span>
+      </td>
+      <td className="px-6 py-4">
+        <span className="text-sm text-gray-600">{transaction.tickets}</span>
+      </td>
+      <td className="px-6 py-4">
+        <span className="text-sm text-gray-600 bg-gray-100 px-2 py-1 rounded">
+          {transaction.paymentMethod}
+        </span>
+      </td>
+      <td className="px-6 py-4">
+        <span
+          className={`inline-flex px-2.5 py-1 text-xs font-medium rounded-full ${transaction.status === "Completed"
+            ? "bg-emerald-100 text-emerald-700"
+            : "bg-amber-100 text-amber-700"
+            }`}
+        >
+          {transaction.status}
+        </span>
+      </td>
+      <td className="px-6 py-4">
+        <span className="text-sm text-gray-500">{transaction.date}</span>
+      </td>
+    </tr>
+  );
+}
+
+export default function ReportsPage() {
+  const router = useRouter();
   const [dateRange, setDateRange] = useState("last-30-days");
   const [reportType, setReportType] = useState("overview");
 
-  // Sample data for reports
+  // Sample data
   const overviewStats = [
     {
       title: "Total Revenue",
       value: "NPR 2,45,680",
       change: "+12.5%",
-      trend: "up",
-      icon: DollarSign,
-      color: "green",
+      trend: "up" as const,
+      icon: CurrencyDollar,
+      color: "green" as const,
     },
     {
       title: "Tickets Sold",
       value: "3,247",
       change: "+8.2%",
-      trend: "up",
+      trend: "up" as const,
       icon: Ticket,
-      color: "blue",
+      color: "blue" as const,
     },
     {
       title: "Active Events",
       value: "42",
       change: "-2.3%",
-      trend: "down",
-      icon: Calendar,
-      color: "orange",
+      trend: "down" as const,
+      icon: CalendarBlank,
+      color: "orange" as const,
     },
     {
       title: "Total Users",
       value: "1,856",
       change: "+15.7%",
-      trend: "up",
+      trend: "up" as const,
       icon: Users,
-      color: "purple",
+      color: "purple" as const,
     },
   ];
 
@@ -69,7 +310,7 @@ const ReportsPage: React.FC = () => {
     {
       id: 2,
       name: "Tech Conference Nepal",
-      organizer: "Tech Conference Nepal",
+      organizer: "Tech Nepal Pvt. Ltd.",
       ticketsSold: 580,
       revenue: "NPR 34,800",
       conversionRate: "65.2%",
@@ -78,7 +319,7 @@ const ReportsPage: React.FC = () => {
     {
       id: 3,
       name: "Cultural Heritage Festival",
-      organizer: "Cultural Heritage Events",
+      organizer: "Heritage Events Co.",
       ticketsSold: 890,
       revenue: "NPR 53,400",
       conversionRate: "71.8%",
@@ -87,7 +328,7 @@ const ReportsPage: React.FC = () => {
     {
       id: 4,
       name: "Himalayan Adventure Summit",
-      organizer: "Himalayan Events Co.",
+      organizer: "Himalayan Events",
       ticketsSold: 320,
       revenue: "NPR 28,800",
       conversionRate: "58.9%",
@@ -147,216 +388,166 @@ const ReportsPage: React.FC = () => {
     { month: "Jun", revenue: 67000, tickets: 850 },
   ];
 
+  const maxRevenue = Math.max(...salesData.map((d) => d.revenue));
+  const maxTickets = Math.max(...salesData.map((d) => d.tickets));
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <h1 className="text-2xl font-semibold text-gray-900">Reports</h1>
-          </div>
-          <div className="flex items-center space-x-3">
-            <button className="flex items-center px-4 py-2 text-gray-600 border border-gray-200 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors">
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Refresh
-            </button>
-            <button className="flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
-              <Download className="w-4 h-4 mr-2" />
-              Export Reports
-            </button>
-            <div className="flex items-center space-x-2 text-sm text-gray-600">
-              <Globe className="w-4 h-4" />
-              <span>English</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
+    <div className="min-h-screen bg-linear-to-br from-gray-50 via-blue-50/30 to-purple-50/30">
       <div className="px-6 py-6 space-y-6">
-        {/* Filters */}
-        <div className="px-6 py-4 border-b border-gray-100">
-          <div className="flex items-center justify-between space-x-4">
-            <div className="flex items-center space-x-4">
-              <div className="relative">
-                <select
-                  value={dateRange}
-                  onChange={(e) => setDateRange(e.target.value)}
-                  className="appearance-none bg-white border text-gray-500 border-gray-200 rounded-lg px-4 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  aria-label="Select date range"
-                >
-                  <option value="today">Today</option>
-                  <option value="yesterday">Yesterday</option>
-                  <option value="last-7-days">Last 7 days</option>
-                  <option value="last-30-days">Last 30 days</option>
-                  <option value="last-3-months">Last 3 months</option>
-                  <option value="last-6-months">Last 6 months</option>
-                  <option value="last-year">Last year</option>
-                </select>
-                <ChevronDown className="w-4 h-4 absolute right-3 top-3 text-gray-400 pointer-events-none" />
-              </div>
-
-              <div className="relative">
-                <select
-                  value={reportType}
-                  onChange={(e) => setReportType(e.target.value)}
-                  className="appearance-none bg-white border text-gray-500 border-gray-200 rounded-lg px-4 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  aria-label="Select report type"
-                >
-                  <option value="overview">Overview</option>
-                  <option value="sales">Sales Report</option>
-                  <option value="events">Event Performance</option>
-                  <option value="customers">Customer Analytics</option>
-                  <option value="financial">Financial Report</option>
-                </select>
-                <ChevronDown className="w-4 h-4 absolute right-3 top-3 text-gray-400 pointer-events-none" />
-              </div>
+        {/* Header with Filters */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            {/* Date Range */}
+            <div className="relative">
+              <select
+                value={dateRange}
+                onChange={(e) => setDateRange(e.target.value)}
+                className="appearance-none bg-white border border-gray-200 rounded-lg px-4 py-2.5 pr-10 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
+              >
+                <option value="today">Today</option>
+                <option value="yesterday">Yesterday</option>
+                <option value="last-7-days">Last 7 days</option>
+                <option value="last-30-days">Last 30 days</option>
+                <option value="last-3-months">Last 3 months</option>
+                <option value="last-6-months">Last 6 months</option>
+                <option value="last-year">Last year</option>
+              </select>
+              <CaretDown weight="bold" className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
             </div>
 
-            <button className="flex items-center px-4 py-2 border border-gray-200 text-gray-600 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors">
-              <Filter className="w-4 h-4 mr-2" />
+            {/* Report Type */}
+            <div className="relative">
+              <select
+                value={reportType}
+                onChange={(e) => setReportType(e.target.value)}
+                className="appearance-none bg-white border border-gray-200 rounded-lg px-4 py-2.5 pr-10 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
+              >
+                <option value="overview">Overview</option>
+                <option value="sales">Sales Report</option>
+                <option value="events">Event Performance</option>
+                <option value="customers">Customer Analytics</option>
+                <option value="financial">Financial Report</option>
+              </select>
+              <CaretDown weight="bold" className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+            </div>
+
+            <button className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors shadow-sm text-sm text-gray-700">
+              <Funnel weight="duotone" className="w-4 h-4" />
               Advanced Filters
             </button>
           </div>
+
+          <div className="flex items-center gap-2">
+            <button className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors shadow-sm text-sm text-gray-700">
+              <ArrowsClockwise weight="duotone" className="w-4 h-4" />
+              Refresh
+            </button>
+            <button className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm text-sm font-medium">
+              <DownloadSimple weight="duotone" className="w-4 h-4" />
+              Export
+            </button>
+          </div>
         </div>
-        {/* Overview Stats */}
+
+        {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {overviewStats.map((stat, index) => {
-            const Icon = stat.icon;
-            const getIconBg = (color: string) => {
-              switch (color) {
-                case "green":
-                  return "bg-green-50";
-                case "blue":
-                  return "bg-blue-50";
-                case "orange":
-                  return "bg-orange-50";
-                case "purple":
-                  return "bg-purple-50";
-                default:
-                  return "bg-gray-50";
-              }
-            };
-            const getIconColor = (color: string) => {
-              switch (color) {
-                case "green":
-                  return "text-green-600";
-                case "blue":
-                  return "text-blue-600";
-                case "orange":
-                  return "text-orange-600";
-                case "purple":
-                  return "text-purple-600";
-                default:
-                  return "text-gray-600";
-              }
-            };
-            return (
-              <div
-                key={index}
-                className="bg-white rounded-lg border border-gray-100 p-6"
-              >
-                <div className="flex items-center justify-between">
-                  <div className={`p-2 rounded-lg ${getIconBg(stat.color)}`}>
-                    <Icon className={`w-6 h-6 ${getIconColor(stat.color)}`} />
-                  </div>
-                  <div
-                    className={`flex items-center text-sm ${
-                      stat.trend === "up" ? "text-green-600" : "text-red-600"
-                    }`}
-                  >
-                    {stat.trend === "up" ? (
-                      <ArrowUpRight className="w-4 h-4 mr-1" />
-                    ) : (
-                      <ArrowDownRight className="w-4 h-4 mr-1" />
-                    )}
-                    {stat.change}
-                  </div>
-                </div>
-                <div className="mt-4">
-                  <h3 className="text-2xl font-bold text-gray-900">
-                    {stat.value}
-                  </h3>
-                  <p className="text-sm text-gray-600 mt-1">{stat.title}</p>
-                </div>
-              </div>
-            );
-          })}
+          {overviewStats.map((stat, index) => (
+            <StatCard key={index} {...stat} />
+          ))}
         </div>
 
         {/* Charts Row */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Revenue Chart */}
-          <div className="bg-white rounded-lg border border-gray-100 p-6">
+          <div className="bg-white rounded-xl border border-gray-100 p-6 shadow-sm">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-gray-900">
-                Revenue Trend
-              </h3>
-              <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-blue-50 rounded-lg">
+                  <ChartBarIcon weight="duotone" className="w-5 h-5 text-blue-600" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Revenue Trend
+                  </h3>
+                  <p className="text-sm text-gray-500">Monthly revenue overview</p>
+                </div>
+              </div>
+              <button className="text-blue-600 hover:text-blue-700 text-sm font-medium hover:bg-blue-50 px-3 py-1.5 rounded-lg transition-colors">
                 View Details
               </button>
             </div>
-            <div className="h-64 flex items-end justify-between space-x-2">
+            <div className="flex items-end gap-3 h-56">
               {salesData.map((data, index) => (
-                <div key={index} className="flex-1 flex flex-col items-center">
-                  <div
-                    className="w-full bg-blue-500 rounded-t"
-                    style={{ height: `${(data.revenue / 70000) * 200}px` }}
-                  ></div>
-                  <span className="text-xs text-gray-600 mt-2">
-                    {data.month}
-                  </span>
-                </div>
+                <ChartBar
+                  key={index}
+                  height={(data.revenue / maxRevenue) * 100}
+                  label={data.month}
+                  value={`NPR ${(data.revenue / 1000).toFixed(0)}K`}
+                  color="bg-linear-to-t from-blue-600 to-blue-400"
+                />
               ))}
             </div>
           </div>
 
           {/* Ticket Sales Chart */}
-          <div className="bg-white rounded-lg border border-gray-100 p-6">
+          <div className="bg-white rounded-xl border border-gray-100 p-6 shadow-sm">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-gray-900">
-                Ticket Sales
-              </h3>
-              <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-emerald-50 rounded-lg">
+                  <Pulse weight="duotone" className="w-5 h-5 text-emerald-600" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Ticket Sales
+                  </h3>
+                  <p className="text-sm text-gray-500">Monthly tickets sold</p>
+                </div>
+              </div>
+              <button className="text-blue-600 hover:text-blue-700 text-sm font-medium hover:bg-blue-50 px-3 py-1.5 rounded-lg transition-colors">
                 View Details
               </button>
             </div>
-            <div className="h-64 flex items-end justify-between space-x-2">
+            <div className="flex items-end gap-3 h-56">
               {salesData.map((data, index) => (
-                <div key={index} className="flex-1 flex flex-col items-center">
-                  <div
-                    className="w-full bg-green-500 rounded-t"
-                    style={{ height: `${(data.tickets / 1000) * 200}px` }}
-                  ></div>
-                  <span className="text-xs text-gray-600 mt-2">
-                    {data.month}
-                  </span>
-                </div>
+                <ChartBar
+                  key={index}
+                  height={(data.tickets / maxTickets) * 100}
+                  label={data.month}
+                  value={`${data.tickets} tickets`}
+                  color="bg-linear-to-t from-emerald-600 to-emerald-400"
+                />
               ))}
             </div>
           </div>
         </div>
 
         {/* Top Events Table */}
-        <div className="bg-white rounded-lg border border-gray-100">
-          <div className="px-6 py-4 border-b border-gray-100">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-gray-900">
-                Top Performing Events
-              </h3>
-              <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
-                View All Events
-              </button>
+        <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-purple-50 rounded-lg">
+                <TrendUp weight="duotone" className="w-5 h-5 text-purple-600" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Top Performing Events
+                </h3>
+                <p className="text-sm text-gray-500">Events with highest revenue</p>
+              </div>
             </div>
+            <button
+              onClick={() => router.push("/events")}
+              className="text-blue-600 hover:text-blue-700 text-sm font-medium hover:bg-blue-50 px-3 py-1.5 rounded-lg transition-colors"
+            >
+              View All Events
+            </button>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-gray-50/50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Event Name
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Organizer
+                    Event
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Tickets Sold
@@ -375,54 +566,14 @@ const ReportsPage: React.FC = () => {
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {topEvents.map((event) => (
-                  <tr key={event.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
-                        {event.name}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-600">
-                        {event.organizer}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
-                        {event.ticketsSold.toLocaleString()}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
-                        {event.revenue}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
-                        {event.conversionRate}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                          event.status === "Live"
-                            ? "bg-green-100 text-green-800"
-                            : "bg-gray-100 text-gray-800"
-                        }`}
-                      >
-                        {event.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <button
-                        aria-label="View"
-                        className="text-blue-600 hover:text-blue-700 text-sm font-medium"
-                      >
-                        <Eye className="w-4 h-4" />
-                      </button>
-                    </td>
-                  </tr>
+              <tbody className="divide-y divide-gray-100">
+                {topEvents.map((event, index) => (
+                  <EventTableRow
+                    key={event.id}
+                    event={event}
+                    index={index}
+                    onView={() => router.push(`/events/eventdetails?id=${event.id}`)}
+                  />
                 ))}
               </tbody>
             </table>
@@ -430,20 +581,26 @@ const ReportsPage: React.FC = () => {
         </div>
 
         {/* Recent Transactions */}
-        <div className="bg-white rounded-lg border border-gray-100">
-          <div className="px-6 py-4 border-b border-gray-100">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-gray-900">
-                Recent Transactions
-              </h3>
-              <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
-                View All Transactions
-              </button>
+        <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-orange-50 rounded-lg">
+                <CurrencyDollar weight="duotone" className="w-5 h-5 text-orange-600" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Recent Transactions
+                </h3>
+                <p className="text-sm text-gray-500">Latest payment activities</p>
+              </div>
             </div>
+            <button className="text-blue-600 hover:text-blue-700 text-sm font-medium hover:bg-blue-50 px-3 py-1.5 rounded-lg transition-colors">
+              View All Transactions
+            </button>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-gray-50/50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Transaction ID
@@ -461,7 +618,7 @@ const ReportsPage: React.FC = () => {
                     Tickets
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Payment Method
+                    Payment
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Status
@@ -471,56 +628,9 @@ const ReportsPage: React.FC = () => {
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-100">
                 {recentTransactions.map((transaction) => (
-                  <tr key={transaction.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-blue-600">
-                        {transaction.id}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
-                        {transaction.event}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
-                        {transaction.customer}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
-                        {transaction.amount}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
-                        {transaction.tickets}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
-                        {transaction.paymentMethod}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                          transaction.status === "Completed"
-                            ? "bg-green-100 text-green-800"
-                            : "bg-yellow-100 text-yellow-800"
-                        }`}
-                      >
-                        {transaction.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-600">
-                        {transaction.date}
-                      </div>
-                    </td>
-                  </tr>
+                  <TransactionRow key={transaction.id} transaction={transaction} />
                 ))}
               </tbody>
             </table>
@@ -529,6 +639,4 @@ const ReportsPage: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default ReportsPage;
+}

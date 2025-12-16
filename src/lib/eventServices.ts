@@ -84,6 +84,34 @@ export class EventService {
   }
 
   /**
+   * Get all events for admin with filters
+   */
+  static async getAdminEvents(filters?: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    status?: string;
+    organizer_id?: string;
+    sort?: string;
+  }): Promise<EventResponse> {
+    const params = new URLSearchParams();
+
+    if (filters) {
+      if (filters.page) params.append('page', filters.page.toString());
+      if (filters.limit) params.append('limit', filters.limit.toString());
+      if (filters.search) params.append('search', filters.search);
+      if (filters.status) params.append('status', filters.status);
+      if (filters.organizer_id) params.append('organizer_id', filters.organizer_id);
+      if (filters.sort) params.append('sort', filters.sort);
+    }
+
+    const query = params.toString();
+    return await api.get<EventResponse>(`/admin/events${query ? `?${query}` : ''}`, {
+      requiresAuth: true
+    });
+  }
+
+  /**
    * Get featured events (top 3 for homepage)
    */
   static async getFeaturedEvents(limit: number = 3): Promise<Event[]> {

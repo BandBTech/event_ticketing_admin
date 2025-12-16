@@ -29,7 +29,7 @@ export interface PendingEvent {
   available: number;
   price: number;
   commission_rate: number;
-  status: "pending" | "approved" | "rejected";
+  status: "draft" | "pending" | "approved" | "rejected" | "live" | "cancelled" | "held";
   sales_status: "active" | "inactive" | "soldout";
   is_featured: boolean;
   is_cancelled: boolean;

@@ -15,7 +15,7 @@ export default function EventsLayout({
 
   return (
     <ProtectedRoute>
-      <div className="flex h-screen overflow-hidden bg-gray-50/50">
+      <div className=" flex h-screen overflow-hidden bg-gray-50/50">
         <AppSidebar
           collapsed={collapsed}
           onToggle={() => setCollapsed(!collapsed)}

@@ -4,7 +4,7 @@ import { API_ENDPOINTS } from '@/app/config/api';
 /**
  * Organizer Types
  */
-interface Organizer {
+export interface Organizer {
   id: string;
   email: string;
   first_name: string;
@@ -23,7 +23,7 @@ interface Organizer {
   updated_at: string;
 }
 
-interface OrganizerListResponse {
+export interface OrganizerListResponse {
   limit: number;
   page: number;
   total: number;
@@ -71,8 +71,21 @@ static async createOrganizer({
 }
 
 
-  static async getOrganizers(): Promise<OrganizerListResponse> {
-    return await api.get(API_ENDPOINTS.GET_ORGANIZERS, {
+  static async getOrganizers(filters?: {
+    page?: number;
+    limit?: number;
+    sort?: string;
+  }): Promise<OrganizerListResponse> {
+    const params = new URLSearchParams();
+
+    if (filters) {
+      if (filters.page) params.append('page', filters.page.toString());
+      if (filters.limit) params.append('limit', filters.limit.toString());
+      if (filters.sort) params.append('sort', filters.sort);
+    }
+
+    const query = params.toString();
+    return await api.get(`${API_ENDPOINTS.GET_ORGANIZERS}${query ? `?${query}` : ''}`, {
       requiresAuth: true,
     });
   }
@@ -99,4 +112,50 @@ static async approveOrganizer(payload: {
     }
   );
 }
+
+  /**
+   * Get organizer by ID
+   * Since there's no dedicated GET endpoint, we fetch from the list
+   */
+  static async getOrganizerById(id: string): Promise<Organizer | null> {
+    // Fetch with a high limit to increase chance of finding the organizer
+    // Ideally the API should support GET /admin/organizers/{id}
+    const response = await this.getOrganizers({ limit: 100 });
+    return response.organizers.find((org) => org.id === id) || null;
+  }
+
+  /**
+   * Update organizer/organization details
+   */
+  static async updateOrganizer(
+    id: string,
+    data: {
+      name?: string;
+      description?: string;
+      phone?: string;
+      email?: string;
+      website?: string;
+      address?: string;
+    }
+  ): Promise<void> {
+    await api.put<void>(
+      `${API_ENDPOINTS.GET_ORGANIZERS.replace('/organizers', '/organizer')}/${id}`,
+      data,
+      {
+        requiresAuth: true,
+      }
+    );
+  }
+
+  /**
+   * Delete organizer
+   */
+  static async deleteOrganizer(id: string): Promise<void> {
+    await api.delete<void>(
+      `${API_ENDPOINTS.GET_ORGANIZERS.replace('/organizers', '/organizer')}/${id}`,
+      {
+        requiresAuth: true,
+      }
+    );
+  }
 }

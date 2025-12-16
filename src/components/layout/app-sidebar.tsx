@@ -4,17 +4,17 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Gauge,
-  LayoutDashboard,
-  Calendar,
+  SquaresFour,
+  CalendarBlank,
   FileText,
-  Settings,
-  ChevronsLeft,
-  ChevronsRight,
-  ChevronRight,
-  LogOut,
+  Gear,
+  CaretDoubleLeft,
+  CaretDoubleRight,
+  CaretRight,
+  SignOut,
   User,
   Ticket,
-} from "lucide-react";
+} from "@phosphor-icons/react";
 
 import { useAuthStore } from "@/store/authStore";
 import {
@@ -27,10 +27,10 @@ import {
 
 const navLinks = [
   { href: "/dashboard", label: "Dashboard", icon: Gauge },
-  { href: "/organisers", label: "Organisers", icon: LayoutDashboard },
-  { href: "/events", label: "Events", icon: Calendar },
+  { href: "/organisers", label: "Organisers", icon: SquaresFour },
+  { href: "/events", label: "Events", icon: CalendarBlank },
   { href: "/reports", label: "Reports", icon: FileText },
-  { href: "/settings", label: "Settings", icon: Settings },
+  { href: "/settings", label: "Settings", icon: Gear },
 ];
 
 interface AppSidebarProps {
@@ -67,7 +67,7 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
       <div className="flex items-center justify-between px-4 py-5 border-b border-gray-100">
         {collapsed ? (
           <div className="flex justify-center w-full">
-            <Ticket size={28} className="text-blue-600" />
+            <Ticket weight="duotone" size={28} className="text-blue-600" />
           </div>
         ) : (
           <>
@@ -76,7 +76,7 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
               onClick={onToggle}
               className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
             >
-              <ChevronsLeft className="size-4 text-gray-500" />
+                <CaretDoubleLeft weight="bold" className="size-4 text-gray-500" />
             </button>
           </>
         )}
@@ -85,7 +85,7 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
             onClick={onToggle}
             className="absolute -right-3 top-6 z-50 bg-white border border-gray-300 rounded-lg shadow-sm p-1.5 text-gray-700 hover:text-gray-900 hover:shadow-md transition-all"
           >
-            <ChevronsRight className="size-4" />
+            <CaretDoubleRight weight="bold" className="size-4" />
           </button>
         )}
       </div>
@@ -107,6 +107,7 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
                   } ${collapsed ? "justify-center" : ""}`}
               >
                 <Icon
+                  weight="duotone"
                   className={`${isActive
                       ? "text-blue-600"
                       : "text-gray-500 group-hover:text-gray-700"
@@ -138,7 +139,7 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
                 }`}
             >
               <div className="relative w-9 h-9 shrink-0 bg-gray-300 rounded-full flex items-center justify-center">
-                <User className="h-5 w-5 text-gray-600" />
+                <User weight="duotone" className="h-5 w-5 text-gray-600" />
               </div>
 
               {!collapsed && (
@@ -146,7 +147,7 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
                   <span className="text-sm text-gray-800 font-medium truncate">
                     {displayName}
                   </span>
-                  <ChevronRight className="h-4 w-4 text-gray-400 shrink-0 ml-1" />
+                  <CaretRight weight="bold" className="h-4 w-4 text-gray-400 shrink-0 ml-1" />
                 </div>
               )}
             </div>
@@ -160,7 +161,7 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
             {/* Header */}
             <div className="flex items-center gap-3 p-3 border-b">
               <div className="relative w-10 h-10 shrink-0 bg-gray-300 rounded-full flex items-center justify-center">
-                <User className="h-5 w-5 text-gray-600" />
+                <User weight="duotone" className="h-5 w-5 text-gray-600" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-gray-900 truncate">
@@ -175,7 +176,7 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
               onClick={() => router.push("/settings/profile")}
               className="cursor-pointer"
             >
-              <User className="mr-2 h-4 w-4 text-gray-600" />
+              <User weight="duotone" className="mr-2 h-4 w-4 text-gray-600" />
               <span className="text-gray-700">Profile</span>
             </DropdownMenuItem>
 
@@ -186,7 +187,7 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
               onClick={handleLogout}
               className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
             >
-              <LogOut className="mr-2 h-4 w-4" />
+              <SignOut weight="duotone" className="mr-2 h-4 w-4" />
               <span>Logout</span>
             </DropdownMenuItem>
           </DropdownMenuContent>

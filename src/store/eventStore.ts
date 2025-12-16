@@ -1,10 +1,10 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { PendingEvent } from '@/types/pendingEvents';
+import { Event } from '@/types/event';
 
 interface EventStore {
-  selectedEvent: PendingEvent | null;
-  setSelectedEvent: (event: PendingEvent | null) => void;
+  selectedEvent: Event | null;
+  setSelectedEvent: (event: Event | null) => void;
   clearSelectedEvent: () => void;
 }
 
