@@ -132,7 +132,7 @@ export default function EventDetailsPage() {
   const categories = Array.isArray(event!.category)
     ? event!.category
     : typeof event!.category === "string"
-      ? (event!.category as string).split(",")
+      ? (event!.category as string).split(",").map((tag) => tag.trim().replace(/[\[\]"'{}]/g, ""))
       : [];
 
   return (
@@ -238,7 +238,6 @@ export default function EventDetailsPage() {
                         key={i}
                         className="flex items-center gap-1 px-3 py-1 bg-gray-100 text-gray-600 rounded-lg text-sm"
                       >
-                        <Tag weight="duotone" className="w-3.5 h-3.5 text-gray-400" />
                         {cat.trim()}
                       </span>
                     ))}

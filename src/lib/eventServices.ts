@@ -190,7 +190,7 @@ export class EventService {
       `/admin/events/${payload.eventId}/approval`, 
       {
         admin_remark: payload.admin_remark,
-        // status: payload.status,
+        status: payload.status,
         commission_rate: payload.commission_rate
       },
       {

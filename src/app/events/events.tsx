@@ -141,7 +141,7 @@ export default function Events() {
                     key={tag}
                     className="text-xs bg-gray-200 px-2 py-1 rounded-lg"
                   >
-                    {tag}
+                    {tag.trim().replace(/[\[\]"'{}]/g, "")}
                   </span>
                 ))}
               </div>

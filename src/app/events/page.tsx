@@ -140,7 +140,7 @@ function EventCard({ event }: { event: Event }) {
   const categories: string[] = Array.isArray(event.category)
     ? event.category
     : typeof event.category === "string"
-      ? (event.category as string).split(",").map((tag: string) => tag.trim())
+      ? (event.category as string).split(",").map((tag: string) => tag.trim().replace(/[\[\]"'{}]/g, ""))
       : [];
 
   const handleViewDetail = () => {
@@ -154,14 +154,15 @@ function EventCard({ event }: { event: Event }) {
   };
 
   return (
-    <Card className="group hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col h-full border-gray-200">
+    <Card className="group hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col h-full border-gray-200 py-0">
       {/* Image */}
-      <div className="relative h-44 overflow-hidden bg-muted">
+      <div className="relative h-full overflow-hidden bg-muted">
         <Image
           src={event.banner_image || "/placeholder.png"}
           alt={event.title}
-          fill
-          className="object-cover group-hover:scale-105 transition-transform duration-300"
+          width={100}
+          height={100}
+          className="object-cover w-full h-full aspect-16/10 group-hover:scale-105 transition-transform duration-300"
         />
         {/* Status Badge */}
         <div className="absolute top-3 left-3">
@@ -420,7 +421,7 @@ export default function EventsPage() {
       </div>
 
       {/* Events Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {isLoading ? (
           Array.from({ length: 8 }).map((_, i) => <EventCardSkeleton key={i} />)
         ) : currentEvents.length === 0 ? (
@@ -485,7 +486,5 @@ export default function EventsPage() {
         </div>
       )}
     </div>
-  );
-}  </div >
   );
 }
