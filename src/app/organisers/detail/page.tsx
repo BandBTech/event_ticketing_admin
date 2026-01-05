@@ -26,6 +26,7 @@ import {
   X,
 } from "@phosphor-icons/react";
 import { toast } from "sonner";
+import { queryKeys } from "@/lib/queryKeys";
 
 
 
@@ -166,8 +167,8 @@ function ApprovalModal({
           ? "Organizer approved successfully"
           : "Organizer rejected"
       );
-      queryClient.invalidateQueries({ queryKey: ["organizers"] });
-      queryClient.invalidateQueries({ queryKey: ["organizer", organizer.id] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.organizers.list });
+      queryClient.invalidateQueries({ queryKey: queryKeys.organizers.detail(organizer.id) });
       onClose();
     },
     onError: (error: Error) => {
@@ -269,7 +270,7 @@ export default function OrganizerDetailPage() {
     isError,
     error,
   } = useQuery<Organizer | null>({
-    queryKey: ["organizer", id],
+    queryKey: queryKeys.organizers.detail(id!),
     queryFn: () => OrganizerService.getOrganizerById(id!),
     enabled: !!id,
   });

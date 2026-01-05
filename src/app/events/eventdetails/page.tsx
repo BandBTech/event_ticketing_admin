@@ -24,6 +24,7 @@ import {
   PencilSimple,
   Trash,
 } from "@phosphor-icons/react";
+import { queryKeys } from "@/lib/queryKeys";
 
 // Status Badge Component
 function StatusBadge({ status }: { status: string }) {
@@ -89,7 +90,7 @@ export default function EventDetailsPage() {
 
   // Fetch event if not in store or ID doesn't match
   const { data: fetchedEvent, isLoading } = useQuery({
-    queryKey: ["event", id],
+    queryKey: queryKeys.events.detail(id!),
     queryFn: () => EventService.getEventById(id!),
     enabled: !!id && (!event || event.id !== id),
   });
