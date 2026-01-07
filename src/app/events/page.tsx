@@ -40,6 +40,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { queryKeys } from "@/lib/queryKeys";
 
 // Status configuration
 function getStatusConfig(status: string) {
@@ -328,7 +329,7 @@ export default function EventsPage() {
     isError,
     error,
   } = useQuery({
-    queryKey: ["adminEvents", statusFilter, organizerId],
+    queryKey: queryKeys.events.all(statusFilter, organizerId || undefined),
     queryFn: () =>
       EventService.getAdminEvents({
         status: statusFilter && statusFilter !== "all" ? statusFilter : undefined,
@@ -431,9 +432,9 @@ export default function EventsPage() {
             <EventCard key={event.id} event={event} />
           ))
         )}
-        </div>
+      </div>
 
-        {/* Pagination */}
+      {/* Pagination */}
       {!isLoading && totalPages > 1 && (
         <div className="flex items-center justify-center gap-2 mt-8">
           <Button
@@ -458,10 +459,10 @@ export default function EventsPage() {
                   onClick={() => setCurrentPage(pageNumber)}
                   className="w-10 h-10"
                 >
-                    {pageNumber}
-                  </Button>
-                );
-              })}
+                  {pageNumber}
+                </Button>
+              );
+            })}
           </div>
 
           <Button

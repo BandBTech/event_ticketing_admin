@@ -32,6 +32,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { queryKeys } from "@/lib/queryKeys";
 
 function getInitials(firstName: string, lastName: string) {
   const first = firstName?.[0] || "";
@@ -267,7 +268,7 @@ export default function OrganisersPage() {
     isError,
     error,
   } = useQuery<OrganizerListResponse>({
-    queryKey: ["organizers", currentPage, itemsPerPage],
+    queryKey: queryKeys.organizers.all(currentPage, itemsPerPage),
     queryFn: () => OrganizerService.getOrganizers({ page: currentPage, limit: itemsPerPage }),
   });
 
@@ -346,9 +347,9 @@ export default function OrganisersPage() {
             <OrganizerCard key={organizer.id} organizer={organizer} />
           ))
         )}
-        </div>
+      </div>
 
-        {/* Pagination */}
+      {/* Pagination */}
       {!isLoading && totalPages > 1 && (
         <div className="flex items-center justify-center gap-2 mt-10">
           <Button
@@ -373,10 +374,10 @@ export default function OrganisersPage() {
                   onClick={() => setCurrentPage(pageNumber)}
                   className="w-10 h-10"
                 >
-                    {pageNumber}
-                  </Button>
-                );
-              })}
+                  {pageNumber}
+                </Button>
+              );
+            })}
           </div>
 
           <Button
