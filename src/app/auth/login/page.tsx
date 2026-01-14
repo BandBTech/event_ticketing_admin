@@ -79,7 +79,6 @@ export default function LoginPage() {
     clearError();
 
     try {
-      // Call real API login with remember me preference
       await login(
         {
           email: data.email,
@@ -88,13 +87,10 @@ export default function LoginPage() {
         data.rememberMe
       );
 
-      // Show success toast
       toast.success("auth.toast.loginSuccess", "Welcome back!");
 
-      // Redirect to homepage
       router.push("/dashboard");
     } catch (error) {
-      // Handle different error types and show toast
       if (error instanceof AuthError) {
         switch (error.code) {
           case "UNAUTHORIZED":
@@ -124,7 +120,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen relative flex flex-col items-center justify-center px-4 py-8 sm:py-20">
       <div className="w-full max-w-[480px] relative z-10">
-        {/* Login Card - Glassmorphic design matching Figma */}
+        {/* Login Card - Glassmorphic design */}
         <div className="relative">
           <div className="glass-login-card rounded-2xl p-4 sm:p-6">
             <div className="space-y-6 p-2 sm:p-3">

@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Plus } from "lucide-react";
-import LanguageButton from "../LanguageButton/LanguageButton";
+import { LanguageSelector } from "../LanguageSelector/LanguageSelector";
 
 interface NavbarProps {
   title: string;
@@ -11,9 +11,6 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ title, addMessage, handleOpen }) => {
-  const [language, setLanguage] = useState("English");
-
-  const languages = ["English", "Japanese", "Italian", "Danish"];
 
   return (
     <nav className="bg-white text-black p-4 space-x-4 flex justify-between">
@@ -40,11 +37,7 @@ const Navbar: React.FC<NavbarProps> = ({ title, addMessage, handleOpen }) => {
         </div> */}
 
         <div className="flex items-center space-x-2 text-gray-600">
-          <LanguageButton
-            languages={languages}
-            selectedLanguage={language}
-            onSelectLanguage={setLanguage}
-          />
+          <LanguageSelector />
         </div>
       </div>
     </nav>

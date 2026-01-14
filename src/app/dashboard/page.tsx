@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { useEventStore } from "@/store/eventStore";
 import { PendingEvent } from "@/types/pendingEvents";
 import PopupModal from "./components/PopupModal";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const AdminDashboard: React.FC = () => {
   interface Organizer {
@@ -45,6 +46,8 @@ const AdminDashboard: React.FC = () => {
     page: number;
     total: number;
   }
+
+  const { t } = useTranslation();
 
   const router = useRouter();
   const setSelectedEvent = useEventStore((state) => state.setSelectedEvent);
@@ -235,7 +238,8 @@ const AdminDashboard: React.FC = () => {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100/50 mt-10">
           <div className="p-6 border-b border-gray-100">
             <h2 className="text-lg font-semibold text-gray-900">
-              Organizers awaiting approval
+              {/* Organizers awaiting approval */}
+              {t("Organizers awaiting approval")}
             </h2>
           </div>
 
