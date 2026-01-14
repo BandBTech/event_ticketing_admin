@@ -4,7 +4,7 @@ import { Bell } from "lucide-react";
 import { usePathname } from "next/navigation";
 import React, { useMemo } from "react";
 import { useAuthStore } from "@/store/authStore";
-import LanguageButton from "@/app/components/LanguageButton/LanguageButton";
+import { LanguageSelector } from "@/app/components/LanguageSelector/LanguageSelector";
 
 /**
  * Get time-based greeting message
@@ -32,9 +32,6 @@ export default function DashboardHeader() {
   const rawPath = usePathname() ?? "/";
   const pathname = rawPath.replace(/\/+$/, "") || "/";
   const { user } = useAuthStore();
-  const [language, setLanguage] = React.useState("English");
-
-  const languages = ["English", "Japanese", "Italian", "Danish"];
 
   // Get user's first name or fallback
   const userName = user?.firstName || "Admin";
@@ -65,13 +62,9 @@ export default function DashboardHeader() {
       <h2 className="text-lg text-gray-900 font-semibold">{headerText}</h2>
 
       <div className="flex items-center gap-3">
-        <LanguageButton
-          languages={languages}
-          selectedLanguage={language}
-          onSelectLanguage={setLanguage}
-        />
+        <LanguageSelector />
 
-        <button className="flex items-center justify-center w-9 h-9 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors">
+        <button title="notification-button" className="flex items-center justify-center w-9 h-9 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors">
           <Bell className="h-4 w-4 text-gray-700" />
         </button>
       </div>

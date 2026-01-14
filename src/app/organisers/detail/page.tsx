@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { OrganizerService, Organizer } from "@/lib/organizerService";
@@ -140,6 +140,29 @@ function DetailPageSkeleton() {
 }
 
 // Approval Modal Component
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { createApprovalSchema, ApprovalFormValues } from "@/lib/validation";
+import { Button } from "@/components/ui/button";
+
 function ApprovalModal({
   isOpen,
   onClose,
@@ -150,15 +173,30 @@ function ApprovalModal({
   onClose: () => void;
   organizer: Organizer;
   action: "approve" | "reject";
-}) {
-  const [remark, setRemark] = useState("");
+  }) {
   const queryClient = useQueryClient();
 
+  const approvalSchema = useMemo(() => createApprovalSchema(action), [action]);
+
+  const form = useForm<ApprovalFormValues>({
+    resolver: zodResolver(approvalSchema),
+    defaultValues: {
+      remark: "",
+    },
+  });
+
+  // Reset form when modal opens or action changes
+  useEffect(() => {
+    if (isOpen) {
+      form.reset({ remark: "" });
+    }
+  }, [isOpen, action, form]);
+
   const approvalMutation = useMutation({
-    mutationFn: () =>
+    mutationFn: (data: ApprovalFormValues) =>
       OrganizerService.approveOrganizer({
         organizerId: organizer.id,
-        admin_remark: remark,
+        admin_remark: data.remark || "",
         status: action === "approve" ? "approved" : "rejected",
       }),
     onSuccess: () => {
@@ -176,77 +214,94 @@ function ApprovalModal({
     },
   });
 
-  if (!isOpen) return null;
+  const onSubmit = (data: ApprovalFormValues) => {
+    approvalMutation.mutate(data);
+  };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 overflow-hidden">
-        <div
-          className={`p-6 ${action === "approve" ? "bg-emerald-50" : "bg-red-50"}`}
-        >
-          <div
-            className={`w-12 h-12 rounded-full ${action === "approve" ? "bg-emerald-100" : "bg-red-100"} flex items-center justify-center mb-4`}
-          >
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="sm:max-w-[500px]">
+        <DialogHeader>
+          <div className={`mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full ${action === "approve" ? "bg-emerald-100" : "bg-red-100"}`}>
             {action === "approve" ? (
-              <Check weight="duotone" className="w-6 h-6 text-emerald-600" />
+              <Check weight="duotone" className="h-6 w-6 text-emerald-600" />
             ) : (
-              <X weight="duotone" className="w-6 h-6 text-red-600" />
+                <X weight="duotone" className="h-6 w-6 text-red-600" />
             )}
           </div>
-          <h3 className="text-lg font-semibold text-gray-900">
+          <DialogTitle className="text-center">
             {action === "approve" ? "Approve Organizer" : "Reject Organizer"}
-          </h3>
-          <p className="text-sm text-gray-600 mt-1">
+          </DialogTitle>
+          <DialogDescription className="text-center">
             {action === "approve"
               ? `Are you sure you want to approve ${organizer.first_name} ${organizer.last_name}?`
               : `Are you sure you want to reject ${organizer.first_name} ${organizer.last_name}?`}
-          </p>
-        </div>
+          </DialogDescription>
+        </DialogHeader>
 
-        <div className="p-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Admin Remark {action === "reject" && "(Required)"}
-          </label>
-          <textarea
-            value={remark}
-            onChange={(e) => setRemark(e.target.value)}
-            placeholder={
-              action === "approve"
-                ? "Optional: Add a note..."
-                : "Please provide a reason for rejection..."
-            }
-            className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-            rows={3}
-          />
-        </div>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="remark"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    Admin Remark {action === "reject" && <span className="text-red-500">*</span>}
+                  </FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder={
+                        action === "approve"
+                          ? "Optional: Add a note..."
+                          : "Please provide a reason for rejection..."
+                      }
+                      className="resize-none"
+                      maxLength={500}
+                      {...field}
+                    />
+                  </FormControl>
+                  <div className="flex justify-between items-center -mt-1 min-h-[20px]">
+                    <FormMessage className="mt-0" />
+                    <div className="text-xs text-muted-foreground ml-auto">
+                      {field.value?.length || 0}/500 characters
+                    </div>
+                  </div>
+                </FormItem>
+              )}
+            />
 
-        <div className="px-6 pb-6 flex gap-3">
-          <button
-            onClick={onClose}
-            className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={() => approvalMutation.mutate()}
-            disabled={
-              approvalMutation.isPending ||
-              (action === "reject" && !remark.trim())
-            }
-            className={`flex-1 px-4 py-2.5 text-sm font-medium text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${action === "approve"
-              ? "bg-emerald-600 hover:bg-emerald-700"
-              : "bg-red-600 hover:bg-red-700"
-              }`}
-          >
-            {approvalMutation.isPending
-              ? "Processing..."
-              : action === "approve"
-                ? "Approve"
-                : "Reject"}
-          </button>
-        </div>
-      </div>
-    </div>
+            <DialogFooter className="gap-2 sm:gap-0">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onClose}
+                disabled={approvalMutation.isPending}
+                className="w-full sm:w-auto"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={approvalMutation.isPending}
+                className={`w-full sm:w-auto ${action === "approve"
+                  ? "bg-emerald-600 hover:bg-emerald-700 text-white"
+                  : "bg-red-600 hover:bg-red-700 text-white"}`}
+              >
+                {approvalMutation.isPending ? (
+                  <>
+                    <Clock className="mr-2 h-4 w-4 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  action === "approve" ? "Approve" : "Reject"
+                )}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 }
 

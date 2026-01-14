@@ -165,3 +165,15 @@ export const createValidationHelpers = (
  *     .regex(/[0-9]/, v.passwordNumber())
  * });
  */
+
+import * as z from "zod";
+
+export const createApprovalSchema = (action: "approve" | "reject") => {
+  return z.object({
+    remark: action === "approve"
+      ? z.string().max(500, "Remark cannot exceed 500 characters").optional()
+      : z.string().min(10, "Reason for rejection is required (min 10 characters)").max(500, "Reason cannot exceed 500 characters"),
+  });
+};
+
+export type ApprovalFormValues = z.infer<ReturnType<typeof createApprovalSchema>>;
