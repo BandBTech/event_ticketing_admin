@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 import { authService, AuthError } from '@/lib/authService';
 import { tokenManager } from '@/lib/tokenManager';
 import { AuthUser, LoginRequest } from '@/types/auth';
@@ -10,7 +9,7 @@ interface AuthStore {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
-  _hasHydrated: boolean;
+  _authChecked: boolean;
 
   // Actions
   login: (credentials: LoginRequest, rememberMe?: boolean) => Promise<void>;
@@ -18,185 +17,186 @@ interface AuthStore {
   fetchProfile: () => Promise<void>;
   clearError: () => void;
   checkAuth: () => void;
-  setHasHydrated: (state: boolean) => void;
 }
 
-export const useAuthStore = create<AuthStore>()(
-  persist(
-    (set, get) => ({
-      // Initial state
-      user: null,
-      isAuthenticated: false,
-      isLoading: false,
-      error: null,
-      _hasHydrated: false,
+export const useAuthStore = create<AuthStore>()((set, get) => ({
+  // Initial state
+  user: null,
+  isAuthenticated: false,
+  isLoading: false,
+  error: null,
+  _authChecked: false,
 
-      // Hydration setter
-      setHasHydrated: (state: boolean) => set({ _hasHydrated: state }),
+  // Login action
+  login: async (credentials: LoginRequest, rememberMe: boolean = false) => {
+    set({ isLoading: true, error: null });
 
-      // Login action
-      login: async (credentials: LoginRequest, rememberMe: boolean = false) => {
-        set({ isLoading: true, error: null });
-
-        try {
-          // Call login API with remember me preference
-          await authService.login(credentials, rememberMe);
-
-          // Fetch user profile
-          const profile = await authService.getProfile();
-
-          // Transform to AuthUser
-          const user: AuthUser = {
-            id: profile.id,
-            email: profile.email,
-            firstName: profile.first_name,
-            lastName: profile.last_name,
-            phone: profile?.phone?.startsWith("+")
-              ? profile?.phone
-              : (profile?.country_code && profile?.phone ? profile.country_code + profile.phone : profile?.phone),
-            countryCode: profile.country_code,
-            isEmailVerified: profile.is_email_verified,
-            organization: profile.organization,
-            roles: profile.roles || [],
-          };
-
-          set({
-            user,
-            isAuthenticated: true,
-            isLoading: false,
-            error: null,
-          });
-        } catch (error) {
-          const errorMessage = error instanceof AuthError 
-            ? error.message 
-            : 'Login failed. Please try again.';
-
-          set({
-            user: null,
-            isAuthenticated: false,
-            isLoading: false,
-            error: errorMessage,
-          });
-
-          throw error;
-        }
-      },
-
-      // Logout action
-      logout: async () => {
-        set({ isLoading: true, error: null });
-
-        try {
-          const result = await authService.logout();
-          set({
-            user: null,
-            isAuthenticated: false,
-            isLoading: false,
-            error: null,
-          });
-          return result;
-        } catch {
-          // Ensure tokens are cleared even if the API call fails
-          tokenManager.clearTokens();
-          set({
-            user: null,
-            isAuthenticated: false,
-            isLoading: false,
-            error: null,
-          });
-          return { message: undefined };
-        }
-      },
+    try {
+      // Call login API with remember me preference
+      await authService.login(credentials, rememberMe);
 
       // Fetch user profile
-      fetchProfile: async () => {
-        set({ isLoading: true, error: null });
+      const profile = await authService.getProfile();
 
-        try {
-          const profile = await authService.getProfile();
+      // Transform to AuthUser
+      const user: AuthUser = {
+        id: profile.id,
+        email: profile.email,
+        firstName: profile.first_name,
+        lastName: profile.last_name,
+        phone: profile?.phone?.startsWith("+")
+          ? profile?.phone
+          : (profile?.country_code && profile?.phone ? profile.country_code + profile.phone : profile?.phone),
+        countryCode: profile.country_code,
+        isEmailVerified: profile.is_email_verified,
+        organization: profile.organization,
+        roles: profile.roles || [],
+      };
 
-          const user: AuthUser = {
-            id: profile.id,
-            email: profile.email,
-            firstName: profile.first_name,
-            lastName: profile.last_name,
-            phone: profile?.phone?.startsWith("+")
-              ? profile?.phone
-              : (profile?.country_code && profile?.phone ? profile.country_code + profile.phone : profile?.phone),
-            isEmailVerified: profile.is_email_verified,
-            organization: profile.organization,
-            roles: profile.roles || [],
-          };
+      set({
+        user,
+        isAuthenticated: true,
+        isLoading: false,
+        error: null,
+      });
+    } catch (error) {
+      const errorMessage = error instanceof AuthError
+        ? error.message
+        : 'Login failed. Please try again.';
 
-          set({
-            user,
-            isAuthenticated: true,
-            isLoading: false,
-            error: null,
-          });
-        } catch (error) {
-          const errorMessage = error instanceof AuthError 
-            ? error.message 
-            : 'Failed to fetch profile';
+      set({
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+        error: errorMessage,
+      });
 
-          set({
-            user: null,
-            isAuthenticated: false,
-            isLoading: false,
-            error: errorMessage,
-          });
-
-          throw error;
-        }
-      },
-
-      // Clear error
-      clearError: () => {
-        set({ error: null });
-      },
-
-      // Check authentication status on app load
-      checkAuth: () => {
-        const hasTokens = tokenManager.hasTokens();
-        // We don't check isAuth (expiry) here because we want to allow the profile fetch
-        // to trigger a token refresh if the access token is expired but refresh token is valid.
-
-        if (hasTokens) {
-          // Set loading while fetching profile
-          set({ isLoading: true });
-          
-          // Try to fetch profile
-          get().fetchProfile().catch(() => {
-            // If profile fetch fails (e.g. refresh token also expired), clear everything
-            set({
-              user: null,
-              isAuthenticated: false,
-              isLoading: false,
-            });
-            tokenManager.clearTokens();
-          });
-        } else {
-          // Clear invalid tokens
-          tokenManager.clearTokens();
-          set({
-            user: null,
-            isAuthenticated: false,
-            isLoading: false,
-          });
-        }
-      },
-    }),
-    {
-      name: 'auth-storage',
-      // Only persist user data, not loading/error states
-      partialize: (state) => ({
-        user: state.user,
-        isAuthenticated: state.isAuthenticated,
-      }),
-      // Called when hydration from localStorage completes
-      onRehydrateStorage: () => (state) => {
-        state?.setHasHydrated(true);
-      },
+      throw error;
     }
-  )
-);
+  },
+
+  // Logout action
+  logout: async () => {
+    set({ isLoading: true, error: null });
+
+    try {
+      const result = await authService.logout();
+      set({
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+        error: null,
+        _authChecked: true,
+      });
+      return result;
+    } catch {
+      // Ensure tokens are cleared even if the API call fails
+      tokenManager.clearTokens();
+      set({
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+        error: null,
+        _authChecked: true,
+      });
+      return { message: undefined };
+    }
+  },
+
+  // Fetch user profile
+  fetchProfile: async () => {
+    set({ isLoading: true, error: null });
+
+    try {
+      const profile = await authService.getProfile();
+
+      const user: AuthUser = {
+        id: profile.id,
+        email: profile.email,
+        firstName: profile.first_name,
+        lastName: profile.last_name,
+        phone: profile?.phone?.startsWith("+")
+          ? profile?.phone
+          : (profile?.country_code && profile?.phone ? profile.country_code + profile.phone : profile?.phone),
+        isEmailVerified: profile.is_email_verified,
+        organization: profile.organization,
+        roles: profile.roles || [],
+      };
+
+      set({
+        user,
+        isAuthenticated: true,
+        isLoading: false,
+        error: null,
+      });
+    } catch (error) {
+      const errorMessage = error instanceof AuthError
+        ? error.message
+        : 'Failed to fetch profile';
+
+      set({
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+        error: errorMessage,
+      });
+
+      throw error;
+    }
+  },
+
+  // Clear error
+  clearError: () => {
+    set({ error: null });
+  },
+
+  // Check authentication status on app load
+  checkAuth: () => {
+    // SYNCHRONOUS CHECK: Verify tokens exist FIRST
+    const hasTokens = tokenManager.hasTokens();
+
+    if (!hasTokens) {
+      // NO TOKENS: Immediately clear state and mark as checked
+      set({
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+        _authChecked: true,
+      });
+      return;
+    }
+
+    // Tokens exist - check if they're valid (not expired)
+    const isAuth = authService.isAuthenticated();
+
+    if (!isAuth) {
+    // Tokens exist but are expired/invalid - clear them
+      tokenManager.clearTokens();
+      set({
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+        _authChecked: true,
+      });
+      return;
+    }
+
+    // Tokens are valid - fetch fresh profile data
+    set({ isLoading: true });
+
+    get().fetchProfile()
+      .catch(() => {
+        // Profile fetch failed - clear everything
+        tokenManager.clearTokens();
+        set({
+          user: null,
+          isAuthenticated: false,
+          isLoading: false,
+        });
+      })
+      .finally(() => {
+        // Mark auth check as complete
+        set({ _authChecked: true });
+      });
+  },
+}));

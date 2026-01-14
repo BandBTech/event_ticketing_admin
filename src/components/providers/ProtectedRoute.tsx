@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/authStore';
+import { tokenManager } from '@/lib/tokenManager';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -10,39 +11,28 @@ interface ProtectedRouteProps {
 
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const router = useRouter();
-  const { isAuthenticated, isLoading, checkAuth, user, _hasHydrated } = useAuthStore();
-  const [authChecked, setAuthChecked] = useState(false);
+  const { isAuthenticated, isLoading, _authChecked } = useAuthStore();
+  const [routeChecked, setRouteChecked] = useState(false);
 
   useEffect(() => {
-    // Only run checkAuth after hydration is complete
-    if (_hasHydrated) {
-      checkAuth();
-    }
-  }, [_hasHydrated, checkAuth]);
+    // Only proceed after auth check is complete and not loading
+    if (_authChecked && !isLoading) {
+      // Check if tokens exist
+      const hasTokens = tokenManager.hasTokens();
 
-  useEffect(() => {
-    // Only proceed after:
-    // 1. Hydration is complete (_hasHydrated = true)
-    // 2. Auth check is not in progress (isLoading = false)
-    if (_hasHydrated && !isLoading) {
-      // Check if we have user data (from persisted storage) or are authenticated
-      const hasUserData = !!user;
-
-      if (!isAuthenticated && !hasUserData) {
-    // No auth and no persisted user - redirect to login
+      if (!hasTokens || !isAuthenticated) {
+      // No tokens or not authenticated - redirect to login
         router.replace('/auth/login');
-      } else {
-        // Either authenticated or have persisted user data - allow access
-        setAuthChecked(true);
+        return;
       }
-    }
-  }, [_hasHydrated, isAuthenticated, isLoading, router, user]);
 
-  // Show loading state while:
-  // 1. Waiting for hydration
-  // 2. Checking authentication
-  // 3. Auth check not complete
-  if (!_hasHydrated || isLoading || !authChecked) {
+      // Authenticated - allow access
+      setRouteChecked(true);
+    }
+  }, [_authChecked, isAuthenticated, isLoading, router]);
+
+  // Show loading state while auth check in progress
+  if (!_authChecked || isLoading || !routeChecked) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-gray-50">
         <div className="flex flex-col items-center gap-4">
@@ -53,8 +43,8 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
     );
   }
 
-  // Don't render children if not authenticated and no user data
-  if (!isAuthenticated && !user) {
+  // Don't render children if not authenticated
+  if (!isAuthenticated) {
     return null;
   }
 
