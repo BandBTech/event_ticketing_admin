@@ -168,11 +168,15 @@ export const createValidationHelpers = (
 
 import * as z from "zod";
 
-export const createApprovalSchema = (action: "approve" | "reject") => {
+export const createApprovalSchema = (t: (key: string, fallback?: string) => string, action: "approve" | "reject" | "activate" | "deactivate") => {
   return z.object({
-    remark: action === "approve"
-      ? z.string().max(500, "Remark cannot exceed 500 characters").optional()
-      : z.string().min(10, "Reason for rejection is required (min 10 characters)").max(500, "Reason cannot exceed 500 characters"),
+    remark: (action === "reject" || action === "deactivate")
+      ? z.string()
+        .min(10, t("organizer.management.validation.rejectReasonRequired", "Reason for rejection is required (min 10 characters)"))
+        .max(500, t("organizer.management.validation.remarkTooLong", "Remark cannot exceed 500 characters"))
+      : z.string()
+        .max(500, t("organizer.management.validation.remarkTooLong", "Remark cannot exceed 500 characters"))
+        .optional(),
   });
 };
 

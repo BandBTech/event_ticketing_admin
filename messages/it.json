@@ -10,7 +10,17 @@
     "loadMore": "Carica Altri Eventi",
     "noResults": "Nessun evento trovato",
     "tryAgain": "Prova ad aggiustare i criteri di ricerca o controlla più tardi per nuovi eventi.",
-    "cancelButton": "Cancellare"
+    "cancelButton": "Cancellare",
+    "yes": "Sì",
+    "no": "No",
+    "characters": "caratteri",
+    "previous": "Precedente",
+    "next": "Successivo",
+    "showing": "Mostrando",
+    "of": "di",
+    "joined": "Iscritto il",
+    "tryAgainLater": "Riprova più tardi",
+    "noResultsTryAgain": "Prova a modificare i termini di ricerca o i filtri"
   },
   "navigation": {
     "events": "Eventi",
@@ -192,6 +202,70 @@
       "billing": "Fatturazione",
       "billingDesc": "Gestisci i tuoi metodi di pagamento",
       "ticketsDesc": "Visualizza i biglietti per i tuoi eventi"
+    }
+  },
+  "organizer": {
+    "management": {
+      "title": "Gestione Organizzatori",
+      "details": "Dettagli Organizzatore",
+      "backToList": "Torna agli Organizzatori",
+      "sections": {
+        "contactInfo": "Informazioni di Contatto",
+        "rolesPermissions": "Ruoli e Permessi",
+        "quickActions": "Azioni Rapide",
+        "statusSummary": "Riepilogo Stato"
+      },
+      "status": {
+        "label": "Stato",
+        "account": "Stato Account",
+        "organizer": "Stato Organizzatore",
+        "verified": "Verificato",
+        "notVerified": "Non Verificato",
+        "active": "Attivo",
+        "inactive": "Inattivo",
+        "suspended": "Sospeso",
+        "pending": "In attesa",
+        "approved": "Approvato",
+        "rejected": "Rifiutato",
+        "unknown": "Sconosciuto"
+      },
+      "actions": {
+        "approve": "Approva",
+        "reject": "Rifiuta",
+        "deactivate": "Disattiva",
+        "activate": "Attiva",
+        "viewEvents": "Vedi Eventi",
+        "editDetails": "Modifica Dettagli",
+        "deleteOrganizer": "Elimina Organizzatore",
+        "sendEmail": "Invia Email",
+        "processing": "Elaborazione..."
+      },
+      "modals": {
+        "approveTitle": "Approva Organizzatore",
+        "rejectTitle": "Rifiuta Organizzatore",
+        "deactivateTitle": "Disattiva Organizzatore",
+        "activateTitle": "Attiva Organizzatore",
+        "approveDesc": "Sei sicuro di voler approvare {name}?",
+        "rejectDesc": "Sei sicuro di voler rifiutare {name}?",
+        "deactivateDesc": "Sei sicuro di voler disattivare l'account di {name}?",
+        "activateDesc": "Sei sicuro di voler attivare l'account di {name}?",
+        "remarkLabel": "Nota Amministratore",
+        "remarkPlaceholder": "Aggiungi una nota...",
+        "rejectPlaceholder": "Fornire una ragione per il rifiuto..."
+      },
+      "messages": {
+        "approveSuccess": "Organizzatore approvato con successo",
+        "rejectSuccess": "Organizzatore rifiutato correttamente",
+        "deactivateSuccess": "Organizzatore disattivato con successo",
+        "activateSuccess": "Organizzatore attivato con successo",
+        "updateError": "Impossibile aggiornare lo stato dell'organizzatore",
+        "notFound": "Organizzatore Non Trovato",
+        "noId": "Nessun Organizzatore Selezionato"
+      },
+      "validation": {
+        "rejectReasonRequired": "La ragione del rifiuto è richiesta (min 10 caratteri)",
+        "remarkTooLong": "La nota non può superare i 500 caratteri"
+      }
     }
   }
 }

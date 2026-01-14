@@ -159,10 +159,110 @@ const FormMessage = React.forwardRef<
       id={formMessageId}
       className={cn("text-xs font-medium text-destructive", className)}
       {...props}
-    />
+    >
+      {body}
+    </p>
   )
 })
 FormMessage.displayName = "FormMessage"
+
+/**
+ * TranslatedFormMessage - Displays form error messages with dynamic translation
+ */
+interface TranslatedFormMessageProps extends React.HTMLAttributes<HTMLParagraphElement> {
+  t: (key: string, fallback?: string, params?: Record<string, string | number>) => string
+  fallback?: string
+}
+
+const parseMessageWithParams = (message: string): { key: string; params: Record<string, string> } => {
+  const pipeIndex = message.indexOf('|')
+  if (pipeIndex === -1) {
+    return { key: message, params: {} }
+  }
+
+  const key = message.substring(0, pipeIndex)
+  const paramsString = message.substring(pipeIndex + 1)
+  const params: Record<string, string> = {}
+
+  paramsString.split(',').forEach(pair => {
+    const colonIndex = pair.indexOf(':')
+    if (colonIndex !== -1) {
+      const paramKey = pair.substring(0, colonIndex).trim()
+      const paramValue = pair.substring(colonIndex + 1).trim()
+      params[paramKey] = paramValue
+    }
+  })
+
+  return { key, params }
+}
+
+const substitutePlaceholders = (text: string, params: Record<string, string>): string => {
+  let result = text
+  Object.entries(params).forEach(([key, value]) => {
+    result = result.replace(new RegExp(`\\{${key}\\}`, 'g'), value)
+  })
+  return result
+}
+
+const TranslatedFormMessage = React.forwardRef<
+  HTMLParagraphElement,
+  TranslatedFormMessageProps
+>(({ className, t, fallback, children, ...props }, ref) => {
+  const { error, formMessageId } = useFormField()
+
+  if (!error && !children) {
+    return null
+  }
+
+  let body: React.ReactNode
+  if (error?.message) {
+    const rawMessage = String(error.message)
+
+    if (rawMessage.includes('.')) {
+      const { key, params } = parseMessageWithParams(rawMessage)
+      const translatedParams: Record<string, string> = {}
+
+      Object.entries(params).forEach(([paramKey, paramValue]) => {
+        if (paramValue.includes(':')) {
+          const colonIndex = paramValue.indexOf(':')
+          const translationKey = paramValue.substring(0, colonIndex)
+          const fallbackValue = paramValue.substring(colonIndex + 1)
+          translatedParams[paramKey] = t(translationKey, fallbackValue)
+        } else if (paramValue.includes('.')) {
+          translatedParams[paramKey] = t(paramValue, paramValue)
+        } else {
+          translatedParams[paramKey] = paramValue
+        }
+      })
+
+      let translated = t(key, fallback || key)
+      if (Object.keys(translatedParams).length > 0) {
+        translated = substitutePlaceholders(translated, translatedParams)
+      }
+      body = translated
+    } else {
+      body = rawMessage
+    }
+  } else {
+    body = children
+  }
+
+  if (!body) {
+    return null
+  }
+
+  return (
+    <p
+      ref={ref}
+      id={formMessageId}
+      className={cn("text-xs font-medium text-destructive", className)}
+      {...props}
+    >
+      {body}
+    </p>
+  )
+})
+TranslatedFormMessage.displayName = "TranslatedFormMessage"
 
 export {
   useFormField,
@@ -172,5 +272,6 @@ export {
   FormControl,
   FormDescription,
   FormMessage,
+  TranslatedFormMessage,
   FormField,
 }

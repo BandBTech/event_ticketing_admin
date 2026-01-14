@@ -20,7 +20,17 @@
       "max": "{field} cannot exceed {value}.",
       "pattern": "{field} format is invalid."
     },
-    "cancelButton": "Cancel"
+    "cancelButton": "Cancel",
+    "yes": "Yes",
+    "no": "No",
+    "characters": "characters",
+    "previous": "Previous",
+    "next": "Next",
+    "showing": "Showing",
+    "of": "of",
+    "joined": "Joined",
+    "tryAgainLater": "Please try again later",
+    "noResultsTryAgain": "Try adjusting your search terms or filters"
   },
   "navigation": {
     "events": "Events",
@@ -331,6 +341,70 @@
       "billingDesc": "Manage your payment methods",
       "tickets": "My Tickets",
       "ticketsDesc": "View your event tickets"
+    }
+  },
+  "organizer": {
+    "management": {
+      "title": "Organizer Management",
+      "details": "Organizer Details",
+      "backToList": "Back to Organisers",
+      "sections": {
+        "contactInfo": "Contact Information",
+        "rolesPermissions": "Roles & Permissions",
+        "quickActions": "Quick Actions",
+        "statusSummary": "Status Summary"
+      },
+      "status": {
+        "label": "Status",
+        "account": "Account Status",
+        "organizer": "Organizer Status",
+        "verified": "Verified",
+        "notVerified": "Not Verified",
+        "active": "Active",
+        "inactive": "Inactive",
+        "suspended": "Suspended",
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "unknown": "Unknown"
+      },
+      "actions": {
+        "approve": "Approve",
+        "reject": "Reject",
+        "deactivate": "Deactivate",
+        "activate": "Activate",
+        "viewEvents": "View Events",
+        "editDetails": "Edit Details",
+        "deleteOrganizer": "Delete Organizer",
+        "sendEmail": "Send Email",
+        "processing": "Processing..."
+      },
+      "modals": {
+        "approveTitle": "Approve Organizer",
+        "rejectTitle": "Reject Organizer",
+        "deactivateTitle": "Deactivate Organizer",
+        "activateTitle": "Activate Organizer",
+        "approveDesc": "Are you sure you want to approve {name}?",
+        "rejectDesc": "Are you sure you want to reject {name}?",
+        "deactivateDesc": "Are you sure you want to deactivate {name}'s account?",
+        "activateDesc": "Are you sure you want to activate {name}'s account?",
+        "remarkLabel": "Admin Remark",
+        "remarkPlaceholder": "Add a note...",
+        "rejectPlaceholder": "Please provide a reason for rejection..."
+      },
+      "messages": {
+        "approveSuccess": "Organizer approved successfully",
+        "rejectSuccess": "Organizer rejected successfully",
+        "deactivateSuccess": "Organizer deactivated successfully",
+        "activateSuccess": "Organizer activated successfully",
+        "updateError": "Failed to update organizer status",
+        "notFound": "Organizer Not Found",
+        "noId": "No Organizer Selected"
+      },
+      "validation": {
+        "rejectReasonRequired": "Reason for rejection is required (min 10 characters)",
+        "remarkTooLong": "Remark cannot exceed 500 characters"
+      }
     }
   }
 }

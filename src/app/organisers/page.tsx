@@ -2,20 +2,21 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import {
-  MagnifyingGlass,
-  Funnel,
-  CaretLeft,
-  CaretRight,
-  Phone,
-  Buildings,
-  CalendarBlank,
-  UserCheck,
-  UserMinus,
-  Eye,
-  CheckCircle,
-  XCircle,
-  Clock,
-  Ticket,
+  MagnifyingGlass as MagnifyingGlassIcon,
+  Funnel as FunnelIcon,
+  CaretLeft as CaretLeftIcon,
+  CaretRight as CaretRightIcon,
+  Phone as PhoneIcon,
+  Buildings as BuildingsIcon,
+  CalendarBlank as CalendarBlankIcon,
+  UserCheck as UserCheckIcon,
+  UserMinus as UserMinusIcon,
+  Eye as EyeIcon,
+  CheckCircle as CheckCircleIcon,
+  XCircle as XCircleIcon,
+  Clock as ClockIcon,
+  Ticket as TicketIcon,
+  Warning as WarningIcon,
 } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
@@ -27,12 +28,15 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { queryKeys } from "@/lib/queryKeys";
+import { useTranslation } from "@/hooks/useTranslation";
+import { useLanguageStore } from "@/store/languageStore";
+import { formatPhoneNumber } from "@/lib/utils";
 
 function getInitials(firstName: string, lastName: string) {
   const first = firstName?.[0] || "";
@@ -40,67 +44,67 @@ function getInitials(firstName: string, lastName: string) {
   return (first + last).toUpperCase();
 }
 
-function getStatusConfig(status: string) {
+function getStatusConfig(status: string, t: any) {
   switch (status?.toLowerCase()) {
     case "approved":
       return {
         variant: "secondary" as const,
         className: "bg-emerald-100 text-emerald-700 hover:bg-emerald-200 border-emerald-200",
-        icon: CheckCircle,
-        label: "Approved",
+        icon: CheckCircleIcon,
+        label: t("organizer.management.status.approved", "Approved"),
       };
     case "pending":
       return {
         variant: "secondary" as const,
         className: "bg-amber-100 text-amber-700 hover:bg-amber-200 border-amber-200",
-        icon: Clock,
-        label: "Pending",
+        icon: ClockIcon,
+        label: t("organizer.management.status.pending", "Pending"),
       };
     case "rejected":
       return {
         variant: "destructive" as const,
         className: "bg-red-100 text-red-700 hover:bg-red-200 border-red-200",
-        icon: XCircle,
-        label: "Rejected",
+        icon: XCircleIcon,
+        label: t("organizer.management.status.rejected", "Rejected"),
       };
     case "inactive":
       return {
         variant: "secondary" as const,
         className: "bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-200",
-        icon: UserMinus,
-        label: "Inactive",
+        icon: UserMinusIcon,
+        label: t("organizer.management.status.inactive", "Inactive"),
       };
     default:
       return {
         variant: "secondary" as const,
         className: "bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-200",
-        icon: Clock,
-        label: status || "Unknown",
+        icon: ClockIcon,
+        label: status || t("organizer.management.status.unknown", "Unknown"),
       };
   }
 }
 
-function getAccountStatusConfig(status: string) {
+function getAccountStatusConfig(status: string, t: any) {
   switch (status?.toLowerCase()) {
     case "active":
       return {
         className: "bg-emerald-500 text-white hover:bg-emerald-600 border-transparent",
-        label: "Active",
+        label: t("organizer.management.status.active", "Active"),
       };
     case "inactive":
       return {
         className: "bg-gray-500 text-white hover:bg-gray-600 border-transparent",
-        label: "Inactive",
+        label: t("organizer.management.status.inactive", "Inactive"),
       };
     case "suspended":
       return {
         className: "bg-red-500 text-white hover:bg-red-600 border-transparent",
-        label: "Suspended",
+        label: t("organizer.management.status.suspended", "Suspended"),
       };
     default:
       return {
         className: "bg-gray-500 text-white hover:bg-gray-600 border-transparent",
-        label: status || "Unknown",
+        label: status || t("organizer.management.status.unknown", "Unknown"),
       };
   }
 }
@@ -134,10 +138,10 @@ function OrganizerCardSkeleton() {
 }
 
 // Organizer Card Component
-function OrganizerCard({ organizer }: { organizer: Organizer }) {
+function OrganizerCard({ organizer, t }: { organizer: Organizer; t: any }) {
   const router = useRouter();
-  const statusConfig = getStatusConfig(organizer.organizer_status);
-  const accountStatusConfig = getAccountStatusConfig(organizer.account_status);
+  const statusConfig = getStatusConfig(organizer.organizer_status, t);
+  const accountStatusConfig = getAccountStatusConfig(organizer.account_status, t);
   const StatusIcon = statusConfig.icon;
 
   const formattedDate = organizer.created_at
@@ -148,7 +152,6 @@ function OrganizerCard({ organizer }: { organizer: Organizer }) {
     <Card className="group hover:shadow-lg transition-all duration-300 flex flex-col h-full overflow-hidden border-gray-200">
       <CardHeader className="flex flex-row items-start gap-4 space-y-0 pb-4">
         <Avatar className="h-16 w-16 border border-gray-100 group-hover:scale-105 transition-transform duration-300">
-          {/* Assuming we might have an image url in the future, simpler to use fallback for now */}
           <AvatarFallback className="text-xl font-bold bg-linear-to-br from-indigo-50 to-blue-50 text-indigo-600">
             {getInitials(organizer.first_name, organizer.last_name)}
           </AvatarFallback>
@@ -172,10 +175,11 @@ function OrganizerCard({ organizer }: { organizer: Organizer }) {
       </CardHeader>
 
       <CardContent className="space-y-4 flex-1 pb-4">
-        {/* Status Line */}
         <div className="flex items-center justify-between bg-muted/50 p-3 rounded-lg border border-border/50">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Status</span>
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+              {t("organizer.management.status.label", "Status")}
+            </span>
             <Badge
               variant={statusConfig.variant}
               className={`gap-1.5 px-2.5 py-0.5 rounded-full font-semibold border ${statusConfig.className}`}
@@ -185,30 +189,31 @@ function OrganizerCard({ organizer }: { organizer: Organizer }) {
             </Badge>
           </div>
           {organizer.is_email_verified && (
-            <Badge variant="secondary" className="bg-blue-50 text-blue-600 hover:bg-blue-100 border-blue-100 gap-1 px-2 py-0.5" title="Email Verified">
-              <UserCheck weight="duotone" className="w-3.5 h-3.5" />
-              Verified
+            <Badge variant="secondary" className="bg-blue-50 text-blue-600 hover:bg-blue-100 border-blue-100 gap-1 px-2 py-0.5" title={t("organizer.management.status.verified", "Email Verified")}>
+              <UserCheckIcon weight="duotone" className="w-3.5 h-3.5" />
+              {t("organizer.management.status.verified", "Verified")}
             </Badge>
           )}
         </div>
 
-        {/* Contact Info */}
         <div className="space-y-1 text-sm text-muted-foreground">
           {organizer.phone && (
             <div className="flex items-center gap-3 p-2 hover:bg-muted/50 rounded-md transition-colors">
               <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center shrink-0">
-                <Phone weight="duotone" className="w-4 h-4" />
+                <PhoneIcon weight="duotone" className="w-4 h-4" />
               </div>
               <span className="font-medium truncate">
-                {organizer.country_code} {organizer.phone}
+                {formatPhoneNumber(organizer.country_code, organizer.phone)}
               </span>
             </div>
           )}
           <div className="flex items-center gap-3 p-2 hover:bg-muted/50 rounded-md transition-colors">
             <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center shrink-0">
-              <CalendarBlank weight="duotone" className="w-4 h-4" />
+              <CalendarBlankIcon weight="duotone" className="w-4 h-4" />
             </div>
-            <span className="font-medium">Joined {formattedDate}</span>
+            <span className="font-medium">
+              {t("common.joined", "Joined")} {formattedDate}
+            </span>
           </div>
         </div>
       </CardContent>
@@ -219,8 +224,8 @@ function OrganizerCard({ organizer }: { organizer: Organizer }) {
           className="flex-1 gap-2"
           onClick={() => router.push(`/organisers/detail?id=${organizer.id}`)}
         >
-          <Eye weight="duotone" className="w-4.5 h-4.5" />
-          Profile
+          <EyeIcon weight="duotone" className="w-4.5 h-4.5" />
+          {t("organizer.management.actions.editDetails", "Profile")}
         </Button>
         <Button
           className="flex-1 gap-2 bg-blue-600 hover:bg-blue-700 text-white"
@@ -228,8 +233,8 @@ function OrganizerCard({ organizer }: { organizer: Organizer }) {
             router.push(`/events?organizer_id=${organizer.id}`)
           }
         >
-          <Ticket weight="duotone" className="w-4.5 h-4.5" />
-          Events
+          <TicketIcon weight="duotone" className="w-4.5 h-4.5" />
+          {t("organizer.management.actions.viewEvents", "Events")}
         </Button>
       </CardFooter>
     </Card>
@@ -237,31 +242,32 @@ function OrganizerCard({ organizer }: { organizer: Organizer }) {
 }
 
 // Empty State Component
-function EmptyState({ searchQuery }: { searchQuery: string }) {
+function EmptyState({ searchQuery, t }: { searchQuery: string, t: any }) {
   return (
     <div className="col-span-full flex flex-col items-center justify-center py-24 text-muted-foreground">
       <div className="w-20 h-20 rounded-full bg-muted shadow-sm border border-border flex items-center justify-center mb-6">
-        <Buildings weight="duotone" className="w-10 h-10 text-muted-foreground/50" />
+        <BuildingsIcon weight="duotone" className="w-10 h-10 text-muted-foreground/50" />
       </div>
       <h3 className="text-xl font-semibold text-foreground mb-2">
-        No organisers found
+        {t("organizer.management.messages.noOrganisers", "No organisers found")}
       </h3>
       <p className="text-sm text-muted-foreground max-w-sm text-center">
         {searchQuery
-          ? "Try adjusting your search terms or filters"
-          : "No organisers have registered yet."}
+          ? t("common.noResultsTryAgain", "Try adjusting your search terms or filters")
+          : t("organizer.management.messages.noOneRegistered", "No organisers have registered yet.")}
       </p>
     </div>
   );
 }
 
 export default function OrganisersPage() {
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
 
-  // Data Fetching with Pagination
   const {
     data: response,
     isLoading,
@@ -274,8 +280,6 @@ export default function OrganisersPage() {
 
   const organizers = response?.organizers || [];
 
-  // Filter organizers based on search query (Client-side filtering for now as API might not support search)
-  // Note: If backend supports search, we should push this to the API too.
   const filteredOrganizers = useMemo(() => {
     if (!searchQuery.trim()) return organizers;
 
@@ -289,24 +293,21 @@ export default function OrganisersPage() {
     );
   }, [organizers, searchQuery]);
 
-  // Pagination Logic
-  const startIndex = (currentPage - 1) * itemsPerPage;
   const totalItems = response?.total || 0;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   const currentOrganizers = filteredOrganizers;
 
-  useEffect(() => {
-    // Check pagination logic if search is implemented
-  }, [searchQuery]);
-
   if (isError) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center text-destructive">
-          <p className="text-lg font-medium">Failed to load organisers</p>
+          <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
+            <WarningIcon weight="duotone" className="w-8 h-8 text-red-500" />
+          </div>
+          <p className="text-lg font-medium">{t("organizer.management.messages.loadError", "Failed to load organisers")}</p>
           <p className="text-sm text-muted-foreground mt-1">
-            {(error as Error)?.message || "Please try again later"}
+            {(error as Error)?.message || t("common.tryAgainLater", "Please try again later")}
           </p>
         </div>
       </div>
@@ -315,13 +316,12 @@ export default function OrganisersPage() {
 
   return (
     <div className="min-h-screen p-8 space-y-8">
-      {/* Search and Filter */}
       <div className="flex items-center justify-between gap-4">
         <div className="relative flex-1 max-w-md">
-          <MagnifyingGlass weight="duotone" className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <MagnifyingGlassIcon weight="duotone" className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             type="text"
-            placeholder="Search organisers..."
+            placeholder={t("common.search", "Search") + "..."}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-9 bg-background/80 backdrop-blur-sm"
@@ -329,27 +329,25 @@ export default function OrganisersPage() {
         </div>
 
         <Button variant="outline" className="gap-2 bg-background/80 backdrop-blur-sm">
-          <Funnel weight="duotone" className="h-4 w-4" />
-          Filter
+          <FunnelIcon weight="duotone" className="h-4 w-4" />
+          {t("common.filter", "Filter")}
         </Button>
       </div>
 
-      {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {isLoading ? (
           Array.from({ length: 8 }).map((_, i) => (
             <OrganizerCardSkeleton key={i} />
           ))
         ) : currentOrganizers.length === 0 ? (
-          <EmptyState searchQuery={searchQuery} />
+            <EmptyState searchQuery={searchQuery} t={t} />
         ) : (
           currentOrganizers.map((organizer) => (
-            <OrganizerCard key={organizer.id} organizer={organizer} />
+            <OrganizerCard key={organizer.id} organizer={organizer} t={t} />
           ))
         )}
       </div>
 
-      {/* Pagination */}
       {!isLoading && totalPages > 1 && (
         <div className="flex items-center justify-center gap-2 mt-10">
           <Button
@@ -359,8 +357,8 @@ export default function OrganisersPage() {
             disabled={currentPage === 1}
             className="gap-2"
           >
-            <CaretLeft weight="bold" className="w-4 h-4" />
-            Previous
+            <CaretLeftIcon weight="bold" className="w-4 h-4" />
+            {t("common.previous", "Previous")}
           </Button>
 
           <div className="flex gap-2">
@@ -387,18 +385,17 @@ export default function OrganisersPage() {
             disabled={currentPage === totalPages}
             className="gap-2"
           >
-            Next
-            <CaretRight weight="bold" className="w-4 h-4" />
+            {t("common.next", "Next")}
+            <CaretRightIcon weight="bold" className="w-4 h-4" />
           </Button>
         </div>
       )}
 
-      {/* Results summary */}
       {!isLoading && filteredOrganizers.length > 0 && (
         <div className="text-center text-sm text-muted-foreground">
-          Showing {(currentPage - 1) * itemsPerPage + 1}-
-          {Math.min(currentPage * itemsPerPage, totalItems)} of{" "}
-          {totalItems} organisers
+          {t("common.showing", "Showing")} {(currentPage - 1) * itemsPerPage + 1}-
+          {Math.min(currentPage * itemsPerPage, totalItems)} {t("common.of", "of")}{" "}
+          {totalItems} {t("organizer.management.title", "organisers")}
         </div>
       )}
     </div>
