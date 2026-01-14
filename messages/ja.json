@@ -149,6 +149,22 @@
     },
     "verifyOTP": {
       "otpValidity": "コードは 10 分後に自動的に期限切れになります。"
+    },
+    "toast": {
+      "loginSuccess": "おかえりなさい!",
+      "loginError": "ログインに失敗しました。もう一度お試しください。",
+      "signupSuccess": "アカウント作成に成功しました!",
+      "signupError": "登録に失敗しました。もう一度お試しください。",
+      "otpSent": "メールアドレスに認証コードを送りました",
+      "otpVerified": "メールアドレスを認証しました!",
+      "otpResent": "New code sent to your email",
+      "passwordResetSent": "パスワードリセットコードをメールアドレスに送りました",
+      "passwordResetSuccess": "パスワードリセットに成功しました!",
+      "logoutSuccess": "You have been logged out",
+      "invalidCredentials": "メールアドレスまたはパスワードが正しくありません",
+      "networkError": "ネットワークエラー。接続を確認してください。",
+      "serverError": "何かがうまくいなかった。もう一度お試しください。",
+      "passwordChangedLogin": "Please login with your new password."
     }
   },
   "settings": {

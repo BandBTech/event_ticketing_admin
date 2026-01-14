@@ -262,7 +262,7 @@ export default function SecuritySettingsPage() {
               disabled={isLoading}
               className="bg-blue-600 hover:bg-blue-700 text-white"
             >
-              {isLoading ? t('settings.security.updating', 'Updating...') : t('settings.security.updateButton', 'Update Password')}
+              {isLoading ? t('common.updating', 'Updating...') : t('settings.security.updateButton', 'Update Password')}
             </Button>
             <Button
               type="button"

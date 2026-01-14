@@ -14,6 +14,8 @@ import {
 import Image from "next/image";
 import { events as eventsData } from "./eventsData";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
+import { useLanguageStore } from "@/store/languageStore";
 
 export interface Tiers {
   id: string;
@@ -80,6 +82,8 @@ export const getEventById = (id: string): Event | undefined => {
 
 export default function Events() {
   const [search, setSearch] = useState("");
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
   return (
     <div className="flex-1 px-6 py-4">
       <div className="flex items-center justify-between mb-6">
@@ -87,7 +91,7 @@ export default function Events() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
           <input
             type="text"
-            placeholder="Search events"
+            placeholder={t("event.placeholder.searchEvents", "Search events...")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
@@ -95,7 +99,7 @@ export default function Events() {
         </div>
         <button className="ml-4 flex items-center gap-2 px-4 py-2 border rounded-lg shadow-sm hover:bg-gray-50">
           <Filter className="w-5 h-5" />
-          Filter events
+          {t("event.filterEvents", "Filter events")}
         </button>
       </div>
 
@@ -166,7 +170,7 @@ export default function Events() {
                     href={`/organizerDashboard/pages/eventdetails/${event.id}`}
                     className="flex items-center gap-2 border border-gray-300 hover:no-underline rounded-lg p-2 text-sm text-gray-700 font-medium hover:bg-gray-100 hover:shadow-lg"
                   >
-                    View Detail <ArrowRight className="w-4 h-4" />
+                    {t("common.viewDetail", "View Detail")} <ArrowRight className="w-4 h-4" />
                   </Link>
                   <button
                     aria-label="pencil line"
@@ -185,7 +189,7 @@ export default function Events() {
       <div className="flex justify-center text-gray-700 items-center gap-2 mt-8">
         <button className="flex items-center px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-50">
           <ArrowLeft className="w-4 h-4" />
-          Previous
+          {t("common.previous", "Previous")}
         </button>
         <button className="px-3 py-1 rounded-full border-gray-300 bg-gradient-to-r from-blue-600 to-indigo-500 text-white">
           1
@@ -197,7 +201,7 @@ export default function Events() {
           3
         </button>
         <button className="flex items-center px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-50">
-          Next
+          {t("common.next", "Next")}
           <ArrowRight className="w-4 h-4" />
         </button>
       </div>

@@ -4,6 +4,8 @@ import React, { useState, useRef, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { useSearchParams } from "next/navigation";
+import { useTranslation } from "@/hooks/useTranslation";
+import { useLanguageStore } from "@/store/languageStore";
 
 const VerifyOTPPageContent: React.FC = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -131,8 +133,10 @@ const VerifyOTPPageContent: React.FC = () => {
 };
 
 export default function VerifyOTPPage() {
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
   return (
-    <Suspense fallback="Loading...">
+    <Suspense fallback={t("common.loading", "Loading...")}>
       <VerifyOTPPageContent />
     </Suspense>
   );

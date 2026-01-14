@@ -282,11 +282,13 @@ function VerifyOTPContent() {
 }
 
 export default function VerifyOTPPage() {
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
   return (
     <Suspense
       fallback={
         <div className="min-h-screen flex items-center justify-center">
-          Loading...
+          {t("common.loading", "Loading...")}
         </div>
       }
     >

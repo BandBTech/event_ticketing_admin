@@ -149,6 +149,22 @@
     },
     "verifyOTP": {
       "otpValidity": "Il codice scadrà automaticamente dopo 10 minuti."
+    },
+    "toast": {
+      "loginSuccess": "Bentornato!",
+      "loginError": "Accesso fallito. Riprova.",
+      "signupSuccess": "Account creato con successo!",
+      "signupError": "Registrazione fallita. Riprova.",
+      "otpSent": "Codice di verifica inviato al tuo email",
+      "otpVerified": "Email verificata con successo!",
+      "otpResent": "Nuovo codice inviato al tuo email",
+      "passwordResetSent": "Codice di reset password inviato al tuo email",
+      "passwordResetSuccess": "Password reset con successo!",
+      "logoutSuccess": "Hai effettuato il logout con successo!",
+      "invalidCredentials": "Email o password non validi",
+      "networkError": "Errore di rete. Controlla la tua connessione.",
+      "serverError": "Qualcosa è andato storto. Riprova.",
+      "passwordChangedLogin": "Effettua il login con la tua nuova password."
     }
   },
   "settings": {
