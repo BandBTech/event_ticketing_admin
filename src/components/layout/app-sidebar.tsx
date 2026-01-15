@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useMemo } from "react";
 import {
   Gauge,
   SquaresFour,
@@ -17,6 +18,8 @@ import {
 } from "@phosphor-icons/react";
 
 import { useAuthStore } from "@/store/authStore";
+import { useLanguageStore } from "@/store/languageStore";
+import { useTranslation } from "@/hooks/useTranslation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,14 +27,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-const navLinks = [
-  { href: "/dashboard", label: "Dashboard", icon: Gauge },
-  { href: "/organisers", label: "Organizers", icon: SquaresFour },
-  { href: "/events", label: "Events", icon: CalendarBlank },
-  { href: "/reports", label: "Reports", icon: FileText },
-  { href: "/settings", label: "Settings", icon: Gear },
-];
 
 interface AppSidebarProps {
   collapsed: boolean;
@@ -42,6 +37,17 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const { user, logout } = useAuthStore();
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
+
+  // Define navLinks with translation keys
+  const navLinks = useMemo(() => [
+    { href: "/dashboard", labelKey: "sidebar.dashboard", icon: Gauge },
+    { href: "/organisers", labelKey: "sidebar.organizers", icon: SquaresFour },
+    { href: "/events", labelKey: "sidebar.events", icon: CalendarBlank },
+    { href: "/reports", labelKey: "sidebar.reports", icon: FileText },
+    { href: "/settings", labelKey: "sidebar.settings", icon: Gear },
+  ], []);
 
   const handleLogout = async () => {
     try {
@@ -54,8 +60,8 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
 
   // Get user display name
   const displayName = user
-    ? `${user.firstName || ""} ${user.lastName || ""}`.trim() || "Admin"
-    : "Admin";
+    ? `${user.firstName || ""} ${user.lastName || ""}`.trim() || t("sidebar.admin", "Admin")
+    : t("sidebar.admin", "Admin");
   const displayEmail = user?.email || "";
 
   return (
@@ -92,7 +98,7 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
 
       {/* Navigation */}
       <nav className="flex-1 py-4 px-2 space-y-1">
-        {navLinks.map(({ href, label, icon: Icon }) => {
+        {navLinks.map(({ href, labelKey, icon: Icon }) => {
           // Check if current path matches or starts with the nav item path
           const isActive =
             pathname === href ||
@@ -121,7 +127,7 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
                         : "text-gray-700 font-normal"
                       }`}
                   >
-                    {label}
+                    {t(labelKey)}
                   </span>
                 )}
               </div>
@@ -177,7 +183,7 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
               className="cursor-pointer"
             >
               <User weight="duotone" className="mr-2 h-4 w-4 text-gray-600" />
-              <span className="text-gray-700">Profile</span>
+              <span className="text-gray-700">{t("sidebar.profile", "Profile")}</span>
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />
@@ -188,7 +194,7 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
               className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
             >
               <SignOut weight="duotone" className="mr-2 h-4 w-4" />
-              <span>Logout</span>
+              <span>{t("sidebar.logout", "Logout")}</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

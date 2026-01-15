@@ -30,6 +30,16 @@
     "signIn": "サインイン",
     "organizeEvent": "イベント開催"
   },
+  "sidebar": {
+    "dashboard": "ダッシュボード",
+    "organizers": "主催者",
+    "events": "イベント",
+    "reports": "レポート",
+    "settings": "設定",
+    "profile": "プロフィール",
+    "logout": "ログアウト",
+    "admin": "管理者"
+  },
   "hero": {
     "badge": "ネパール最高のイベントプラットフォーム",
     "title": "ネパールの素晴らしいイベントを発見",

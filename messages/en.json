@@ -187,8 +187,11 @@
     "dashboard": "Dashboard",
     "organizers": "Organizers",
     "events": "Events",
+    "reports": "Reports",
     "settings": "Settings",
-    "report": "Report"
+    "profile": "Profile",
+    "logout": "Logout",
+    "admin": "Admin"
   },
   "auth": {
     "login": {

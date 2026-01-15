@@ -30,6 +30,16 @@
     "signIn": "Accedi",
     "organizeEvent": "Organizza Evento"
   },
+  "sidebar": {
+    "dashboard": "Pannello di controllo",
+    "organizers": "Organizzatori",
+    "events": "Eventi",
+    "reports": "Rapporti",
+    "settings": "Impostazioni",
+    "profile": "Profilo",
+    "logout": "Esci",
+    "admin": "Admin"
+  },
   "hero": {
     "badge": "La Piattaforma Eventi Premier del Nepal",
     "title": "Scopri Eventi Fantastici in Nepal",
