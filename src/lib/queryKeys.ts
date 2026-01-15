@@ -14,9 +14,11 @@ export const queryKeys = {
      * Admin events query keys
      */
     events: {
-        /** Key for fetching admin events list with filters */
-        all: (statusFilter?: string, organizerId?: string) =>
-            ['adminEvents', statusFilter, organizerId] as const,
+    /** Key for fetching admin events list with filters and pagination */
+    all: (filters?: { page?: number; limit?: number; status?: string; organizerId?: string; search?: string }) =>
+      ['adminEvents', filters] as const,
+    /** Key for all events (used for invalidation) */
+    list: ['adminEvents'] as const,
         /** Key for fetching a single event by ID */
         detail: (id: string) => ['event', id] as const,
     },
@@ -34,3 +36,4 @@ export const queryKeys = {
         detail: (id: string) => ['organizer', id] as const,
     },
 } as const;
+

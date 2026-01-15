@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useMemo, useCallback } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
@@ -9,25 +9,24 @@ import { Event } from "@/types/event";
 import { format } from "date-fns";
 import { useEventStore } from "@/store/eventStore";
 import {
-  MagnifyingGlass,
-  Funnel,
-  CalendarBlank,
-  MapPin,
-  PencilSimple,
-  CaretLeft,
-  CaretRight,
-  Eye,
-  Users,
-  Ticket,
-  Clock,
-  CheckCircle,
-  XCircle,
-  WarningCircle,
+  MagnifyingGlass as MagnifyingGlassIcon,
+  Funnel as FunnelIcon,
+  CalendarBlank as CalendarBlankIcon,
+  MapPin as MapPinIcon,
+  PencilSimple as PencilSimpleIcon,
+  CaretLeft as CaretLeftIcon,
+  CaretRight as CaretRightIcon,
+  Eye as EyeIcon,
+  Users as UsersIcon,
+  Ticket as TicketIcon,
+  Clock as ClockIcon,
+  CheckCircle as CheckCircleIcon,
+  XCircle as XCircleIcon,
+  WarningCircle as WarningCircleIcon,
 } from "@phosphor-icons/react";
 import {
   Card,
   CardContent,
-  CardFooter,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -49,49 +48,49 @@ function getStatusConfig(status: string) {
       return {
         variant: "secondary" as const,
         className: "bg-emerald-100 text-emerald-700 hover:bg-emerald-200 border-none",
-        icon: CheckCircle,
+        icon: CheckCircleIcon,
         label: "Approved",
       };
     case "pending":
       return {
         variant: "secondary" as const,
         className: "bg-amber-100 text-amber-700 hover:bg-amber-200 border-none",
-        icon: Clock,
+        icon: ClockIcon,
         label: "Pending",
       };
     case "rejected":
       return {
         variant: "destructive" as const,
         className: "bg-red-100 text-red-700 hover:bg-red-200 border-none",
-        icon: XCircle,
+        icon: XCircleIcon,
         label: "Rejected",
       };
     case "draft":
       return {
         variant: "secondary" as const,
         className: "bg-gray-100 text-gray-700 hover:bg-gray-200 border-none",
-        icon: WarningCircle,
+        icon: WarningCircleIcon,
         label: "Draft",
       };
     case "live":
       return {
         variant: "secondary" as const,
         className: "bg-green-100 text-green-700 hover:bg-green-200 border-none",
-        icon: CheckCircle,
+        icon: CheckCircleIcon,
         label: "Live",
       };
     case "cancelled":
       return {
         variant: "destructive" as const,
         className: "bg-red-100 text-red-700 hover:bg-red-200 border-none",
-        icon: XCircle,
+        icon: XCircleIcon,
         label: "Cancelled",
       };
     default:
       return {
         variant: "secondary" as const,
         className: "bg-gray-100 text-gray-700 hover:bg-gray-200 border-none",
-        icon: WarningCircle,
+        icon: WarningCircleIcon,
         label: status || "Unknown",
       };
   }
@@ -113,12 +112,12 @@ function EventCardSkeleton() {
           <Skeleton className="h-4 w-2/3" />
         </div>
       </CardContent>
-      <CardFooter className="pt-0 border-t mx-4 my-4 border-border/50">
+      <div className="pt-0 border-t mx-4 my-4 border-border/50">
         <div className="flex justify-between w-full pt-4 gap-2">
           <Skeleton className="h-9 flex-1" />
           <Skeleton className="h-9 w-10" />
         </div>
-      </CardFooter>
+      </div>
     </Card>
   );
 }
@@ -211,13 +210,13 @@ function EventCard({ event }: { event: Event }) {
         {/* Event Details */}
         <div className="space-y-2 text-sm text-muted-foreground mb-4">
           <div className="flex items-center gap-2">
-            <CalendarBlank weight="duotone" className="w-4 h-4 text-muted-foreground/70 shrink-0" />
+            <CalendarBlankIcon weight="duotone" className="w-4 h-4 text-muted-foreground/70 shrink-0" />
             <span className="truncate">
               {formattedDate} <span className="text-muted-foreground/40">•</span> {formattedTime}
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <MapPin weight="duotone" className="w-4 h-4 text-muted-foreground/70 shrink-0" />
+            <MapPinIcon weight="duotone" className="w-4 h-4 text-muted-foreground/70 shrink-0" />
             <span className="truncate">
               {event.address || event.venue_name || "Location TBA"}
             </span>
@@ -227,12 +226,12 @@ function EventCard({ event }: { event: Event }) {
         {/* Stats Row */}
         <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4 bg-muted/30 p-2 rounded-lg border border-border/50">
           <div className="flex items-center gap-1.5" title="Capacity">
-            <Users weight="duotone" className="w-4 h-4 text-muted-foreground/70" />
+            <UsersIcon weight="duotone" className="w-4 h-4 text-muted-foreground/70" />
             <span className="font-medium">{event.capacity || 0}</span>
           </div>
           <div className="w-px h-4 bg-border" />
           <div className="flex items-center gap-1.5" title="Available">
-            <Ticket weight="duotone" className="w-4 h-4 text-muted-foreground/70" />
+            <TicketIcon weight="duotone" className="w-4 h-4 text-muted-foreground/70" />
             <span className="font-medium">{event.available || 0}</span>
           </div>
           {event.price > 0 && (
@@ -252,7 +251,7 @@ function EventCard({ event }: { event: Event }) {
             className="flex-1 gap-2 bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 hover:text-gray-900 shadow-sm"
             onClick={handleViewDetail}
           >
-            <Eye weight="duotone" className="w-4 h-4" />
+            <EyeIcon weight="duotone" className="w-4 h-4" />
             Detail
           </Button>
           <Button
@@ -262,7 +261,7 @@ function EventCard({ event }: { event: Event }) {
             onClick={handleEdit}
             title="Edit Event"
           >
-            <PencilSimple weight="duotone" className="w-4 h-4" />
+            <PencilSimpleIcon weight="duotone" className="w-4 h-4" />
           </Button>
         </div>
       </CardContent>
@@ -275,7 +274,7 @@ function EmptyState({ searchQuery }: { searchQuery: string }) {
   return (
     <div className="col-span-full flex flex-col items-center justify-center py-16 text-muted-foreground">
       <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
-        <CalendarBlank weight="duotone" className="w-8 h-8 text-muted-foreground/50" />
+        <CalendarBlankIcon weight="duotone" className="w-8 h-8 text-muted-foreground/50" />
       </div>
       <h3 className="text-lg font-medium text-foreground mb-1">No events found</h3>
       <p className="text-sm text-muted-foreground max-w-sm text-center">
@@ -316,12 +315,43 @@ function StatusFilter({
 export default function EventsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const organizerId = searchParams.get("organizer_id");
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all"); // Changed default to "all" for select compatibility
-  const [currentPage, setCurrentPage] = useState(1);
+  // Read all state from URL params
+  const currentPage = Number(searchParams.get("page")) || 1;
+  const searchQuery = searchParams.get("search") || "";
+  const statusFilter = searchParams.get("status") || "all";
+  const organizerId = searchParams.get("organizer_id") || "";
   const itemsPerPage = 9;
+
+  // Helper to update URL params
+  const updateParams = useCallback((updates: Record<string, string | null>) => {
+    const params = new URLSearchParams(searchParams.toString());
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value === null || value === "" || value === "all") {
+        params.delete(key);
+      } else {
+        params.set(key, value);
+      }
+    });
+    const queryString = params.toString();
+    router.push(`/events${queryString ? `?${queryString}` : ""}`, { scroll: false });
+  }, [router, searchParams]);
+
+  const handlePageChange = useCallback((page: number) => {
+    updateParams({ page: page === 1 ? null : page.toString() });
+  }, [updateParams]);
+
+  const handleSearchChange = useCallback((value: string) => {
+    updateParams({ search: value, page: null });
+  }, [updateParams]);
+
+  const handleStatusChange = useCallback((value: string) => {
+    updateParams({ status: value, page: null });
+  }, [updateParams]);
+
+  const handleClearOrganizerFilter = useCallback(() => {
+    updateParams({ organizer_id: null });
+  }, [updateParams]);
 
   const {
     data: response,
@@ -329,12 +359,17 @@ export default function EventsPage() {
     isError,
     error,
   } = useQuery({
-    queryKey: queryKeys.events.all(statusFilter, organizerId || undefined),
+    queryKey: queryKeys.events.all({
+      page: currentPage,
+      limit: 100, // Fetch more for client-side filtering
+      status: statusFilter !== "all" ? statusFilter : undefined,
+      organizerId: organizerId || undefined,
+    }),
     queryFn: () =>
       EventService.getAdminEvents({
         status: statusFilter && statusFilter !== "all" ? statusFilter : undefined,
         organizer_id: organizerId || undefined,
-        limit: 100, // Fetch more for client-side filtering
+        limit: 100,
         sort: "-created_at",
       }),
   });
@@ -363,11 +398,6 @@ export default function EventsPage() {
     startIndex + itemsPerPage
   );
 
-  // Reset page when filters change
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, statusFilter]);
-
   if (isError) {
     return (
       <div className="min-h-screen bg-linear-to-br from-gray-50 via-blue-50 to-purple-50 flex items-center justify-center">
@@ -391,7 +421,7 @@ export default function EventsPage() {
           </p>
           <Button
             variant="link"
-            onClick={() => router.push("/events")}
+            onClick={handleClearOrganizerFilter}
             className="text-blue-600 hover:text-blue-800 h-auto p-0"
           >
             Clear filter
@@ -402,20 +432,20 @@ export default function EventsPage() {
       {/* Search and Filters */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="relative flex-1 max-w-md w-full">
-          <MagnifyingGlass weight="duotone" className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <MagnifyingGlassIcon weight="duotone" className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             type="text"
             placeholder="Search events..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => handleSearchChange(e.target.value)}
             className="pl-10"
           />
         </div>
 
         <div className="flex items-center gap-3">
-          <StatusFilter value={statusFilter} onChange={setStatusFilter} />
+          <StatusFilter value={statusFilter} onChange={handleStatusChange} />
           <Button variant="outline" className="gap-2 bg-background">
-            <Funnel weight="duotone" className="h-4 w-4" />
+            <FunnelIcon weight="duotone" className="h-4 w-4" />
             More Filters
           </Button>
         </div>
@@ -440,11 +470,11 @@ export default function EventsPage() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
             disabled={currentPage === 1}
             className="gap-1"
           >
-            <CaretLeft weight="bold" className="w-4 h-4" />
+            <CaretLeftIcon weight="bold" className="w-4 h-4" />
             Previous
           </Button>
 
@@ -456,7 +486,7 @@ export default function EventsPage() {
                   key={pageNumber}
                   variant={currentPage === pageNumber ? "default" : "outline"}
                   size="icon"
-                  onClick={() => setCurrentPage(pageNumber)}
+                  onClick={() => handlePageChange(pageNumber)}
                   className="w-10 h-10"
                 >
                   {pageNumber}
@@ -468,12 +498,12 @@ export default function EventsPage() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
             disabled={currentPage === totalPages}
             className="gap-1"
           >
             Next
-            <CaretRight weight="bold" className="w-4 h-4" />
+            <CaretRightIcon weight="bold" className="w-4 h-4" />
           </Button>
         </div>
       )}
@@ -489,3 +519,4 @@ export default function EventsPage() {
     </div>
   );
 }
+

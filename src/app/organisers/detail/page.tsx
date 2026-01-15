@@ -24,6 +24,7 @@ import {
   X as XIcon,
   Warning as WarningIcon,
   ArrowLeft as ArrowLeftIcon,
+  ArrowUpLeftIcon,
 } from "@phosphor-icons/react";
 import { toast } from "sonner";
 import { queryKeys } from "@/lib/queryKeys";
@@ -447,7 +448,7 @@ export default function OrganizerDetailPage() {
           onClick={() => router.push("/organisers")}
           className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6 group"
         >
-          <ArrowLeftIcon weight="duotone" className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+          <ArrowUpLeftIcon weight="duotone" className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
           <span className="font-medium">{t("organizer.management.backToList", "Back to Organisers")}</span>
         </button>
 

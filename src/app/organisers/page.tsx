@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useMemo, useCallback } from "react";
 import {
   MagnifyingGlass as MagnifyingGlassIcon,
   Funnel as FunnelIcon,
@@ -17,8 +17,9 @@ import {
   Clock as ClockIcon,
   Ticket as TicketIcon,
   Warning as WarningIcon,
+  EyesIcon,
 } from "@phosphor-icons/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { OrganizerService, Organizer, OrganizerListResponse } from "@/lib/organizerService";
 import { format } from "date-fns";
@@ -224,7 +225,7 @@ function OrganizerCard({ organizer, t }: { organizer: Organizer; t: any }) {
           className="flex-1 gap-2"
           onClick={() => router.push(`/organisers/detail?id=${organizer.id}`)}
         >
-          <EyeIcon weight="duotone" className="w-4.5 h-4.5" />
+          <EyesIcon weight="duotone" className="w-4.5 h-4.5" />
           {t("organizer.management.actions.editDetails", "Profile")}
         </Button>
         <Button
@@ -264,9 +265,35 @@ export default function OrganisersPage() {
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
   const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const searchParams = useSearchParams();
+
+  // Read state from URL params
+  const currentPage = Number(searchParams.get("page")) || 1;
+  const searchQuery = searchParams.get("search") || "";
+  const statusFilter = searchParams.get("status") || "";
   const itemsPerPage = 9;
+
+  // Helper to update URL params
+  const updateParams = useCallback((updates: Record<string, string | null>) => {
+    const params = new URLSearchParams(searchParams.toString());
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value === null || value === "") {
+        params.delete(key);
+      } else {
+        params.set(key, value);
+      }
+    });
+    router.push(`/organisers?${params.toString()}`, { scroll: false });
+  }, [router, searchParams]);
+
+  const handlePageChange = useCallback((page: number) => {
+    updateParams({ page: page.toString() });
+  }, [updateParams]);
+
+  const handleSearchChange = useCallback((value: string) => {
+    // Reset to page 1 when searching
+    updateParams({ search: value, page: "1" });
+  }, [updateParams]);
 
   const {
     data: response,
@@ -280,23 +307,32 @@ export default function OrganisersPage() {
 
   const organizers = response?.organizers || [];
 
+  // Client-side filtering (API doesn't support search/status)
   const filteredOrganizers = useMemo(() => {
-    if (!searchQuery.trim()) return organizers;
+    let result = organizers;
 
-    const query = searchQuery.toLowerCase();
-    return organizers.filter(
-      (org) =>
-        org.first_name?.toLowerCase().includes(query) ||
-        org.last_name?.toLowerCase().includes(query) ||
-        org.email?.toLowerCase().includes(query) ||
-        org.phone?.includes(query)
-    );
-  }, [organizers, searchQuery]);
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(
+        (org) =>
+          org.first_name?.toLowerCase().includes(query) ||
+          org.last_name?.toLowerCase().includes(query) ||
+          org.email?.toLowerCase().includes(query) ||
+          org.phone?.includes(query)
+      );
+    }
+
+    if (statusFilter) {
+      result = result.filter(
+        (org) => org.organizer_status?.toLowerCase() === statusFilter.toLowerCase()
+      );
+    }
+
+    return result;
+  }, [organizers, searchQuery, statusFilter]);
 
   const totalItems = response?.total || 0;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-  const currentOrganizers = filteredOrganizers;
 
   if (isError) {
     return (
@@ -323,7 +359,7 @@ export default function OrganisersPage() {
             type="text"
             placeholder={t("common.search", "Search") + "..."}
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => handleSearchChange(e.target.value)}
             className="pl-9 bg-background/80 backdrop-blur-sm"
           />
         </div>
@@ -339,10 +375,10 @@ export default function OrganisersPage() {
           Array.from({ length: 8 }).map((_, i) => (
             <OrganizerCardSkeleton key={i} />
           ))
-        ) : currentOrganizers.length === 0 ? (
+        ) : filteredOrganizers.length === 0 ? (
             <EmptyState searchQuery={searchQuery} t={t} />
         ) : (
-          currentOrganizers.map((organizer) => (
+              filteredOrganizers.map((organizer) => (
             <OrganizerCard key={organizer.id} organizer={organizer} t={t} />
           ))
         )}
@@ -353,7 +389,7 @@ export default function OrganisersPage() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
             disabled={currentPage === 1}
             className="gap-2"
           >
@@ -369,7 +405,7 @@ export default function OrganisersPage() {
                   key={pageNumber}
                   variant={currentPage === pageNumber ? "default" : "outline"}
                   size="icon"
-                  onClick={() => setCurrentPage(pageNumber)}
+                  onClick={() => handlePageChange(pageNumber)}
                   className="w-10 h-10"
                 >
                   {pageNumber}
@@ -381,7 +417,7 @@ export default function OrganisersPage() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
             disabled={currentPage === totalPages}
             className="gap-2"
           >
@@ -401,3 +437,4 @@ export default function OrganisersPage() {
     </div>
   );
 }
+
