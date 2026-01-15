@@ -72,7 +72,7 @@ function getInitials(firstName: string, lastName: string) {
   return (first + last).toUpperCase();
 }
 
-function getStatusConfig(status: string, t: any) {
+function getStatusConfig(status: string, t: (key: string, fallback?: string) => string) {
   switch (status?.toLowerCase()) {
     case "approved":
       return {
@@ -117,7 +117,7 @@ function getStatusConfig(status: string, t: any) {
   }
 }
 
-function getAccountStatusConfig(status: string, t: any) {
+function getAccountStatusConfig(status: string, t: (key: string, fallback?: string) => string) {
   switch (status?.toLowerCase()) {
     case "active":
       return {
@@ -147,7 +147,7 @@ function getAccountStatusConfig(status: string, t: any) {
 }
 
 // Skeleton Component
-function DetailPageSkeleton({ t }: { t: any }) {
+function DetailPageSkeleton({ t }: { t: (key: string, fallback?: string) => string }) {
   return (
     <div className="min-h-screen">
       <div className="max-w-5xl mx-auto px-6 py-8">
@@ -191,7 +191,7 @@ function StatusModal({
   onClose: () => void;
   organizer: Organizer;
   action: StatusAction;
-  t: any;
+    t: (key: string, fallback?: string) => string;
 }) {
   const queryClient = useQueryClient();
   const approvalSchema = useMemo(() => createApprovalSchema(t, action), [action, t]);
@@ -243,7 +243,7 @@ function StatusModal({
       case "approve":
         return {
           title: t("organizer.management.modals.approveTitle", "Approve Organizer"),
-          description: t("organizer.management.modals.approveDesc", "Are you sure you want to approve {name}?", { name: `${organizer.first_name} ${organizer.last_name}` }).replace("{name}", `${organizer.first_name} ${organizer.last_name}`),
+          description: t("organizer.management.modals.approveDesc", "Are you sure you want to approve {name}?").replace("{name}", `${organizer.first_name} ${organizer.last_name}`),
           buttonText: t("organizer.management.actions.approve", "Approve"),
           buttonClass: "bg-emerald-600 hover:bg-emerald-700 text-white",
           icon: CheckIcon,
@@ -252,7 +252,7 @@ function StatusModal({
       case "reject":
         return {
           title: t("organizer.management.modals.rejectTitle", "Reject Organizer"),
-          description: t("organizer.management.modals.rejectDesc", "Are you sure you want to reject {name}?", { name: `${organizer.first_name} ${organizer.last_name}` }).replace("{name}", `${organizer.first_name} ${organizer.last_name}`),
+          description: t("organizer.management.modals.rejectDesc", "Are you sure you want to reject {name}?").replace("{name}", `${organizer.first_name} ${organizer.last_name}`),
           buttonText: t("organizer.management.actions.reject", "Reject"),
           buttonClass: "bg-red-600 hover:bg-red-700 text-white",
           icon: XIcon,
@@ -261,7 +261,7 @@ function StatusModal({
       case "deactivate":
         return {
           title: t("organizer.management.modals.deactivateTitle", "Deactivate Organizer"),
-          description: t("organizer.management.modals.deactivateDesc", "Are you sure you want to deactivate {name}'s account?", { name: `${organizer.first_name} ${organizer.last_name}` }).replace("{name}", `${organizer.first_name} ${organizer.last_name}`),
+          description: t("organizer.management.modals.deactivateDesc", "Are you sure you want to deactivate {name}'s account?").replace("{name}", `${organizer.first_name} ${organizer.last_name}`),
           buttonText: t("organizer.management.actions.deactivate", "Deactivate"),
           buttonClass: "bg-gray-600 hover:bg-gray-700 text-white",
           icon: UserMinusIcon,
@@ -270,7 +270,7 @@ function StatusModal({
       case "activate":
         return {
           title: t("organizer.management.modals.activateTitle", "Activate Organizer"),
-          description: t("organizer.management.modals.activateDesc", "Are you sure you want to activate {name}'s account?", { name: `${organizer.first_name} ${organizer.last_name}` }).replace("{name}", `${organizer.first_name} ${organizer.last_name}`),
+          description: t("organizer.management.modals.activateDesc", "Are you sure you want to activate {name}'s account?").replace("{name}", `${organizer.first_name} ${organizer.last_name}`),
           buttonText: t("organizer.management.actions.activate", "Activate"),
           buttonClass: "bg-blue-600 hover:bg-blue-700 text-white",
           icon: CheckCircleIcon,

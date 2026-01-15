@@ -425,10 +425,9 @@ export default function EventsPage() {
       }),
   });
 
-  const events = response?.events || [];
-
   // Client-side search filtering
   const filteredEvents = useMemo(() => {
+    const events = response?.events || [];
     if (!searchQuery.trim()) return events;
 
     const query = searchQuery.toLowerCase();
@@ -439,7 +438,7 @@ export default function EventsPage() {
         event.venue_name?.toLowerCase().includes(query) ||
         event.address?.toLowerCase().includes(query)
     );
-  }, [events, searchQuery]);
+  }, [response?.events, searchQuery]);
 
   // Pagination
   const totalPages = Math.ceil(filteredEvents.length / itemsPerPage);

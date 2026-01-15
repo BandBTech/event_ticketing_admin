@@ -340,11 +340,9 @@ export default function OrganisersPage() {
       }),
   });
 
-  const organizers = response?.organizers || [];
-
   // Client-side filtering (API doesn't support search/status)
   const filteredOrganizers = useMemo(() => {
-    let result = organizers;
+    let result = response?.organizers || [];
 
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
@@ -365,7 +363,7 @@ export default function OrganisersPage() {
     }
 
     return result;
-  }, [organizers, searchQuery, statusFilter]);
+  }, [response?.organizers, searchQuery, statusFilter]);
 
   const totalItems = response?.total || 0;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
