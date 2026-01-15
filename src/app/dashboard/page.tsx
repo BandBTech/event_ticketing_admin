@@ -12,6 +12,7 @@ import { useEventStore } from "@/store/eventStore";
 import { PendingEvent } from "@/types/pendingEvents";
 import PopupModal from "./components/PopupModal";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useLanguageStore } from "@/store/languageStore";
 
 const AdminDashboard: React.FC = () => {
   interface Organizer {
@@ -47,7 +48,7 @@ const AdminDashboard: React.FC = () => {
     total: number;
   }
 
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
 
   const router = useRouter();
   const setSelectedEvent = useEventStore((state) => state.setSelectedEvent);
@@ -58,9 +59,8 @@ const AdminDashboard: React.FC = () => {
   const [pendingEventsData, setPendingEnventsData] =
     useState<EventResponse | null>(null);
 
-  const handleOpen = () => {
-    // Modal open handler
-  };
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
 
   const [rejectModal, setRejectModal] = useState<{
     open: boolean;
@@ -133,7 +133,8 @@ const AdminDashboard: React.FC = () => {
       const res = await EventService.getPendingtEvent();
       setPendingEnventsData(res);
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to reject event";
+      const message =
+        error instanceof Error ? error.message : "Failed to reject event";
       toast.error(message);
     }
   };
@@ -158,7 +159,8 @@ const AdminDashboard: React.FC = () => {
       const res = await EventService.getPendingtEvent();
       setPendingEnventsData(res);
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to approve event";
+      const message =
+        error instanceof Error ? error.message : "Failed to approve event";
       toast.error(message);
     }
   };
@@ -197,7 +199,7 @@ const AdminDashboard: React.FC = () => {
               <div className="flex-1">
                 <div className="text-3xl font-bold text-gray-900 mb-1">24</div>
                 <div className="text-sm text-gray-600 font-medium">
-                  Successful Events
+                  {t("dashboard.successfulEvents")}
                 </div>
               </div>
             </div>
@@ -212,7 +214,7 @@ const AdminDashboard: React.FC = () => {
               <div className="flex-1">
                 <div className="text-3xl font-bold text-gray-900 mb-1">11</div>
                 <div className="text-sm text-gray-600 font-medium">
-                  Pending approval
+                  {t("dashboard.pendingApproval")}
                 </div>
               </div>
             </div>
@@ -227,7 +229,7 @@ const AdminDashboard: React.FC = () => {
               <div className="flex-1">
                 <div className="text-3xl font-bold text-gray-900 mb-1">8</div>
                 <div className="text-sm text-gray-600 font-medium">
-                  Organizers
+                  {t("dashboard.organizers")}
                 </div>
               </div>
             </div>
@@ -238,8 +240,7 @@ const AdminDashboard: React.FC = () => {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100/50 mt-10">
           <div className="p-6 border-b border-gray-100">
             <h2 className="text-lg font-semibold text-gray-900">
-              {/* Organizers awaiting approval */}
-              {t("Organizers awaiting approval")}
+              {t("dashboard.orgazinersAwaitingApproval")}
             </h2>
           </div>
 
@@ -285,7 +286,7 @@ const AdminDashboard: React.FC = () => {
                         }
                         className="px-4 py-2 text-sm font-medium text-red-600 bg-white border border-red-300 rounded-md hover:bg-red-50 transition-colors cursor-pointer w-full sm:w-auto"
                       >
-                        <span className="mr-2">X</span> REJECT
+                        <span className="mr-2">X</span> {t("dashboard.reject")}
                       </button>
                       <button
                         onClick={() => handleApprove(organizer.id)}
@@ -304,7 +305,7 @@ const AdminDashboard: React.FC = () => {
                             d="M5 13l4 4L19 7"
                           />
                         </svg>
-                        ACCEPT
+                        {t("dashboard.accept")}
                       </button>
                     </div>
                   </div>
@@ -318,11 +319,10 @@ const AdminDashboard: React.FC = () => {
                     <Calendar className="h-8 w-8 text-gray-400" />
                   </div>
                   <p className="text-gray-500 font-medium">
-                    No organizers awaiting approval
+                    {t("dashboard.noOrganizersAwaitingApproval")}
                   </p>
                   <p className="text-sm text-gray-400">
-                    When organizers submit for registration, they&apos;ll appear
-                    here
+                    {t("dashboard.noOrganizersAwaitingApprovalMessage")}
                   </p>
                 </div>
               </>
@@ -334,7 +334,7 @@ const AdminDashboard: React.FC = () => {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100/50 mt-10">
           <div className="p-6 border-b border-gray-100">
             <h2 className="text-lg font-semibold text-gray-900">
-              Events awaiting approval
+              {t("dashboard.eventsAwaitingApproval")}
             </h2>
           </div>
 
@@ -355,11 +355,6 @@ const AdminDashboard: React.FC = () => {
                       <h3 className="text-base font-semibold text-gray-900 truncate">
                         {event.title}
                       </h3>
-                      {/* {organizer.roles[0]?.name && (
-                        <p className="text-sm text-gray-600 truncate">
-                          {organizer.roles[0]?.name}
-                        </p>
-                      )} */}
                       {event?.description && (
                         <p
                           className="text-xs text-gray-500 max-w-md line-clamp-2"
@@ -379,7 +374,7 @@ const AdminDashboard: React.FC = () => {
                           <span>
                             <ExternalLink className="h-4 w-4" />
                           </span>
-                          <span>VIEW EVENT</span>
+                          <span>{t("dashboard.viewEvent")}</span>
                         </span>
                       </button>
                       <button
@@ -391,7 +386,7 @@ const AdminDashboard: React.FC = () => {
                         }
                         className="px-4 py-2 text-sm font-medium text-red-600 bg-white border border-red-300 rounded-md hover:bg-red-50 transition-colors cursor-pointer w-full sm:w-auto"
                       >
-                        <span className="mr-2">X</span> REJECT
+                        <span className="mr-2">X</span> {t("dashboard.reject")}
                       </button>
                       <button
                         onClick={() =>
@@ -415,7 +410,7 @@ const AdminDashboard: React.FC = () => {
                             d="M5 13l4 4L19 7"
                           />
                         </svg>
-                        ACCEPT
+                        {t("dashboard.accept")}
                       </button>
                     </div>
                   </div>
@@ -429,11 +424,10 @@ const AdminDashboard: React.FC = () => {
                     <Calendar className="h-8 w-8 text-gray-400" />
                   </div>
                   <p className="text-gray-500 font-medium">
-                    No events awaiting approval
+                    {t("dashboard.noEventsAwaitingApproval")}
                   </p>
                   <p className="text-sm text-gray-400">
-                    When events submit for registration, they&apos;ll appear
-                    here
+                    {t("dashboard.noEventsAwaitingApprovalMessage")}
                   </p>
                 </div>
               </>

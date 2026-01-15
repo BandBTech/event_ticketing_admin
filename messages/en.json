@@ -142,6 +142,13 @@
     "ja": "Japanese",
     "it": "Italian"
   },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "organizers": "Organizers",
+    "events": "Events",
+    "settings": "Settings",
+    "report": "Report"
+  },
   "auth": {
     "login": {
       "title": "Login",
@@ -303,6 +310,25 @@
       "serverError": "Something went wrong. Please try again.",
       "passwordChangedLogin": "Please login with your new password."
     }
+  },
+  "dashboard": {
+    "greeting": {
+      "morning": "Good morning",
+      "afternoon": "Good afternoon",
+      "evening": "Good evening"
+    },
+    "successfulEvents": "Successful Events",
+    "pendingApproval": "Pending Approval",
+    "organizers": "Organizers",
+    "orgazinersAwaitingApproval": "Organizers Awaiting Approval",
+    "noOrganizersAwaitingApproval": "No organizers awaiting approval",
+    "noOrganizersAwaitingApprovalMessage": "When organizers submit for registration, they'll appear here",
+    "eventsAwaitingApproval": "Events Awaiting Approval",
+    "noEventsAwaitingApproval": "No events awaiting approval",
+    "noEventsAwaitingApprovalMessage": "When organizers submit events for approval, they'll appear here",
+    "reject": "REJECT",
+    "accept": "ACCEPT",
+    "viewEvent": "VIEW EVENT"
   },
   "settings": {
     "security": {

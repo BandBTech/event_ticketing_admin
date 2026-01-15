@@ -107,47 +107,147 @@
   },
   "auth": {
     "login": {
-      "title": "Accedi",
-      "subtitle": "come amministratore",
+      "title": "Accesso",
+      "subtitle": "come Amministratore",
       "email": "Email",
       "password": "Password",
-      "emailPlaceholder": "Inserisci indirizzo email",
+      "emailPlaceholder": "Inserisci l'indirizzo email",
       "passwordPlaceholder": "••••••••••••",
       "rememberMe": "Ricordami",
-      "forgotPassword": "Password Dimenticata?",
+      "forgotPassword": "Password dimenticata?",
       "loginButton": "Accedi",
       "signingIn": "Accesso in corso...",
       "noAccount": "Non hai un account?",
       "signUpHere": "Registrati qui.",
+      "demoCredentials": "Demo: Usa attendee@example.com / password123",
       "validation": {
-        "emailRequired": "Email è richiesta",
+        "emailRequired": "L'email è obbligatoria",
         "emailInvalid": "Inserisci un indirizzo email valido",
-        "passwordRequired": "Password è richiesta",
-        "passwordTooShort": "La password deve essere di almeno 6 caratteri",
+        "passwordRequired": "La password è obbligatoria",
+        "passwordTooShort": "La password deve essere lunga almeno 6 caratteri",
         "passwordTooLong": "La password è troppo lunga"
       },
       "errors": {
-        "invalidCredentials": "Email o password non validi. Prova: attendee@example.com / password123",
+        "invalidCredentials": "Email o password non validi",
         "loginFailed": "Accesso fallito. Riprova."
       },
       "showPassword": "Mostra password",
       "hidePassword": "Nascondi password"
     },
     "signup": {
-      "phonePlaceholder": "Inserisci un numero di contatto valido",
+      "title": "Registrazione",
+      "subtitle": "come Partecipante",
+      "firstName": "Nome",
+      "lastName": "Cognome",
+      "email": "Email",
+      "phone": "Numero di telefono",
+      "password": "Password",
+      "confirmPassword": "Conferma Password",
+      "firstNamePlaceholder": "Mario",
+      "lastNamePlaceholder": "Rossi",
+      "emailPlaceholder": "Inserisci l'indirizzo email",
+      "phonePlaceholder": "Inserisci un numero di telefono valido",
+      "passwordPlaceholder": "••••••••••••",
+      "confirmPasswordPlaceholder": "••••••••••••",
+      "signupButton": "Inizia",
+      "signingUp": "Creazione account in corso...",
+      "haveAccount": "Hai già un account?",
+      "loginHere": "Accedi come Partecipante.",
+      "termsPrefix": "Continuando, acconsenti di aver letto e compreso i nostri",
+      "terms": "termini e condizioni",
+      "termsAnd": "e la",
+      "privacy": "politica sulla privacy",
       "validation": {
-        "phoneRequired": "Il numero di contatto è obbligatorio",
-        "firstNameRequired": "Il nome è obbligatorio",
-        "firstNameTooLong": "Il nome è troppo lungo",
-        "firstNameTooShort": "Il nome deve contenere almeno 2 caratteri",
-        "lastNameTooShort": "Il cognome deve contenere almeno 2 caratteri"
+        "firstNameTooShort": "Il nome deve essere di almeno 2 caratteri.",
+        "firstNameTooLong": "Il nome è troppo lungo.",
+        "lastNameTooShort": "Il cognome deve essere di almeno 2 caratteri.",
+        "lastNameTooLong": "Il cognome è troppo lungo.",
+        "emailRequired": "L'email è obbligatoria.",
+        "emailInvalid": "Inserisci un indirizzo email valido.",
+        "phoneInvalid": "Inserisci un numero di telefono valido.",
+        "passwordTooShort": "La password deve essere di almeno 8 caratteri.",
+        "passwordTooLong": "La password è troppo lunga.",
+        "passwordUppercase": "La password deve contenere almeno una lettera maiuscola.",
+        "passwordLowercase": "La password deve contenere almeno una lettera minuscola.",
+        "passwordNumber": "La password deve contenere almeno un numero.",
+        "passwordMismatch": "Le password non corrispondono.",
+        "phoneRequired": "Il numero di telefono è obbligatorio.",
+        "firstNameRequired": "Il nome è obbligatorio.",
+        "lastNameRequired": "Il cognome è obbligatorio."
       },
+      "errors": {
+        "signupFailed": "Registrazione fallita. Riprova."
+      },
+      "showPassword": "Mostra password",
+      "hidePassword": "Nascondi password",
       "setPassword": "Crea una password sicura per"
     },
+    "forgotPassword": {
+      "title": "Password dimenticata",
+      "subtitle": "Inserisci la tua email per ricevere un codice di reimpostazione password",
+      "email": "Indirizzo Email",
+      "emailPlaceholder": "Inserisci il tuo indirizzo email",
+      "sendResetCode": "Invia Codice di Reimpostazione",
+      "sending": "Invio in corso...",
+      "backToLogin": "Torna all'accesso",
+      "rememberPassword": "Ti sei ricordato la password?",
+      "loginHere": "Accedi qui",
+      "continueToReset": "Continua per Reimpostare la Password",
+      "successMessage": "Il codice di reimpostazione password è stato inviato alla tua email. Controlla la tua casella di posta.",
+      "validation": {
+        "emailRequired": "L'email è obbligatoria.",
+        "emailInvalid": "Inserisci un indirizzo email valido."
+      },
+      "errors": {
+        "requestFailed": "Invio email di reimpostazione fallito. Riprova."
+      }
+    },
     "resetPassword": {
-      "subtitle": "Imposta una nuova password per"
+      "title": "Reimposta Password",
+      "subtitle": "Imposta una nuova password per",
+      "back": "Indietro",
+      "otp": "Codice di Verifica",
+      "otpPlaceholder": "Inserisci il codice",
+      "newPassword": "Nuova Password",
+      "newPasswordPlaceholder": "••••••••••••",
+      "confirmPassword": "Conferma Password",
+      "confirmPasswordPlaceholder": "••••••••••••",
+      "resetButton": "Reimposta Password",
+      "resetting": "Reimpostazione in corso...",
+      "backToLogin": "Torna all'accesso",
+      "successMessage": "Reimpostazione password completata! Reindirizzamento all'accesso...",
+      "validation": {
+        "otpRequired": "L'OTP è obbligatorio",
+        "otpInvalid": "OTP non valido",
+        "passwordTooShort": "La password deve essere di almeno 8 caratteri",
+        "passwordTooLong": "La password è troppo lunga",
+        "passwordUppercase": "Deve contenere una lettera maiuscola",
+        "passwordLowercase": "Deve contenere una lettera minuscola",
+        "passwordNumber": "Deve contenere un numero",
+        "passwordMismatch": "Le password non corrispondono"
+      },
+      "errors": {
+        "resetFailed": "Reimpostazione password fallita. Riprova."
+      }
     },
     "verifyOTP": {
+      "title": "Verifica la tua Email",
+      "subtitle": "Inserisci il codice a 6 cifre inviato a",
+      "back": "Indietro",
+      "otp": "Codice di Verifica",
+      "otpPlaceholder": "Inserisci il codice a 6 cifre",
+      "verifyButton": "Verifica Email",
+      "verifying": "Verifica in corso...",
+      "didntReceive": "Non hai ricevuto il codice?",
+      "resend": "Invia di nuovo",
+      "resending": "Invio in corso...",
+      "checkSpam": "Controlla la cartella spam se non vedi l'email",
+      "otpResent": "L'OTP è stato rinviato alla tua email",
+      "errors": {
+        "otpIncomplete": "Inserisci il codice a 6 cifre completo",
+        "verificationFailed": "OTP non valido. Riprova.",
+        "resendFailed": "Invio OTP fallito. Riprova."
+      },
       "otpValidity": "Il codice scadrà automaticamente dopo 10 minuti."
     },
     "toast": {
@@ -165,7 +265,42 @@
       "networkError": "Errore di rete. Controlla la tua connessione.",
       "serverError": "Qualcosa è andato storto. Riprova.",
       "passwordChangedLogin": "Effettua il login con la tua nuova password."
+    },
+    "toast": {
+      "loginSuccess": "Bentornato/a!",
+      "loginError": "Accesso fallito. Riprova.",
+      "signupSuccess": "Account creato con successo!",
+      "signupError": "Registrazione fallita. Riprova.",
+      "otpSent": "Codice di verifica inviato alla tua email",
+      "otpVerified": "Email verificata con successo!",
+      "otpResent": "Nuovo codice inviato alla tua email",
+      "passwordResetSent": "Codice di reimpostazione password inviato alla tua email",
+      "passwordResetSuccess": "Reimpostazione password completata!",
+      "logoutSuccess": "Sei stato/a disconnesso/a",
+      "invalidCredentials": "Email o password non validi",
+      "networkError": "Errore di rete. Controlla la tua connessione.",
+      "serverError": "Qualcosa è andato storto. Riprova.",
+      "passwordChangedLogin": "Accedi con la tua nuova password."
     }
+  },
+  "dashboard": {
+    "greeting": {
+      "morning": "Buongiorno",
+      "afternoon": "Buon pomeriggio",
+      "evening": "Buonasera"
+    },
+    "successfulEvents": "Eventi Riusciti",
+    "pendingApproval": "In Attesa di Approvazione",
+    "organizers": "Organizzatori",
+    "orgazinersAwaitingApproval": "Organizzatori in Attesa di Approvazione",
+    "noOrganizersAwaitingApproval": "Nessun organizzatore in attesa di approvazione",
+    "noOrganizersAwaitingApprovalMessage": "Quando gli organizzatori invieranno la registrazione, appariranno qui",
+    "eventsAwaitingApproval": "Eventi in Attesa di Approvazione",
+    "noEventsAwaitingApproval": "Nessun evento in attesa di approvazione",
+    "noEventsAwaitingApprovalMessage": "Quando gli organizzatori invieranno eventi per l'approvazione, appariranno qui",
+    "reject": "RIFIUTA",
+    "accept": "ACCETTA",
+    "viewEvent": "VEDI EVENTO"
   },
   "settings": {
     "security": {
