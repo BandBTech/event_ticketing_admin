@@ -135,7 +135,38 @@
     "from": "From",
     "ticketsLeft": "tickets left",
     "soldOut": "Sold out",
-    "priceTBA": "Price TBA"
+    "priceTBA": "Price TBA",
+    "title": "Events",
+    "searchEvents": "Search Events...",
+    "allStatus": "All Status",
+    "moreFilters": "More Filters",
+    "details": "Details",
+    "noEventsFound": "No events found",
+    "noEventsCreated": "No events have been created yet.",
+    "tryAdjustingSearch": "Try adjusting your search terms or filters",
+    "failedToLoadEvents": "Failed to load events",
+    "pleaseTryAgainLater": "Please try again later",
+    "showingEventsForOrganizer": "Showing events for organizer ID",
+    "clearFilter": "Clear filter",
+    "goBack": "Go Back",
+    "eventDetails" : {
+      "backToEvents": "Back to Events",
+      "sales": "Sales",
+      "capacity": "Capacity",
+      "available": "Available",
+      "editEvents": "Edit Events",
+      "pauseSales": "Pause Sales",
+      "cancelEvent": "Cancel Event",
+      "dateAndTime": "Date & Time",
+      "location": "Location",
+      "pricing": "Pricing",
+      "commissionRate": "Commission Rate",
+      "createdAt": "Created At",
+      "lastUpdated": "Last Updated",
+      "organizerId": "Organizer ID",
+      "viewOrganizer": "View Organizer",
+      "featured": "FEATURED"
+    }
   },
   "languages": {
     "en": "English",
@@ -379,6 +410,20 @@
       "tickets": "My Tickets",
       "ticketsDesc": "View your event tickets"
     }
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "approved": "Approved",
+    "pending": "Pending",
+    "rejected": "Rejected",
+    "suspended": "Suspended",
+    "verified": "Verified",
+    "unverified": "Unverified",
+    "live": "Live",
+    "draft": "Draft",
+    "published": "Published",
+    "cancelled": "Cancelled"
   },
   "pagination": {
     "previous": "Previous",

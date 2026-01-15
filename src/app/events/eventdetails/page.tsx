@@ -7,6 +7,8 @@ import { useQuery } from "@tanstack/react-query";
 import { EventService } from "@/lib/eventServices";
 import { Event } from "@/types/event";
 import { useEventStore } from "@/store/eventStore";
+import { useLanguageStore } from "@/store/languageStore";
+import { useTranslation } from "@/hooks/useTranslation";
 import { format } from "date-fns";
 import {
   CalendarBlank,
@@ -82,6 +84,8 @@ function DetailItem({
 }
 
 export default function EventDetailsPage() {
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
@@ -115,12 +119,14 @@ export default function EventDetailsPage() {
         <div className="p-4 bg-red-100 rounded-full text-red-600">
           <WarningCircle weight="duotone" className="w-8 h-8" />
         </div>
-        <h2 className="text-xl font-semibold text-gray-900">Event Not Found</h2>
+        <h2 className="text-xl font-semibold text-gray-900">
+          {t("events.noEventsFound")}
+        </h2>
         <button
           onClick={() => router.push("/events")}
           className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50"
         >
-          Go Back
+          {t("events.goBack")}
         </button>
       </div>
     );
@@ -133,8 +139,10 @@ export default function EventDetailsPage() {
   const categories = Array.isArray(event!.category)
     ? event!.category
     : typeof event!.category === "string"
-      ? (event!.category as string).split(",").map((tag) => tag.trim().replace(/[\[\]"'{}]/g, ""))
-      : [];
+    ? (event!.category as string)
+        .split(",")
+        .map((tag) => tag.trim().replace(/[\[\]"'{}]/g, ""))
+    : [];
 
   return (
     <div className="min-h-screen bg-gray-50/50 pb-12">
@@ -156,7 +164,7 @@ export default function EventDetailsPage() {
             className="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md text-white rounded-lg hover:bg-white/20 transition-colors"
           >
             <ArrowLeft weight="duotone" className="w-4 h-4" />
-            Back to Events
+            {t("events.eventDetails.backToEvents")}
           </button>
         </div>
       </div>
@@ -176,7 +184,7 @@ export default function EventDetailsPage() {
                   />
                   {event!.is_featured && (
                     <div className="absolute top-4 right-4 px-3 py-1 bg-linear-to-r from-amber-500 to-orange-500 text-white text-xs font-bold rounded-full shadow-lg">
-                      FEATURED
+                      {t("events.eventDetails.featured")}
                     </div>
                   )}
                 </div>
@@ -187,7 +195,7 @@ export default function EventDetailsPage() {
                       {event!.capacity}
                     </div>
                     <div className="text-xs font-medium text-blue-600 uppercase tracking-wide">
-                      Capacity
+                      {t("events.eventDetails.capacity")}
                     </div>
                   </div>
                   <div className="p-4 bg-emerald-50 rounded-xl text-center">
@@ -195,7 +203,7 @@ export default function EventDetailsPage() {
                       {event!.available}
                     </div>
                     <div className="text-xs font-medium text-emerald-600 uppercase tracking-wide">
-                      Available
+                      {t("events.eventDetails.available")}
                     </div>
                   </div>
                 </div>
@@ -206,15 +214,15 @@ export default function EventDetailsPage() {
                     className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-900 text-white rounded-xl hover:bg-gray-800 transition-colors font-medium"
                   >
                     <PencilSimple weight="duotone" className="w-4 h-4" />
-                    Edit Event
+                    {t("events.eventDetails.editEvents")}
                   </button>
                   <button className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors font-medium">
                     <PauseCircle weight="duotone" className="w-4 h-4" />
-                    Pause Sales
+                    {t("events.eventDetails.pauseSales")}
                   </button>
                   <button className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 transition-colors font-medium border border-red-100">
                     <Trash weight="duotone" className="w-4 h-4" />
-                    Cancel Event
+                    {t("events.eventDetails.cancelEvent")}
                   </button>
                 </div>
               </div>
@@ -226,7 +234,7 @@ export default function EventDetailsPage() {
                     <StatusBadge status={event!.status} />
                     {event!.sales_status && (
                       <span className="px-3 py-1 bg-gray-100 text-gray-600 text-sm font-medium rounded-full capitalize">
-                        Sales: {event!.sales_status}
+                        {t("events.eventDetails.sales")}: {event!.sales_status}
                       </span>
                     )}
                   </div>
@@ -244,20 +252,25 @@ export default function EventDetailsPage() {
                     ))}
                   </div>
                   <div className="prose prose-blue max-w-none text-gray-600 bg-gray-50/50 p-6 rounded-xl border border-gray-100">
-                    <p>{event!.description}</p>
+                    <div
+                      dangerouslySetInnerHTML={{ __html: event!.description }}
+                    />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <DetailItem
                     icon={CalendarBlank}
-                    label="Date & Time"
+                    label={t("events.eventDetails.dateAndTime")}
                     value={
                       <div>
                         {event!.start_date ? (
                           <>
                             <div className="text-gray-900">
-                              {format(new Date(event!.start_date), "MMMM dd, yyyy")}
+                              {format(
+                                new Date(event!.start_date),
+                                "MMMM dd, yyyy"
+                              )}
                             </div>
                             <div className="text-sm text-gray-500 font-normal">
                               {format(new Date(event!.start_date), "hh:mm a")} -{" "}
@@ -274,10 +287,12 @@ export default function EventDetailsPage() {
                   />
                   <DetailItem
                     icon={MapPin}
-                    label="Location"
+                    label={t("events.eventDetails.location")}
                     value={
                       <div>
-                        <div className="text-gray-900 line-clamp-1">{event!.venue_name}</div>
+                        <div className="text-gray-900 line-clamp-1">
+                          {event!.venue_name}
+                        </div>
                         <div className="text-sm text-gray-500 font-normal line-clamp-1">
                           {event!.address}
                         </div>
@@ -286,12 +301,12 @@ export default function EventDetailsPage() {
                   />
                   <DetailItem
                     icon={CurrencyDollar}
-                    label="Pricing"
+                    label={t("events.eventDetails.pricing")}
                     value={`NPR ${event!.price}`}
                   />
                   <DetailItem
                     icon={ShieldCheck}
-                    label="Commission Rate"
+                    label={t("events.eventDetails.commissionRate")}
                     value={`${event!.commission_rate}%`}
                   />
                 </div>
@@ -299,15 +314,29 @@ export default function EventDetailsPage() {
                 {/* Additional Metadata */}
                 <div className="pt-6 border-t border-gray-100 grid grid-cols-2 gap-6 text-sm">
                   <div>
-                    <span className="text-gray-500 block mb-1">Created At</span>
+                    <span className="text-gray-500 block mb-1">
+                      {t("events.eventDetails.createdAt")}
+                    </span>
                     <span className="font-medium text-gray-900">
-                      {event!.created_at ? format(new Date(event!.created_at), "MMM dd, yyyy HH:mm") : 'N/A'}
+                      {event!.created_at
+                        ? format(
+                            new Date(event!.created_at),
+                            "MMM dd, yyyy HH:mm"
+                          )
+                        : "N/A"}
                     </span>
                   </div>
                   <div>
-                    <span className="text-gray-500 block mb-1">Last Updated</span>
+                    <span className="text-gray-500 block mb-1">
+                      {t("events.eventDetails.lastUpdated")}
+                    </span>
                     <span className="font-medium text-gray-900">
-                      {event!.updated_at ? format(new Date(event!.updated_at), "MMM dd, yyyy HH:mm") : 'N/A'}
+                      {event!.updated_at
+                        ? format(
+                            new Date(event!.updated_at),
+                            "MMM dd, yyyy HH:mm"
+                          )
+                        : "N/A"}
                     </span>
                   </div>
                 </div>
@@ -320,15 +349,23 @@ export default function EventDetailsPage() {
                           <Users weight="duotone" className="w-5 h-5" />
                         </div>
                         <div>
-                          <p className="text-xs font-semibold text-indigo-500 uppercase tracking-wider">Organizer ID</p>
-                          <p className="font-mono font-medium text-indigo-900">{event!.organizer_id}</p>
+                          <p className="text-xs font-semibold text-indigo-500 uppercase tracking-wider">
+                            {t("events.eventDetails.organizerId")}
+                          </p>
+                          <p className="font-mono font-medium text-indigo-900">
+                            {event!.organizer_id}
+                          </p>
                         </div>
                       </div>
                       <button
-                        onClick={() => router.push(`/organisers/detail?id=${event!.organizer_id}`)}
+                        onClick={() =>
+                          router.push(
+                            `/organisers/detail?id=${event!.organizer_id}`
+                          )
+                        }
                         className="px-3 py-1.5 bg-white text-indigo-600 text-sm font-medium rounded-lg hover:bg-indigo-50 transition-colors shadow-sm"
                       >
-                        View Organizer
+                        {t("events.eventDetails.viewOrganizer")}
                       </button>
                     </div>
                   </div>

@@ -95,10 +95,41 @@
     "madeIn": "Fatto con ❤️ in Nepal"
   },
   "events": {
-    "from": "Da",
+    "from": "Dal",
     "ticketsLeft": "biglietti rimasti",
     "soldOut": "Esaurito",
-    "priceTBA": "Prezzo da Annunciare"
+    "priceTBA": "Prezzo da definire",
+    "title": "Eventi",
+    "searchEvents": "Cerca eventi...",
+    "allStatus": "Tutti gli stati",
+    "moreFilters": "Più filtri",
+    "details": "Dettagli",
+    "noEventsFound": "Nessun evento trovato",
+    "noEventsCreated": "Nessun evento è stato ancora creato",
+    "tryAdjustingSearch": "Prova ad aggiustare i termini di ricerca o i filtri",
+    "failedToLoadEvents": "Caricamento eventi fallito",
+    "pleaseTryAgainLater": "Per favore, riprova più tardi",
+    "showingEventsForOrganizer": "Visualizzazione eventi per l'ID organizzatore",
+    "clearFilter": "Pulisci filtro",
+    "goBack": "Torna indietro",
+    "eventDetails" : {
+      "backToEvents": "Torna agli Eventi",
+      "sales": "Vendite",
+      "capacity": "Capacità",
+      "available": "Disponibili",
+      "editEvents": "Modifica Eventi",
+      "pauseSales": "Sospendi Vendite",
+      "cancelEvent": "Cancella Evento",
+      "dateAndTime": "Data e Ora",
+      "location": "Luogo",
+      "pricing": "Prezzi",
+      "commissionRate": "Commissione",
+      "createdAt": "Creato il",
+      "lastUpdated": "Ultimo Aggiornamento",
+      "organizerId": "ID Organizzatore",
+      "viewOrganizer": "Vedi Organizzatore",
+      "featured": "IN PRIMO PIANO"
+    }
   },
   "languages": {
     "en": "English",
@@ -349,6 +380,20 @@
       "billingDesc": "Gestisci i tuoi metodi di pagamento",
       "ticketsDesc": "Visualizza i biglietti per i tuoi eventi"
     }
+  },
+  "status": {
+    "active": "Attivo",
+    "inactive": "Inattivo",
+    "approved": "Approvato",
+    "pending": "In attesa",
+    "rejected": "Rifiutato",
+    "suspended": "Sospeso",
+    "verified": "Verificato",
+    "unverified": "Non verificato",
+    "live": "In diretta",
+    "draft": "Bozza",
+    "published": "Pubblicato",
+    "cancelled": "Annullato"
   },
   "pagination": {
     "previous": "Precedente",

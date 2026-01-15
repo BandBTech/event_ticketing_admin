@@ -41,6 +41,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { queryKeys } from "@/lib/queryKeys";
+import { useLanguageStore } from "@/store/languageStore";
+import { useTranslation } from "@/hooks/useTranslation";
 
 // Status configuration
 function getStatusConfig(status: string) {
@@ -125,6 +127,8 @@ function EventCardSkeleton() {
 
 // Event Card Component
 function EventCard({ event }: { event: Event }) {
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
   const router = useRouter();
   const { setSelectedEvent } = useEventStore();
   const statusConfig = getStatusConfig(event.status);
@@ -253,7 +257,7 @@ function EventCard({ event }: { event: Event }) {
             onClick={handleViewDetail}
           >
             <Eye weight="duotone" className="w-4 h-4" />
-            Detail
+            {t("events.details")}
           </Button>
           <Button
             variant="outline"
@@ -272,16 +276,18 @@ function EventCard({ event }: { event: Event }) {
 
 // Empty State
 function EmptyState({ searchQuery }: { searchQuery: string }) {
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
   return (
     <div className="col-span-full flex flex-col items-center justify-center py-16 text-muted-foreground">
       <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
         <CalendarBlank weight="duotone" className="w-8 h-8 text-muted-foreground/50" />
       </div>
-      <h3 className="text-lg font-medium text-foreground mb-1">No events found</h3>
+      <h3 className="text-lg font-medium text-foreground mb-1">{t("events.noEventsFound")}</h3>
       <p className="text-sm text-muted-foreground max-w-sm text-center">
         {searchQuery
-          ? "Try adjusting your search terms or filters"
-          : "No events have been created yet."}
+          ? t("events.tryAdjustingSearch")
+          : t("events.noEventsCreated")}
       </p>
     </div>
   );
@@ -295,19 +301,21 @@ function StatusFilter({
   value: string;
   onChange: (value: string) => void;
 }) {
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
   return (
     <Select value={value} onValueChange={onChange}>
       <SelectTrigger className="w-[180px] bg-background">
-        <SelectValue placeholder="All Status" />
+        <SelectValue placeholder={t("events.allStatus")} />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="all">All Status</SelectItem>
-        <SelectItem value="pending">Pending</SelectItem>
-        <SelectItem value="approved">Approved</SelectItem>
-        <SelectItem value="rejected">Rejected</SelectItem>
-        <SelectItem value="draft">Draft</SelectItem>
-        <SelectItem value="live">Live</SelectItem>
-        <SelectItem value="cancelled">Cancelled</SelectItem>
+        <SelectItem value="all">{t("events.allStatus")}</SelectItem>
+        <SelectItem value="pending">{t("status.pending")}</SelectItem>
+        <SelectItem value="approved">{t("status.approved")}</SelectItem>
+        <SelectItem value="rejected">{t("status.rejected")}</SelectItem>
+        <SelectItem value="draft">{t("status.draft")}</SelectItem>
+        <SelectItem value="live">{t("status.live")}</SelectItem>
+        <SelectItem value="cancelled">{t("status.cancelled")}</SelectItem>
       </SelectContent>
     </Select>
   );
@@ -319,7 +327,7 @@ export default function EventsPage() {
   const organizerId = searchParams.get("organizer_id");
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all"); // Changed default to "all" for select compatibility
+  const [statusFilter, setStatusFilter] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
 
@@ -334,7 +342,7 @@ export default function EventsPage() {
       EventService.getAdminEvents({
         status: statusFilter && statusFilter !== "all" ? statusFilter : undefined,
         organizer_id: organizerId || undefined,
-        limit: 100, // Fetch more for client-side filtering
+        limit: 100,
         sort: "-created_at",
       }),
   });
@@ -368,13 +376,15 @@ export default function EventsPage() {
     setCurrentPage(1);
   }, [searchQuery, statusFilter]);
 
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
   if (isError) {
     return (
       <div className="min-h-screen bg-linear-to-br from-gray-50 via-blue-50 to-purple-50 flex items-center justify-center">
         <div className="text-center text-destructive">
-          <p className="text-lg font-medium">Failed to load events</p>
+          <p className="text-lg font-medium">{t("events.failedToLoadEvents")}</p>
           <p className="text-sm text-muted-foreground mt-1">
-            {(error as Error)?.message || "Please try again later"}
+            {(error as Error)?.message || t("events.pleaseTryAgainLater")}
           </p>
         </div>
       </div>
@@ -387,14 +397,14 @@ export default function EventsPage() {
       {organizerId && (
         <div className="px-4 py-3 bg-blue-50 border border-blue-200 rounded-lg flex items-center justify-between">
           <p className="text-sm text-blue-700">
-            Showing events for organizer ID: <strong>{organizerId}</strong>
+            {t("events.showingEventsForOrganizer")} : <strong>{organizerId}</strong>
           </p>
           <Button
             variant="link"
             onClick={() => router.push("/events")}
             className="text-blue-600 hover:text-blue-800 h-auto p-0"
           >
-            Clear filter
+            {t("events.clearFilter")}
           </Button>
         </div>
       )}
@@ -405,7 +415,7 @@ export default function EventsPage() {
           <MagnifyingGlass weight="duotone" className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             type="text"
-            placeholder="Search events..."
+            placeholder={t("events.searchEvents")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10"
@@ -416,7 +426,7 @@ export default function EventsPage() {
           <StatusFilter value={statusFilter} onChange={setStatusFilter} />
           <Button variant="outline" className="gap-2 bg-background">
             <Funnel weight="duotone" className="h-4 w-4" />
-            More Filters
+            {t("events.moreFilters")}
           </Button>
         </div>
       </div>
@@ -445,7 +455,7 @@ export default function EventsPage() {
             className="gap-1"
           >
             <CaretLeft weight="bold" className="w-4 h-4" />
-            Previous
+            {t("pagination.previous")}
           </Button>
 
           <div className="flex gap-1">
@@ -472,7 +482,7 @@ export default function EventsPage() {
             disabled={currentPage === totalPages}
             className="gap-1"
           >
-            Next
+            {t("pagination.next")}
             <CaretRight weight="bold" className="w-4 h-4" />
           </Button>
         </div>
@@ -481,9 +491,9 @@ export default function EventsPage() {
       {/* Results Summary */}
       {!isLoading && filteredEvents.length > 0 && (
         <div className="text-center text-sm text-muted-foreground mt-4">
-          Showing {startIndex + 1}-
-          {Math.min(startIndex + itemsPerPage, filteredEvents.length)} of{" "}
-          {filteredEvents.length} events
+          {t("pagination.showing")} {startIndex + 1}-
+          {Math.min(startIndex + itemsPerPage, filteredEvents.length)} {t("pagination.of")}{" "}
+          {filteredEvents.length} {t("pagination.events")}
         </div>
       )}
     </div>

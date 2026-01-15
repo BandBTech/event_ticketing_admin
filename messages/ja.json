@@ -95,10 +95,41 @@
     "madeIn": "ネパールで❤️を込めて作成"
   },
   "events": {
-    "from": "から",
+    "from": "開始日",
     "ticketsLeft": "枚残り",
-    "soldOut": "売り切れ",
-    "priceTBA": "価格未定"
+    "soldOut": "完売",
+    "priceTBA": "価格未定",
+    "title": "イベント",
+    "searchEvents": "イベントを検索...",
+    "allStatus": "すべてのステータス",
+    "moreFilters": "その他のフィルター",
+    "details": "詳細",
+    "noEventsFound": "イベントが見つかりません",
+    "noEventsCreated": "まだイベントが作成されていません",
+    "tryAdjustingSearch": "検索条件やフィルターを調整してみてください",
+    "failedToLoadEvents": "イベントの読み込みに失敗しました",
+    "pleaseTryAgainLater": "後ほど再度お試しください",
+    "showingEventsForOrganizer": "主催者IDのイベントを表示しています",
+    "clearFilter": "フィルターをクリア",
+    "goBack": "戻る",
+    "eventDetails" : {
+      "backToEvents": "イベント一覧に戻る",
+      "sales": "販売状況",
+      "capacity": "収容人数",
+      "available": "残り枠",
+      "editEvents": "イベントを編集",
+      "pauseSales": "販売を一時停止",
+      "cancelEvent": "イベントをキャンセル",
+      "dateAndTime": "日時",
+      "location": "場所",
+      "pricing": "価格設定",
+      "commissionRate": "手数料率",
+      "createdAt": "作成日",
+      "lastUpdated": "最終更新日",
+      "organizerId": "主催者ID",
+      "viewOrganizer": "主催者を表示",
+      "featured": "注目の"
+    }
   },
   "languages": {
     "en": "English",
@@ -350,6 +381,20 @@
       "billingDesc": "支払い方法を管理する",
       "ticketsDesc": "イベントチケットを表示する"
     }
+  },
+  "status": {
+    "active": "有効",
+    "inactive": "無効",
+    "approved": "承認済み",
+    "pending": "承認待ち",
+    "rejected": "却下",
+    "suspended": "停止中",
+    "verified": "認証済み",
+    "unverified": "未認証",
+    "live": "公開中",
+    "draft": "下書き",
+    "published": "公開済み",
+    "cancelled": "キャンセル済み"
   },
   "pagination": {
     "previous": "前へ",
