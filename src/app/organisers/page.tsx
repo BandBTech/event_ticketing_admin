@@ -17,11 +17,14 @@ import {
   Clock as ClockIcon,
   Ticket as TicketIcon,
   Warning as WarningIcon,
-  EyesIcon,
 } from "@phosphor-icons/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { OrganizerService, Organizer, OrganizerListResponse } from "@/lib/organizerService";
+import {
+  OrganizerService,
+  Organizer,
+  OrganizerListResponse,
+} from "@/lib/organizerService";
 import { format } from "date-fns";
 import {
   Card,
@@ -45,67 +48,74 @@ function getInitials(firstName: string, lastName: string) {
   return (first + last).toUpperCase();
 }
 
-function getStatusConfig(status: string, t: any) {
+function getStatusConfig(status: string) {
   switch (status?.toLowerCase()) {
     case "approved":
       return {
         variant: "secondary" as const,
-        className: "bg-emerald-100 text-emerald-700 hover:bg-emerald-200 border-emerald-200",
+        className:
+          "bg-emerald-100 text-emerald-700 hover:bg-emerald-200 border-emerald-200",
         icon: CheckCircleIcon,
-        label: t("organizer.management.status.approved", "Approved"),
+        label: "approved",
       };
     case "pending":
       return {
         variant: "secondary" as const,
-        className: "bg-amber-100 text-amber-700 hover:bg-amber-200 border-amber-200",
+        className:
+          "bg-amber-100 text-amber-700 hover:bg-amber-200 border-amber-200",
         icon: ClockIcon,
-        label: t("organizer.management.status.pending", "Pending"),
+        label: "pending",
       };
     case "rejected":
       return {
         variant: "destructive" as const,
         className: "bg-red-100 text-red-700 hover:bg-red-200 border-red-200",
         icon: XCircleIcon,
-        label: t("organizer.management.status.rejected", "Rejected"),
+        label: "rejected",
       };
     case "inactive":
       return {
         variant: "secondary" as const,
-        className: "bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-200",
+        className:
+          "bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-200",
         icon: UserMinusIcon,
-        label: t("organizer.management.status.inactive", "Inactive"),
+        label: "inactive",
       };
     default:
       return {
         variant: "secondary" as const,
-        className: "bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-200",
+        className:
+          "bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-200",
         icon: ClockIcon,
-        label: status || t("organizer.management.status.unknown", "Unknown"),
+        label: status || "unknown",
       };
   }
 }
 
-function getAccountStatusConfig(status: string, t: any) {
+function getAccountStatusConfig(status: string) {
   switch (status?.toLowerCase()) {
     case "active":
       return {
-        className: "bg-emerald-500 text-white hover:bg-emerald-600 border-transparent",
-        label: t("organizer.management.status.active", "Active"),
+        className:
+          "bg-emerald-500 text-white hover:bg-emerald-600 border-transparent",
+        label: "active",
       };
     case "inactive":
       return {
-        className: "bg-gray-500 text-white hover:bg-gray-600 border-transparent",
-        label: t("organizer.management.status.inactive", "Inactive"),
+        className:
+          "bg-gray-500 text-white hover:bg-gray-600 border-transparent",
+        label: "inactive",
       };
     case "suspended":
       return {
         className: "bg-red-500 text-white hover:bg-red-600 border-transparent",
-        label: t("organizer.management.status.suspended", "Suspended"),
+        label: "suspended",
       };
     default:
       return {
-        className: "bg-gray-500 text-white hover:bg-gray-600 border-transparent",
-        label: status || t("organizer.management.status.unknown", "Unknown"),
+        className:
+          "bg-gray-500 text-white hover:bg-gray-600 border-transparent",
+        label: status || "unknown",
       };
   }
 }
@@ -139,10 +149,12 @@ function OrganizerCardSkeleton() {
 }
 
 // Organizer Card Component
-function OrganizerCard({ organizer, t }: { organizer: Organizer; t: any }) {
+function OrganizerCard({ organizer }: { organizer: Organizer }) {
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
   const router = useRouter();
-  const statusConfig = getStatusConfig(organizer.organizer_status, t);
-  const accountStatusConfig = getAccountStatusConfig(organizer.account_status, t);
+  const statusConfig = getStatusConfig(organizer.organizer_status);
+  const accountStatusConfig = getAccountStatusConfig(organizer.account_status);
   const StatusIcon = statusConfig.icon;
 
   const formattedDate = organizer.created_at
@@ -164,12 +176,15 @@ function OrganizerCard({ organizer, t }: { organizer: Organizer; t: any }) {
             </h3>
             <Badge
               variant="outline"
-              className={`text-[10px] uppercase font-bold shrink-0 ${accountStatusConfig.className}`}
+              className={`text-[10px] font-bold shrink-0 ${accountStatusConfig.className}`}
             >
-              {accountStatusConfig.label}
+              {t(`organizer.${accountStatusConfig.label}`)}
             </Badge>
           </div>
-          <p className="text-sm text-muted-foreground truncate font-medium" title={organizer.email}>
+          <p
+            className="text-sm text-muted-foreground truncate font-medium"
+            title={organizer.email}
+          >
             {organizer.email}
           </p>
         </div>
@@ -179,20 +194,24 @@ function OrganizerCard({ organizer, t }: { organizer: Organizer; t: any }) {
         <div className="flex items-center justify-between bg-muted/50 p-3 rounded-lg border border-border/50">
           <div className="flex items-center gap-2">
             <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-              {t("organizer.management.status.label", "Status")}
+              {t("organizer.status")}
             </span>
             <Badge
               variant={statusConfig.variant}
               className={`gap-1.5 px-2.5 py-0.5 rounded-full font-semibold border ${statusConfig.className}`}
             >
               <StatusIcon weight="duotone" className="w-3.5 h-3.5" />
-              {statusConfig.label}
+              {t(`organizer.${statusConfig.label}`)}
             </Badge>
           </div>
           {organizer.is_email_verified && (
-            <Badge variant="secondary" className="bg-blue-50 text-blue-600 hover:bg-blue-100 border-blue-100 gap-1 px-2 py-0.5" title={t("organizer.management.status.verified", "Email Verified")}>
+            <Badge
+              variant="secondary"
+              className="bg-blue-50 text-blue-600 hover:bg-blue-100 border-blue-100 gap-1 px-2 py-0.5"
+              title="Email Verified"
+            >
               <UserCheckIcon weight="duotone" className="w-3.5 h-3.5" />
-              {t("organizer.management.status.verified", "Verified")}
+              {t("organizer.verified")}
             </Badge>
           )}
         </div>
@@ -213,7 +232,7 @@ function OrganizerCard({ organizer, t }: { organizer: Organizer; t: any }) {
               <CalendarBlankIcon weight="duotone" className="w-4 h-4" />
             </div>
             <span className="font-medium">
-              {t("common.joined", "Joined")} {formattedDate}
+              {t("organizer.joined")} {formattedDate}
             </span>
           </div>
         </div>
@@ -225,17 +244,15 @@ function OrganizerCard({ organizer, t }: { organizer: Organizer; t: any }) {
           className="flex-1 gap-2"
           onClick={() => router.push(`/organisers/detail?id=${organizer.id}`)}
         >
-          <EyesIcon weight="duotone" className="w-4.5 h-4.5" />
-          {t("organizer.management.actions.editDetails", "Profile")}
+          <EyeIcon weight="duotone" className="w-4.5 h-4.5" />
+          {t("organizer.profile")}
         </Button>
         <Button
           className="flex-1 gap-2 bg-blue-600 hover:bg-blue-700 text-white"
-          onClick={() =>
-            router.push(`/events?organizer_id=${organizer.id}`)
-          }
+          onClick={() => router.push(`/events?organizer_id=${organizer.id}`)}
         >
           <TicketIcon weight="duotone" className="w-4.5 h-4.5" />
-          {t("organizer.management.actions.viewEvents", "Events")}
+          {t("organizer.events")}
         </Button>
       </CardFooter>
     </Card>
@@ -243,19 +260,24 @@ function OrganizerCard({ organizer, t }: { organizer: Organizer; t: any }) {
 }
 
 // Empty State Component
-function EmptyState({ searchQuery, t }: { searchQuery: string, t: any }) {
+function EmptyState({ searchQuery }: { searchQuery: string }) {
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
   return (
     <div className="col-span-full flex flex-col items-center justify-center py-24 text-muted-foreground">
       <div className="w-20 h-20 rounded-full bg-muted shadow-sm border border-border flex items-center justify-center mb-6">
-        <BuildingsIcon weight="duotone" className="w-10 h-10 text-muted-foreground/50" />
+        <BuildingsIcon
+          weight="duotone"
+          className="w-10 h-10 text-muted-foreground/50"
+        />
       </div>
       <h3 className="text-xl font-semibold text-foreground mb-2">
-        {t("organizer.management.messages.noOrganisers", "No organisers found")}
+        {t("organizer.noOrganizerFound")}
       </h3>
       <p className="text-sm text-muted-foreground max-w-sm text-center">
         {searchQuery
-          ? t("common.noResultsTryAgain", "Try adjusting your search terms or filters")
-          : t("organizer.management.messages.noOneRegistered", "No organisers have registered yet.")}
+          ? t("organizer.tryAdjustingSearchParams")
+          : t("organizer.noOrganizersRegisteredYet")}
       </p>
     </div>
   );
@@ -274,26 +296,35 @@ export default function OrganisersPage() {
   const itemsPerPage = 9;
 
   // Helper to update URL params
-  const updateParams = useCallback((updates: Record<string, string | null>) => {
-    const params = new URLSearchParams(searchParams.toString());
-    Object.entries(updates).forEach(([key, value]) => {
-      if (value === null || value === "") {
-        params.delete(key);
-      } else {
-        params.set(key, value);
-      }
-    });
-    router.push(`/organisers?${params.toString()}`, { scroll: false });
-  }, [router, searchParams]);
+  const updateParams = useCallback(
+    (updates: Record<string, string | null>) => {
+      const params = new URLSearchParams(searchParams.toString());
+      Object.entries(updates).forEach(([key, value]) => {
+        if (value === null || value === "") {
+          params.delete(key);
+        } else {
+          params.set(key, value);
+        }
+      });
+      router.push(`/organisers?${params.toString()}`, { scroll: false });
+    },
+    [router, searchParams]
+  );
 
-  const handlePageChange = useCallback((page: number) => {
-    updateParams({ page: page.toString() });
-  }, [updateParams]);
+  const handlePageChange = useCallback(
+    (page: number) => {
+      updateParams({ page: page.toString() });
+    },
+    [updateParams]
+  );
 
-  const handleSearchChange = useCallback((value: string) => {
-    // Reset to page 1 when searching
-    updateParams({ search: value, page: "1" });
-  }, [updateParams]);
+  const handleSearchChange = useCallback(
+    (value: string) => {
+      // Reset to page 1 when searching
+      updateParams({ search: value, page: "1" });
+    },
+    [updateParams]
+  );
 
   const {
     data: response,
@@ -302,7 +333,11 @@ export default function OrganisersPage() {
     error,
   } = useQuery<OrganizerListResponse>({
     queryKey: queryKeys.organizers.all(currentPage, itemsPerPage),
-    queryFn: () => OrganizerService.getOrganizers({ page: currentPage, limit: itemsPerPage }),
+    queryFn: () =>
+      OrganizerService.getOrganizers({
+        page: currentPage,
+        limit: itemsPerPage,
+      }),
   });
 
   const organizers = response?.organizers || [];
@@ -324,7 +359,8 @@ export default function OrganisersPage() {
 
     if (statusFilter) {
       result = result.filter(
-        (org) => org.organizer_status?.toLowerCase() === statusFilter.toLowerCase()
+        (org) =>
+          org.organizer_status?.toLowerCase() === statusFilter.toLowerCase()
       );
     }
 
@@ -341,9 +377,11 @@ export default function OrganisersPage() {
           <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
             <WarningIcon weight="duotone" className="w-8 h-8 text-red-500" />
           </div>
-          <p className="text-lg font-medium">{t("organizer.management.messages.loadError", "Failed to load organisers")}</p>
+          <p className="text-lg font-medium">
+            {t("organizer.failedToLoadOrganizers")}
+          </p>
           <p className="text-sm text-muted-foreground mt-1">
-            {(error as Error)?.message || t("common.tryAgainLater", "Please try again later")}
+            {(error as Error)?.message || t("organizer.pleaseTryAgainLater")}
           </p>
         </div>
       </div>
@@ -354,19 +392,25 @@ export default function OrganisersPage() {
     <div className="min-h-screen p-8 space-y-8">
       <div className="flex items-center justify-between gap-4">
         <div className="relative flex-1 max-w-md">
-          <MagnifyingGlassIcon weight="duotone" className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <MagnifyingGlassIcon
+            weight="duotone"
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground"
+          />
           <Input
             type="text"
-            placeholder={t("common.search", "Search") + "..."}
+            placeholder={t("organizer.searchOrganizers")}
             value={searchQuery}
             onChange={(e) => handleSearchChange(e.target.value)}
             className="pl-9 bg-background/80 backdrop-blur-sm"
           />
         </div>
 
-        <Button variant="outline" className="gap-2 bg-background/80 backdrop-blur-sm">
+        <Button
+          variant="outline"
+          className="gap-2 bg-background/80 backdrop-blur-sm"
+        >
           <FunnelIcon weight="duotone" className="h-4 w-4" />
-          {t("common.filter", "Filter")}
+          {t("common.filter")}
         </Button>
       </div>
 
@@ -376,10 +420,10 @@ export default function OrganisersPage() {
             <OrganizerCardSkeleton key={i} />
           ))
         ) : filteredOrganizers.length === 0 ? (
-            <EmptyState searchQuery={searchQuery} t={t} />
+          <EmptyState searchQuery={searchQuery} />
         ) : (
-              filteredOrganizers.map((organizer) => (
-            <OrganizerCard key={organizer.id} organizer={organizer} t={t} />
+          filteredOrganizers.map((organizer) => (
+            <OrganizerCard key={organizer.id} organizer={organizer} />
           ))
         )}
       </div>
@@ -394,7 +438,7 @@ export default function OrganisersPage() {
             className="gap-2"
           >
             <CaretLeftIcon weight="bold" className="w-4 h-4" />
-            {t("common.previous", "Previous")}
+            {t("pagination.previous")}
           </Button>
 
           <div className="flex gap-2">
@@ -417,11 +461,13 @@ export default function OrganisersPage() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+            onClick={() =>
+              handlePageChange(Math.min(totalPages, currentPage + 1))
+            }
             disabled={currentPage === totalPages}
             className="gap-2"
           >
-            {t("common.next", "Next")}
+            {t("pagination.next")}
             <CaretRightIcon weight="bold" className="w-4 h-4" />
           </Button>
         </div>
@@ -429,12 +475,11 @@ export default function OrganisersPage() {
 
       {!isLoading && filteredOrganizers.length > 0 && (
         <div className="text-center text-sm text-muted-foreground">
-          {t("common.showing", "Showing")} {(currentPage - 1) * itemsPerPage + 1}-
-          {Math.min(currentPage * itemsPerPage, totalItems)} {t("common.of", "of")}{" "}
-          {totalItems} {t("organizer.management.title", "organisers")}
+          {t("pagination.showing")} {(currentPage - 1) * itemsPerPage + 1}-
+          {Math.min(currentPage * itemsPerPage, totalItems)}{" "}
+          {t("pagination.of")} {totalItems} {t("pagination.organizers")}
         </div>
       )}
     </div>
   );
 }
-

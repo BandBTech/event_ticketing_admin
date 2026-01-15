@@ -5,15 +5,17 @@ import { usePathname } from "next/navigation";
 import React, { useMemo } from "react";
 import { useAuthStore } from "@/store/authStore";
 import { LanguageSelector } from "@/app/components/LanguageSelector/LanguageSelector";
+import { useLanguageStore } from "@/store/languageStore";
+import { useTranslation } from "@/hooks/useTranslation";
 
 /**
  * Get time-based greeting message
  */
-function getGreeting(): string {
+function getGreeting({ t }: { t: (key: string) => string }): string {
   const hour = new Date().getHours();
-  if (hour < 12) return "Good Morning";
-  if (hour < 17) return "Good Afternoon";
-  return "Good Evening";
+  if (hour < 12) return `${t("dashboard.greeting.morning")}`;
+  if (hour < 17) return `${t("dashboard.greeting.afternoon")}`;
+  return `${t("dashboard.greeting.evening")}`;
 }
 
 const pageHeaders: {
@@ -32,14 +34,17 @@ export default function DashboardHeader() {
   const rawPath = usePathname() ?? "/";
   const pathname = rawPath.replace(/\/+$/, "") || "/";
   const { user } = useAuthStore();
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
 
   // Get user's first name or fallback
   const userName = user?.firstName || "Admin";
 
   // Dynamic greeting for dashboard
-  const dynamicGreeting = useMemo(() => {
-    return `${getGreeting()}, ${userName}!`;
-  }, [userName]);
+const dynamicGreeting = useMemo(() => {
+  return `${getGreeting({ t })}, ${userName}!`;
+}, [userName, t]);
+
 
   // Pick the best match (longest prefix first)
   const matched = pageHeaders

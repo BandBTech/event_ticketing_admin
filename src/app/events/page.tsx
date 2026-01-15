@@ -24,10 +24,7 @@ import {
   XCircle as XCircleIcon,
   WarningCircle as WarningCircleIcon,
 } from "@phosphor-icons/react";
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,6 +37,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { queryKeys } from "@/lib/queryKeys";
+import { useLanguageStore } from "@/store/languageStore";
+import { useTranslation } from "@/hooks/useTranslation";
 
 // Status configuration
 function getStatusConfig(status: string) {
@@ -47,14 +46,16 @@ function getStatusConfig(status: string) {
     case "approved":
       return {
         variant: "secondary" as const,
-        className: "bg-emerald-100 text-emerald-700 hover:bg-emerald-200 border-none",
+        className:
+          "bg-emerald-100 text-emerald-700 hover:bg-emerald-200 border-none",
         icon: CheckCircleIcon,
         label: "Approved",
       };
     case "pending":
       return {
         variant: "secondary" as const,
-        className: "bg-amber-100 text-amber-700 hover:bg-amber-200 border-none",
+        className:
+          "bg-amber-100 text-amber-700 hover:bg-amber-200 border-none",
         icon: ClockIcon,
         label: "Pending",
       };
@@ -124,6 +125,8 @@ function EventCardSkeleton() {
 
 // Event Card Component
 function EventCard({ event }: { event: Event }) {
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
   const router = useRouter();
   const { setSelectedEvent } = useEventStore();
   const statusConfig = getStatusConfig(event.status);
@@ -140,7 +143,9 @@ function EventCard({ event }: { event: Event }) {
   const categories: string[] = Array.isArray(event.category)
     ? event.category
     : typeof event.category === "string"
-      ? (event.category as string).split(",").map((tag: string) => tag.trim().replace(/[\[\]"'{}]/g, ""))
+      ? (event.category as string)
+        .split(",")
+        .map((tag: string) => tag.trim().replace(/[\[\]"'{}]/g, ""))
       : [];
 
   const handleViewDetail = () => {
@@ -190,12 +195,19 @@ function EventCard({ event }: { event: Event }) {
         {categories.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mb-3">
             {categories.slice(0, 3).map((tag) => (
-              <Badge key={tag} variant="outline" className="text-xs font-normal text-muted-foreground bg-muted/50 border-border">
+              <Badge
+                key={tag}
+                variant="outline"
+                className="text-xs font-normal text-muted-foreground bg-muted/50 border-border"
+              >
                 {tag}
               </Badge>
             ))}
             {categories.length > 3 && (
-              <Badge variant="outline" className="text-xs font-normal text-muted-foreground bg-muted/50 border-border">
+              <Badge
+                variant="outline"
+                className="text-xs font-normal text-muted-foreground bg-muted/50 border-border"
+              >
                 +{categories.length - 3}
               </Badge>
             )}
@@ -210,13 +222,20 @@ function EventCard({ event }: { event: Event }) {
         {/* Event Details */}
         <div className="space-y-2 text-sm text-muted-foreground mb-4">
           <div className="flex items-center gap-2">
-            <CalendarBlankIcon weight="duotone" className="w-4 h-4 text-muted-foreground/70 shrink-0" />
+            <CalendarBlankIcon
+              weight="duotone"
+              className="w-4 h-4 text-muted-foreground/70 shrink-0"
+            />
             <span className="truncate">
-              {formattedDate} <span className="text-muted-foreground/40">•</span> {formattedTime}
+              {formattedDate}{" "}
+              <span className="text-muted-foreground/40">•</span> {formattedTime}
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <MapPinIcon weight="duotone" className="w-4 h-4 text-muted-foreground/70 shrink-0" />
+            <MapPinIcon
+              weight="duotone"
+              className="w-4 h-4 text-muted-foreground/70 shrink-0"
+            />
             <span className="truncate">
               {event.address || event.venue_name || "Location TBA"}
             </span>
@@ -226,12 +245,18 @@ function EventCard({ event }: { event: Event }) {
         {/* Stats Row */}
         <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4 bg-muted/30 p-2 rounded-lg border border-border/50">
           <div className="flex items-center gap-1.5" title="Capacity">
-            <UsersIcon weight="duotone" className="w-4 h-4 text-muted-foreground/70" />
+            <UsersIcon
+              weight="duotone"
+              className="w-4 h-4 text-muted-foreground/70"
+            />
             <span className="font-medium">{event.capacity || 0}</span>
           </div>
           <div className="w-px h-4 bg-border" />
           <div className="flex items-center gap-1.5" title="Available">
-            <TicketIcon weight="duotone" className="w-4 h-4 text-muted-foreground/70" />
+            <TicketIcon
+              weight="duotone"
+              className="w-4 h-4 text-muted-foreground/70"
+            />
             <span className="font-medium">{event.available || 0}</span>
           </div>
           {event.price > 0 && (
@@ -252,7 +277,7 @@ function EventCard({ event }: { event: Event }) {
             onClick={handleViewDetail}
           >
             <EyeIcon weight="duotone" className="w-4 h-4" />
-            Detail
+            {t("events.details")}
           </Button>
           <Button
             variant="outline"
@@ -271,16 +296,23 @@ function EventCard({ event }: { event: Event }) {
 
 // Empty State
 function EmptyState({ searchQuery }: { searchQuery: string }) {
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
   return (
     <div className="col-span-full flex flex-col items-center justify-center py-16 text-muted-foreground">
       <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
-        <CalendarBlankIcon weight="duotone" className="w-8 h-8 text-muted-foreground/50" />
+        <CalendarBlankIcon
+          weight="duotone"
+          className="w-8 h-8 text-muted-foreground/50"
+        />
       </div>
-      <h3 className="text-lg font-medium text-foreground mb-1">No events found</h3>
+      <h3 className="text-lg font-medium text-foreground mb-1">
+        {t("events.noEventsFound")}
+      </h3>
       <p className="text-sm text-muted-foreground max-w-sm text-center">
         {searchQuery
-          ? "Try adjusting your search terms or filters"
-          : "No events have been created yet."}
+          ? t("events.tryAdjustingSearch")
+          : t("events.noEventsCreated")}
       </p>
     </div>
   );
@@ -294,25 +326,29 @@ function StatusFilter({
   value: string;
   onChange: (value: string) => void;
 }) {
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
   return (
     <Select value={value} onValueChange={onChange}>
       <SelectTrigger className="w-[180px] bg-background">
-        <SelectValue placeholder="All Status" />
+        <SelectValue placeholder={t("events.allStatus")} />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="all">All Status</SelectItem>
-        <SelectItem value="pending">Pending</SelectItem>
-        <SelectItem value="approved">Approved</SelectItem>
-        <SelectItem value="rejected">Rejected</SelectItem>
-        <SelectItem value="draft">Draft</SelectItem>
-        <SelectItem value="live">Live</SelectItem>
-        <SelectItem value="cancelled">Cancelled</SelectItem>
+        <SelectItem value="all">{t("events.allStatus")}</SelectItem>
+        <SelectItem value="pending">{t("status.pending")}</SelectItem>
+        <SelectItem value="approved">{t("status.approved")}</SelectItem>
+        <SelectItem value="rejected">{t("status.rejected")}</SelectItem>
+        <SelectItem value="draft">{t("status.draft")}</SelectItem>
+        <SelectItem value="live">{t("status.live")}</SelectItem>
+        <SelectItem value="cancelled">{t("status.cancelled")}</SelectItem>
       </SelectContent>
     </Select>
   );
 }
 
 export default function EventsPage() {
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -324,30 +360,44 @@ export default function EventsPage() {
   const itemsPerPage = 9;
 
   // Helper to update URL params
-  const updateParams = useCallback((updates: Record<string, string | null>) => {
-    const params = new URLSearchParams(searchParams.toString());
-    Object.entries(updates).forEach(([key, value]) => {
-      if (value === null || value === "" || value === "all") {
-        params.delete(key);
-      } else {
-        params.set(key, value);
-      }
-    });
-    const queryString = params.toString();
-    router.push(`/events${queryString ? `?${queryString}` : ""}`, { scroll: false });
-  }, [router, searchParams]);
+  const updateParams = useCallback(
+    (updates: Record<string, string | null>) => {
+      const params = new URLSearchParams(searchParams.toString());
+      Object.entries(updates).forEach(([key, value]) => {
+        if (value === null || value === "" || value === "all") {
+          params.delete(key);
+        } else {
+          params.set(key, value);
+        }
+      });
+      const queryString = params.toString();
+      router.push(`/events${queryString ? `?${queryString}` : ""}`, {
+        scroll: false,
+      });
+    },
+    [router, searchParams]
+  );
 
-  const handlePageChange = useCallback((page: number) => {
-    updateParams({ page: page === 1 ? null : page.toString() });
-  }, [updateParams]);
+  const handlePageChange = useCallback(
+    (page: number) => {
+      updateParams({ page: page === 1 ? null : page.toString() });
+    },
+    [updateParams]
+  );
 
-  const handleSearchChange = useCallback((value: string) => {
-    updateParams({ search: value, page: null });
-  }, [updateParams]);
+  const handleSearchChange = useCallback(
+    (value: string) => {
+      updateParams({ search: value, page: null });
+    },
+    [updateParams]
+  );
 
-  const handleStatusChange = useCallback((value: string) => {
-    updateParams({ status: value, page: null });
-  }, [updateParams]);
+  const handleStatusChange = useCallback(
+    (value: string) => {
+      updateParams({ status: value, page: null });
+    },
+    [updateParams]
+  );
 
   const handleClearOrganizerFilter = useCallback(() => {
     updateParams({ organizer_id: null });
@@ -367,7 +417,8 @@ export default function EventsPage() {
     }),
     queryFn: () =>
       EventService.getAdminEvents({
-        status: statusFilter && statusFilter !== "all" ? statusFilter : undefined,
+        status:
+          statusFilter && statusFilter !== "all" ? statusFilter : undefined,
         organizer_id: organizerId || undefined,
         limit: 100,
         sort: "-created_at",
@@ -402,9 +453,9 @@ export default function EventsPage() {
     return (
       <div className="min-h-screen bg-linear-to-br from-gray-50 via-blue-50 to-purple-50 flex items-center justify-center">
         <div className="text-center text-destructive">
-          <p className="text-lg font-medium">Failed to load events</p>
+          <p className="text-lg font-medium">{t("events.failedToLoadEvents")}</p>
           <p className="text-sm text-muted-foreground mt-1">
-            {(error as Error)?.message || "Please try again later"}
+            {(error as Error)?.message || t("events.pleaseTryAgainLater")}
           </p>
         </div>
       </div>
@@ -417,14 +468,15 @@ export default function EventsPage() {
       {organizerId && (
         <div className="px-4 py-3 bg-blue-50 border border-blue-200 rounded-lg flex items-center justify-between">
           <p className="text-sm text-blue-700">
-            Showing events for organizer ID: <strong>{organizerId}</strong>
+            {t("events.showingEventsForOrganizer")}:{" "}
+            <strong>{organizerId}</strong>
           </p>
           <Button
             variant="link"
             onClick={handleClearOrganizerFilter}
             className="text-blue-600 hover:text-blue-800 h-auto p-0"
           >
-            Clear filter
+            {t("events.clearFilter")}
           </Button>
         </div>
       )}
@@ -432,10 +484,13 @@ export default function EventsPage() {
       {/* Search and Filters */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="relative flex-1 max-w-md w-full">
-          <MagnifyingGlassIcon weight="duotone" className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <MagnifyingGlassIcon
+            weight="duotone"
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground"
+          />
           <Input
             type="text"
-            placeholder="Search events..."
+            placeholder={t("events.searchEvents")}
             value={searchQuery}
             onChange={(e) => handleSearchChange(e.target.value)}
             className="pl-10"
@@ -446,7 +501,7 @@ export default function EventsPage() {
           <StatusFilter value={statusFilter} onChange={handleStatusChange} />
           <Button variant="outline" className="gap-2 bg-background">
             <FunnelIcon weight="duotone" className="h-4 w-4" />
-            More Filters
+            {t("events.moreFilters")}
           </Button>
         </div>
       </div>
@@ -475,7 +530,7 @@ export default function EventsPage() {
             className="gap-1"
           >
             <CaretLeftIcon weight="bold" className="w-4 h-4" />
-            Previous
+            {t("pagination.previous")}
           </Button>
 
           <div className="flex gap-1">
@@ -498,11 +553,13 @@ export default function EventsPage() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+            onClick={() =>
+              handlePageChange(Math.min(totalPages, currentPage + 1))
+            }
             disabled={currentPage === totalPages}
             className="gap-1"
           >
-            Next
+            {t("pagination.next")}
             <CaretRightIcon weight="bold" className="w-4 h-4" />
           </Button>
         </div>
@@ -511,12 +568,11 @@ export default function EventsPage() {
       {/* Results Summary */}
       {!isLoading && filteredEvents.length > 0 && (
         <div className="text-center text-sm text-muted-foreground mt-4">
-          Showing {startIndex + 1}-
-          {Math.min(startIndex + itemsPerPage, filteredEvents.length)} of{" "}
-          {filteredEvents.length} events
+          {t("pagination.showing")} {startIndex + 1}-
+          {Math.min(startIndex + itemsPerPage, filteredEvents.length)}{" "}
+          {t("pagination.of")} {filteredEvents.length} {t("pagination.events")}
         </div>
       )}
     </div>
   );
 }
-

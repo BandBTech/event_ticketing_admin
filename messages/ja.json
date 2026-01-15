@@ -105,10 +105,41 @@
     "madeIn": "ネパールで❤️を込めて作成"
   },
   "events": {
-    "from": "から",
+    "from": "開始日",
     "ticketsLeft": "枚残り",
-    "soldOut": "売り切れ",
-    "priceTBA": "価格未定"
+    "soldOut": "完売",
+    "priceTBA": "価格未定",
+    "title": "イベント",
+    "searchEvents": "イベントを検索...",
+    "allStatus": "すべてのステータス",
+    "moreFilters": "その他のフィルター",
+    "details": "詳細",
+    "noEventsFound": "イベントが見つかりません",
+    "noEventsCreated": "まだイベントが作成されていません",
+    "tryAdjustingSearch": "検索条件やフィルターを調整してみてください",
+    "failedToLoadEvents": "イベントの読み込みに失敗しました",
+    "pleaseTryAgainLater": "後ほど再度お試しください",
+    "showingEventsForOrganizer": "主催者IDのイベントを表示しています",
+    "clearFilter": "フィルターをクリア",
+    "goBack": "戻る",
+    "eventDetails": {
+      "backToEvents": "イベント一覧に戻る",
+      "sales": "販売状況",
+      "capacity": "収容人数",
+      "available": "残り枠",
+      "editEvents": "イベントを編集",
+      "pauseSales": "販売を一時停止",
+      "cancelEvent": "イベントをキャンセル",
+      "dateAndTime": "日時",
+      "location": "場所",
+      "pricing": "価格設定",
+      "commissionRate": "手数料率",
+      "createdAt": "作成日",
+      "lastUpdated": "最終更新日",
+      "organizerId": "主催者ID",
+      "viewOrganizer": "主催者を表示",
+      "featured": "注目の"
+    }
   },
   "languages": {
     "en": "English",
@@ -121,14 +152,15 @@
       "subtitle": "管理者として",
       "email": "メールアドレス",
       "password": "パスワード",
-      "emailPlaceholder": "メールアドレスを入力",
+      "emailPlaceholder": "メールアドレスを入力してください",
       "passwordPlaceholder": "••••••••••••",
-      "rememberMe": "ログイン状態を保持",
-      "forgotPassword": "パスワードを忘れた方",
+      "rememberMe": "ログイン状態を保持する",
+      "forgotPassword": "パスワードをお忘れですか？",
       "loginButton": "ログイン",
       "signingIn": "ログイン中...",
-      "noAccount": "アカウントをお持ちでない方は",
-      "signUpHere": "こちらから登録",
+      "noAccount": "アカウントをお持ちでない場合",
+      "signUpHere": "こちらから登録してください。",
+      "demoCredentials": "デモ: attendee@example.com / password123 を使用してください",
       "validation": {
         "emailRequired": "メールアドレスは必須です",
         "emailInvalid": "有効なメールアドレスを入力してください",
@@ -137,73 +169,163 @@
         "passwordTooLong": "パスワードが長すぎます"
       },
       "errors": {
-        "invalidCredentials": "メールアドレスまたはパスワードが正しくありません。試してください: attendee@example.com / password123",
+        "invalidCredentials": "メールアドレスまたはパスワードが無効です",
         "loginFailed": "ログインに失敗しました。もう一度お試しください。"
       },
       "showPassword": "パスワードを表示",
       "hidePassword": "パスワードを非表示"
     },
     "signup": {
-      "phonePlaceholder": "有効な連絡先番号を入力してください",
+      "title": "新規登録",
+      "subtitle": "参加者として",
+      "firstName": "名",
+      "lastName": "姓",
+      "email": "メールアドレス",
+      "phone": "電話番号",
+      "password": "パスワード",
+      "confirmPassword": "パスワード（確認用）",
+      "firstNamePlaceholder": "太郎",
+      "lastNamePlaceholder": "山田",
+      "emailPlaceholder": "メールアドレスを入力してください",
+      "phonePlaceholder": "有効な電話番号を入力してください",
+      "passwordPlaceholder": "••••••••••••",
+      "confirmPasswordPlaceholder": "••••••••••••",
+      "signupButton": "始める",
+      "signingUp": "アカウントを作成中...",
+      "haveAccount": "すでにアカウントをお持ちの場合",
+      "loginHere": "参加者としてログインする。",
+      "termsPrefix": "続行することで、以下の内容を読み、理解したことに同意したものとみなされます",
+      "terms": "利用規約",
+      "termsAnd": "および",
+      "privacy": "プライバシーポリシー",
       "validation": {
-        "phoneRequired": "連絡先番号は必須です",
-        "firstNameRequired": "名は必須です",
-        "firstNameTooLong": "名前が長すぎます",
-        "firstNameTooShort": "名は少なくとも 2 文字である必要があります",
-        "lastNameTooShort": "姓は少なくとも 2 文字である必要があります"
+        "firstNameTooShort": "名は2文字以上である必要があります。",
+        "firstNameTooLong": "名が長すぎます。",
+        "lastNameTooShort": "姓は2文字以上である必要があります。",
+        "lastNameTooLong": "姓が長すぎます。",
+        "emailRequired": "メールアドレスは必須です。",
+        "emailInvalid": "有効なメールアドレスを入力してください。",
+        "phoneInvalid": "有効な電話番号を入力してください。",
+        "passwordTooShort": "パスワードは8文字以上である必要があります。",
+        "passwordTooLong": "パスワードが長すぎます。",
+        "passwordUppercase": "パスワードには少なくとも1つの大文字を含めてください。",
+        "passwordLowercase": "パスワードには少なくとも1つの小文字を含めてください。",
+        "passwordNumber": "パスワードには少なくとも1つの数字を含めてください。",
+        "passwordMismatch": "パスワードが一致しません。",
+        "phoneRequired": "電話番号は必須です。",
+        "firstNameRequired": "名は必須です。",
+        "lastNameRequired": "姓は必須です。"
       },
-      "setPassword": "安全なパスワードを作成する"
+      "errors": {
+        "signupFailed": "登録に失敗しました。もう一度お試しください。"
+      },
+      "showPassword": "パスワードを表示",
+      "hidePassword": "パスワードを非表示",
+      "setPassword": "次のアカウントの安全なパスワードを作成してください："
+    },
+    "forgotPassword": {
+      "title": "パスワードをお忘れですか",
+      "subtitle": "パスワードリセットコードを受け取るためにメールアドレスを入力してください",
+      "email": "メールアドレス",
+      "emailPlaceholder": "メールアドレスを入力してください",
+      "sendResetCode": "リセットコードを送信",
+      "sending": "送信中...",
+      "backToLogin": "ログインに戻る",
+      "rememberPassword": "パスワードを思い出しましたか？",
+      "loginHere": "こちらからログイン",
+      "continueToReset": "パスワードリセットに進む",
+      "successMessage": "パスワードリセットコードがメールに送信されました。受信トレイを確認してください。",
+      "validation": {
+        "emailRequired": "メールアドレスは必須です。",
+        "emailInvalid": "有効なメールアドレスを入力してください。"
+      },
+      "errors": {
+        "requestFailed": "リセットメールの送信に失敗しました。もう一度お試しください。"
+      }
     },
     "resetPassword": {
-      "subtitle": "新しいパスワードを設定してください"
+      "title": "パスワードのリセット",
+      "subtitle": "次のアカウントの新しいパスワードを設定してください：",
+      "back": "戻る",
+      "otp": "認証コード",
+      "otpPlaceholder": "コードを入力",
+      "newPassword": "新しいパスワード",
+      "newPasswordPlaceholder": "••••••••••••",
+      "confirmPassword": "パスワード（確認用）",
+      "confirmPasswordPlaceholder": "••••••••••••",
+      "resetButton": "パスワードをリセット",
+      "resetting": "リセット中...",
+      "backToLogin": "ログインに戻る",
+      "successMessage": "パスワードのリセットが完了しました！ログイン画面にリダイレクトします...",
+      "validation": {
+        "otpRequired": "OTPは必須です",
+        "otpInvalid": "無効なOTPです",
+        "passwordTooShort": "パスワードは8文字以上である必要があります",
+        "passwordTooLong": "パスワードが長すぎます",
+        "passwordUppercase": "大文字を含めてください",
+        "passwordLowercase": "小文字を含めてください",
+        "passwordNumber": "数字を含めてください",
+        "passwordMismatch": "パスワードが一致しません"
+      },
+      "errors": {
+        "resetFailed": "パスワードのリセットに失敗しました。もう一度お試しください。"
+      }
     },
     "verifyOTP": {
-      "otpValidity": "コードは 10 分後に自動的に期限切れになります。"
+      "title": "メールアドレスの確認",
+      "subtitle": "次のメールアドレスに送信された6桁のコードを入力してください：",
+      "back": "戻る",
+      "otp": "認証コード",
+      "otpPlaceholder": "6桁のコードを入力",
+      "verifyButton": "メールアドレスを確認",
+      "verifying": "確認中...",
+      "didntReceive": "コードが届きませんか？",
+      "resend": "再送信",
+      "resending": "再送信中...",
+      "checkSpam": "メールが届かない場合はスパムフォルダーも確認してください",
+      "otpResent": "OTPがメールに再送信されました",
+      "errors": {
+        "otpIncomplete": "6桁のコードをすべて入力してください",
+        "verificationFailed": "無効なOTPです。もう一度お試しください。",
+        "resendFailed": "OTPの再送信に失敗しました。もう一度お試しください。"
+      },
+      "otpValidity": "このコードは10分後に自動的に無効になります。"
     },
     "toast": {
-      "loginSuccess": "おかえりなさい!",
+      "loginSuccess": "おかえりなさい！",
       "loginError": "ログインに失敗しました。もう一度お試しください。",
-      "signupSuccess": "アカウント作成に成功しました!",
+      "signupSuccess": "アカウントが正常に作成されました！",
       "signupError": "登録に失敗しました。もう一度お試しください。",
-      "otpSent": "メールアドレスに認証コードを送りました",
-      "otpVerified": "メールアドレスを認証しました!",
-      "otpResent": "New code sent to your email",
-      "passwordResetSent": "パスワードリセットコードをメールアドレスに送りました",
-      "passwordResetSuccess": "パスワードリセットに成功しました!",
-      "logoutSuccess": "You have been logged out",
-      "invalidCredentials": "メールアドレスまたはパスワードが正しくありません",
+      "otpSent": "確認コードがメールに送信されました",
+      "otpVerified": "メールアドレスが正常に確認されました！",
+      "otpResent": "新しいコードがメールに送信されました",
+      "passwordResetSent": "パスワードリセットコードがメールに送信されました",
+      "passwordResetSuccess": "パスワードのリセットが完了しました！",
+      "logoutSuccess": "ログアウトしました",
+      "invalidCredentials": "メールアドレスまたはパスワードが無効です",
       "networkError": "ネットワークエラー。接続を確認してください。",
-      "serverError": "何かがうまくいなかった。もう一度お試しください。",
-      "passwordChangedLogin": "Please login with your new password."
+      "serverError": "問題が発生しました。もう一度お試しください。",
+      "passwordChangedLogin": "新しいパスワードでログインしてください。"
     }
   },
-  "settings": {
-    "security": {
-      "title": "セキュリティ設定",
-      "subtitle": "パスワードと認証を管理する",
-      "changePassword": "パスワードを変更する",
-      "changePasswordDesc": "アカウントを安全に保つためにパスワードを定期的に更新してください",
-      "currentPassword": "現在のパスワード",
-      "currentPasswordPlaceholder": "現在のパスワードを入力してください",
-      "newPassword": "新しいパスワード",
-      "newPasswordPlaceholder": "新しいパスワードを入力してください",
-      "confirmPassword": "新しいパスワードを確認する",
-      "confirmPasswordPlaceholder": "新しいパスワードをもう一度入力してください",
-      "updating": "更新中...",
-      "updateButton": "パスワードを更新する"
+  "dashboard": {
+    "greeting": {
+      "morning": "おはようございます",
+      "afternoon": "こんにちは",
+      "evening": "こんばんは"
     },
-    "title": "設定",
-    "menu": {
-      "profile": "プロフィール",
-      "profileDesc": "個人情報の管理",
-      "security": "安全",
-      "securityDesc": "パスワード and 認証",
-      "notifications": "通知",
-      "notificationsDesc": "メール通知とプッシュ通知",
-      "billing": "請求する",
-      "billingDesc": "支払い方法を管理する",
-      "ticketsDesc": "イベントチケットを表示する"
-    }
+    "successfulEvents": "成功したイベント",
+    "pendingApproval": "承認待ち",
+    "organizers": "主催者",
+    "orgazinersAwaitingApproval": "承認待ちの主催者",
+    "noOrganizersAwaitingApproval": "承認待ちの主催者はいません",
+    "noOrganizersAwaitingApprovalMessage": "主催者が登録申請をすると、ここに表示されます",
+    "eventsAwaitingApproval": "承認待ちのイベント",
+    "noEventsAwaitingApproval": "承認待ちのイベントはありません",
+    "noEventsAwaitingApprovalMessage": "主催者が承認のためにイベントを申請すると、ここに表示されます",
+    "reject": "拒否",
+    "accept": "承認",
+    "viewEvent": "イベントを表示"
   },
   "organizer": {
     "management": {
@@ -267,6 +389,75 @@
         "rejectReasonRequired": "却下の理由が必要です（最低10文字）",
         "remarkTooLong": "備考は500文字以内で入力してください"
       }
+    },
+    "title": "主催者管理",
+    "searchOrganizers": "主催者を検索...",
+    "status": "ステータス",
+    "profile": "プロフィール",
+    "events": "イベント",
+    "active": "有効",
+    "inactive": "無効",
+    "approved": "承認済み",
+    "pending": "承認待ち",
+    "rejected": "拒否済み",
+    "suspended": "停止中",
+    "verified": "認証済み",
+    "unverified": "未認証",
+    "noOrganizerFound": "主催者が見つかりません",
+    "failedToLoadOrganizers": "主催者の読み込みに失敗しました",
+    "tryAdjustingSearchParams": "検索キーワードや絞り込み条件を調整してください",
+    "noOrganizersRegisteredYet": "登録されている主催者はいません",
+    "joined": "参加済み",
+    "pleaseTryAgainLater": "時間をおいて再度お試しください"
+  },
+  "settings": {
+    "security": {
+      "title": "セキュリティ設定",
+      "subtitle": "パスワードと認証を管理する",
+      "changePassword": "パスワードを変更する",
+      "changePasswordDesc": "アカウントを安全に保つためにパスワードを定期的に更新してください",
+      "currentPassword": "現在のパスワード",
+      "currentPasswordPlaceholder": "現在のパスワードを入力してください",
+      "newPassword": "新しいパスワード",
+      "newPasswordPlaceholder": "新しいパスワードを入力してください",
+      "confirmPassword": "新しいパスワードを確認する",
+      "confirmPasswordPlaceholder": "新しいパスワードをもう一度入力してください",
+      "updating": "更新中...",
+      "updateButton": "パスワードを更新する"
+    },
+    "title": "設定",
+    "menu": {
+      "profile": "プロフィール",
+      "profileDesc": "個人情報の管理",
+      "security": "安全",
+      "securityDesc": "パスワード and 認証",
+      "notifications": "通知",
+      "notificationsDesc": "メール通知とプッシュ通知",
+      "billing": "請求する",
+      "billingDesc": "支払い方法を管理する",
+      "ticketsDesc": "イベントチケットを表示する"
     }
+  },
+  "status": {
+    "active": "有効",
+    "inactive": "無効",
+    "approved": "承認済み",
+    "pending": "承認待ち",
+    "rejected": "却下",
+    "suspended": "停止中",
+    "verified": "認証済み",
+    "unverified": "未認証",
+    "live": "公開中",
+    "draft": "下書き",
+    "published": "公開済み",
+    "cancelled": "キャンセル済み"
+  },
+  "pagination": {
+    "previous": "前へ",
+    "next": "次へ",
+    "showing": "表示中",
+    "of": "/",
+    "organizers": "件の主催者",
+    "events": "件のイベント"
   }
 }

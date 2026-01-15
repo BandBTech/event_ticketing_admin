@@ -145,12 +145,50 @@
     "from": "From",
     "ticketsLeft": "tickets left",
     "soldOut": "Sold out",
-    "priceTBA": "Price TBA"
+    "priceTBA": "Price TBA",
+    "title": "Events",
+    "searchEvents": "Search Events...",
+    "allStatus": "All Status",
+    "moreFilters": "More Filters",
+    "details": "Details",
+    "noEventsFound": "No events found",
+    "noEventsCreated": "No events have been created yet.",
+    "tryAdjustingSearch": "Try adjusting your search terms or filters",
+    "failedToLoadEvents": "Failed to load events",
+    "pleaseTryAgainLater": "Please try again later",
+    "showingEventsForOrganizer": "Showing events for organizer ID",
+    "clearFilter": "Clear filter",
+    "goBack": "Go Back",
+    "eventDetails": {
+      "backToEvents": "Back to Events",
+      "sales": "Sales",
+      "capacity": "Capacity",
+      "available": "Available",
+      "editEvents": "Edit Events",
+      "pauseSales": "Pause Sales",
+      "cancelEvent": "Cancel Event",
+      "dateAndTime": "Date & Time",
+      "location": "Location",
+      "pricing": "Pricing",
+      "commissionRate": "Commission Rate",
+      "createdAt": "Created At",
+      "lastUpdated": "Last Updated",
+      "organizerId": "Organizer ID",
+      "viewOrganizer": "View Organizer",
+      "featured": "FEATURED"
+    }
   },
   "languages": {
     "en": "English",
     "ja": "Japanese",
     "it": "Italian"
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "organizers": "Organizers",
+    "events": "Events",
+    "settings": "Settings",
+    "report": "Report"
   },
   "auth": {
     "login": {
@@ -314,34 +352,24 @@
       "passwordChangedLogin": "Please login with your new password."
     }
   },
-  "settings": {
-    "security": {
-      "title": "Security Settings",
-      "subtitle": "Manage your password and authentication",
-      "changePassword": "Change Password",
-      "changePasswordDesc": "Update your password regularly to keep your account secure",
-      "currentPassword": "Current Password",
-      "currentPasswordPlaceholder": "Enter current password",
-      "newPassword": "New Password",
-      "newPasswordPlaceholder": "Enter new password",
-      "confirmPassword": "Confirm New Password",
-      "confirmPasswordPlaceholder": "Enter new password again",
-      "updating": "Updating...",
-      "updateButton": "Update Password"
+  "dashboard": {
+    "greeting": {
+      "morning": "Good morning",
+      "afternoon": "Good afternoon",
+      "evening": "Good evening"
     },
-    "title": "Settings",
-    "menu": {
-      "profile": "Profile",
-      "profileDesc": "Manage your personal information",
-      "security": "Security",
-      "securityDesc": "Password and authentication",
-      "notifications": "Notifications",
-      "notificationsDesc": "Email and push notifications",
-      "billing": "Billing",
-      "billingDesc": "Manage your payment methods",
-      "tickets": "My Tickets",
-      "ticketsDesc": "View your event tickets"
-    }
+    "successfulEvents": "Successful Events",
+    "pendingApproval": "Pending Approval",
+    "organizers": "Organizers",
+    "orgazinersAwaitingApproval": "Organizers Awaiting Approval",
+    "noOrganizersAwaitingApproval": "No organizers awaiting approval",
+    "noOrganizersAwaitingApprovalMessage": "When organizers submit for registration, they'll appear here",
+    "eventsAwaitingApproval": "Events Awaiting Approval",
+    "noEventsAwaitingApproval": "No events awaiting approval",
+    "noEventsAwaitingApprovalMessage": "When organizers submit events for approval, they'll appear here",
+    "reject": "REJECT",
+    "accept": "ACCEPT",
+    "viewEvent": "VIEW EVENT"
   },
   "organizer": {
     "management": {
@@ -405,6 +433,76 @@
         "rejectReasonRequired": "Reason for rejection is required (min 10 characters)",
         "remarkTooLong": "Remark cannot exceed 500 characters"
       }
+    },
+    "title": "Organizers",
+    "searchOrganizers": "Search organizers...",
+    "status": "Status",
+    "profile": "Profile",
+    "events": "Events",
+    "active": "Active",
+    "inactive": "Inactive",
+    "approved": "Approved",
+    "pending": "Pending",
+    "rejected": "Rejected",
+    "suspended": "Suspended",
+    "verified": "Verified",
+    "unverified": "Unverified",
+    "noOrganizerFound": "No organisers found",
+    "failedToLoadOrganizers": "Failed to load organizers",
+    "tryAdjustingSearchParams": "Try adjusting your search terms or filters",
+    "noOrganizersRegisteredYet": "No organisers have registered yet.",
+    "joined": "Joined",
+    "pleaseTryAgainLater": "Please try again later"
+  },
+  "settings": {
+    "security": {
+      "title": "Security Settings",
+      "subtitle": "Manage your password and authentication",
+      "changePassword": "Change Password",
+      "changePasswordDesc": "Update your password regularly to keep your account secure",
+      "currentPassword": "Current Password",
+      "currentPasswordPlaceholder": "Enter current password",
+      "newPassword": "New Password",
+      "newPasswordPlaceholder": "Enter new password",
+      "confirmPassword": "Confirm New Password",
+      "confirmPasswordPlaceholder": "Enter new password again",
+      "updating": "Updating...",
+      "updateButton": "Update Password"
+    },
+    "title": "Settings",
+    "menu": {
+      "profile": "Profile",
+      "profileDesc": "Manage your personal information",
+      "security": "Security",
+      "securityDesc": "Password and authentication",
+      "notifications": "Notifications",
+      "notificationsDesc": "Email and push notifications",
+      "billing": "Billing",
+      "billingDesc": "Manage your payment methods",
+      "tickets": "My Tickets",
+      "ticketsDesc": "View your event tickets"
     }
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "approved": "Approved",
+    "pending": "Pending",
+    "rejected": "Rejected",
+    "suspended": "Suspended",
+    "verified": "Verified",
+    "unverified": "Unverified",
+    "live": "Live",
+    "draft": "Draft",
+    "published": "Published",
+    "cancelled": "Cancelled"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "showing": "Showing",
+    "of": "of",
+    "organizers": "organizers",
+    "events": "events"
   }
 }
