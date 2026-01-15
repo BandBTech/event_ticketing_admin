@@ -19,7 +19,11 @@ import {
 } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { OrganizerService, Organizer, OrganizerListResponse } from "@/lib/organizerService";
+import {
+  OrganizerService,
+  Organizer,
+  OrganizerListResponse,
+} from "@/lib/organizerService";
 import { format } from "date-fns";
 import {
   Card,
@@ -33,6 +37,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { queryKeys } from "@/lib/queryKeys";
+import { useTranslation } from "@/hooks/useTranslation";
+import { useLanguageStore } from "@/store/languageStore";
 
 function getInitials(firstName: string, lastName: string) {
   const first = firstName?.[0] || "";
@@ -45,14 +51,16 @@ function getStatusConfig(status: string) {
     case "approved":
       return {
         variant: "secondary" as const,
-        className: "bg-emerald-100 text-emerald-700 hover:bg-emerald-200 border-emerald-200",
+        className:
+          "bg-emerald-100 text-emerald-700 hover:bg-emerald-200 border-emerald-200",
         icon: CheckCircle,
         label: "Approved",
       };
     case "pending":
       return {
         variant: "secondary" as const,
-        className: "bg-amber-100 text-amber-700 hover:bg-amber-200 border-amber-200",
+        className:
+          "bg-amber-100 text-amber-700 hover:bg-amber-200 border-amber-200",
         icon: Clock,
         label: "Pending",
       };
@@ -66,14 +74,16 @@ function getStatusConfig(status: string) {
     case "inactive":
       return {
         variant: "secondary" as const,
-        className: "bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-200",
+        className:
+          "bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-200",
         icon: UserMinus,
         label: "Inactive",
       };
     default:
       return {
         variant: "secondary" as const,
-        className: "bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-200",
+        className:
+          "bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-200",
         icon: Clock,
         label: status || "Unknown",
       };
@@ -84,12 +94,14 @@ function getAccountStatusConfig(status: string) {
   switch (status?.toLowerCase()) {
     case "active":
       return {
-        className: "bg-emerald-500 text-white hover:bg-emerald-600 border-transparent",
+        className:
+          "bg-emerald-500 text-white hover:bg-emerald-600 border-transparent",
         label: "Active",
       };
     case "inactive":
       return {
-        className: "bg-gray-500 text-white hover:bg-gray-600 border-transparent",
+        className:
+          "bg-gray-500 text-white hover:bg-gray-600 border-transparent",
         label: "Inactive",
       };
     case "suspended":
@@ -99,7 +111,8 @@ function getAccountStatusConfig(status: string) {
       };
     default:
       return {
-        className: "bg-gray-500 text-white hover:bg-gray-600 border-transparent",
+        className:
+          "bg-gray-500 text-white hover:bg-gray-600 border-transparent",
         label: status || "Unknown",
       };
   }
@@ -135,6 +148,8 @@ function OrganizerCardSkeleton() {
 
 // Organizer Card Component
 function OrganizerCard({ organizer }: { organizer: Organizer }) {
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
   const router = useRouter();
   const statusConfig = getStatusConfig(organizer.organizer_status);
   const accountStatusConfig = getAccountStatusConfig(organizer.account_status);
@@ -160,12 +175,15 @@ function OrganizerCard({ organizer }: { organizer: Organizer }) {
             </h3>
             <Badge
               variant="outline"
-              className={`text-[10px] uppercase font-bold shrink-0 ${accountStatusConfig.className}`}
+              className={`text-[10px] font-bold shrink-0 ${accountStatusConfig.className}`}
             >
-              {accountStatusConfig.label}
+              {t(`organizer.${accountStatusConfig.label.toLowerCase()}`)}
             </Badge>
           </div>
-          <p className="text-sm text-muted-foreground truncate font-medium" title={organizer.email}>
+          <p
+            className="text-sm text-muted-foreground truncate font-medium"
+            title={organizer.email}
+          >
             {organizer.email}
           </p>
         </div>
@@ -175,19 +193,25 @@ function OrganizerCard({ organizer }: { organizer: Organizer }) {
         {/* Status Line */}
         <div className="flex items-center justify-between bg-muted/50 p-3 rounded-lg border border-border/50">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Status</span>
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+              {t("organizer.status")}
+            </span>
             <Badge
               variant={statusConfig.variant}
               className={`gap-1.5 px-2.5 py-0.5 rounded-full font-semibold border ${statusConfig.className}`}
             >
               <StatusIcon weight="duotone" className="w-3.5 h-3.5" />
-              {statusConfig.label}
+              {t(`organizer.${statusConfig.label.toLowerCase()}`)}
             </Badge>
           </div>
           {organizer.is_email_verified && (
-            <Badge variant="secondary" className="bg-blue-50 text-blue-600 hover:bg-blue-100 border-blue-100 gap-1 px-2 py-0.5" title="Email Verified">
+            <Badge
+              variant="secondary"
+              className="bg-blue-50 text-blue-600 hover:bg-blue-100 border-blue-100 gap-1 px-2 py-0.5"
+              title="Email Verified"
+            >
               <UserCheck weight="duotone" className="w-3.5 h-3.5" />
-              Verified
+              {t("organizer.verified")}
             </Badge>
           )}
         </div>
@@ -208,7 +232,9 @@ function OrganizerCard({ organizer }: { organizer: Organizer }) {
             <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center shrink-0">
               <CalendarBlank weight="duotone" className="w-4 h-4" />
             </div>
-            <span className="font-medium">Joined {formattedDate}</span>
+            <span className="font-medium">
+              {t("organizer.joined")} {formattedDate}
+            </span>
           </div>
         </div>
       </CardContent>
@@ -220,16 +246,14 @@ function OrganizerCard({ organizer }: { organizer: Organizer }) {
           onClick={() => router.push(`/organisers/detail?id=${organizer.id}`)}
         >
           <Eye weight="duotone" className="w-4.5 h-4.5" />
-          Profile
+          {t("organizer.profile")}
         </Button>
         <Button
           className="flex-1 gap-2 bg-blue-600 hover:bg-blue-700 text-white"
-          onClick={() =>
-            router.push(`/events?organizer_id=${organizer.id}`)
-          }
+          onClick={() => router.push(`/events?organizer_id=${organizer.id}`)}
         >
           <Ticket weight="duotone" className="w-4.5 h-4.5" />
-          Events
+          {t("organizer.events")}
         </Button>
       </CardFooter>
     </Card>
@@ -238,18 +262,23 @@ function OrganizerCard({ organizer }: { organizer: Organizer }) {
 
 // Empty State Component
 function EmptyState({ searchQuery }: { searchQuery: string }) {
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
   return (
     <div className="col-span-full flex flex-col items-center justify-center py-24 text-muted-foreground">
       <div className="w-20 h-20 rounded-full bg-muted shadow-sm border border-border flex items-center justify-center mb-6">
-        <Buildings weight="duotone" className="w-10 h-10 text-muted-foreground/50" />
+        <Buildings
+          weight="duotone"
+          className="w-10 h-10 text-muted-foreground/50"
+        />
       </div>
       <h3 className="text-xl font-semibold text-foreground mb-2">
-        No organisers found
+        {t("organizer.noOrganizerFound")}
       </h3>
       <p className="text-sm text-muted-foreground max-w-sm text-center">
         {searchQuery
-          ? "Try adjusting your search terms or filters"
-          : "No organisers have registered yet."}
+          ? t("organizer.tryAdjustingSearchParams")
+          : t("organizer.noOrganizersRegisteredYet")}
       </p>
     </div>
   );
@@ -260,6 +289,8 @@ export default function OrganisersPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
 
   // Data Fetching with Pagination
   const {
@@ -269,7 +300,11 @@ export default function OrganisersPage() {
     error,
   } = useQuery<OrganizerListResponse>({
     queryKey: queryKeys.organizers.all(currentPage, itemsPerPage),
-    queryFn: () => OrganizerService.getOrganizers({ page: currentPage, limit: itemsPerPage }),
+    queryFn: () =>
+      OrganizerService.getOrganizers({
+        page: currentPage,
+        limit: itemsPerPage,
+      }),
   });
 
   const organizers = response?.organizers || [];
@@ -304,11 +339,14 @@ export default function OrganisersPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center text-destructive">
-          <p className="text-lg font-medium">Failed to load organisers</p>
+          <p className="text-lg font-medium">
+            {t("organizer.failedToLoadOrganizers")}
+          </p>
           <p className="text-sm text-muted-foreground mt-1">
-            {(error as Error)?.message || "Please try again later"}
+            {(error as Error)?.message || t("organizer.pleaseTryAgainLater")}
           </p>
         </div>
+        1
       </div>
     );
   }
@@ -318,19 +356,25 @@ export default function OrganisersPage() {
       {/* Search and Filter */}
       <div className="flex items-center justify-between gap-4">
         <div className="relative flex-1 max-w-md">
-          <MagnifyingGlass weight="duotone" className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <MagnifyingGlass
+            weight="duotone"
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground"
+          />
           <Input
             type="text"
-            placeholder="Search organisers..."
+            placeholder={t("organizer.searchOrganizers")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 bg-background/80 backdrop-blur-sm"
+            className="pl-9"
           />
         </div>
 
-        <Button variant="outline" className="gap-2 bg-background/80 backdrop-blur-sm">
+        <Button
+          variant="outline"
+          className="gap-2 bg-background/80 backdrop-blur-sm"
+        >
           <Funnel weight="duotone" className="h-4 w-4" />
-          Filter
+          {t("common.filter")}
         </Button>
       </div>
 
@@ -360,7 +404,7 @@ export default function OrganisersPage() {
             className="gap-2"
           >
             <CaretLeft weight="bold" className="w-4 h-4" />
-            Previous
+            {t("pagination.previous")}
           </Button>
 
           <div className="flex gap-2">
@@ -387,7 +431,7 @@ export default function OrganisersPage() {
             disabled={currentPage === totalPages}
             className="gap-2"
           >
-            Next
+            {t("pagination.next")}
             <CaretRight weight="bold" className="w-4 h-4" />
           </Button>
         </div>
@@ -396,9 +440,9 @@ export default function OrganisersPage() {
       {/* Results summary */}
       {!isLoading && filteredOrganizers.length > 0 && (
         <div className="text-center text-sm text-muted-foreground">
-          Showing {(currentPage - 1) * itemsPerPage + 1}-
-          {Math.min(currentPage * itemsPerPage, totalItems)} of{" "}
-          {totalItems} organisers
+          {t("pagination.showing")} {(currentPage - 1) * itemsPerPage + 1}-
+          {Math.min(currentPage * itemsPerPage, totalItems)}{" "}
+          {t("pagination.of")} {totalItems} {t("pagination.organizers")}
         </div>
       )}
     </div>

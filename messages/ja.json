@@ -283,7 +283,6 @@
       "passwordChangedLogin": "新しいパスワードでログインしてください。"
     }
   },
-
   "dashboard": {
     "greeting": {
       "morning": "おはようございます",
@@ -302,6 +301,27 @@
     "reject": "拒否",
     "accept": "承認",
     "viewEvent": "イベントを表示"
+  },
+  "organizer": {
+    "title": "主催者管理",
+    "searchOrganizers": "主催者を検索...",
+    "status": "ステータス",
+    "profile": "プロフィール",
+    "events": "イベント",
+    "active": "有効",
+    "inactive": "無効",
+    "approved": "承認済み",
+    "pending": "承認待ち",
+    "rejected": "拒否済み",
+    "suspended": "停止中",
+    "verified": "認証済み",
+    "unverified": "未認証",
+    "noOrganizerFound": "主催者が見つかりません",
+    "failedToLoadOrganizers": "主催者の読み込みに失敗しました",
+    "tryAdjustingSearchParams": "検索キーワードや絞り込み条件を調整してください",
+    "noOrganizersRegisteredYet": "登録されている主催者はいません",
+    "joined": "参加済み",
+    "pleaseTryAgainLater": "時間をおいて再度お試しください"
   },
   "settings": {
     "security": {
@@ -330,5 +350,13 @@
       "billingDesc": "支払い方法を管理する",
       "ticketsDesc": "イベントチケットを表示する"
     }
+  },
+  "pagination": {
+    "previous": "前へ",
+    "next": "次へ",
+    "showing": "表示中",
+    "of": "/",
+    "organizers": "件の主催者",
+    "events": "件のイベント"
   }
 }

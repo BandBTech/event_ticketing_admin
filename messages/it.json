@@ -302,6 +302,27 @@
     "accept": "ACCETTA",
     "viewEvent": "VEDI EVENTO"
   },
+  "organizer": {
+    "title": "Organizzatori",
+    "searchOrganizers": "Cerca organizzatori...",
+    "status": "Stato",
+    "profile": "Profilo",
+    "events": "Eventi",
+    "active": "Attivo",
+    "inactive": "Inattivo",
+    "approved": "Approvato",
+    "pending": "In attesa",
+    "rejected": "Rifiutato",
+    "suspended": "Sospeso",
+    "verified": "Verificato",
+    "unverified": "Non verificato",
+    "noOrganizerFound": "Nessun organizzatore trovato",
+    "failedToLoadOrganizers": "Caricamento organizzatori non riuscito",
+    "tryAdjustingSearchParams": "Prova a modificare i termini di ricerca o i filtri",
+    "noOrganizersRegisteredYet": "Nessun organizzatore è ancora registrato",
+    "joined": "Iscritto",
+    "pleaseTryAgainLater": "Riprova più tardi"
+  },
   "settings": {
     "security": {
       "title": "Impostazioni di sicurezza",
@@ -328,5 +349,13 @@
       "billingDesc": "Gestisci i tuoi metodi di pagamento",
       "ticketsDesc": "Visualizza i biglietti per i tuoi eventi"
     }
+  },
+  "pagination": {
+    "previous": "Precedente",
+    "next": "Successivo",
+    "showing": "Visualizzati",
+    "of": "di",
+    "organizers": "organizzatori",
+    "events": "eventi"
   }
 }

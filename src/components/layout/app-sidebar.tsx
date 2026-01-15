@@ -27,7 +27,7 @@ import {
 
 const navLinks = [
   { href: "/dashboard", label: "Dashboard", icon: Gauge },
-  { href: "/organisers", label: "Organisers", icon: SquaresFour },
+  { href: "/organisers", label: "Organizers", icon: SquaresFour },
   { href: "/events", label: "Events", icon: CalendarBlank },
   { href: "/reports", label: "Reports", icon: FileText },
   { href: "/settings", label: "Settings", icon: Gear },

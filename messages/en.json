@@ -330,6 +330,27 @@
     "accept": "ACCEPT",
     "viewEvent": "VIEW EVENT"
   },
+  "organizer": {
+    "title": "Organizers",
+    "searchOrganizers": "Search organizers...",
+    "status": "Status",
+    "profile": "Profile",
+    "events": "Events",
+    "active": "Active",
+    "inactive": "Inactive",
+    "approved": "Approved",
+    "pending": "Pending",
+    "rejected": "Rejected",
+    "suspended": "Suspended",
+    "verified": "Verified",
+    "unverified": "Unverified",
+    "noOrganizerFound": "No organisers found",
+    "failedToLoadOrganizers": "Failed to load organizers",
+    "tryAdjustingSearchParams": "Try adjusting your search terms or filters",
+    "noOrganizersRegisteredYet": "No organisers have registered yet.",
+    "joined": "Joined",
+    "pleaseTryAgainLater": "Please try again later"
+  },
   "settings": {
     "security": {
       "title": "Security Settings",
@@ -358,5 +379,13 @@
       "tickets": "My Tickets",
       "ticketsDesc": "View your event tickets"
     }
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "showing": "Showing",
+    "of": "of",
+    "organizers": "organizers",
+    "events": "events"
   }
 }
