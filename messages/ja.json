@@ -318,6 +318,13 @@
       "passwordChangedLogin": "新しいパスワードでログインしてください。"
     }
   },
+  "pages": {
+    "dashboard": "ダッシュボード",
+    "organisers": "主催者",
+    "events": "イベント",
+    "reports": "レポート",
+    "settings": "設定"
+  },
   "dashboard": {
     "greeting": {
       "morning": "おはようございます",
@@ -436,6 +443,95 @@
       "updateButton": "パスワードを更新する"
     },
     "title": "設定",
+    "headers": {
+      "profile": "プロフィール",
+      "security": "セキュリティ",
+      "general": "一般",
+      "tickets": "チケット",
+      "payments": "支払い",
+      "notifications": "通知",
+      "systemsecurity": "システムセキュリティ",
+      "api": "API",
+      "permissions": "権限"
+    },
+    "profile": {
+      "title": "プロフィール設定",
+      "subtitle": "個人情報を管理する",
+      "editProfile": "プロフィール編集",
+      "firstName": "名",
+      "lastName": "姓",
+      "emailAddress": "メールアドレス",
+      "phoneNumber": "電話番号",
+      "emailCannotBeChanged": "メールアドレスは変更できません",
+      "saveChanges": "変更を保存",
+      "cancel": "キャンセル"
+    },
+    "general": {
+      "title": "一般設定",
+      "subtitle": "サイトの基本設定を管理する",
+      "siteName": "サイト名",
+      "siteUrl": "サイトURL",
+      "supportEmail": "サポートメール",
+      "timezone": "タイムゾーン",
+      "saveChanges": "変更を保存"
+    },
+    "tickets": {
+      "title": "チケット設定",
+      "subtitle": "チケットのルールとポリシーを設定する",
+      "maxTicketsPerUser": "ユーザーごとの最大チケット数",
+      "ticketValidity": "チケット有効期限（日数）",
+      "refundPolicy": "返金ポリシー",
+      "strictRefund": "厳格（返金不可）",
+      "moderateRefund": "中程度（一部返金）",
+      "flexibleRefund": "柔軟（全額返金）",
+      "saveChanges": "変更を保存"
+    },
+    "payments": {
+      "title": "支払い設定",
+      "subtitle": "決済ゲートウェイと手数料を管理する",
+      "paymentGateway": "決済ゲートウェイ",
+      "stripe": "Stripe",
+      "paypal": "PayPal",
+      "square": "Square",
+      "currency": "通貨",
+      "processingFee": "決済手数料（%）",
+      "saveChanges": "変更を保存"
+    },
+    "notifications": {
+      "title": "通知設定",
+      "subtitle": "メールとSMS通知を管理する",
+      "emailNotifications": "メール通知",
+      "receiveEmail": "メールで通知を受け取る",
+      "smsNotifications": "SMS通知",
+      "receiveSms": "SMSで通知を受け取る",
+      "orderConfirmations": "注文確認",
+      "receiveOrderConfirmations": "新規注文の確認メールを受け取る",
+      "eventReminders": "イベントリマインダー",
+      "sendEventReminders": "イベント開始前にリマインダーを送信する",
+      "saveChanges": "変更を保存"
+    },
+    "systemSecurity": {
+      "title": "システムセキュリティ",
+      "subtitle": "システム全体のセキュリティ設定を構成する",
+      "twoFactorAuth": "二段階認証",
+      "enforce2FA": "全管理者ユーザーに2FAを強制する",
+      "sessionTimeout": "セッションタイムアウト（分）",
+      "passwordPolicy": "パスワードポリシー",
+      "basic": "基本（最低8文字）",
+      "standard": "標準（最低8文字、数字1文字以上）",
+      "strong": "強力（最低12文字、数字、記号、大文字/小文字を含む）",
+      "saveChanges": "変更を保存"
+    },
+    "api": {
+      "apiSettings": "API設定",
+      "apiRateLimit": "APIレート制限（リクエスト/分）",
+      "apiKeyRotation": "APIキー更新期間（日数）"
+    },
+    "permission": {
+      "title": "権限設定",
+      "initializePermissions": "権限を初期化",
+      "initializeSystem": "システムを初期化"
+    },
     "menu": {
       "profile": "プロフィール",
       "profileDesc": "個人情報の管理",

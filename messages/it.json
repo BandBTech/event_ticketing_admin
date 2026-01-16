@@ -318,6 +318,13 @@
       "passwordChangedLogin": "Accedi con la tua nuova password."
     }
   },
+  "pages": {
+    "dashboard": "Cruscotto",
+    "organisers": "Organizzatori",
+    "events": "Eventi",
+    "reports": "Rapporti",
+    "settings": "Impostazioni"
+  },
   "dashboard": {
     "greeting": {
       "morning": "Buongiorno",
@@ -435,6 +442,95 @@
       "updateButton": "Aggiorna password"
     },
     "title": "Impostazioni",
+    "headers": {
+      "profile": "Profilo",
+      "security": "Sicurezza",
+      "general": "Generale",
+      "tickets": "Biglietti",
+      "payments": "Pagamenti",
+      "notifications": "Notifiche",
+      "systemsecurity": "Sicurezza di Sistema",
+      "api": "API",
+      "permissions": "Permessi"
+    },
+    "profile": {
+      "title": "Impostazioni Profilo",
+      "subtitle": "Gestisci le tue informazioni personali",
+      "editProfile": "Modifica Profilo",
+      "firstName": "Nome",
+      "lastName": "Cognome",
+      "emailAddress": "Indirizzo Email",
+      "phoneNumber": "Numero di Telefono",
+      "emailCannotBeChanged": "L'email non può essere modificata",
+      "saveChanges": "Salva Modifiche",
+      "cancel": "Annulla"
+    },
+    "general": {
+      "title": "Impostazioni Generali",
+      "subtitle": "Gestisci la configurazione generale del tuo sito",
+      "siteName": "Nome del Sito",
+      "siteUrl": "URL del Sito",
+      "supportEmail": "Email di Supporto",
+      "timezone": "Fuso Orario",
+      "saveChanges": "Salva Modifiche"
+    },
+    "tickets": {
+      "title": "Impostazioni Biglietti",
+      "subtitle": "Configura regole e politiche per i biglietti",
+      "maxTicketsPerUser": "Numero Massimo di Biglietti per Utente",
+      "ticketValidity": "Validità del Biglietto (Giorni)",
+      "refundPolicy": "Politica di Rimborso",
+      "strictRefund": "Rigida (Nessun Rimborso)",
+      "moderateRefund": "Moderata (Rimborsi Parziali)",
+      "flexibleRefund": "Flessibile (Rimborso Completo)",
+      "saveChanges": "Salva Modifiche"
+    },
+    "payments": {
+      "title": "Impostazioni Pagamenti",
+      "subtitle": "Gestisci gateway di pagamento e commissioni",
+      "paymentGateway": "Gateway di Pagamento",
+      "stripe": "Stripe",
+      "paypal": "PayPal",
+      "square": "Square",
+      "currency": "Valuta",
+      "processingFee": "Commissione di Elaborazione (%)",
+      "saveChanges": "Salva Modifiche"
+    },
+    "notifications": {
+      "title": "Impostazioni Notifiche",
+      "subtitle": "Gestisci notifiche email e SMS",
+      "emailNotifications": "Notifiche Email",
+      "receiveEmail": "Ricevi notifiche via email",
+      "smsNotifications": "Notifiche SMS",
+      "receiveSms": "Ricevi notifiche via SMS",
+      "orderConfirmations": "Conferme d'Ordine",
+      "receiveOrderConfirmations": "Ricevi email di conferma per nuovi ordini",
+      "eventReminders": "Promemoria Eventi",
+      "sendEventReminders": "Invia promemoria prima dell'inizio degli eventi",
+      "saveChanges": "Salva Modifiche"
+    },
+    "systemSecurity": {
+      "title": "Sicurezza di Sistema",
+      "subtitle": "Configura le impostazioni di sicurezza per l'intero sistema",
+      "twoFactorAuth": "Autenticazione a Due Fattori",
+      "enforce2FA": "Impone 2FA per tutti gli utenti amministratori",
+      "sessionTimeout": "Timeout della Sessione (Minuti)",
+      "passwordPolicy": "Politica delle Password",
+      "basic": "Base (Minimo 8 caratteri)",
+      "standard": "Standard (Minimo 8 caratteri, 1 numero)",
+      "strong": "Forte (Minimo 12 caratteri, numero, simbolo, maiuscole/minuscole)",
+      "saveChanges": "Salva Modifiche"
+    },
+    "api": {
+      "apiSettings": "Impostazioni API",
+      "apiRateLimit": "Limite di Frequenza API (Richieste/Minuto)",
+      "apiKeyRotation": "Rotazione Chiavi API (Giorni)"
+    },
+    "permission": {
+      "title": "Impostazioni Permessi",
+      "initializePermissions": "Inizializza Permessi",
+      "initializeSystem": "Inizializza Sistema"
+    },
     "menu": {
       "profile": "Profilo",
       "profileDesc": "Gestisci le tue informazioni personali",
