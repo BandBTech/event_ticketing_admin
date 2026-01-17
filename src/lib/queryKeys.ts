@@ -35,5 +35,27 @@ export const queryKeys = {
         /** Key for fetching a single organizer by ID */
         detail: (id: string) => ['organizer', id] as const,
     },
+
+  /**
+   * Permissions query keys
+   */
+  permissions: {
+    /** Key for fetching all permissions */
+    all: ['permissions'] as const,
+    /** Key for permission list (used for invalidation) */
+    list: ['permissions'] as const,
+  },
+
+  /**
+   * Roles query keys
+   */
+  roles: {
+    /** Key for fetching all roles */
+    all: ['roles'] as const,
+    /** Key for role list (used for invalidation) */
+    list: ['roles'] as const,
+    /** Key for fetching permissions of a specific role */
+    permissions: (roleId: string) => ['roles', roleId, 'permissions'] as const,
+  },
 } as const;
 

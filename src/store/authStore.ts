@@ -17,6 +17,10 @@ interface AuthStore {
   fetchProfile: () => Promise<void>;
   clearError: () => void;
   checkAuth: () => void;
+
+  // Permission helpers
+  hasRole: (role: string) => boolean;
+  hasPermission: (permission: string) => boolean;
 }
 
 export const useAuthStore = create<AuthStore>()((set, get) => ({
@@ -148,6 +152,23 @@ export const useAuthStore = create<AuthStore>()((set, get) => ({
   // Clear error
   clearError: () => {
     set({ error: null });
+  },
+
+  // Check if user has a specific role
+  hasRole: (role: string) => {
+    const { user } = get();
+    if (!user || !user.roles) return false;
+    return user.roles.some(r => r.name === role);
+  },
+
+  // Check if user has a specific permission
+  hasPermission: (permission: string) => {
+    const { user } = get();
+    if (!user || !user.roles) return false;
+    // Gather all permissions from all roles
+    const allPermissions = user.roles.flatMap(r => r.permissions?.map(p => p.name) || []);
+    // admin:full overrides everything
+    return allPermissions.includes('admin:full') || allPermissions.includes(permission);
   },
 
   // Check authentication status on app load

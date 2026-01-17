@@ -484,6 +484,43 @@
       "billingDesc": "Manage your payment methods",
       "tickets": "My Tickets",
       "ticketsDesc": "View your event tickets"
+    },
+    "permissions": {
+      "title": "Permissions & Roles",
+      "subtitle": "Manage system permissions and role assignments",
+      "tabs": {
+        "permissions": "Permissions",
+        "roles": "Roles",
+        "rolePermissions": "Role Permissions"
+      },
+      "table": {
+        "name": "Name",
+        "description": "Description",
+        "category": "Category",
+        "system": "System",
+        "created": "Created",
+        "permissionCount": "Permissions"
+      },
+      "roleEditor": {
+        "selectRole": "Select a role",
+        "noRoleSelected": "Select a role to manage its permissions",
+        "saveChanges": "Save Changes",
+        "saving": "Saving...",
+        "saveSuccess": "Permissions updated successfully",
+        "saveError": "Failed to update permissions",
+        "selectRoleDescription": "Choose a role to manage its permissions"
+      },
+      "initialize": {
+        "title": "Initialize System",
+        "description": "Re-sync default permissions and roles",
+        "button": "Initialize System",
+        "loading": "Initializing...",
+        "success": "System permissions initialized successfully"
+      },
+      "empty": {
+        "permissions": "No permissions found",
+        "roles": "No roles found"
+      }
     }
   },
   "status": {

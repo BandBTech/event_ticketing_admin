@@ -446,6 +446,43 @@
       "billing": "請求する",
       "billingDesc": "支払い方法を管理する",
       "ticketsDesc": "イベントチケットを表示する"
+    },
+    "permissions": {
+      "title": "権限とロール",
+      "subtitle": "システム権限とロール割り当てを管理する",
+      "tabs": {
+        "permissions": "権限",
+        "roles": "ロール",
+        "rolePermissions": "ロール権限"
+      },
+      "table": {
+        "name": "名前",
+        "description": "説明",
+        "category": "カテゴリー",
+        "system": "システム",
+        "created": "作成日",
+        "permissionCount": "権限数"
+      },
+      "roleEditor": {
+        "selectRole": "ロールを選択",
+        "noRoleSelected": "権限を管理するロールを選択してください",
+        "saveChanges": "変更を保存",
+        "saving": "保存中...",
+        "saveSuccess": "権限が正常に更新されました",
+        "saveError": "権限の更新に失敗しました",
+        "selectRoleDescription": "権限を管理する役割を選択してください"
+      },
+      "initialize": {
+        "title": "システム初期化",
+        "description": "デフォルトの権限とロールを再同期する",
+        "button": "システム初期化",
+        "loading": "初期化中...",
+        "success": "システム権限が正常に初期化されました"
+      },
+      "empty": {
+        "permissions": "権限が見つかりません",
+        "roles": "ロールが見つかりません"
+      }
     }
   },
   "status": {

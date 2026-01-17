@@ -445,6 +445,43 @@
       "billing": "Fatturazione",
       "billingDesc": "Gestisci i tuoi metodi di pagamento",
       "ticketsDesc": "Visualizza i biglietti per i tuoi eventi"
+    },
+    "permissions": {
+      "title": "Permessi e Ruoli",
+      "subtitle": "Gestisci i permessi di sistema e le assegnazioni dei ruoli",
+      "tabs": {
+        "permissions": "Permessi",
+        "roles": "Ruoli",
+        "rolePermissions": "Permessi Ruolo"
+      },
+      "table": {
+        "name": "Nome",
+        "description": "Descrizione",
+        "category": "Categoria",
+        "system": "Sistema",
+        "created": "Creato",
+        "permissionCount": "Permessi"
+      },
+      "roleEditor": {
+        "selectRole": "Seleziona un ruolo",
+        "noRoleSelected": "Seleziona un ruolo per gestire i suoi permessi",
+        "saveChanges": "Salva modifiche",
+        "saving": "Salvataggio...",
+        "saveSuccess": "Permessi aggiornati con successo",
+        "saveError": "Aggiornamento permessi non riuscito",
+        "selectRoleDescription": "Scegli un ruolo per gestirne le autorizzazioni"
+      },
+      "initialize": {
+        "title": "Inizializza Sistema",
+        "description": "Ri-sincronizza i permessi e i ruoli predefiniti",
+        "button": "Inizializza Sistema",
+        "loading": "Inizializzazione...",
+        "success": "Permessi di sistema inizializzati con successo"
+      },
+      "empty": {
+        "permissions": "Nessun permesso trovato",
+        "roles": "Nessun ruolo trovato"
+      }
     }
   },
   "status": {
