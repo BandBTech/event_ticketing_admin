@@ -355,6 +355,13 @@
       "passwordChangedLogin": "Please login with your new password."
     }
   },
+    "pages": {
+    "dashboard": "Dashboard",
+    "organisers": "Organisers",
+    "events": "Events",
+    "reports": "Reports",
+    "settings": "Settings"
+  },
   "dashboard": {
     "greeting": {
       "morning": "Good morning",
@@ -473,6 +480,95 @@
       "updateButton": "Update Password"
     },
     "title": "Settings",
+    "headers": {
+      "profile": "Profile",
+      "security": "Security",
+      "general": "General",
+      "tickets": "Tickets",
+      "payments": "Payments",
+      "notifications": "Notifications",
+      "systemsecurity": "System Security",
+      "api": "API",
+      "permissions": "Permissions"
+    },
+    "profile": {
+      "title": "Profile Settings",
+      "subtitle": "Manage your personal information",
+      "editProfile": "Edit Profile",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "emailAddress": "Email Address",
+      "phoneNumber": "Phone Number",
+      "emailCannotBeChanged": "Email cannot be changed",
+      "saveChanges": "Save Changes",
+      "cancel": "Cancel"
+    },
+    "general": {
+      "title": "General Settings",
+      "subtitle": "Manage your site's general configuration",
+      "siteName": "Site Name",
+      "siteUrl": "Site URL",
+      "supportEmail": "Support Email",
+      "timezone": "Timezone",
+      "saveChanges": "Save Changes"
+    },
+    "tickets": {
+      "title": "Ticket Settings",
+      "subtitle": "Configure ticket rules and policies",
+      "maxTicketsPerUser": "Max Tickets Per User",
+      "ticketValidity": "Ticket Validity (Days)",
+      "refundPolicy": "Refund Policy",
+      "strictRefund": "Strict (No Refunds)",
+      "moderateRefund": "Moderate (Partial Refunds)",
+      "flexibleRefund": "Flexible (Full Refund)",
+      "saveChanges": "Save Changes"
+    },
+    "payments": {
+      "title": "Payment Settings",
+      "subtitle": "Manage payment gateways and fees",
+      "paymentGateway": "Payment Gateway",
+      "stripe": "Stripe",
+      "paypal": "Paypal",
+      "square": "Square",
+      "currency": "Currency",
+      "processingFee": "Processing Fee (%)",
+      "saveChanges": "Save Changes"
+    },
+    "notifications": {
+      "title": "Notification Settings",
+      "subtitle": "Manage email and SMS notifications",
+      "emailNotifications": "Email Notifications",
+      "receiveEmail": "Receive notifications via email",
+      "smsNotifications": "SMS Notifications",
+      "receiveSms": "Receive notifications via SMS",
+      "orderConfirmations": "Order Confirmations",
+      "receiveOrderConfirmations": "Receive confirmation emails for new orders",
+      "eventReminders": "Event Reminders",
+      "sendEventReminders": "Send reminders before events start",
+      "saveChanges": "Save Changes"
+    },
+    "systemSecurity": {
+      "title": "System Security",
+      "subtitle": "Configure system-wide security settings",
+      "twoFactorAuth": "Two-Factor Authentication",
+      "enforce2FA": "Enforce 2FA for all admin users",
+      "sessionTimeout": "Session Timeout (Minutes)",
+      "passwordPolicy": "Password Policy",
+      "basic": "Basic (Min 8 chars)",
+      "standard": "Standard (Min 8 chars, 1 number)",
+      "strong": "Strong (Min 12 chars, number, symbol, lower/upper case)",
+      "saveChanges": "Save Changes"
+    },
+    "api": {
+      "apiSettings": "API Settings",
+      "apiRateLimit": "API Rate Limit (Requests/Minute)",
+      "apiKeyRotation": "API Key Rotation (Days)"
+    },
+    "permission": {
+      "title": "Permission Settings",
+      "initializePermissions": "Initialize Permissions",
+      "initializeSystem": "Initialize System"
+    },
     "menu": {
       "profile": "Profile",
       "profileDesc": "Manage your personal information",

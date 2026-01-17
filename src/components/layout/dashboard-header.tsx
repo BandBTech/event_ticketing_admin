@@ -20,15 +20,16 @@ function getGreeting({ t }: { t: (key: string) => string }): string {
 
 const pageHeaders: {
   prefix: string;
-  title: string;
+  titleKey?: string;
   isDynamic?: boolean;
 }[] = [
-  { prefix: "/dashboard", title: "", isDynamic: true },
-  { prefix: "/organisers", title: "Organisers" },
-  { prefix: "/events", title: "Events" },
-  { prefix: "/reports", title: "Reports" },
-  { prefix: "/settings", title: "Settings" },
+  { prefix: "/dashboard", isDynamic: true },
+  { prefix: "/organisers", titleKey: "pages.organisers" },
+  { prefix: "/events", titleKey: "pages.events" },
+  { prefix: "/reports", titleKey: "pages.reports" },
+  { prefix: "/settings", titleKey: "pages.settings" },
 ];
+
 
 export default function DashboardHeader() {
   const rawPath = usePathname() ?? "/";
@@ -58,9 +59,12 @@ const dynamicGreeting = useMemo(() => {
     );
 
   // Use dynamic greeting for dashboard
-  const headerText = matched?.isDynamic
-    ? dynamicGreeting
-    : matched?.title ?? "Dashboard";
+const headerText = matched?.isDynamic
+  ? dynamicGreeting
+  : matched?.titleKey
+  ? t(matched.titleKey)
+  : t("pages.dashboard");
+
 
   return (
     <div className="flex flex-1 items-center justify-between">

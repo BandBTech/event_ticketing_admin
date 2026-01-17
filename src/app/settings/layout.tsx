@@ -54,7 +54,7 @@ const menuItems = [
   },
   {
     href: "/settings/system-security",
-    label: "System Security",
+    label: "SystemSecurity",
     icon: ShieldCheckIcon,
   },
   {
@@ -64,7 +64,7 @@ const menuItems = [
   },
   {
     href: "/settings/permission",
-    label: "Permission",
+    label: "Permissions",
     icon: ShieldCheckeredIcon,
   },
 ];
@@ -117,7 +117,7 @@ export default function SettingsLayout({
                             )}
                           >
                             <Icon size={20} weight={isActive ? 'fill' : 'duotone'} />
-                            <span className="text-base">{item.label}</span>
+                            <span className="text-base">{t(`settings.headers.${item.label.toLowerCase()}`)}</span>
                           </Link>
                         );
                       })}
