@@ -464,6 +464,8 @@
       "phoneNumber": "電話番号",
       "emailCannotBeChanged": "メールアドレスは変更できません",
       "saveChanges": "変更を保存",
+      "saving": "保存中",
+      "saved": "保存された",
       "cancel": "キャンセル"
     },
     "general": {
@@ -523,14 +525,17 @@
       "saveChanges": "変更を保存"
     },
     "api": {
-      "apiSettings": "API設定",
+      "title": "API設定",
+      "subtitle": "APIアクセスと制限を管理する",
       "apiRateLimit": "APIレート制限（リクエスト/分）",
       "apiKeyRotation": "APIキー更新期間（日数）"
     },
     "permission": {
       "title": "権限設定",
       "initializePermissions": "権限を初期化",
-      "initializeSystem": "システムを初期化"
+      "initializeSystem": "システムを初期化",
+      "initializing": "初期化中...",
+      "successChanges": "システム権限が正常に初期化されました"
     },
     "menu": {
       "profile": "プロフィール",

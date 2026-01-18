@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import { FloppyDiskIcon } from "@phosphor-icons/react/dist/ssr";
+import { useLanguageStore } from "@/store/languageStore";
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function SystemSecuritySettingsPage() {
   const [settings, setSettings] = useState({
@@ -10,6 +12,9 @@ export default function SystemSecuritySettingsPage() {
     passwordPolicy: "standard",
   });
   const [saveStatus, setSaveStatus] = useState<"" | "saving" | "saved">("");
+
+  const {locale} = useLanguageStore();
+  const { t } = useTranslation(locale);
 
   const handleInputChange = (field: string, value: string | number | boolean) => {
     setSettings((prev) => ({ ...prev, [field]: value }));
@@ -31,8 +36,8 @@ export default function SystemSecuritySettingsPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 font-poppins">System Security</h1>
-          <p className="text-sm text-gray-600">Configure system-wide security settings</p>
+          <h1 className="text-2xl font-bold text-gray-900 font-poppins">{t("settings.systemSecurity.title")}</h1>
+          <p className="text-sm text-gray-600">{t("settings.systemSecurity.subtitle")}</p>
         </div>
         <button
           onClick={handleSave}
@@ -47,10 +52,10 @@ export default function SystemSecuritySettingsPage() {
           <FloppyDiskIcon size={16} weight="duotone" className={saveStatus === "saving" ? "animate-spin" : ""} />
           <span>
             {saveStatus === "saved"
-              ? "Saved!"
+              ? t("settings.profile.saved")
               : saveStatus === "saving"
-                ? "Saving..."
-                : "Save Changes"}
+                ? t("settings.profile.saving")
+                : t("settings.systemSecurity.saveChanges")}
           </span>
         </button>
       </div>
@@ -59,8 +64,8 @@ export default function SystemSecuritySettingsPage() {
         <div className="space-y-4">
           <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
             <div>
-              <h3 className="font-medium text-gray-900">Two-Factor Authentication</h3>
-              <p className="text-sm text-gray-500">Enforce 2FA for all admin users</p>
+              <h3 className="font-medium text-gray-900">{t("settings.systemSecurity.twoFactorAuth")}</h3>
+              <p className="text-sm text-gray-500">{t("settings.systemSecurity.enforce2FA")}</p>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input
@@ -76,7 +81,7 @@ export default function SystemSecuritySettingsPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Session Timeout (Minutes)
+              {t("settings.systemSecurity.sessionTimeout")}
             </label>
             <input
               type="number"
@@ -89,7 +94,7 @@ export default function SystemSecuritySettingsPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Password Policy
+              {t("settings.systemSecurity.passwordPolicy")}
             </label>
             <select
               title="Password Policy"
@@ -97,9 +102,9 @@ export default function SystemSecuritySettingsPage() {
               onChange={(e) => handleInputChange("passwordPolicy", e.target.value)}
               className="w-full p-3 border border-gray-300 text-gray-500 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
             >
-              <option value="basic">Basic (Min 8 chars)</option>
-              <option value="standard">Standard (Min 8 chars, 1 number)</option>
-              <option value="strong">Strong (Min 12 chars, symbol, number, upper/lower)</option>
+              <option value="basic">{t("settings.systemSecurity.basic")}</option>
+              <option value="standard">{t("settings.systemSecurity.standard")}</option>
+              <option value="strong">{t("settings.systemSecurity.strong")}</option>
             </select>
           </div>
         </div>

@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import { FloppyDiskIcon } from "@phosphor-icons/react/dist/ssr";
+import { useLanguageStore } from "@/store/languageStore";
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function ApiSettingsPage() {
   const [settings, setSettings] = useState({
@@ -9,6 +11,9 @@ export default function ApiSettingsPage() {
     apiKeyRotation: 30,
   });
   const [saveStatus, setSaveStatus] = useState<"" | "saving" | "saved">("");
+
+  const {locale} = useLanguageStore();
+  const { t } = useTranslation(locale);
 
   const handleInputChange = (field: string, value: number) => {
     setSettings((prev) => ({ ...prev, [field]: value }));
@@ -30,8 +35,8 @@ export default function ApiSettingsPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 font-poppins">API Settings</h1>
-          <p className="text-sm text-gray-600">Manage API access and limits</p>
+          <h1 className="text-2xl font-bold text-gray-900 font-poppins">{t("settings.api.title")}</h1>
+          <p className="text-sm text-gray-600">{t("settings.api.subtitle")}</p>
         </div>
         <button
           onClick={handleSave}
@@ -46,10 +51,10 @@ export default function ApiSettingsPage() {
           <FloppyDiskIcon size={16} weight="duotone" className={saveStatus === "saving" ? "animate-spin" : ""} />
           <span>
             {saveStatus === "saved"
-              ? "Saved!"
+              ? t("settings.profile.saved")
               : saveStatus === "saving"
-                ? "Saving..."
-                : "Save Changes"}
+                ? t("settings.profile.saving")
+                : t("settings.profile.saveChanges")}
           </span>
         </button>
       </div>
@@ -58,7 +63,7 @@ export default function ApiSettingsPage() {
         <div className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              API Rate Limit (Requests/Minute)
+              {t("settings.api.apiRateLimit")}
             </label>
             <input
               type="number"
@@ -71,7 +76,7 @@ export default function ApiSettingsPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              API Key Rotation (Days)
+              {t("settings.api.apiKeyRotation")}
             </label>
             <input
               type="number"

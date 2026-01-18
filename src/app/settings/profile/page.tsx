@@ -168,7 +168,7 @@ export default function ProfileSettingsPage() {
             }}
           >
             <PencilIcon size={16} weight="duotone" />
-            {t('settings.profile.editButton', 'Edit Profile')}
+            {t('settings.profile.editProfile', 'Edit Profile')}
           </Button>
         )}
       </div>
@@ -187,7 +187,7 @@ export default function ProfileSettingsPage() {
             <p className="text-sm text-gray-600">{user?.email}</p>
             {user?.isEmailVerified && (
               <span className="inline-flex items-center px-2 py-0.5 mt-2 text-xs font-medium text-green-700 bg-green-100 rounded-full">
-                ✓ Verified
+                ✓ {t('status.verified', 'Verified')}
               </span>
             )}
           </div>
@@ -252,7 +252,7 @@ export default function ProfileSettingsPage() {
           {/* Email (Read-only) */}
           <div className="space-y-2">
             <label htmlFor="email" className="text-sm font-medium text-gray-900 block">
-              {t('settings.profile.email', 'Email Address')}
+              {t('settings.profile.emailAddress', 'Email Address')}
             </label>
             <div className="relative">
               <div className="absolute left-3 top-1/2 -translate-y-1/2">
@@ -267,14 +267,14 @@ export default function ProfileSettingsPage() {
               />
             </div>
             <p className="text-xs text-gray-500">
-              {t('settings.profile.emailNote', 'Email cannot be changed')}
+              {t('settings.profile.emailCannotBeChanged', 'Email cannot be changed.')}
             </p>
           </div>
 
           {/* Phone */}
           <div className="space-y-2">
             <label htmlFor="phone" className="text-sm font-medium text-gray-900 block">
-              {t('settings.profile.phone', 'Phone Number')}
+              {t('settings.profile.phoneNumber', 'Phone Number')}
             </label>
             <Controller
               name="phone"
@@ -305,14 +305,14 @@ export default function ProfileSettingsPage() {
                 disabled={isLoading || !isDirty}
                 className="bg-blue-600 hover:bg-blue-700 text-white"
               >
-                {isLoading ? t('settings.profile.saving', 'Saving...') : t('settings.profile.saveButton', 'Save Changes')}
+                {isLoading ? t('settings.profile.saving', 'Saving...') : t('settings.profile.saveChanges', 'Save Changes')}
               </Button>
               <Button
                 type="button"
                 onClick={handleCancel}
                 className="bg-gray-200 hover:bg-gray-300 text-gray-600"
               >
-                {t('settings.profile.cancelButton', 'Cancel')}
+                {t('settings.profile.cancel', 'Cancel')}
               </Button>
             </div>
           )}

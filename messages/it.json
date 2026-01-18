@@ -463,6 +463,8 @@
       "phoneNumber": "Numero di Telefono",
       "emailCannotBeChanged": "L'email non può essere modificata",
       "saveChanges": "Salva Modifiche",
+      "saving": "Salvando",
+      "saved": "salvato",
       "cancel": "Annulla"
     },
     "general": {
@@ -522,14 +524,17 @@
       "saveChanges": "Salva Modifiche"
     },
     "api": {
-      "apiSettings": "Impostazioni API",
+      "title": "Impostazioni API",
+      "subtitle": "Gestisci l'accesso e i limiti dell'API",
       "apiRateLimit": "Limite di Frequenza API (Richieste/Minuto)",
       "apiKeyRotation": "Rotazione Chiavi API (Giorni)"
     },
     "permission": {
       "title": "Impostazioni Permessi",
       "initializePermissions": "Inizializza Permessi",
-      "initializeSystem": "Inizializza Sistema"
+      "initializeSystem": "Inizializza Sistema",
+      "initializing": "inizializzazione...",
+      "successChanges": "Autorizzazioni di sistema inizializzate correttamente"
     },
     "menu": {
       "profile": "Profilo",

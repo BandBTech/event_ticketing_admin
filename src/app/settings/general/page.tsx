@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import { FloppyDiskIcon } from "@phosphor-icons/react/dist/ssr";
+import { useLanguageStore } from "@/store/languageStore";
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function GeneralSettingsPage() {
   const [settings, setSettings] = useState({
@@ -11,6 +13,9 @@ export default function GeneralSettingsPage() {
     timezone: "UTC-5",
   });
   const [saveStatus, setSaveStatus] = useState<"" | "saving" | "saved">("");
+
+  const {locale} = useLanguageStore();
+  const { t } = useTranslation(locale);
 
   const handleInputChange = (field: string, value: string) => {
     setSettings((prev) => ({ ...prev, [field]: value }));
@@ -32,8 +37,8 @@ export default function GeneralSettingsPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 font-poppins">General Settings</h1>
-          <p className="text-sm text-gray-600">Manage your site&apos;s general configuration</p>
+          <h1 className="text-2xl font-bold text-gray-900 font-poppins">{t("settings.general.title")}</h1>
+          <p className="text-sm text-gray-600">{t("settings.general.subtitle")}</p>
         </div>
         <button
           onClick={handleSave}
@@ -48,10 +53,10 @@ export default function GeneralSettingsPage() {
           <FloppyDiskIcon size={16} weight="duotone" className={saveStatus === "saving" ? "animate-spin" : ""} />
           <span>
             {saveStatus === "saved"
-              ? "Saved!"
+              ? t("settings.profile.saved")
               : saveStatus === "saving"
-                ? "Saving..."
-                : "Save Changes"}
+                ? t("settings.profile.saving")
+                : t("settings.general.saveChanges")}
           </span>
         </button>
       </div>
@@ -60,7 +65,7 @@ export default function GeneralSettingsPage() {
         <div className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Site Name
+              {t("settings.general.siteName")}
             </label>
             <input
               type="text"
@@ -68,13 +73,13 @@ export default function GeneralSettingsPage() {
               value={settings.siteName}
               onChange={(e) => handleInputChange("siteName", e.target.value)}
               className="w-full p-3 border border-gray-300 text-gray-500 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-              placeholder="Enter site name"
+              placeholder={t("settings.general.enterSiteName")}
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Site URL
+              {t("settings.general.siteUrl")}
             </label>
             <input
               type="url"
@@ -88,7 +93,7 @@ export default function GeneralSettingsPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Support Email
+              {t("settings.general.supportEmail")}
             </label>
             <input
               type="email"
@@ -102,7 +107,7 @@ export default function GeneralSettingsPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Timezone
+              {t("settings.general.timezone")}
             </label>
             <select
               title="Timezone"

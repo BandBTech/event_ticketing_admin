@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import { FloppyDiskIcon } from "@phosphor-icons/react/dist/ssr";
+import { useLanguageStore } from "@/store/languageStore";
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function NotificationsSettingsPage() {
   const [settings, setSettings] = useState({
@@ -11,6 +13,8 @@ export default function NotificationsSettingsPage() {
     eventReminders: true,
   });
   const [saveStatus, setSaveStatus] = useState<"" | "saving" | "saved">("");
+    const {locale} = useLanguageStore();
+    const { t } = useTranslation(locale);
 
   const handleInputChange = (field: string, value: boolean) => {
     setSettings((prev) => ({ ...prev, [field]: value }));
@@ -32,8 +36,8 @@ export default function NotificationsSettingsPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 font-poppins">Notification Settings</h1>
-          <p className="text-sm text-gray-600">Manage email and SMS notifications</p>
+          <h1 className="text-2xl font-bold text-gray-900 font-poppins">{t("settings.notifications.title")}</h1>
+          <p className="text-sm text-gray-600">{t("settings.notifications.subtitle")}</p>
         </div>
         <button
           onClick={handleSave}
@@ -48,10 +52,10 @@ export default function NotificationsSettingsPage() {
           <FloppyDiskIcon weight="duotone" size={16} className={saveStatus === "saving" ? "animate-spin" : ""} />
           <span>
             {saveStatus === "saved"
-              ? "Saved!"
+              ? t("settings.profile.saved")
               : saveStatus === "saving"
-                ? "Saving..."
-                : "Save Changes"}
+                ? t("settings.profile.saving")
+                : t("settings.notifications.saveChanges")}
           </span>
         </button>
       </div>
@@ -60,8 +64,8 @@ export default function NotificationsSettingsPage() {
         <div className="space-y-6">
           <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
             <div>
-              <h3 className="font-medium text-gray-900">Email Notifications</h3>
-              <p className="text-sm text-gray-500">Receive notifications via email</p>
+              <h3 className="font-medium text-gray-900">{t("settings.notifications.emailNotifications")}</h3>
+              <p className="text-sm text-gray-500">{t("settings.notifications.receiveEmail")}</p>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input
@@ -77,8 +81,8 @@ export default function NotificationsSettingsPage() {
 
           <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
             <div>
-              <h3 className="font-medium text-gray-900">SMS Notifications</h3>
-              <p className="text-sm text-gray-500">Receive notifications via SMS</p>
+              <h3 className="font-medium text-gray-900">{t("settings.notifications.smsNotifications")}</h3>
+              <p className="text-sm text-gray-500">{t("settings.notifications.receiveSms")}</p>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input
@@ -94,8 +98,8 @@ export default function NotificationsSettingsPage() {
 
           <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
             <div>
-              <h3 className="font-medium text-gray-900">Order Confirmations</h3>
-              <p className="text-sm text-gray-500">Send confirmation emails for new orders</p>
+              <h3 className="font-medium text-gray-900">{t("settings.notifications.orderConfirmations")}</h3>
+              <p className="text-sm text-gray-500">{t("settings.notifications.receiveOrderConfirmations")}</p>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input
@@ -111,8 +115,8 @@ export default function NotificationsSettingsPage() {
 
           <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
             <div>
-              <h3 className="font-medium text-gray-900">Event Reminders</h3>
-              <p className="text-sm text-gray-500">Send reminders before events start</p>
+              <h3 className="font-medium text-gray-900">{t("settings.notifications.eventReminders")}</h3>
+              <p className="text-sm text-gray-500">{t("settings.notifications.sendEventReminders")}</p>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input

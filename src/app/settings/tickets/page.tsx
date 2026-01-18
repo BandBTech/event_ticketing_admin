@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import { FloppyDiskIcon } from "@phosphor-icons/react/dist/ssr";
+import { useLanguageStore } from "@/store/languageStore";
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function TicketsSettingsPage() {
   const [settings, setSettings] = useState({
@@ -10,6 +12,9 @@ export default function TicketsSettingsPage() {
     refundPolicy: "flexible",
   });
   const [saveStatus, setSaveStatus] = useState<"" | "saving" | "saved">("");
+
+    const {locale} = useLanguageStore();
+    const { t } = useTranslation(locale);
 
   const handleInputChange = (field: string, value: string | number) => {
     setSettings((prev) => ({ ...prev, [field]: value }));
@@ -31,8 +36,8 @@ export default function TicketsSettingsPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 font-poppins">Ticket Settings</h1>
-          <p className="text-sm text-gray-600">Configure ticket rules and policies</p>
+          <h1 className="text-2xl font-bold text-gray-900 font-poppins">{t("settings.tickets.title")}</h1>
+          <p className="text-sm text-gray-600">{t("settings.tickets.subtitle")}</p>
         </div>
         <button
           onClick={handleSave}
@@ -47,10 +52,10 @@ export default function TicketsSettingsPage() {
           <FloppyDiskIcon weight="duotone" size={16} className={saveStatus === "saving" ? "animate-spin" : ""} />
           <span>
             {saveStatus === "saved"
-              ? "Saved!"
+              ? t("settings.profile.saved")
               : saveStatus === "saving"
-                ? "Saving..."
-                : "Save Changes"}
+                ? t("settings.profile.saving")
+                : t("settings.tickets.saveChanges")}
           </span>
         </button>
       </div>
@@ -59,7 +64,7 @@ export default function TicketsSettingsPage() {
         <div className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Max Tickets Per User
+              {t("settings.tickets.maxTicketsPerUser")}
             </label>
             <input
               type="number"
@@ -72,7 +77,7 @@ export default function TicketsSettingsPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Ticket Validity (Days)
+              {t("settings.tickets.ticketValidity")}
             </label>
             <input
               type="number"
@@ -85,7 +90,7 @@ export default function TicketsSettingsPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Refund Policy
+              {t("settings.tickets.refundPolicy")}
             </label>
             <select
               title="Refund Policy"
@@ -93,9 +98,9 @@ export default function TicketsSettingsPage() {
               onChange={(e) => handleInputChange("refundPolicy", e.target.value)}
               className="w-full p-3 border border-gray-300 text-gray-500 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
             >
-              <option value="strict">Strict (No Refunds)</option>
-              <option value="moderate">Moderate (Partial Refund)</option>
-              <option value="flexible">Flexible (Full Refund)</option>
+              <option value="strict">{t("settings.tickets.strict")}</option>
+              <option value="moderate">{t("settings.tickets.moderate")}</option>
+              <option value="flexible">{t("settings.tickets.flexible")}</option>
             </select>
           </div>
         </div>

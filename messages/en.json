@@ -501,12 +501,15 @@
       "phoneNumber": "Phone Number",
       "emailCannotBeChanged": "Email cannot be changed",
       "saveChanges": "Save Changes",
+      "saving": "Saving",
+      "saved": "Saved !",
       "cancel": "Cancel"
     },
     "general": {
       "title": "General Settings",
       "subtitle": "Manage your site's general configuration",
       "siteName": "Site Name",
+      "enterSiteName": "Enter Site Name",
       "siteUrl": "Site URL",
       "supportEmail": "Support Email",
       "timezone": "Timezone",
@@ -560,14 +563,17 @@
       "saveChanges": "Save Changes"
     },
     "api": {
-      "apiSettings": "API Settings",
+      "title": "API Settings",
+      "subtitle": "Manage API access and limits",
       "apiRateLimit": "API Rate Limit (Requests/Minute)",
       "apiKeyRotation": "API Key Rotation (Days)"
     },
     "permission": {
       "title": "Permission Settings",
       "initializePermissions": "Initialize Permissions",
-      "initializeSystem": "Initialize System"
+      "initializeSystem": "Initialize System",
+      "initializing": "Initializing ...",
+      "successChanges": "System permissions initialized successfully"
     },
     "menu": {
       "profile": "Profile",
