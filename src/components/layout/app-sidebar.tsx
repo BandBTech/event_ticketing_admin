@@ -45,6 +45,7 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
     { href: "/dashboard", labelKey: "sidebar.dashboard", icon: Gauge },
     { href: "/organisers", labelKey: "sidebar.organizers", icon: SquaresFour },
     { href: "/events", labelKey: "sidebar.events", icon: CalendarBlank },
+    { href: "/users", labelKey: "sidebar.users", icon: User },
     { href: "/reports", labelKey: "sidebar.reports", icon: FileText },
     { href: "/settings", labelKey: "sidebar.settings", icon: Gear },
   ], []);
@@ -79,6 +80,7 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
           <>
             <span className="text-xl font-bold text-blue-600">E-Ticket</span>
             <button
+            title="toggle-button"
               onClick={onToggle}
               className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
             >
@@ -88,6 +90,7 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
         )}
         {collapsed && (
           <button
+          title="toggle-button"
             onClick={onToggle}
             className="absolute -right-3 top-6 z-50 bg-white border border-gray-300 rounded-lg shadow-sm p-1.5 text-gray-700 hover:text-gray-900 hover:shadow-md transition-all"
           >
