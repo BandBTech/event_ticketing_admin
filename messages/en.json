@@ -355,7 +355,7 @@
       "passwordChangedLogin": "Please login with your new password."
     }
   },
-    "pages": {
+  "pages": {
     "dashboard": "Dashboard",
     "organisers": "Organisers",
     "events": "Events",
@@ -377,9 +377,40 @@
     "eventsAwaitingApproval": "Events Awaiting Approval",
     "noEventsAwaitingApproval": "No events awaiting approval",
     "noEventsAwaitingApprovalMessage": "When organizers submit events for approval, they'll appear here",
-    "reject": "REJECT",
-    "accept": "ACCEPT",
-    "viewEvent": "VIEW EVENT"
+    "reject": "Reject",
+    "accept": "Accept",
+    "viewEvent": "View Event",
+    "modal": {
+      "rejectOrganizer": "Reject Organizer",
+      "rejectEvent": "Reject Event",
+      "approveEvent": "Approve Event",
+      "commissionRate": "Commission Rate",
+      "commissionHint": "Commission rate is always in percentage",
+      "commissionError": "Commission rate must be between 0 and 100",
+      "reasonForRejection": "Reason for Rejection",
+      "additionalNotes": "Additional Notes (Optional)",
+      "additionalNotesPlaceholder": "Add any additional notes...",
+      "rejectionPlaceholder": "Please provide a reason for rejection...",
+      "confirmApprove": "Approve",
+      "confirmReject": "Reject",
+      "commissionRatePlaceholder": "Enter commission rate (in %)"
+    },
+    "toast": {
+      "organizerApproved": "Organizer approved successfully!",
+      "organizerRejected": "Organizer rejected successfully!",
+      "eventApproved": "Event approved successfully!",
+      "eventRejected": "Event rejected successfully!",
+      "commissionRequired": "Commission rate is required for approval."
+    },
+    "validation": {
+      "commissionRequired": "Commission rate is required.",
+      "commissionInvalid": "Please enter a valid number.",
+      "commissionMin": "Commission rate must be at least 0.",
+      "commissionMax": "Commission rate cannot exceed 100.",
+      "commissionDecimal": "Commission rate can have at most 2 decimal places.",
+      "rejectionReasonRequired": "Reason for rejection is required (min 10 characters).",
+      "remarkTooLong": "Remark cannot exceed 500 characters."
+    }
   },
   "organizer": {
     "management": {

@@ -340,9 +340,40 @@
     "eventsAwaitingApproval": "Eventi in Attesa di Approvazione",
     "noEventsAwaitingApproval": "Nessun evento in attesa di approvazione",
     "noEventsAwaitingApprovalMessage": "Quando gli organizzatori invieranno eventi per l'approvazione, appariranno qui",
-    "reject": "RIFIUTA",
-    "accept": "ACCETTA",
-    "viewEvent": "VEDI EVENTO"
+    "reject": "Rifiuta",
+    "accept": "Accetta",
+    "viewEvent": "Vedi Evento",
+    "modal": {
+      "rejectOrganizer": "Rifiuta Organizzatore",
+      "rejectEvent": "Rifiuta Evento",
+      "approveEvent": "Approva Evento",
+      "commissionRate": "Tasso di Commissione",
+      "commissionHint": "Il tasso di commissione è sempre in percentuale",
+      "commissionError": "Il tasso di commissione deve essere compreso tra 0 e 100",
+      "reasonForRejection": "Motivo del Rifiuto",
+      "additionalNotes": "Note Aggiuntive (Opzionale)",
+      "additionalNotesPlaceholder": "Aggiungi eventuali note aggiuntive...",
+      "rejectionPlaceholder": "Fornisci un motivo per il rifiuto...",
+      "confirmApprove": "Approva",
+      "confirmReject": "Rifiuta",
+      "commissionRatePlaceholder": "Inserisci il tasso di commissione (in%)"
+    },
+    "toast": {
+      "organizerApproved": "Organizzatore approvato con successo!",
+      "organizerRejected": "Organizzatore rifiutato con successo!",
+      "eventApproved": "Evento approvato con successo!",
+      "eventRejected": "Evento rifiutato con successo!",
+      "commissionRequired": "Il tasso di commissione è richiesto per l'approvazione."
+    },
+    "validation": {
+      "commissionRequired": "Il tasso di commissione è obbligatorio.",
+      "commissionInvalid": "Inserisci un numero valido.",
+      "commissionMin": "Il tasso di commissione deve essere almeno 0.",
+      "commissionMax": "Il tasso di commissione non può superare 100.",
+      "commissionDecimal": "Il tasso di commissione può avere al massimo 2 cifre decimali.",
+      "rejectionReasonRequired": "Il motivo del rifiuto è obbligatorio (minimo 10 caratteri).",
+      "remarkTooLong": "La nota non può superare i 500 caratteri."
+    }
   },
   "organizer": {
     "management": {

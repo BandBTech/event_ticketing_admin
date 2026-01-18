@@ -57,5 +57,15 @@ export const queryKeys = {
     /** Key for fetching permissions of a specific role */
     permissions: (roleId: string) => ['roles', roleId, 'permissions'] as const,
   },
+
+  /**
+   * Dashboard query keys
+   */
+  dashboard: {
+    /** Key for fetching pending organizers awaiting approval */
+    pendingOrganizers: ['dashboard', 'pendingOrganizers'] as const,
+    /** Key for fetching pending events awaiting approval */
+    pendingEvents: ['dashboard', 'pendingEvents'] as const,
+  },
 } as const;
 

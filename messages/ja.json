@@ -340,9 +340,40 @@
     "eventsAwaitingApproval": "承認待ちのイベント",
     "noEventsAwaitingApproval": "承認待ちのイベントはありません",
     "noEventsAwaitingApprovalMessage": "主催者が承認のためにイベントを申請すると、ここに表示されます",
-    "reject": "拒否",
+    "reject": "却下",
     "accept": "承認",
-    "viewEvent": "イベントを表示"
+    "viewEvent": "イベントを表示",
+    "modal": {
+      "rejectOrganizer": "主催者を却下",
+      "rejectEvent": "イベントを却下",
+      "approveEvent": "イベントを承認",
+      "commissionRate": "手数料率",
+      "commissionHint": "手数料率は常にパーセンテージで表示されます",
+      "commissionError": "手数料率は0から100の間である必要があります",
+      "reasonForRejection": "却下の理由",
+      "additionalNotes": "追加メモ（任意）",
+      "additionalNotesPlaceholder": "追加のメモを入力してください...",
+      "rejectionPlaceholder": "却下の理由を入力してください...",
+      "confirmApprove": "承認",
+      "confirmReject": "却下",
+      "commissionRatePlaceholder": "手数料率（%）を入力してください"
+    },
+    "toast": {
+      "organizerApproved": "主催者が正常に承認されました！",
+      "organizerRejected": "主催者が正常に却下されました！",
+      "eventApproved": "イベントが正常に承認されました！",
+      "eventRejected": "イベントが正常に却下されました！",
+      "commissionRequired": "承認には手数料率が必要です。"
+    },
+    "validation": {
+      "commissionRequired": "手数料率は必須です。",
+      "commissionInvalid": "有効な数値を入力してください。",
+      "commissionMin": "手数料率は0以上である必要があります。",
+      "commissionMax": "手数料率は100を超えることはできません。",
+      "commissionDecimal": "手数料率は小数点以下2桁までです。",
+      "rejectionReasonRequired": "却下の理由が必要です（最低10文字）。",
+      "remarkTooLong": "備考は500文字以内で入力してください。"
+    }
   },
   "organizer": {
     "management": {

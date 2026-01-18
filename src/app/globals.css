@@ -220,6 +220,16 @@
     inset 0px 30px 60px 0px rgba(255, 255, 255, 0.15);
 }
 
+.glass-card-lower {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgb(240, 240, 240);
+  box-shadow:
+    0px 2px 4px 0px rgba(0, 0, 0, 0.04),
+    0px 6px 12px 0px rgba(0, 0, 0, 0.05),
+    inset 0px 30px 60px 0px rgba(255, 255, 255, 0.15);
+}
 /* Input field styling */
 .login-input {
   background: rgba(255, 255, 255, 0.8);

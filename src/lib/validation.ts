@@ -181,3 +181,60 @@ export const createApprovalSchema = (t: (key: string, fallback?: string) => stri
 };
 
 export type ApprovalFormValues = z.infer<ReturnType<typeof createApprovalSchema>>;
+
+/**
+ * Dashboard Event Approval Schema
+ * Used for approving events with commission rate
+ * 
+ * Schema Factory Pattern:
+ * - Pass `t` function to schema for translated error messages
+ * - Use with `useMemo(() => createEventApprovalSchema(t), [t])`
+ */
+export const createEventApprovalSchema = (t: (key: string, fallback?: string) => string) => {
+  return z.object({
+    commissionRate: z.string()
+      .min(1, t("dashboard.validation.commissionRequired", "Commission rate is required."))
+      .refine(
+        (val) => !isNaN(parseFloat(val)),
+        t("dashboard.validation.commissionInvalid", "Please enter a valid number.")
+      )
+      .refine(
+        (val) => parseFloat(val) >= 0,
+        t("dashboard.validation.commissionMin", "Commission rate must be at least 0.")
+      )
+      .refine(
+        (val) => parseFloat(val) <= 100,
+        t("dashboard.validation.commissionMax", "Commission rate cannot exceed 100.")
+      )
+      .refine(
+        (val) => {
+          const parts = val.split(".");
+          return !parts[1] || parts[1].length <= 2;
+        },
+        t("dashboard.validation.commissionDecimal", "Commission rate can have at most 2 decimal places.")
+      ),
+    // Required string with max length (not optional to match form interface)
+    adminRemark: z.string()
+      .max(500, t("dashboard.validation.remarkTooLong", "Remark cannot exceed 500 characters.")),
+  });
+};
+
+export type EventApprovalFormValues = z.infer<ReturnType<typeof createEventApprovalSchema>>;
+
+/**
+ * Dashboard Rejection Schema
+ * Used for rejecting events and organizers with required reason
+ * 
+ * Schema Factory Pattern:
+ * - Pass `t` function to schema for translated error messages
+ * - Use with `useMemo(() => createRejectionSchema(t), [t])`
+ */
+export const createRejectionSchema = (t: (key: string, fallback?: string) => string) => {
+  return z.object({
+    adminRemark: z.string()
+      .min(10, t("dashboard.validation.rejectionReasonRequired", "Reason for rejection is required (min 10 characters)."))
+      .max(500, t("dashboard.validation.remarkTooLong", "Remark cannot exceed 500 characters.")),
+  });
+};
+
+export type RejectionFormValues = z.infer<ReturnType<typeof createRejectionSchema>>;

@@ -1,5 +1,36 @@
-import React, { useState } from "react";
-import { X } from "lucide-react"; // If you don't have lucide-react, I'll provide an alternative
+"use client";
+
+import React, { useEffect, useMemo } from "react";
+import { X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/hooks/useTranslation";
+import { useLanguageStore } from "@/store/languageStore";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  TranslatedFormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  createEventApprovalSchema,
+  createRejectionSchema,
+} from "@/lib/validation";
+
+// Explicit form value types for better type safety
+interface ApprovalFormData {
+  commissionRate: string;
+  adminRemark: string;
+}
+
+interface RejectionFormData {
+  adminRemark: string;
+}
 
 interface PopupModalProps {
   title: string;
@@ -8,143 +39,267 @@ interface PopupModalProps {
   onCancel?: () => void;
   onConfirm?: (data: { commissionRate?: number; adminRemark: string }) => void;
   showCommissionInput?: boolean;
+  isLoading?: boolean;
 }
 
-const PopupModal = ({
+/**
+ * Event Approval Modal Component
+ * Uses React Hook Form + Zod validation following the project patterns
+ */
+function EventApprovalModal({
   title,
   children,
-  isApprove,
   onCancel,
   onConfirm,
-  showCommissionInput = false,
-}: PopupModalProps) => {
-  const [commissionRate, setCommissionRate] = useState<string>("10");
-  const [adminRemark, setAdminRemark] = useState("");
-  const [commissionError, setCommissionError] = useState("");
+  isLoading = false,
+  t,
+}: {
+  title: string;
+  children?: React.ReactNode;
+  onCancel?: () => void;
+  onConfirm?: (data: { commissionRate?: number; adminRemark: string }) => void;
+  isLoading?: boolean;
+  t: (key: string, fallback?: string) => string;
+}) {
+  // Schema Factory Pattern: Create schema with translated messages
+  const schema = useMemo(() => createEventApprovalSchema(t), [t]);
 
-  const handleConfirm = () => {
-    // Validate commission rate for approval
-    if (showCommissionInput) {
-      const rate = parseFloat(commissionRate);
-      if (!commissionRate || isNaN(rate) || rate < 0 || rate > 100) {
-        setCommissionError("Commission rate must be between 0 and 100");
-        return;
-      }
-      setCommissionError("");
-    }
+  const form = useForm<ApprovalFormData>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      commissionRate: "10",
+      adminRemark: "",
+    },
+  });
 
+  useEffect(() => {
+    form.reset({ commissionRate: "10", adminRemark: "" });
+  }, [form]);
+
+  const onSubmit = (data: ApprovalFormData) => {
     onConfirm?.({
-      commissionRate:
-        showCommissionInput && commissionRate
-          ? parseFloat(commissionRate)
-          : undefined,
-      adminRemark,
+      commissionRate: parseFloat(data.commissionRate),
+      adminRemark: data.adminRemark || "",
     });
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-      {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={onCancel}
-      />
-
-      {/* Modal */}
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md transform transition-all animate-in zoom-in-95 duration-200">
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onCancel} />
+      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-100">
           <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
-          <button
-            onClick={onCancel}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200 group"
-            aria-label="Close modal"
-          >
-            <X className="w-5 h-5 text-gray-400 group-hover:text-gray-600" />
+          <button onClick={onCancel} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+            <X className="w-5 h-5 text-gray-400 hover:text-gray-600" />
           </button>
         </div>
 
-        {/* Content */}
-        <div className="p-6 space-y-4">
-          {children}
+        {/* Form */}
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 space-y-4">
+            {children}
 
-          {showCommissionInput && (
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Commission Rate
-              </label>
-              <input
-                type="number"
-                step="0.01"
-                min="0"
-                max="100"
-                className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${commissionError ? 'border-red-500' : 'border-gray-200'
-                  }`}
-                placeholder="10%"
-                value={commissionRate}
-                onChange={(e) => {
-                  setCommissionRate(e.target.value);
-                  setCommissionError("");
-                }}
-              />
-              {commissionError ? (
-                <p className="text-xs text-red-500">{commissionError}</p>
-              ) : (
-                  <p className="text-xs text-gray-500 flex items-center gap-1">
-                    <span className="inline-block w-1 h-1 bg-gray-400 rounded-full" />
-                    Commission rate is always in percentage
-                  </p>
+            <FormField
+              control={form.control}
+              name="commissionRate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    {t("dashboard.modal.commissionRate")}
+                    <span className="text-red-500 ml-1">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input type="number" step="0.01" min="0" max="100" placeholder={t("dashboard.modal.commissionRatePlaceholder", "Enter commission rate (in %)")} {...field} />
+                  </FormControl>
+                  <div className="flex justify-between items-center min-h-[20px]">
+                    <TranslatedFormMessage t={t} className="mt-0" />
+                  </div>
+                </FormItem>
               )}
-            </div>
-          )}
-
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              {isApprove
-                ? "Additional Notes (Optional)"
-                : "Reason for Rejection"}
-            </label>
-            <textarea
-              rows={4}
-              className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none"
-              placeholder={
-                isApprove
-                  ? "Add any additional notes..."
-                  : "Please provide a reason for rejection..."
-              }
-              value={adminRemark}
-              onChange={(e) => setAdminRemark(e.target.value)}
             />
-          </div>
-        </div>
 
-        {/* Footer */}
-        <div className="flex items-center justify-end gap-3 p-6 bg-gray-50 rounded-b-2xl">
-          <button
-            onClick={onCancel}
-            className="px-5 py-2.5 rounded-lg font-medium text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-200"
-          >
-            Cancel
-          </button>
-          {isApprove ? (
-            <button
-              onClick={handleConfirm}
-              className="px-5 py-2.5 rounded-lg font-medium text-white bg-green-600 hover:bg-green-700 shadow-sm hover:shadow transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-            >
-              Accept
-            </button>
-          ) : (
-            <button
-              onClick={handleConfirm}
-              className="px-5 py-2.5 rounded-lg font-medium text-white bg-red-600 hover:bg-red-700 shadow-sm hover:shadow transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-            >
-              Reject
-            </button>
-          )}
-        </div>
+            <FormField
+              control={form.control}
+              name="adminRemark"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("dashboard.modal.additionalNotes")}</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      rows={4}
+                      placeholder={t("dashboard.modal.additionalNotesPlaceholder")}
+                      className="resize-none"
+                      maxLength={500}
+                      {...field}
+                    />
+                  </FormControl>
+                  <div className="flex justify-between items-center min-h-[20px]">
+                    <TranslatedFormMessage t={t} className="mt-0" />
+                    <div className="text-xs text-muted-foreground ml-auto">
+                      {field.value?.length || 0}/500 {t("common.characters")}
+                    </div>
+                  </div>
+                </FormItem>
+              )}
+            />
+
+            {/* Footer */}
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
+              <Button variant="outline" type="button" onClick={onCancel} disabled={isLoading}>
+                {t("common.cancel")}
+              </Button>
+              <Button type="submit" disabled={isLoading} className="bg-green-600 hover:bg-green-700 text-white">
+                {isLoading ? t("common.loading") : t("dashboard.modal.confirmApprove")}
+              </Button>
+            </div>
+          </form>
+        </Form>
       </div>
     </div>
   );
-};
+}
 
-export default PopupModal;
+/**
+ * Rejection Modal Component
+ * Uses React Hook Form + Zod validation following the project patterns
+ */
+function RejectionModal({
+  title,
+  children,
+  onCancel,
+  onConfirm,
+  isLoading = false,
+  t,
+}: {
+  title: string;
+  children?: React.ReactNode;
+  onCancel?: () => void;
+  onConfirm?: (data: { commissionRate?: number; adminRemark: string }) => void;
+  isLoading?: boolean;
+  t: (key: string, fallback?: string) => string;
+}) {
+  // Schema Factory Pattern: Create schema with translated messages
+  const schema = useMemo(() => createRejectionSchema(t), [t]);
+
+  const form = useForm<RejectionFormData>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      adminRemark: "",
+    },
+  });
+
+  useEffect(() => {
+    form.reset({ adminRemark: "" });
+  }, [form]);
+
+  const onSubmit = (data: RejectionFormData) => {
+    onConfirm?.({
+      adminRemark: data.adminRemark,
+    });
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onCancel} />
+      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md">
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b border-gray-100">
+          <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
+          <button onClick={onCancel} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+            <X className="w-5 h-5 text-gray-400 hover:text-gray-600" />
+          </button>
+        </div>
+
+        {/* Form */}
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 space-y-4">
+            {children}
+
+            <FormField
+              control={form.control}
+              name="adminRemark"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    {t("dashboard.modal.reasonForRejection")}
+                    <span className="text-red-500 ml-1">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Textarea
+                      rows={4}
+                      placeholder={t("dashboard.modal.rejectionPlaceholder")}
+                      className="resize-none"
+                      maxLength={500}
+                      {...field}
+                    />
+                  </FormControl>
+                  <div className="flex justify-between items-center min-h-[20px]">
+                    <TranslatedFormMessage t={t} className="mt-0" />
+                    <div className="text-xs text-muted-foreground ml-auto">
+                      {field.value?.length || 0}/500 {t("common.characters")}
+                    </div>
+                  </div>
+                </FormItem>
+              )}
+            />
+
+            {/* Footer */}
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
+              <Button variant="outline" type="button" onClick={onCancel} disabled={isLoading}>
+                {t("dashboard.modal.cancel")}
+              </Button>
+              <Button type="submit" disabled={isLoading} variant="destructive">
+                {isLoading ? t("common.loading") : t("dashboard.modal.confirmReject")}
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * PopupModal - Unified modal for approval/rejection flows
+ * Follows the Schema Factory Pattern with React Hook Form + Zod
+ */
+export default function PopupModal({
+  title,
+  children,
+  isApprove = false,
+  onCancel,
+  onConfirm,
+  showCommissionInput = false,
+  isLoading = false,
+}: PopupModalProps) {
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
+
+  // Route to the appropriate modal based on action type
+  if (isApprove && showCommissionInput) {
+    return (
+      <EventApprovalModal
+        title={title}
+        onCancel={onCancel}
+        onConfirm={onConfirm}
+        isLoading={isLoading}
+        t={t}
+      >
+        {children}
+      </EventApprovalModal>
+    );
+  }
+
+  return (
+    <RejectionModal
+      title={title}
+      onCancel={onCancel}
+      onConfirm={onConfirm}
+      isLoading={isLoading}
+      t={t}
+    >
+      {children}
+    </RejectionModal>
+  );
+}
