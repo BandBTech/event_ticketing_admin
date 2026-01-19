@@ -191,7 +191,8 @@
     "settings": "Settings",
     "profile": "Profile",
     "logout": "Logout",
-    "admin": "Admin"
+    "admin": "Admin",
+    "users": "Users"
   },
   "auth": {
     "login": {
@@ -360,7 +361,8 @@
     "organisers": "Organisers",
     "events": "Events",
     "reports": "Reports",
-    "settings": "Settings"
+    "settings": "Settings",
+    "users": "Users"
   },
   "dashboard": {
     "greeting": {
@@ -463,6 +465,9 @@
     "noOrganizersRegisteredYet": "No organisers have registered yet.",
     "joined": "Joined",
     "pleaseTryAgainLater": "Please try again later"
+  },
+  "users": {
+    "searchUsers": "Search users..."
   },
   "settings": {
     "security": {

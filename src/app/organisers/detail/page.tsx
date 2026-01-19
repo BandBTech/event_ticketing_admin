@@ -515,6 +515,7 @@ export default function OrganizerDetailPage() {
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <button
+                          title="dropdown-manager"
                           className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors border border-gray-200"
                         >
                           <DotsThreeVerticalIcon weight="duotone" className="w-5 h-5" />
