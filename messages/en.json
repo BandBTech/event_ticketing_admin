@@ -30,7 +30,8 @@
     "of": "of",
     "joined": "Joined",
     "tryAgainLater": "Please try again later",
-    "noResultsTryAgain": "Try adjusting your search terms or filters"
+    "noResultsTryAgain": "Try adjusting your search terms or filters",
+    "back": "Back"
   },
   "navigation": {
     "events": "Events",
@@ -159,6 +160,91 @@
     "showingEventsForOrganizer": "Showing events for organizer ID",
     "clearFilter": "Clear filter",
     "goBack": "Go Back",
+    "backToEvents": "Back to Events",
+    "featured": "Featured",
+    "sales": "Sales",
+    "status": {
+      "approved": "Approved",
+      "pending": "Pending",
+      "rejected": "Rejected",
+      "cancelled": "Cancelled",
+      "draft": "Draft",
+      "live": "Live",
+      "on_sale": "On Sale",
+      "unknown": "Unknown"
+    },
+    "actions": {
+      "approve": "Approve",
+      "reject": "Reject",
+      "cancelEvent": "Cancel Event",
+      "deleteEvent": "Delete Event",
+      "markFeatured": "Mark as Featured",
+      "removeFeatured": "Remove Featured",
+      "viewOrganizer": "View Organizer",
+      "pauseSales": "Pause Sales",
+      "editEvent": "Edit Event "
+    },
+    "modals": {
+      "approveTitle": "Approve Event",
+      "approveDesc": "Approve this event and set the commission rate.",
+      "rejectTitle": "Reject Event",
+      "rejectDesc": "Are you sure you want to reject this event?",
+      "cancelTitle": "Cancel Event",
+      "cancelDesc": "Are you sure you want to cancel this event?",
+      "deleteConfirm": "Are you sure you want to delete this event?",
+      "commissionRate": "Commission Rate (%)",
+      "adminRemark": "Admin Remark (Optional)",
+      "reason": "Reason",
+      "remarkPlaceholder": "Add a note...",
+      "reasonPlaceholder": "Please provide a reason...",
+      "cancellationReason": "Reason for Cancellation",
+      "cancellationPlaceholder": "Please provide a reason for cancelling this event...",
+      "deleteDesc": "This action cannot be undone. This will permanently delete the event and remove detailed data from our servers."
+    },
+    "messages": {
+      "noId": "No Event Selected",
+      "notFound": "Event Not Found",
+      "notExist": "The event you're looking for doesn't exist.",
+      "approveSuccess": "Event approved successfully!",
+      "approveError": "Failed to approve event",
+      "rejectSuccess": "Event rejected successfully!",
+      "cancelSuccess": "Event cancelled successfully!",
+      "deleteSuccess": "Event deleted successfully!",
+      "deleteError": "Failed to delete event",
+      "featuredSuccess": "Event marked as featured!",
+      "unfeaturedSuccess": "Event removed from featured",
+      "featuredError": "Failed to update featured status",
+      "actionError": "Failed to perform action",
+      "noStatusHistory": "No status history available",
+      "loadError": "Failed to load event details"
+    },
+    "sections": {
+      "description": "Description",
+      "eventDetails": "Event Details",
+      "timeline": "Timeline",
+      "ticketStats": "Ticket Stats",
+      "ticketAnalytics": "Ticket Analytics",
+      "quickActions": "Quick Actions",
+      "statusSummary": "Status Summary",
+      "statusHistory": "Status History"
+    },
+    "fields": {
+      "dateTime": "Date & Time",
+      "location": "Location",
+      "price": "Price",
+      "commission": "Commission Rate",
+      "createdAt": "Created",
+      "updatedAt": "Last Updated",
+      "capacity": "Capacity",
+      "available": "Available",
+      "eventStatus": "Event Status",
+      "salesStatus": "Sales Status",
+      "featured": "Featured",
+      "eventStartsOn": "Event Starts On",
+      "eventEndsOn": "Event Ends On",
+      "venueName": "Venue Name",
+      "tags": "Tags"
+    },
     "eventDetails": {
       "backToEvents": "Back to Events",
       "sales": "Sales",
@@ -176,6 +262,11 @@
       "organizerId": "Organizer ID",
       "viewOrganizer": "View Organizer",
       "featured": "FEATURED"
+    },
+    "analytics": {
+      "progress": "Sales Progress",
+      "sold": "Sold",
+      "revenue": "Revenue"
     }
   },
   "languages": {

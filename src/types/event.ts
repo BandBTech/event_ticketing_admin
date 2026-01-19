@@ -88,3 +88,15 @@ export interface EventsResponse {
   events: Event[];
   pagination: PaginationInfo;
 }
+
+export interface EventStatusHistory {
+  id: string;
+  event_id: string;
+  old_status: string;
+  new_status: string;
+  status_type: string;
+  remark?: string;
+  changed_by: string;
+  changed_by_name: string;
+  created_at: string;
+}

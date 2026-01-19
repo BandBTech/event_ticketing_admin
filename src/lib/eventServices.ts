@@ -41,6 +41,32 @@ interface ApproveEventResponse {
   message: string;
 }
 
+export interface EventAnalytics {
+  event_id: string;
+  event_title: string;
+  total_tickets: number;
+  sold_tickets: number;
+  revenue: number;
+  check_ins: number;
+}
+
+export interface EventAnalyticsResponse {
+  analytics: EventAnalytics[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+interface EventStatusHistory {
+  id: string;
+  event_id: string;
+  from_status: string;
+  to_status: string;
+  changed_by: string;
+  reason?: string;
+  created_at: string;
+}
+
 export class EventService {
   /**
    * Get all approved public events with pagination and filters
@@ -179,7 +205,9 @@ export class EventService {
     return await api.get<PaginatedResponse<Event>>(endpoint);
   }
 
-
+  /**
+   * Approve or reject an event
+   */
   static async approveEvent(payload: {
     eventId: string;
     admin_remark: string;
@@ -198,5 +226,93 @@ export class EventService {
       }
     );
   }
+
+  /**
+   * Reject an event
+   */
+  static async rejectEvent(eventId: string, data: { adminRemark: string }): Promise<ApproveEventResponse> {
+    return await api.put<ApproveEventResponse>(
+      `/admin/events/${eventId}/approval`,
+      {
+        admin_remark: data.adminRemark,
+        status: 'rejected',
+        commission_rate: 0
+      },
+      {
+        requiresAuth: true,
+      }
+    );
   }
 
+  /**
+   * Toggle event featured status
+   */
+  static async toggleFeatured(eventId: string, isFeatured: boolean): Promise<Event> {
+    return await api.put<Event>(
+      `/admin/events/${eventId}/featured`,
+      { is_featured: isFeatured },
+      { requiresAuth: true }
+    );
+  }
+
+  /**
+   * Cancel an event
+   */
+  static async cancelEvent(eventId: string, reason: string): Promise<Event> {
+    return await api.put<Event>(
+      `/admin/events/${eventId}/cancel`,
+      { cancellation_reason: reason },
+      { requiresAuth: true }
+    );
+  }
+
+  /**
+   * Delete an event (soft delete)
+   */
+  static async deleteEvent(eventId: string): Promise<void> {
+    return await api.delete<void>(
+      `/admin/events/${eventId}`,
+      { requiresAuth: true }
+    );
+  }
+
+  /**
+   * Get event analytics for all events
+   */
+  static async getEventAnalytics(filters?: {
+    page?: number;
+    limit?: number;
+  }): Promise<EventAnalyticsResponse> {
+    const params = new URLSearchParams();
+    if (filters?.page) params.append('page', filters.page.toString());
+    if (filters?.limit) params.append('limit', filters.limit.toString());
+
+    const query = params.toString();
+    return await api.get<EventAnalyticsResponse>(
+      `/admin/events/analytics${query ? `?${query}` : ''}`,
+      { requiresAuth: true }
+    );
+  }
+  /**
+   * Get single event ticket analytics
+   * Uses the global admin analytics endpoint filtered by event ID
+   */
+  static async getEventAnalyticsById(eventId: string): Promise<EventAnalytics | null> {
+    const response = await api.get<EventAnalyticsResponse>(
+      `/admin/events/analytics?event_id=${eventId}&limit=1`,
+      { requiresAuth: true }
+    );
+    return response.analytics && response.analytics.length > 0 ? response.analytics[0] : null;
+  }
+
+
+  /**
+   * Get event status change history
+   */
+  static async getStatusHistory(eventId: string): Promise<EventStatusHistory[]> {
+    return await api.get<EventStatusHistory[]>(
+      `/admin/events/${eventId}/status-history`,
+      { requiresAuth: true }
+    );
+  }
+}

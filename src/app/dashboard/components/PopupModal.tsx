@@ -147,7 +147,7 @@ function EventApprovalModal({
             {/* Footer */}
             <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
               <Button variant="outline" type="button" onClick={onCancel} disabled={isLoading}>
-                {t("common.cancel")}
+                {t("common.cancelButton", "Cancel")}
               </Button>
               <Button type="submit" disabled={isLoading} className="bg-green-600 hover:bg-green-700 text-white">
                 {isLoading ? t("common.loading") : t("dashboard.modal.confirmApprove")}
@@ -171,6 +171,9 @@ function RejectionModal({
   onConfirm,
   isLoading = false,
   t,
+  remarkLabel,
+  placeholder,
+  confirmText,
 }: {
   title: string;
   children?: React.ReactNode;
@@ -178,7 +181,10 @@ function RejectionModal({
   onConfirm?: (data: { commissionRate?: number; adminRemark: string }) => void;
   isLoading?: boolean;
   t: (key: string, fallback?: string) => string;
-}) {
+    remarkLabel?: string;
+    placeholder?: string;
+    confirmText?: string;
+  }) {
   // Schema Factory Pattern: Create schema with translated messages
   const schema = useMemo(() => createRejectionSchema(t), [t]);
 
@@ -222,13 +228,13 @@ function RejectionModal({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    {t("dashboard.modal.reasonForRejection")}
-                    <span className="text-red-500 ml-1">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Textarea
-                      rows={4}
-                      placeholder={t("dashboard.modal.rejectionPlaceholder")}
+                      {remarkLabel || t("dashboard.modal.reasonForRejection")}
+                      <span className="text-red-500 ml-1">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea
+                        rows={4}
+                      placeholder={placeholder || t("dashboard.modal.rejectionPlaceholder")}
                       className="resize-none"
                       maxLength={500}
                       {...field}
@@ -250,7 +256,7 @@ function RejectionModal({
                 {t("dashboard.modal.cancel")}
               </Button>
               <Button type="submit" disabled={isLoading} variant="destructive">
-                {isLoading ? t("common.loading") : t("dashboard.modal.confirmReject")}
+                {isLoading ? t("common.loading") : confirmText || t("dashboard.modal.confirmReject")}
               </Button>
             </div>
           </form>
@@ -272,7 +278,10 @@ export default function PopupModal({
   onConfirm,
   showCommissionInput = false,
   isLoading = false,
-}: PopupModalProps) {
+  remarkLabel,
+  placeholder,
+  confirmText,
+}: PopupModalProps & { remarkLabel?: string; placeholder?: string; confirmText?: string }) {
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
 
@@ -298,6 +307,9 @@ export default function PopupModal({
       onConfirm={onConfirm}
       isLoading={isLoading}
       t={t}
+      remarkLabel={remarkLabel}
+      placeholder={placeholder}
+      confirmText={confirmText}
     >
       {children}
     </RejectionModal>
