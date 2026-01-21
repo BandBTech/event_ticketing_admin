@@ -26,6 +26,7 @@ const pageHeaders: {
   { prefix: "/dashboard", isDynamic: true },
   { prefix: "/organisers", titleKey: "pages.organisers" },
   { prefix: "/events", titleKey: "pages.events" },
+  { prefix: "/users", titleKey: "pages.users" },
   { prefix: "/reports", titleKey: "pages.reports" },
   { prefix: "/settings", titleKey: "pages.settings" },
 ];

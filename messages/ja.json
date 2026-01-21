@@ -39,7 +39,8 @@
     "settings": "設定",
     "profile": "プロフィール",
     "logout": "ログアウト",
-    "admin": "管理者"
+    "admin": "管理者",
+    "users": "ユーザー"
   },
   "hero": {
     "badge": "ネパール最高のイベントプラットフォーム",
@@ -412,7 +413,8 @@
     "organisers": "主催者",
     "events": "イベント",
     "reports": "レポート",
-    "settings": "設定"
+    "settings": "設定",
+    "users": "ユーザー"
   },
   "dashboard": {
     "greeting": {
@@ -546,6 +548,9 @@
     "noOrganizersRegisteredYet": "登録されている主催者はいません",
     "joined": "参加済み",
     "pleaseTryAgainLater": "時間をおいて再度お試しください"
+  },
+    "users": {
+    "searchUsers": "検索ユーザー..."
   },
   "settings": {
     "security": {

@@ -39,7 +39,8 @@
     "settings": "Impostazioni",
     "profile": "Profilo",
     "logout": "Esci",
-    "admin": "Admin"
+    "admin": "Admin",
+    "users": "Utenti"
   },
   "hero": {
     "badge": "La Piattaforma Eventi Premier del Nepal",
@@ -412,7 +413,8 @@
     "organisers": "Organizzatori",
     "events": "Eventi",
     "reports": "Rapporti",
-    "settings": "Impostazioni"
+    "settings": "Impostazioni",
+    "users": "Utenti"
   },
   "dashboard": {
     "greeting": {
@@ -546,6 +548,9 @@
     "noOrganizersRegisteredYet": "Nessun organizzatore è ancora registrato",
     "joined": "Iscritto",
     "pleaseTryAgainLater": "Riprova più tardi"
+  },
+    "users": {
+    "searchUsers": "cerca utenti..."
   },
   "settings": {
     "security": {
