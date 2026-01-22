@@ -399,7 +399,7 @@ export default function OrganisersPage() {
             placeholder={t("organizer.searchOrganizers")}
             value={searchQuery}
             onChange={(e) => handleSearchChange(e.target.value)}
-            className="pl-9 bg-background/80 backdrop-blur-sm"
+            className="pl-9"
           />
         </div>
 
