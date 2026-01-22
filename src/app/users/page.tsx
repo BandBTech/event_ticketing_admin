@@ -469,7 +469,7 @@ export default function UsersPage() {
       ],
       updated_at: "2025-01-14T16:40:00Z",
     },
-        {
+    {
       account_status: "active",
       admin_remark: "Auto-approved",
       approved_at: "2025-01-14T16:40:00Z",
@@ -530,7 +530,7 @@ export default function UsersPage() {
       ],
       updated_at: "2025-01-14T16:40:00Z",
     },
-        {
+    {
       account_status: "active",
       admin_remark: "Auto-approved",
       approved_at: "2025-01-14T16:40:00Z",
@@ -591,7 +591,7 @@ export default function UsersPage() {
       ],
       updated_at: "2025-01-14T16:40:00Z",
     },
-        {
+    {
       account_status: "active",
       admin_remark: "Auto-approved",
       approved_at: "2025-01-14T16:40:00Z",
@@ -652,7 +652,7 @@ export default function UsersPage() {
       ],
       updated_at: "2025-01-14T16:40:00Z",
     },
-        {
+    {
       account_status: "active",
       admin_remark: "Auto-approved",
       approved_at: "2025-01-14T16:40:00Z",
@@ -713,7 +713,7 @@ export default function UsersPage() {
       ],
       updated_at: "2025-01-14T16:40:00Z",
     },
-        {
+    {
       account_status: "active",
       admin_remark: "Auto-approved",
       approved_at: "2025-01-14T16:40:00Z",
@@ -774,7 +774,7 @@ export default function UsersPage() {
       ],
       updated_at: "2025-01-14T16:40:00Z",
     },
-        {
+    {
       account_status: "active",
       admin_remark: "Auto-approved",
       approved_at: "2025-01-14T16:40:00Z",
@@ -835,7 +835,7 @@ export default function UsersPage() {
       ],
       updated_at: "2025-01-14T16:40:00Z",
     },
-        {
+    {
       account_status: "active",
       admin_remark: "Auto-approved",
       approved_at: "2025-01-14T16:40:00Z",
@@ -896,7 +896,7 @@ export default function UsersPage() {
       ],
       updated_at: "2025-01-14T16:40:00Z",
     },
-        {
+    {
       account_status: "active",
       admin_remark: "Auto-approved",
       approved_at: "2025-01-14T16:40:00Z",
@@ -957,7 +957,7 @@ export default function UsersPage() {
       ],
       updated_at: "2025-01-14T16:40:00Z",
     },
-        {
+    {
       account_status: "active",
       admin_remark: "Auto-approved",
       approved_at: "2025-01-14T16:40:00Z",
@@ -1018,7 +1018,7 @@ export default function UsersPage() {
       ],
       updated_at: "2025-01-14T16:40:00Z",
     },
-        {
+    {
       account_status: "active",
       admin_remark: "Auto-approved",
       approved_at: "2025-01-14T16:40:00Z",
@@ -1079,7 +1079,7 @@ export default function UsersPage() {
       ],
       updated_at: "2025-01-14T16:40:00Z",
     },
-        {
+    {
       account_status: "active",
       admin_remark: "Auto-approved",
       approved_at: "2025-01-14T16:40:00Z",
@@ -1140,7 +1140,7 @@ export default function UsersPage() {
       ],
       updated_at: "2025-01-14T16:40:00Z",
     },
-        {
+    {
       account_status: "active",
       admin_remark: "Auto-approved",
       approved_at: "2025-01-14T16:40:00Z",
@@ -1300,7 +1300,6 @@ export default function UsersPage() {
 
   return (
     <div className="min-h-screen p-8 space-y-6">
-
       <div className="flex items-center justify-between gap-4">
         <div className="relative flex-1 max-w-md">
           <MagnifyingGlassIcon
@@ -1312,7 +1311,7 @@ export default function UsersPage() {
             placeholder="Search users..."
             value={searchQuery}
             onChange={(e) => handleSearchChange(e.target.value)}
-            className="pl-9 bg-background/80 backdrop-blur-sm"
+            className="pl-9"
           />
         </div>
 
@@ -1326,167 +1325,186 @@ export default function UsersPage() {
         </Button>
       </div>
 
-
       {/* Table */}
       <Card>
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <Table>
-<TableHeader>
-  <TableRow className="bg-gray-100">
-    <TableHead className="w-16">S.N.</TableHead>
-    <TableHead>User</TableHead>
-    <TableHead>Contact</TableHead>
-    <TableHead>Business</TableHead>
-    <TableHead>Role</TableHead>
-    <TableHead>Organizer Status</TableHead>
-    <TableHead>Account Status</TableHead>
-    <TableHead>Verified</TableHead>
-    <TableHead>Joined</TableHead>
-    <TableHead className="text-right">Actions</TableHead>
-  </TableRow>
-</TableHeader>
-<TableBody>
-  {paginatedData.length === 0 ? (
-    <TableRow>
-      <TableCell colSpan={10} className="text-center py-12">
-        <div className="flex flex-col items-center gap-2">
-          <UserIcon
-            weight="duotone"
-            className="w-12 h-12 text-muted-foreground/50"
-          />
-          <p className="text-muted-foreground">No users found</p>
-        </div>
-      </TableCell>
-    </TableRow>
-  ) : (
-    paginatedData.map((user, index) => {
-      const statusConfig = getStatusConfig(user.organizer_status);
-      const accountStatusConfig = getAccountStatusConfig(
-        user.account_status,
-      );
-      const StatusIcon = statusConfig.icon;
-      const serialNumber = (currentPage - 1) * itemsPerPage + index + 1;
+              <TableHeader>
+                <TableRow className="bg-gray-100">
+                  <TableHead className="w-16">S.N.</TableHead>
+                  <TableHead>User</TableHead>
+                  <TableHead>Contact</TableHead>
+                  <TableHead>Business</TableHead>
+                  <TableHead>Role</TableHead>
+                  <TableHead>Organizer Status</TableHead>
+                  <TableHead>Account Status</TableHead>
+                  <TableHead>Verified</TableHead>
+                  <TableHead>Joined</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {paginatedData.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={10} className="text-center py-12">
+                      <div className="flex flex-col items-center gap-2">
+                        <UserIcon
+                          weight="duotone"
+                          className="w-12 h-12 text-muted-foreground/50"
+                        />
+                        <p className="text-muted-foreground">No users found</p>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  paginatedData.map((user, index) => {
+                    const statusConfig = getStatusConfig(user.organizer_status);
+                    const accountStatusConfig = getAccountStatusConfig(
+                      user.account_status,
+                    );
+                    const StatusIcon = statusConfig.icon;
+                    const serialNumber =
+                      (currentPage - 1) * itemsPerPage + index + 1;
 
-      return (
-        <TableRow key={user.id} className="hover:bg-muted/50">
-          <TableCell className="font-medium text-muted-foreground">
-            {serialNumber}
-          </TableCell>
-          <TableCell>
-            <div className="flex flex-col">
-              <span className="font-medium text-gray-900">
-                {user.first_name} {user.last_name}
-              </span>
-              <span className="text-sm text-muted-foreground">
-                ID: {user.id}
-              </span>
-            </div>
-          </TableCell>
-          <TableCell>
-            <div className="flex flex-col gap-1">
-              <span className="text-sm">{user.email}</span>
-              <span className="text-sm text-muted-foreground">
-                {formatPhoneNumber(user.country_code, user.phone)}
-              </span>
-            </div>
-          </TableCell>
-          <TableCell>
-            <div className="flex items-center gap-2">
-              <BuildingsIcon
-                weight="duotone"
-                className="w-4 h-4 text-muted-foreground shrink-0"
-              />
-              <div className="flex flex-col">
-                <span className="text-sm font-medium truncate max-w-[150px]">
-                  {user.organizer_onboarding?.business_name || "N/A"}
-                </span>
-                {user.organizer_onboarding?.business_description && (
-                  <span className="text-xs text-muted-foreground truncate max-w-[200px]">
-                    {user.organizer_onboarding.business_description}
-                  </span>
+                    return (
+                      <TableRow key={user.id} className="hover:bg-muted/50">
+                        <TableCell className="font-medium text-muted-foreground">
+                          {serialNumber}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex flex-col">
+                            <span className="font-medium text-gray-900">
+                              {user.first_name} {user.last_name}
+                            </span>
+                            <span className="text-sm text-muted-foreground">
+                              ID: {user.id}
+                            </span>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex flex-col gap-1">
+                            <span className="text-sm">{user.email}</span>
+                            <span className="text-sm text-muted-foreground">
+                              {formatPhoneNumber(user.country_code, user.phone)}
+                            </span>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <BuildingsIcon
+                              weight="duotone"
+                              className="w-4 h-4 text-muted-foreground shrink-0"
+                            />
+                            <div className="flex flex-col">
+                              <span className="text-sm font-medium truncate max-w-[150px]">
+                                {user.organizer_onboarding?.business_name ||
+                                  "N/A"}
+                              </span>
+                              {user.organizer_onboarding
+                                ?.business_description && (
+                                <span className="text-xs text-muted-foreground truncate max-w-[200px]">
+                                  {
+                                    user.organizer_onboarding
+                                      .business_description
+                                  }
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex flex-col gap-1">
+                            {user.roles.length > 0 ? (
+                              <>
+                                <div className="flex items-center gap-2">
+                                  <Badge
+                                    variant="outline"
+                                    className="gap-1.5 bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100"
+                                  >
+                                    <ShieldIcon
+                                      weight="duotone"
+                                      className="w-3 h-3"
+                                    />
+                                    {user.roles[0].name}
+                                  </Badge>
+                                  {user.roles.length > 1 && (
+                                    <span className="text-xs text-muted-foreground">
+                                      +{user.roles.length - 1} more
+                                    </span>
+                                  )}
+                                </div>
+                                <span className="text-xs text-muted-foreground">
+                                  {user.roles[0].permissions.length}{" "}
+                                  permission(s)
+                                </span>
+                              </>
+                            ) : (
+                              <span className="text-sm text-muted-foreground">
+                                No role
+                              </span>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant="outline"
+                            className={`gap-1.5 px-2.5 py-1 rounded-full font-semibold border ${statusConfig.className}`}
+                          >
+                            <StatusIcon
+                              weight="duotone"
+                              className="w-3.5 h-3.5"
+                            />
+                            {statusConfig.label}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant="outline"
+                            className={`text-xs font-bold ${accountStatusConfig.className}`}
+                          >
+                            {accountStatusConfig.label}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          {user.is_email_verified ? (
+                            <Badge
+                              variant="secondary"
+                              className="bg-blue-50 text-blue-600 hover:bg-blue-100 border-blue-100 gap-1"
+                            >
+                              <UserCheckIcon
+                                weight="duotone"
+                                className="w-3.5 h-3.5"
+                              />
+                              Verified
+                            </Badge>
+                          ) : (
+                            <span className="text-sm text-muted-foreground">
+                              Unverified
+                            </span>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <span className="text-sm">
+                            {format(new Date(user.created_at), "MMM dd, yyyy")}
+                          </span>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="gap-1.5"
+                            onClick={() => router.push(`/users/${user.id}`)}
+                          >
+                            <EyeIcon weight="duotone" className="w-4 h-4" />
+                            View
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })
                 )}
-              </div>
-            </div>
-          </TableCell>
-          <TableCell>
-            <div className="flex flex-col gap-1">
-              {user.roles.length > 0 ? (
-                <>
-                  <div className="flex items-center gap-2">
-                    <Badge
-                      variant="outline"
-                      className="gap-1.5 bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100"
-                    >
-                      <ShieldIcon weight="duotone" className="w-3 h-3" />
-                      {user.roles[0].name}
-                    </Badge>
-                    {user.roles.length > 1 && (
-                      <span className="text-xs text-muted-foreground">
-                        +{user.roles.length - 1} more
-                      </span>
-                    )}
-                  </div>
-                  <span className="text-xs text-muted-foreground">
-                    {user.roles[0].permissions.length} permission(s)
-                  </span>
-                </>
-              ) : (
-                <span className="text-sm text-muted-foreground">No role</span>
-              )}
-            </div>
-          </TableCell>
-          <TableCell>
-            <Badge
-              variant="outline"
-              className={`gap-1.5 px-2.5 py-1 rounded-full font-semibold border ${statusConfig.className}`}
-            >
-              <StatusIcon weight="duotone" className="w-3.5 h-3.5" />
-              {statusConfig.label}
-            </Badge>
-          </TableCell>
-          <TableCell>
-            <Badge
-              variant="outline"
-              className={`text-xs font-bold ${accountStatusConfig.className}`}
-            >
-              {accountStatusConfig.label}
-            </Badge>
-          </TableCell>
-          <TableCell>
-            {user.is_email_verified ? (
-              <Badge
-                variant="secondary"
-                className="bg-blue-50 text-blue-600 hover:bg-blue-100 border-blue-100 gap-1"
-              >
-                <UserCheckIcon weight="duotone" className="w-3.5 h-3.5" />
-                Verified
-              </Badge>
-            ) : (
-              <span className="text-sm text-muted-foreground">Unverified</span>
-            )}
-          </TableCell>
-          <TableCell>
-            <span className="text-sm">
-              {format(new Date(user.created_at), "MMM dd, yyyy")}
-            </span>
-          </TableCell>
-          <TableCell className="text-right">
-            <Button
-              variant="outline"
-              size="sm"
-              className="gap-1.5"
-              onClick={() => router.push(`/users/${user.id}`)}
-            >
-              <EyeIcon weight="duotone" className="w-4 h-4" />
-              View
-            </Button>
-          </TableCell>
-        </TableRow>
-      );
-    })
-  )}
-</TableBody>
+              </TableBody>
             </Table>
           </div>
         </CardContent>
