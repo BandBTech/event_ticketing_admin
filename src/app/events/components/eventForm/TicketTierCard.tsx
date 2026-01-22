@@ -14,6 +14,7 @@ import { ShadcnDateTimePicker } from "@/components/ui/shadcn-datetime-picker";
 import { TierTemplate } from "@/types/event";
 import { EventFormData, TIER_NAME_MAX } from "@/lib/validation";
 import { useTranslation } from "@/hooks/useTranslation";
+import TierNameSelector from "./TierNameSelector";
 
 interface TicketTierCardProps {
   index: number;
@@ -28,8 +29,10 @@ interface TicketTierCardProps {
 const TicketTierCard = ({
   index,
   control,
+  tierTemplates,
   showDelete,
   onDelete,
+  onCreateNew,
 }: TicketTierCardProps & { usedTierNames?: string[] }) => {
   const { t } = useTranslation();
 
@@ -39,15 +42,17 @@ const TicketTierCard = ({
         <FormField
           control={control}
           name={`tickets.${index}.name`}
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <FormItem>
               <FormLabel className="inline-block">{t("event.field.tierName", "Tier Name")} <span className="text-red-500">*</span></FormLabel>
               <FormControl>
-                <Input
-                  className="h-13 md:text-md"
-                  placeholder={t("event.placeholder.tierName", "e.g. General Admission")}
-                  maxLength={TIER_NAME_MAX}
-                  {...field}
+                <TierNameSelector
+                  value={field.value}
+                  onChange={field.onChange}
+                  templates={tierTemplates}
+                  error={!!fieldState.error}
+                  onCreateNew={onCreateNew}
+                // usedTierNames={usedTierNames} 
                 />
               </FormControl>
               <TranslatedFormMessage t={t} />
