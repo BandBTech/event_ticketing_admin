@@ -169,35 +169,6 @@ class AuthService {
   }
 
   /**
-   * Register a new user
-   * Returns user profile and API message
-   * Note: New API only requires email, first_name, last_name (password set via OTP flow)
-   */
-  async register(userData: {
-    email: string;
-    first_name: string;
-    last_name: string;
-    phone?: string;
-    country_code?: string;
-  }): Promise<{ user: UserProfileResponse; message?: string }> {
-    const response = await apiRequest<UserProfileResponse & { message?: string }>('/auth/user/register', {
-      method: 'POST',
-      body: JSON.stringify({
-        email: userData.email,
-        first_name: userData.first_name,
-        last_name: userData.last_name,
-        phone: userData.phone,
-        country_code: userData.country_code
-      }),
-    });
-    
-    return {
-      user: response,
-      message: 'message' in response ? response.message : undefined
-    };
-  }
-
-  /**
    * Request password reset OTP
    * Updated to use new endpoint
    */
@@ -299,48 +270,30 @@ class AuthService {
   }
 
   /**
-   * Set password after OTP verification
-   * New endpoint for completing registration
-   */
-  async setPassword(data: {
-    email: string;
-    password: string;
-  }): Promise<{ user: UserProfileResponse; message?: string }> {
-    const response = await api.post<AuthApiResponse<UserProfileResponse>>('/auth/organizer/set-password', data, {
-      returnFullResponse: true,
-    });
-
-    return {
-      user: response.data,
-      message: response.message
-    };
-  }
-
-  /**
    * Verify guest token for booking
    * Used when a guest user clicks the verification link in their email
    * Returns user data and access token for temporary authenticated session
    */
-  async verifyGuestToken(token: string): Promise<{
-    user: UserProfileResponse;
-    token: string;
-    message?: string;
-  }> {
-    const response = await apiRequest<{
-      user: UserProfileResponse;
-      token: string;
-      message?: string;
-    }>(`/auth/guest/verify/${token}`, {
-      method: 'GET',
-    });
+  // async verifyGuestToken(token: string): Promise<{
+  //   user: UserProfileResponse;
+  //   token: string;
+  //   message?: string;
+  // }> {
+  //   const response = await apiRequest<{
+  //     user: UserProfileResponse;
+  //     token: string;
+  //     message?: string;
+  //   }>(`/auth/guest/verify/${token}`, {
+  //     method: 'GET',
+  //   });
 
-    // Store the temporary guest token
-    if (response.token) {
-      tokenManager.setTokens(response.token, '', false); // No refresh token for guests, use session storage
-    }
+  //   // Store the temporary guest token
+  //   if (response.token) {
+  //     tokenManager.setTokens(response.token, '', false); // No refresh token for guests, use session storage
+  //   }
 
-    return response;
-  }
+  //   return response;
+  // }
 }
 
 export const authService = new AuthService();

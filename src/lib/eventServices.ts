@@ -94,7 +94,7 @@ export class EventService {
   }
 
   /**
-   * Get event by ID
+   * Get event by ID for admin
    */
   static async getEventById(id: string): Promise<Event> {
     return await api.get<Event>(`/public/events/${id}`);
@@ -251,20 +251,20 @@ export class EventService {
     return await api.put<Event>(
       `/admin/events/${eventId}/featured`,
       { is_featured: isFeatured },
-      { requiresAuth: true }
+      { requiresAuth: true, showSuccessToast: true }
     );
   }
 
   /**
    * Cancel an event
    */
-  static async cancelEvent(eventId: string, reason: string): Promise<Event> {
-    return await api.put<Event>(
-      `/admin/events/${eventId}/cancel`,
-      { cancellation_reason: reason },
-      { requiresAuth: true }
-    );
-  }
+  // static async cancelEvent(eventId: string, reason: string): Promise<Event> {
+  //   return await api.put<Event>(
+  //     `/admin/events/${eventId}/cancel`,
+  //     { cancellation_reason: reason },
+  //     { requiresAuth: true }
+  //   );
+  // }
 
   /**
    * Delete an event (soft delete)

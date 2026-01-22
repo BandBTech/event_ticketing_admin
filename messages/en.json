@@ -243,7 +243,8 @@
       "eventStartsOn": "Event Starts On",
       "eventEndsOn": "Event Ends On",
       "venueName": "Venue Name",
-      "tags": "Tags"
+      "tags": "Tags",
+      "markFeatured": "Mark as Featured"
     },
     "eventDetails": {
       "backToEvents": "Back to Events",
@@ -262,6 +263,20 @@
       "organizerId": "Organizer ID",
       "viewOrganizer": "View Organizer",
       "featured": "FEATURED"
+    },
+    "badge": {
+      "approved": "Approved",
+      "pending": "Pending",
+      "cancelled": "Cancelled",
+      "draft": "Draft",
+      "live": "Live",
+      "ended": "Ended",
+      "rejected": "Rejected",
+      "active": "Sales Live",
+      "paused": "Sales Paused",
+      "stopped": "Sales Stopped",
+      "sold_out": "Sold Out",
+      "sales_ended": "Sales Ended"
     },
     "analytics": {
       "progress": "Sales Progress",

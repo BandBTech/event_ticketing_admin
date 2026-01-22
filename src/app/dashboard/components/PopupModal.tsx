@@ -253,7 +253,7 @@ function RejectionModal({
             {/* Footer */}
             <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
               <Button variant="outline" type="button" onClick={onCancel} disabled={isLoading}>
-                {t("dashboard.modal.cancel")}
+                {t("common.cancel", "Cancel")}
               </Button>
               <Button type="submit" disabled={isLoading} variant="destructive">
                 {isLoading ? t("common.loading") : confirmText || t("dashboard.modal.confirmReject")}

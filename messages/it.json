@@ -137,16 +137,6 @@
     "backToEvents": "Torna agli Eventi",
     "featured": "In primo piano",
     "sales": "Vendite",
-    "status": {
-      "approved": "Approvato",
-      "pending": "In attesa",
-      "rejected": "Rifiutato",
-      "cancelled": "Cancellato",
-      "draft": "Bozza",
-      "live": "In corso",
-      "on_sale": "In vendita",
-      "unknown": "Sconosciuto"
-    },
     "actions": {
       "approve": "Approva",
       "reject": "Rifiuta",
@@ -215,7 +205,22 @@
       "eventStartsOn": "L'evento inizia il",
       "eventEndsOn": "L'evento termina il",
       "venueName": "Nome della sede",
-      "tags": "Tag"
+      "tags": "Tag",
+      "markFeatured": "Contrassegna come in primo piano"
+    },
+    "badge": {
+      "approved": "Approvato",
+      "pending": "In attesa di",
+      "cancelled": "Annullato",
+      "draft": "Bozza",
+      "live": "Vivere",
+      "ended": "Finito",
+      "rejected": "Respinto",
+      "active": "Vendite in diretta",
+      "paused": "Vendite sospese",
+      "stopped": "Le vendite si sono fermate",
+      "sold_out": "Esaurito",
+      "sales_ended": "Vendite terminate"
     },
     "analytics": {
       "progress": "Avanzamento Vendite",
@@ -549,7 +554,7 @@
     "joined": "Iscritto",
     "pleaseTryAgainLater": "Riprova più tardi"
   },
-    "users": {
+  "users": {
     "searchUsers": "cerca utenti..."
   },
   "settings": {

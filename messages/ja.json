@@ -211,11 +211,26 @@
       "available": "残り枠",
       "eventStatus": "イベントステータス",
       "salesStatus": "販売ステータス",
-      "featured": "注目",
+      "featured": "注目の",
       "adminRemark": "管理者メモ",
       "eventStartsOn": "イベント開始日",
       "venueName": "会場名",
-      "tags": "タグ"
+      "tags": "タグ",
+      "markFeatured": "注目としてマークする"
+    },
+    "badge": {
+      "approved": "承認された",
+      "pending": "保留中",
+      "cancelled": "キャンセル",
+      "draft": "下書き",
+      "live": "ライブ",
+      "ended": "終了しました",
+      "active": "セールスライブ",
+      "paused": "販売一時停止",
+      "stopped": "販売停止",
+      "sold_out": "完売",
+      "sales_ended": "販売終了",
+      "rejected": "拒否されました"
     },
     "analytics": {
       "progress": "販売進捗",
@@ -549,7 +564,7 @@
     "joined": "参加済み",
     "pleaseTryAgainLater": "時間をおいて再度お試しください"
   },
-    "users": {
+  "users": {
     "searchUsers": "検索ユーザー..."
   },
   "settings": {

@@ -10,40 +10,47 @@
  */
 
 export const queryKeys = {
-    /**
-     * Admin events query keys
-     */
-    events: {
+  /**
+   * Admin events query keys
+   */
+  events: {
     /** Key for fetching admin events list with filters and pagination */
-    all: (filters?: { page?: number; limit?: number; status?: string; organizerId?: string; search?: string }) =>
-      ['adminEvents', filters] as const,
+    all: (filters?: {
+      page?: number;
+      limit?: number;
+      status?: string;
+      organizerId?: string;
+      search?: string;
+    }) => ["adminEvents", filters] as const,
     /** Key for all events (used for invalidation) */
-    list: ['adminEvents'] as const,
-        /** Key for fetching a single event by ID */
-        detail: (id: string) => ['event', id] as const,
-    },
+    list: ["adminEvents"] as const,
+    /** Key for fetching a single event by ID */
+    detail: (id: string) => ["event", id] as const,
+    /** Key for fetching event status history */
+    statusHistory: (id: string) => ["event", id, "statusHistory"] as const,
+  },
 
-    /**
-     * Organizers query keys
-     */
-    organizers: {
-        /** Key for fetching organizers list with pagination */
-        all: (page?: number, itemsPerPage?: number) =>
-            ['organizers', page, itemsPerPage] as const,
-        /** Key for all organizers (used for invalidation) */
-        list: ['organizers'] as const,
-        /** Key for fetching a single organizer by ID */
-        detail: (id: string) => ['organizer', id] as const,
-    },
+  /**
+   * Organizers query keys
+   */
+  organizers: {
+    /** Key for fetching organizers list with pagination */
+    all: (page?: number, itemsPerPage?: number) =>
+      ["organizers", page, itemsPerPage] as const,
+    /** Key for all organizers (used for invalidation) */
+    list: ["organizers"] as const,
+    /** Key for fetching a single organizer by ID */
+    detail: (id: string) => ["organizer", id] as const,
+  },
 
   /**
    * Permissions query keys
    */
   permissions: {
     /** Key for fetching all permissions */
-    all: ['permissions'] as const,
+    all: ["permissions"] as const,
     /** Key for permission list (used for invalidation) */
-    list: ['permissions'] as const,
+    list: ["permissions"] as const,
   },
 
   /**
@@ -51,11 +58,11 @@ export const queryKeys = {
    */
   roles: {
     /** Key for fetching all roles */
-    all: ['roles'] as const,
+    all: ["roles"] as const,
     /** Key for role list (used for invalidation) */
-    list: ['roles'] as const,
+    list: ["roles"] as const,
     /** Key for fetching permissions of a specific role */
-    permissions: (roleId: string) => ['roles', roleId, 'permissions'] as const,
+    permissions: (roleId: string) => ["roles", roleId, "permissions"] as const,
   },
 
   /**
@@ -63,9 +70,8 @@ export const queryKeys = {
    */
   dashboard: {
     /** Key for fetching pending organizers awaiting approval */
-    pendingOrganizers: ['dashboard', 'pendingOrganizers'] as const,
+    pendingOrganizers: ["dashboard", "pendingOrganizers"] as const,
     /** Key for fetching pending events awaiting approval */
-    pendingEvents: ['dashboard', 'pendingEvents'] as const,
+    pendingEvents: ["dashboard", "pendingEvents"] as const,
   },
 } as const;
-
