@@ -26,4 +26,7 @@ export const API_ENDPOINTS = {
   GET_PENDING_EVENTS: `${API_BASE_URL}/admin/events/pending`,
 
   // Payouts
+
+  //users
+  GET_USERS: `${API_BASE_URL}/admin/users`,
 };
