@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { FloppyDiskIcon } from "@phosphor-icons/react/dist/ssr";
 import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
+import Image from "next/image";
 
 export default function GeneralSettingsPage() {
   const [settings, setSettings] = useState({
@@ -37,6 +38,7 @@ export default function GeneralSettingsPage() {
       setTimeout(() => setSaveStatus(""), 2000);
     } catch (error) {
       // Error handled silently
+      console.error(error);
       setSaveStatus("");
     }
   };
@@ -82,7 +84,7 @@ export default function GeneralSettingsPage() {
         <div className="space-y-6">
           <div className="flex gap-6 items-center">
             <div>
-              <img
+              <Image
                 src="https://img.freepik.com/premium-vector/young-man-avatar-character-due-avatar-man-vector-icon-cartoon-illustration_1186924-4438.jpg?semt=ais_user_personalization&w=740&q=80"
                 alt=""
                 className="w-32 h-32 rounded-full"

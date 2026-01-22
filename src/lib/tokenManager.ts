@@ -68,7 +68,7 @@ class TokenManager {
       );
       return JSON.parse(jsonPayload) as { exp?: number; [key: string]: unknown };
     } catch (error) {
-      // Token decoding error handled silently
+      console.error('Error decoding token:', error);
       return null;
     }
   }

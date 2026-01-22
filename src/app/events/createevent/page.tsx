@@ -1,17 +1,14 @@
-"use client";
+"use client"
 
-import React, { useState } from "react";
+import React from "react";
 import {
-  ChevronDown,
-  Upload,
   MapPin,
   ChevronLeft,
   Save,
   Calendar,
-  DollarSign,
   Ticket,
   Image as ImageIcon,
-  Type
+  Type,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -22,7 +19,9 @@ const EventForm: React.FC = () => {
   const isEditMode = searchParams.get("edit") === "true";
 
   const handleCreateEvent = () => {
-    toast.success(isEditMode ? "Event updated successfully" : "Event created successfully");
+    toast.success(
+      isEditMode ? "Event updated successfully" : "Event created successfully",
+    );
     router.push("/events");
   };
 
@@ -34,6 +33,7 @@ const EventForm: React.FC = () => {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-4">
               <button
+                title="icon"
                 onClick={() => router.back()}
                 className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
               >
@@ -44,7 +44,9 @@ const EventForm: React.FC = () => {
                   {isEditMode ? "Edit Event" : "Create New Event"}
                 </h1>
                 <p className="text-xs text-gray-500 mt-0.5">
-                  {isEditMode ? "Update event details and settings" : "Fill in the details to publish your event"}
+                  {isEditMode
+                    ? "Update event details and settings"
+                    : "Fill in the details to publish your event"}
                 </p>
               </div>
             </div>
@@ -71,12 +73,13 @@ const EventForm: React.FC = () => {
         <div className="flex gap-8">
           {/* Main Content */}
           <div className="flex-1 space-y-6">
-
             {/* Basic Details Card */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
               <div className="border-b border-gray-100 px-6 py-4 bg-gray-50/50 flex items-center gap-2">
                 <Type className="w-4 h-4 text-blue-500" />
-                <h2 className="text-sm font-semibold text-gray-900">Basic Details</h2>
+                <h2 className="text-sm font-semibold text-gray-900">
+                  Basic Details
+                </h2>
               </div>
 
               <div className="p-6 space-y-6">
@@ -142,7 +145,9 @@ const EventForm: React.FC = () => {
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
               <div className="border-b border-gray-100 px-6 py-4 bg-gray-50/50 flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-orange-500" />
-                <h2 className="text-sm font-semibold text-gray-900">Time & Location</h2>
+                <h2 className="text-sm font-semibold text-gray-900">
+                  Time & Location
+                </h2>
               </div>
               <div className="p-6 space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -178,6 +183,7 @@ const EventForm: React.FC = () => {
                       Start Date & Time
                     </label>
                     <input
+                      title="date time input"
                       type="datetime-local"
                       className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
                     />
@@ -189,6 +195,7 @@ const EventForm: React.FC = () => {
                       End Date & Time
                     </label>
                     <input
+                      title="date time input"
                       type="datetime-local"
                       className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
                     />
@@ -201,7 +208,9 @@ const EventForm: React.FC = () => {
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
               <div className="border-b border-gray-100 px-6 py-4 bg-gray-50/50 flex items-center gap-2">
                 <Ticket className="w-4 h-4 text-emerald-500" />
-                <h2 className="text-sm font-semibold text-gray-900">Ticketing</h2>
+                <h2 className="text-sm font-semibold text-gray-900">
+                  Ticketing
+                </h2>
               </div>
               <div className="p-6 space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -243,7 +252,6 @@ const EventForm: React.FC = () => {
                 </div>
               </div>
             </div>
-
           </div>
 
           {/* Sidebar (Optional settings) */}
@@ -254,14 +262,23 @@ const EventForm: React.FC = () => {
               </div>
               <div className="p-5 space-y-4">
                 <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
-                  <input type="radio" name="visibility" className="w-4 h-4 text-blue-600" defaultChecked />
+                  <input
+                    type="radio"
+                    name="visibility"
+                    className="w-4 h-4 text-blue-600"
+                    defaultChecked
+                  />
                   <div>
                     <p className="text-sm font-medium text-gray-900">Public</p>
                     <p className="text-xs text-gray-500">Visible to everyone</p>
                   </div>
                 </label>
                 <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
-                  <input type="radio" name="visibility" className="w-4 h-4 text-blue-600" />
+                  <input
+                    type="radio"
+                    name="visibility"
+                    className="w-4 h-4 text-blue-600"
+                  />
                   <div>
                     <p className="text-sm font-medium text-gray-900">Draft</p>
                     <p className="text-xs text-gray-500">Only visible to you</p>
@@ -276,12 +293,22 @@ const EventForm: React.FC = () => {
               </div>
               <div className="p-5 space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-700">Display remaining tickets</span>
-                  <input type="checkbox" className="w-4 h-4 text-blue-600 rounded" defaultChecked />
+                  <span className="text-sm text-gray-700">
+                    Display remaining tickets
+                  </span>
+                  <input
+                    type="checkbox"
+                    className="w-4 h-4 text-blue-600 rounded"
+                    defaultChecked
+                  />
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-700">Allow refunds</span>
-                  <input type="checkbox" className="w-4 h-4 text-blue-600 rounded" />
+                  <input
+                    title="checkbox"
+                    type="checkbox"
+                    className="w-4 h-4 text-blue-600 rounded"
+                  />
                 </div>
               </div>
             </div>

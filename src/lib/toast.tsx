@@ -34,7 +34,7 @@ const getTranslation = (key: string, locale: string, fallback?: string): string 
     
     return (typeof value === 'string' ? value : undefined) || fallback || key;
   } catch (error) {
-    // Translation error handled silently
+    console.error(error);
     return fallback || key;
   }
 };

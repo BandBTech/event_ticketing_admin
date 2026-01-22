@@ -5,6 +5,7 @@ export interface ApiResponse {
   request_id: string;
   success: boolean;
   timestamp: string;
+  users: User[];
 }
 
 export interface UserData {

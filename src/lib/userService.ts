@@ -2,12 +2,6 @@ import { api } from './apiClient';
 import { API_ENDPOINTS } from '@/app/config/api';
 import {
   ApiResponse as UserApiResponse,
-  User,
-  UserRole,
-  UserPermission,
-  UserData,
-  UserApiError,
-  UserOrganizerOnboarding,
 } from "@/types/user";
 
 
@@ -64,74 +58,5 @@ static async createOrganizer({
     return await api.get(`${API_ENDPOINTS.GET_USERS}${query ? `?${query}` : ''}`, {
       requiresAuth: true,
     });
-  }
-
-  static async getPendingOrganizers(): Promise<UserApiResponse> {
-    return await api.get(API_ENDPOINTS.GET_PENDING_ORGANIZERS, {
-      requiresAuth: true,
-    });
-  }
-
-static async approveOrganizer(payload: {
-  organizerId: string;
-  admin_remark: string;
-  status: string;
-}): Promise<ApproveOrganizerResponse> {
-  return await api.put<ApproveOrganizerResponse>(
-    API_ENDPOINTS.APPROVE_ORGANIZERS(payload.organizerId),
-    {
-      admin_remark: payload.admin_remark,
-      status: payload.status,
-    },
-    {
-      requiresAuth: true,
-    }
-  );
-}
-
-  /**
-   * Get organizer by ID
-   * Since there's no dedicated GET endpoint, we fetch from the list
-   */
-  static async getOrganizerById(id: string): Promise<Organizer | null> {
-    // Fetch with a high limit to increase chance of finding the organizer
-    // Ideally the API should support GET /admin/organizers/{id}
-    const response = await this.getOrganizers({ limit: 100 });
-    return response.organizers.find((org) => org.id === id) || null;
-  }
-
-  /**
-   * Update organizer/organization details
-   */
-  static async updateOrganizer(
-    id: string,
-    data: {
-      name?: string;
-      description?: string;
-      phone?: string;
-      email?: string;
-      website?: string;
-      address?: string;
-    }
-  ): Promise<void> {
-    await api.put<void>(
-      `${API_ENDPOINTS.GET_ORGANIZERS.replace('/organizers', '/organizer')}/${id}`,
-      data,
-      {
-        requiresAuth: true,
-      }
-    );
-  }
-
-  /**
-   * Delete organizer
-   */
-  static async deleteOrganizer(id: string): Promise<void> {
-    await api.delete<void>(
-      `${API_ENDPOINTS.GET_ORGANIZERS.replace('/organizers', '/organizer')}/${id}`,
-      {
-        requiresAuth: true,
-      }
-    );
   }
 }

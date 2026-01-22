@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useMemo, useState, useEffect } from "react";
+import React, { useCallback, useMemo } from "react";
 import {
   MagnifyingGlass as MagnifyingGlassIcon,
   Funnel as FunnelIcon,
@@ -13,7 +13,6 @@ import {
   UserCheck as UserCheckIcon,
   Eye as EyeIcon,
   Shield as ShieldIcon,
-  Buildings as BuildingsIcon,
   User as UserIcon,
 } from "@phosphor-icons/react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -29,34 +28,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-// import {
-//   Tooltip,
-//   TooltipContent,
-//   TooltipProvider,
-//   TooltipTrigger,
-// } from "@/components/ui/tooltip";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatPhoneNumber } from "@/lib/utils";
 import { UserService } from "@/lib/userService";
 import { useQuery } from "@tanstack/react-query";
 import {
   ApiResponse as UserApiResponse,
-  User,
-  UserRole,
-  UserPermission,
-  UserData,
-  UserApiError,
-  UserOrganizerOnboarding,
 } from "@/types/user";
 import { queryKeys } from "@/lib/queryKeys";
-import { set } from "zod";
 
 interface Permission {
   id: string;
@@ -66,49 +45,6 @@ interface Permission {
   action: string;
   roles: string[];
   created_at: string;
-  updated_at: string;
-}
-
-interface Role {
-  id: string;
-  name: string;
-  description: string;
-  created_at: string;
-  updated_at: string;
-  users: string[];
-  permissions: Permission[];
-}
-
-interface OrganizerOnboarding {
-  business_description: string;
-  business_logo_url: string;
-  business_name: string;
-  created_at: string;
-  id: string;
-  is_complete: boolean;
-  organizer: string;
-  organizer_id: string;
-  updated_at: string;
-}
-
-interface User {
-  account_status: string;
-  admin_remark: string;
-  approved_at: string | null;
-  country_code: string;
-  created_at: string;
-  created_by: string;
-  email: string;
-  first_name: string;
-  id: string;
-  is_email_verified: boolean;
-  last_name: string;
-  organizer_id: string;
-  organizer_onboarding: OrganizerOnboarding;
-  organizer_status: string;
-  phone: string;
-  rejected_at: string | null;
-  roles: Role[];
   updated_at: string;
 }
 
@@ -194,14 +130,9 @@ function getAccountStatusConfig(status: string) {
 export default function UsersPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-
-  const [filterOpen, setFilterOpen] = useState(false);
-
     const {
       data: response,
       isLoading,
-      isError,
-      error,
     } = useQuery<UserApiResponse>({
       queryKey: queryKeys.users.all(),
       queryFn: () =>
@@ -247,20 +178,6 @@ export default function UsersPage() {
     [updateParams],
   );
 
-  const handleStatusFilter = useCallback(
-    (value: string) => {
-      updateParams({ status: value, page: "1" });
-    },
-    [updateParams],
-  );
-
-  const handleAccountStatusFilter = useCallback(
-    (value: string) => {
-      updateParams({ account_status: value, page: "1" });
-    },
-    [updateParams],
-  );
-
   // Filter data
   const filteredData = useMemo(() => {
     let result = mockUserData;
@@ -295,13 +212,13 @@ export default function UsersPage() {
     }
 
     return result;
-  }, [searchQuery, statusFilter, accountStatusFilter]);
+  }, [searchQuery, statusFilter, accountStatusFilter, mockUserData]);
 
   const paginatedData = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     return filteredData.slice(startIndex, endIndex);
-  }, [filteredData, currentPage, itemsPerPage]);
+  }, [filteredData, currentPage, itemsPerPage, mockUserData]);
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const startItem = (currentPage - 1) * itemsPerPage + 1;

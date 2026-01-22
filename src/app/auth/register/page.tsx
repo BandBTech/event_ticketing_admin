@@ -62,14 +62,14 @@ const RegisterPage: React.FC = () => {
   const handleSubmit = async (data: RegisterFormData) => {
     setLoading(true);
 
-    const payload = {
-      country_code: data.countryCode,
-      email: data.email,
-      first_name: data.firstName,
-      last_name: data.lastName,
-      phone: data.phone,
-      password: data.password,
-    };
+    // const payload = {
+    //   country_code: data.countryCode,
+    //   email: data.email,
+    //   first_name: data.firstName,
+    //   last_name: data.lastName,
+    //   phone: data.phone,
+    //   password: data.password,
+    // };
 
     
 

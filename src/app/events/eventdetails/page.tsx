@@ -21,7 +21,6 @@ import {
   XCircle,
   WarningCircle,
   ShieldCheck,
-  Tag,
   PauseCircle,
   PencilSimple,
   Trash,

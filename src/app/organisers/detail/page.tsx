@@ -9,7 +9,6 @@ import {
   DotsThreeVertical as DotsThreeVerticalIcon,
   ArrowSquareOut as ArrowSquareOutIcon,
   PencilSimple as PencilSimpleIcon,
-  Trash as TrashIcon,
   UserCheck as UserCheckIcon,
   CalendarBlank as CalendarBlankIcon,
   Phone as PhoneIcon,
@@ -23,7 +22,6 @@ import {
   Check as CheckIcon,
   X as XIcon,
   Warning as WarningIcon,
-  ArrowLeft as ArrowLeftIcon,
   ArrowUpLeftIcon,
 } from "@phosphor-icons/react";
 import { toast } from "sonner";
@@ -57,7 +55,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -147,7 +144,7 @@ function getAccountStatusConfig(status: string, t: (key: string, fallback?: stri
 }
 
 // Skeleton Component
-function DetailPageSkeleton({ t }: { t: (key: string, fallback?: string) => string }) {
+function DetailPageSkeleton() {
   return (
     <div className="min-h-screen">
       <div className="max-w-5xl mx-auto px-6 py-8">
@@ -363,7 +360,6 @@ export default function OrganizerDetailPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const id = searchParams.get("id");
-  const queryClient = useQueryClient();
 
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [statusAction, setStatusAction] = useState<StatusAction>("approve");
@@ -379,20 +375,8 @@ export default function OrganizerDetailPage() {
     enabled: !!id,
   });
 
-  // const deleteMutation = useMutation({
-  //   mutationFn: () => OrganizerService.deleteOrganizer(id!),
-  //   onSuccess: () => {
-  //     toast.success(t("organizer.management.messages.deleteSuccess", "Organizer deleted successfully"));
-  //     queryClient.invalidateQueries({ queryKey: queryKeys.organizers.list });
-  //     router.push("/organisers");
-  //   },
-  //   onError: (error: Error) => {
-  //     toast.error(error.message || t("organizer.management.messages.deleteError", "Failed to delete organizer"));
-  //   },
-  // });
-
   if (isLoading) {
-    return <DetailPageSkeleton t={t} />;
+    return <DetailPageSkeleton />;
   }
 
   if (isError || !organizer || !id) {

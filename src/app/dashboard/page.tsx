@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { Calendar, Clock, Users, ExternalLink } from "lucide-react";
-import Navbar from "../components/Navbar/Navbar";
 import { OrganizerService } from "@/lib/organizerService";
 import { EventService } from "@/lib/eventServices";
 import { toast } from "sonner";
@@ -97,6 +96,7 @@ const AdminDashboard: React.FC = () => {
       setPendingData(res);
     } catch (error) {
       // Error handled by toast
+      console.error("Error approving organizer:", error);
     }
   };
   const handleReject = async (organizerId: string, admin_remark: string) => {
@@ -115,6 +115,7 @@ const AdminDashboard: React.FC = () => {
       setPendingData(res);
     } catch (error) {
       // Error handled by toast
+      console.error("Error rejecting organizer:", error);
     }
   };
   const handleEventReject = async (eventId: string, admin_remark: string) => {
