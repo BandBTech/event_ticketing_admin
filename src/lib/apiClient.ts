@@ -287,4 +287,15 @@ export const api = {
       method: 'PUT',
       body: formData,
     }),
+
+  /**
+   * POST request with FormData support (multipart/form-data)
+   * Used for multipart form submissions like event creation with file uploads
+   */
+  postFormData: <T>(endpoint: string, formData: FormData, config?: ApiRequestConfig) =>
+    apiRequest<T>(endpoint, {
+      ...config,
+      method: 'POST',
+      body: formData,
+    }),
 };

@@ -1,5 +1,5 @@
 import { api } from './apiClient';
-import { Event } from '@/types/event';
+import { Event, CreateEventData, UpdateEventRequest, CreateEventTierRequest } from '@/types/event';
 
 /**
  * Event Service
@@ -315,4 +315,116 @@ export class EventService {
       { requiresAuth: true }
     );
   }
+
+  /**
+   * Get single event by ID for admin (with full details for editing)
+   */
+  static async getAdminEventById(id: string): Promise<Event> {
+    // Admin can view any event - try admin endpoint first, fallback to public
+    try {
+      const events = await this.getAdminEvents({ limit: 1, search: id });
+      const event = events.events.find(e => e.id === id);
+      if (event) return event;
+    } catch {
+      // Fallback to public endpoint
+    }
+    return await api.get<Event>(`/public/events/${id}`);
+  }
+
+  /**
+   * Create a new event (Admin)
+   * Uses multipart/form-data for file upload support
+   */
+  static async createEvent(data: CreateEventData): Promise<Event> {
+    const formData = this.createEventFormData(data);
+    return await api.postFormData<Event>('/admin/events', formData, {
+      requiresAuth: true,
+      showSuccessToast: true,
+      successMessage: 'Event created successfully',
+    });
+  }
+
+  /**
+   * Update an existing event (Admin)
+   * Uses JSON body as per admin API specification
+   */
+  static async updateEvent(id: string, data: UpdateEventRequest): Promise<Event> {
+    // Admin update uses JSON body (not FormData)
+    const payload: Record<string, unknown> = {};
+
+    if (data.title) payload.title = data.title;
+    if (data.description) payload.description = data.description;
+    if (data.category && data.category.length > 0) {
+      payload.category = data.category.join(',');
+    }
+    if (data.venue_name) payload.venue_name = data.venue_name;
+    if (data.address) payload.address = data.address;
+    if (data.start_date) payload.start_date = data.start_date;
+    if (data.end_date) payload.end_date = data.end_date;
+    if (data.timezone) payload.timezone = data.timezone;
+    if (data.capacity !== undefined) payload.capacity = data.capacity;
+    if (data.price !== undefined) payload.price = data.price;
+    if (data.commission_rate !== undefined) payload.commission_rate = data.commission_rate;
+    if (data.tiers) payload.tiers = data.tiers;
+    if (data.status) payload.status = data.status;
+
+    // Handle banner_image - if it's a File, we need to use FormData
+    if (data.banner_image instanceof File) {
+      const formData = new FormData();
+      Object.entries(payload).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          formData.append(key, typeof value === 'object' ? JSON.stringify(value) : String(value));
+        }
+      });
+      formData.append('banner_image', data.banner_image);
+      return await api.putFormData<Event>(`/admin/events/${id}`, formData, {
+        requiresAuth: true,
+        showSuccessToast: true,
+        successMessage: 'Event updated successfully',
+      });
+    }
+
+    return await api.put<Event>(`/admin/events/${id}`, payload, {
+      requiresAuth: true,
+      showSuccessToast: true,
+      successMessage: 'Event updated successfully',
+    });
+  }
+
+  /**
+   * Helper to create FormData from event data
+   */
+  private static createEventFormData(data: CreateEventData): FormData {
+    const formData = new FormData();
+
+    formData.append('title', data.title);
+    if (data.description) formData.append('description', data.description);
+
+    if (data.banner_image) {
+      formData.append('banner_image', data.banner_image);
+    }
+
+    if (data.category && data.category.length > 0) {
+      formData.append('category', data.category.join(','));
+    }
+
+    formData.append('venue_name', data.venue_name);
+    formData.append('address', data.address);
+    formData.append('start_date', data.start_date);
+    formData.append('end_date', data.end_date);
+    if (data.timezone) formData.append('timezone', data.timezone);
+    formData.append('capacity', data.capacity.toString());
+    formData.append('price', data.price.toString());
+
+    if (data.commission_rate !== undefined) {
+      formData.append('commission_rate', data.commission_rate.toString());
+    }
+
+    if (data.tiers) {
+      formData.append('tiers', data.tiers);
+    }
+
+    return formData;
+  }
 }
+

@@ -22,6 +22,7 @@ export interface Event {
   admin_remark: string;
   created_at: string;
   updated_at: string;
+  tiers?: EventTier[];
 }
 
 export interface Venue {
@@ -99,4 +100,77 @@ export interface EventStatusHistory {
   changed_by: string;
   changed_by_name: string;
   created_at: string;
+}
+
+// Event Tier Types
+export interface EventTier {
+  id: string;
+  tier_name: string;
+  tier_template_id?: string;
+  price: number;
+  quantity: number;
+  gst?: number;
+  sales_start?: string;
+  sales_end?: string;
+  currency?: string;
+  sort_order?: number;
+  available?: number;
+  sold?: number;
+  is_active?: boolean;
+}
+
+export interface CreateEventTierRequest {
+  tier_template_id?: string;
+  tier_name: string;
+  price: number;
+  quantity: number;
+  currency?: string;
+  gst?: number;
+  sales_start?: string;
+  sales_end?: string;
+  sort_order?: number;
+}
+
+// Create/Update Event Data (Admin)
+export interface CreateEventData {
+  title: string;
+  description?: string;
+  banner_image?: File;
+  category: string[];
+  venue_name: string;
+  address: string;
+  start_date: string;
+  end_date: string;
+  timezone?: string;
+  capacity: number;
+  price: number;
+  commission_rate?: number;
+  tiers: string; // JSON string of CreateEventTierRequest[]
+}
+
+export interface UpdateEventRequest {
+  title?: string;
+  description?: string;
+  banner_image?: string | File;
+  category?: string[];
+  venue_name?: string;
+  address?: string;
+  start_date?: string;
+  end_date?: string;
+  timezone?: string;
+  capacity?: number;
+  price?: number;
+  commission_rate?: number;
+  tiers?: CreateEventTierRequest[];
+  status?: string;
+}
+
+// TierTemplate for organizer compatibility
+export interface TierTemplate {
+  id: string;
+  template_name: string;
+  description?: string;
+  is_default?: boolean;
+  created_at?: string;
+  updated_at?: string;
 }

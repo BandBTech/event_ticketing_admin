@@ -238,3 +238,309 @@ export const createRejectionSchema = (t: (key: string, fallback?: string) => str
 };
 
 export type RejectionFormValues = z.infer<ReturnType<typeof createRejectionSchema>>;
+
+// =======================================
+// Event Form Validation (Admin)
+// =======================================
+
+// Field Validation Limits
+export const EVENT_TITLE_MAX = 200;
+export const EVENT_DESC_MAX = 5000;
+export const VENUE_NAME_MAX = 200;
+export const VENUE_ADDRESS_MAX = 500;
+export const TIER_NAME_MAX = 100;
+export const MAX_CAPACITY = 100000;
+export const MAX_PRICE = 100000;
+export const MAX_QUANTITY = 100000;
+
+export const MAX_COMMISSION = 100;
+export const PROMO_CODE_NAME_MAX = 50;
+export const PROMO_CODE_AMOUNT_MAX = 100000;
+export const PROMO_CODE_QUANTITY_MAX = 100000;
+
+// Helper for required date string validation
+const createRequiredDateSchema = (
+  t: (key: string, fallback?: string) => string,
+  fieldName: string
+) =>
+  z.string().min(1, t('event.validation.dateRequired', `${fieldName} is required.`)).superRefine((val, ctx) => {
+    const date = new Date(val);
+    if (isNaN(date.getTime())) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: t('event.validation.invalidDate', 'Enter a valid date and time.'),
+      });
+      return;
+    }
+    if (date.getFullYear() > 9999) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: t('event.validation.yearLimit', 'Year cannot exceed 4 digits.'),
+      });
+      return;
+    }
+    // Check for past date
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (date < today) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: t('event.validation.pastDate', 'Date cannot be in the past.'),
+      });
+    }
+  });
+
+// Helper for required number schema
+const createRequiredNumberSchema = (
+  t: (key: string, fallback?: string) => string,
+  fieldName: string,
+  minValue: number = 1,
+  maxValue: number = Number.MAX_SAFE_INTEGER
+) => {
+  return z.preprocess(
+    (val) => {
+      if (val === '' || val === null || val === undefined) return undefined;
+      const num = Number(val);
+      return isNaN(num) ? undefined : num;
+    },
+    z
+      .number({
+        message: t('event.validation.numberRequired', `${fieldName} is required.`),
+      })
+      .min(minValue, t('event.validation.minValue', `${fieldName} must be at least ${minValue}.`))
+      .max(maxValue, t('event.validation.maxValue', `${fieldName} cannot exceed ${maxValue}.`))
+  );
+};
+
+/**
+ * Ticket/Tier Schema
+ * Used for validating individual ticket tiers
+ */
+export const createTicketSchema = (t: (key: string, fallback?: string) => string) =>
+  z
+    .object({
+      id: z.string().optional(),
+      name: z
+        .string()
+        .min(1, t('event.validation.tierNameRequired', 'Tier Name is required.'))
+        .max(TIER_NAME_MAX, t('event.validation.tierNameMax', `Tier Name must be under ${TIER_NAME_MAX} characters.`)),
+      price: createRequiredNumberSchema(t, 'Price', 1, MAX_PRICE),
+      quantity: createRequiredNumberSchema(
+        t,
+        'Quantity',
+        1,
+        MAX_QUANTITY
+      ),
+      gst: z.preprocess(
+        (val) => {
+          if (val === '' || val === null || val === undefined) return undefined;
+          const num = Number(val);
+          return isNaN(num) ? undefined : num;
+        },
+        z.number().min(0, t('event.validation.gstPositive', "GST must be positive.")).max(100, t('event.validation.gstMax', "GST cannot exceed 100%."))
+      ),
+      salesStart: createRequiredDateSchema(t, 'event.field.salesStart:Sales Start Date').optional().or(z.literal("")),
+      salesEnd: createRequiredDateSchema(t, 'event.field.salesEnd:Sales End Date').optional().or(z.literal("")),
+    })
+    .refine(
+      (data) => {
+        if (!data.salesEnd || !data.salesStart) return true;
+        return new Date(data.salesEnd) > new Date(data.salesStart);
+      },
+      {
+        message: t('event.validation.salesEndAfterStart', 'Sales End Date must be after Sales Start Date.'),
+        path: ['salesEnd'],
+      }
+    );
+
+export const createPromoCodeSchema = (t: (key: string, fallback?: string) => string) => z.object({
+  code: z
+    .string()
+    .min(1, t('event.validation.promoCodeRequired', "Promo Code is required."))
+    .max(PROMO_CODE_NAME_MAX, t('event.validation.promoCodeMaxLength', `Promo Code must be under ${PROMO_CODE_NAME_MAX} characters.`))
+    .regex(/^[A-Z0-9_-]+$/, t('event.validation.promoCodeFormat', "Promo Code may only contain A-Z , 0-9, _ or -")),
+  discountType: z.string().min(1, t('event.validation.discountTypeRequired', "Discount Type is required.")),
+  amount: z.preprocess(
+    (val) => {
+      if (val === '' || val === null || val === undefined) return undefined;
+      const num = Number(val);
+      return isNaN(num) ? undefined : num;
+    },
+    z.number().optional()
+  ),
+  quantity: createRequiredNumberSchema(
+    t,
+    'event.field.discountQuantity:Quantity',
+    1,
+    PROMO_CODE_QUANTITY_MAX,
+  ),
+}).superRefine((data, ctx) => {
+  const { discountType, amount } = data;
+
+  // Handle empty amount based on discount type
+  if (amount === undefined || amount === null) {
+    const message = discountType === 'percentage'
+      ? t('event.validation.discountPercentageRequired', 'Discount Percentage is required.')
+      : t('event.validation.discountAmountRequired', 'Discount Amount is required.');
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message,
+      path: ['amount'],
+    });
+    return;
+  }
+
+  if (discountType === 'percentage') {
+    if (!amount) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: t('event.validation.discountPercentageRequired', 'Discount Percentage is required.'),
+        path: ['amount'],
+      });
+    }
+    // Percentage validation: 0.01 - 100, max 2 decimal places
+    if (amount < 0.01) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: t('event.validation.percentageMin', "Percentage must be at least 0.01%."),
+        path: ['amount'],
+      });
+    }
+    if (amount > 100) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: t('event.validation.percentageMax', "Percentage cannot exceed 100%."),
+        path: ['amount'],
+      });
+    }
+    // Check for max 2 decimal places
+    const decimalStr = amount.toString();
+    const decimalPart = decimalStr.split('.')[1];
+    if (decimalPart && decimalPart.length > 2) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: t('event.validation.percentageDecimals', "Percentage can have at most 2 decimal places."),
+        path: ['amount'],
+      });
+    }
+  } else {
+    // Amount (fixed) validation: 1 - PROMO_CODE_AMOUNT_MAX
+    if (amount < 1) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: t('event.validation.amountRequired', "Amount must be at least 1."),
+        path: ['amount'],
+      });
+    }
+    if (amount > PROMO_CODE_AMOUNT_MAX) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: t('event.validation.amountMax', `Amount cannot exceed ${PROMO_CODE_AMOUNT_MAX}.`),
+        path: ['amount'],
+      });
+    }
+  }
+});
+
+export type TicketFormData = z.infer<ReturnType<typeof createTicketSchema>>;
+
+/**
+ * Event Schema
+ * Full validation for create/edit event form
+ */
+export const createEventSchema = (t: (key: string, fallback?: string) => string) =>
+  z
+    .object({
+      name: z
+        .string()
+        .min(1, t('event.validation.titleRequired', 'Event Title is required.'))
+        .max(EVENT_TITLE_MAX, t('event.validation.titleMax', `Event Title must be under ${EVENT_TITLE_MAX} characters.`)),
+      description: z
+        .string()
+        .min(1, t('event.validation.descriptionRequired', 'Event Description is required.'))
+        .max(EVENT_DESC_MAX, t('event.validation.descriptionMax', `Event Description must be under ${EVENT_DESC_MAX} characters.`)),
+      tags: z.array(z.string()).min(1, t('event.validation.tagsRequired', 'At least one Category is required.')),
+      image: z.string().min(1, t('event.validation.imageRequired', 'Banner Image is required.')),
+      venue: z
+        .string()
+        .min(1, t('event.validation.venueRequired', 'Venue Name is required.'))
+        .max(VENUE_NAME_MAX, t('event.validation.venueMax', `Venue Name must be under ${VENUE_NAME_MAX} characters.`)),
+      venueAddress: z
+        .string()
+        .min(1, t('event.validation.addressRequired', 'Venue Address is required.'))
+        .max(VENUE_ADDRESS_MAX, t('event.validation.addressMax', `Venue Address must be under ${VENUE_ADDRESS_MAX} characters.`)),
+      capacity: createRequiredNumberSchema(t, 'Capacity', 1, MAX_CAPACITY),
+      timezone: z.string().min(1, t('event.validation.timezoneRequired', 'Timezone is required.')),
+      startDate: createRequiredDateSchema(t, 'Event Start Date'),
+      endDate: createRequiredDateSchema(t, 'Event End Date'),
+      tickets: z.array(createTicketSchema(t)).min(1, t('event.validation.ticketsRequired', 'At least one Ticket Tier is required.')),
+      promoCodes: z.array(createPromoCodeSchema(t)).optional(),
+      commissionRate: z.preprocess(
+        (val) => {
+          if (val === '' || val === null || val === undefined) return 0;
+          const num = Number(val);
+          return isNaN(num) ? 0 : num;
+        },
+        z
+          .number()
+          .min(0, t('event.validation.commissionMin', 'Commission rate must be 0 or greater.'))
+          .max(MAX_COMMISSION, t('event.validation.commissionMax', `Commission rate cannot exceed ${MAX_COMMISSION}%.`))
+      ),
+    })
+    .refine(
+      (data) => {
+        if (!data.endDate || !data.startDate) return true;
+        return new Date(data.endDate) > new Date(data.startDate);
+      },
+      {
+        message: t('event.validation.endDateAfterStart', 'Event End Date must be after Event Start Date.'),
+        path: ['endDate'],
+      }
+    )
+    .superRefine((data, ctx) => {
+      // Validate ticket sales dates against event start date
+      if (!data.startDate) return;
+      const eventStartDate = new Date(data.startDate);
+
+      data.tickets.forEach((ticket, index) => {
+        if (ticket.salesStart) {
+          const salesStartDate = new Date(ticket.salesStart);
+          if (salesStartDate > eventStartDate) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: t('event.validation.salesStartBeforeEvent', 'Sales Start Date cannot be after Event Start Date.'),
+              path: ['tickets', index, 'salesStart'],
+            });
+          }
+        }
+        if (ticket.salesEnd) {
+          const salesEndDate = new Date(ticket.salesEnd);
+          if (salesEndDate > eventStartDate) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: t('event.validation.salesEndBeforeEvent', 'Sales End Date cannot be after Event Start Date.'),
+              path: ['tickets', index, 'salesEnd'],
+            });
+          }
+        }
+      });
+
+      // Check for duplicate tier names
+      if (data.tickets && data.tickets.length > 0) {
+        const seenNames = new Set<string>();
+        data.tickets.forEach((ticket, index) => {
+          if (!ticket.name) return;
+          const normalizedName = ticket.name.trim().toLowerCase();
+          if (seenNames.has(normalizedName)) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: t('event.validation.duplicateTierName', 'Tier Name must be unique.'),
+              path: ['tickets', index, 'name'],
+            });
+          }
+          seenNames.add(normalizedName);
+        });
+      }
+    });
+
+export type EventFormData = z.infer<ReturnType<typeof createEventSchema>>;

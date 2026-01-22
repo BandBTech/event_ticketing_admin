@@ -23,6 +23,7 @@ import {
   CheckCircle as CheckCircleIcon,
   XCircle as XCircleIcon,
   WarningCircle as WarningCircleIcon,
+  Plus as PlusIcon,
 } from "@phosphor-icons/react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -155,7 +156,7 @@ function EventCard({ event }: { event: Event }) {
 
   const handleEdit = () => {
     setSelectedEvent(event);
-    router.push(`/events/createevent?id=${event.id}&edit=true`);
+    router.push(`/events/edit?id=${event.id}`);
   };
 
   return (
@@ -501,6 +502,13 @@ export default function EventsPage() {
           <Button variant="outline" className="gap-2 bg-background">
             <FunnelIcon weight="duotone" className="h-4 w-4" />
             {t("events.moreFilters")}
+          </Button>
+          <Button
+            onClick={() => router.push("/events/createevent")}
+            className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
+          >
+            <PlusIcon weight="bold" className="h-4 w-4" />
+            {t("events.createEvent", "Create Event")}
           </Button>
         </div>
       </div>
