@@ -473,7 +473,7 @@
     },
     "validation": {
       "commissionRequired": "手数料率は必須です。",
-      "commissionInvalid": "有効な数値を入力してください。",
+      "commissionInvalid": "小数点以下 2 桁までの有効なパーセンテージ (0 ～ 100) を入力します。",
       "commissionMin": "手数料率は0以上である必要があります。",
       "commissionMax": "手数料率は100を超えることはできません。",
       "commissionDecimal": "手数料率は小数点以下2桁までです。",

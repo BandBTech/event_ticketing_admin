@@ -512,7 +512,7 @@
     },
     "validation": {
       "commissionRequired": "Commission rate is required.",
-      "commissionInvalid": "Please enter a valid number.",
+      "commissionInvalid": "Enter a valid percentage (0-100) with up to 2 decimal places.",
       "commissionMin": "Commission rate must be at least 0.",
       "commissionMax": "Commission rate cannot exceed 100.",
       "commissionDecimal": "Commission rate can have at most 2 decimal places.",

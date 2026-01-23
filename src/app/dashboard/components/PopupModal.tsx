@@ -70,6 +70,7 @@ function EventApprovalModal({
       commissionRate: "10",
       adminRemark: "",
     },
+    mode: "onChange",
   });
 
   useEffect(() => {

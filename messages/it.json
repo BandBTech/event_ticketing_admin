@@ -463,7 +463,7 @@
     },
     "validation": {
       "commissionRequired": "Il tasso di commissione è obbligatorio.",
-      "commissionInvalid": "Inserisci un numero valido.",
+      "commissionInvalid": "Inserisci una percentuale valida (0-100) con un massimo di 2 cifre decimali.",
       "commissionMin": "Il tasso di commissione deve essere almeno 0.",
       "commissionMax": "Il tasso di commissione non può superare 100.",
       "commissionDecimal": "Il tasso di commissione può avere al massimo 2 cifre decimali.",

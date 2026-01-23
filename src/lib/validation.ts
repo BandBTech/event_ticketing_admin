@@ -194,24 +194,9 @@ export const createEventApprovalSchema = (t: (key: string, fallback?: string) =>
   return z.object({
     commissionRate: z.string()
       .min(1, t("dashboard.validation.commissionRequired", "Commission rate is required."))
-      .refine(
-        (val) => !isNaN(parseFloat(val)),
-        t("dashboard.validation.commissionInvalid", "Please enter a valid number.")
-      )
-      .refine(
-        (val) => parseFloat(val) >= 0,
-        t("dashboard.validation.commissionMin", "Commission rate must be at least 0.")
-      )
-      .refine(
-        (val) => parseFloat(val) <= 100,
-        t("dashboard.validation.commissionMax", "Commission rate cannot exceed 100.")
-      )
-      .refine(
-        (val) => {
-          const parts = val.split(".");
-          return !parts[1] || parts[1].length <= 2;
-        },
-        t("dashboard.validation.commissionDecimal", "Commission rate can have at most 2 decimal places.")
+      .regex(
+        /^(100(\.00?)?|[0-9]?\d(\.\d{1,2})?)$/,
+        t("dashboard.validation.commissionInvalid", "Enter a valid percentage (0-100) with up to 2 decimal places.")
       ),
     // Required string with max length (not optional to match form interface)
     adminRemark: z.string()
