@@ -187,7 +187,7 @@ export class EventService {
     commission_rate: number;
   }): Promise<ApproveEventResponse> {
     return await api.put<ApproveEventResponse>(
-      `/admin/events/${payload.eventId}/approval`, 
+      `/admin/events/${payload.eventId}/status`, 
       {
         admin_remark: payload.admin_remark,
         status: payload.status,
