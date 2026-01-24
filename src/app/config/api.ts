@@ -19,7 +19,7 @@ export const API_ENDPOINTS = {
   CREATE_ORGANIZERS: `${API_BASE_URL}/admin/organizer`,
   GET_PENDING_ORGANIZERS: `${API_BASE_URL}/admin/organizers/pending`,
   APPROVE_ORGANIZERS: (id: string) =>
-    `${API_BASE_URL}/admin/organizers/${id}/approval`,
+    `${API_BASE_URL}/admin/organizers/${id}/status`,
 
   // Events
   GET_EVENTS: `${API_BASE_URL}/admin/events`,

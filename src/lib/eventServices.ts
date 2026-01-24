@@ -97,7 +97,9 @@ export class EventService {
    * Get event by ID for admin
    */
   static async getEventById(id: string): Promise<Event> {
-    return await api.get<Event>(`/public/events/${id}`);
+    return await api.get<Event>(`/admin/events/${id}`, {
+      requiresAuth: true
+    });
   }
   
   /**
@@ -215,7 +217,7 @@ export class EventService {
     commission_rate: number;
   }): Promise<ApproveEventResponse> {
     return await api.put<ApproveEventResponse>(
-      `/admin/events/${payload.eventId}/approval`, 
+      `/admin/events/${payload.eventId}/status`, 
       {
         admin_remark: payload.admin_remark,
         status: payload.status,
@@ -232,7 +234,7 @@ export class EventService {
    */
   static async rejectEvent(eventId: string, data: { adminRemark: string }): Promise<ApproveEventResponse> {
     return await api.put<ApproveEventResponse>(
-      `/admin/events/${eventId}/approval`,
+      `/admin/events/${eventId}/status`,
       {
         admin_remark: data.adminRemark,
         status: 'rejected',
@@ -314,21 +316,6 @@ export class EventService {
       `/admin/events/${eventId}/status-history`,
       { requiresAuth: true }
     );
-  }
-
-  /**
-   * Get single event by ID for admin (with full details for editing)
-   */
-  static async getAdminEventById(id: string): Promise<Event> {
-    // Admin can view any event - try admin endpoint first, fallback to public
-    try {
-      const events = await this.getAdminEvents({ limit: 1, search: id });
-      const event = events.events.find(e => e.id === id);
-      if (event) return event;
-    } catch {
-      // Fallback to public endpoint
-    }
-    return await api.get<Event>(`/public/events/${id}`);
   }
 
   /**

@@ -121,12 +121,12 @@ export default function EventDetailsPage() {
   const toggleFeaturedMutation = useMutation({
     mutationFn: () => EventService.toggleFeatured(eventId!, !event?.is_featured),
     onSuccess: () => {
-    // queryClient.setQueryData(queryKeys.events.detail(eventId!), {
-    //   ...event,
-    //   is_featured: !event?.is_featured,
-    // });
-    // queryClient.invalidateQueries({ queryKey: queryKeys.events.list });
-    // queryClient.invalidateQueries({ queryKey: queryKeys.events.detail(eventId!) });
+      queryClient.setQueryData(queryKeys.events.detail(eventId!), {
+        ...event,
+        is_featured: !event?.is_featured,
+      });
+      queryClient.invalidateQueries({ queryKey: queryKeys.events.list });
+      queryClient.invalidateQueries({ queryKey: queryKeys.events.detail(eventId!) });
     },
     onError: () => toast.error(t("events.messages.featuredError", "Failed to update featured status")),
   });
@@ -455,6 +455,31 @@ export default function EventDetailsPage() {
               </div>
             </div> */}
 
+            {/* Financial Details */}
+            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <TicketIcon weight="duotone" className="w-5 h-5 text-gray-500" />
+                {t("events.sections.financialDetails", "Financial Details")}
+              </h2>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center py-2 border-b border-gray-50">
+                  <span className="text-gray-500 text-sm">{t("events.fields.price", "Ticket Price")}</span>
+                  <span className="font-semibold text-gray-900 text-lg">
+                    {event.price > 0 ? `${event.price} NPR` : "Free"}
+                  </span>
+                </div>
+
+                {event.commission_rate > 0 && (
+                  <div className="flex justify-between items-center py-2">
+                    <span className="text-gray-500 text-sm">{t("events.fields.commissionRate", "Commission Rate")}</span>
+                    <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 border-emerald-100 px-3 py-1">
+                      {event.commission_rate}%
+                    </Badge>
+                  </div>
+                )}
+              </div>
+            </div>
+
             {/* Quick Actions / Featured */}
             <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">{t("events.sections.quickActions", "Quick Actions")}</h2>
@@ -514,6 +539,8 @@ export default function EventDetailsPage() {
             commissionRate: data.commissionRate || 0,
             adminRemark: data.adminRemark
           })}
+          eventName={event.title}
+          eventDetails={event}
         />
       )}
 

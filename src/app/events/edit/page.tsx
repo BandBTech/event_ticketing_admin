@@ -13,7 +13,7 @@ export default function EditEventPage() {
 
   const { data: event, isLoading, error } = useQuery({
     queryKey: queryKeys.events.detail(eventId || ""),
-    queryFn: () => EventService.getAdminEventById(eventId!),
+    queryFn: () => EventService.getEventById(eventId!),
     enabled: !!eventId,
   });
 

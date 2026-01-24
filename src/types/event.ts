@@ -1,4 +1,4 @@
-export interface Event {
+export interface AppEvent {
   id: string;
   title: string;
   description: string;
@@ -24,6 +24,8 @@ export interface Event {
   updated_at: string;
   tiers?: EventTier[];
 }
+
+export type Event = AppEvent;
 
 export interface Venue {
   id: string;

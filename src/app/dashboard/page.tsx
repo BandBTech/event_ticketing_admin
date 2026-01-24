@@ -17,11 +17,13 @@ import {
   useRejectEvent,
 } from "@/hooks/useDashboard";
 
-import { OrganizerCard } from "./components/OrganizerCard";
+import { OrganizerCard } from "./components/OrganizerApproval/OrganizerCard";
 import { EventCard } from "./components/EventCard";
 import { EmptyState } from "./components/EmptyState";
 import { DashboardSkeleton, ListItemSkeleton } from "./components/DashboardSkeleton";
 import PopupModal from "./components/PopupModal";
+import { DashboardStats } from "./components/DashboardStats";
+import { OrganizerApprovalList } from "./components/OrganizerApproval";
 
 interface ModalState {
   open: boolean;
@@ -35,7 +37,7 @@ const AdminDashboard: React.FC = () => {
   const setSelectedEvent = useEventStore((state) => state.setSelectedEvent);
 
   // Modal state
-  const [rejectOrganizerModal, setRejectOrganizerModal] = useState<ModalState>({ open: false });
+  // const [rejectOrganizerModal, setRejectOrganizerModal] = useState<ModalState>({ open: false });
   const [rejectEventModal, setRejectEventModal] = useState<ModalState>({ open: false });
   const [acceptEventModal, setAcceptEventModal] = useState<ModalState>({ open: false });
 
@@ -44,7 +46,7 @@ const AdminDashboard: React.FC = () => {
   const { data: pendingEventsData, isLoading: isLoadingEvents } = usePendingEvents();
 
   // Mutation hooks
-  const approveOrganizerMutation = useApproveOrganizer();
+  // const approveOrganizerMutation = useApproveOrganizer();
   const rejectOrganizerMutation = useRejectOrganizer();
   const approveEventMutation = useApproveEvent();
   const rejectEventMutation = useRejectEvent();
@@ -55,27 +57,19 @@ const AdminDashboard: React.FC = () => {
     router.push(`/events/eventdetails`);
   };
 
-  const handleApproveOrganizer = (organizerId: string) => {
-    approveOrganizerMutation.mutate(organizerId, {
-      onSuccess: () => {
-        toast.success(t("dashboard.toast.organizerApproved"));
-      },
-    });
-  };
+  // const handleRejectOrganizer = (data: { adminRemark: string }) => {
+  //   if (!rejectOrganizerModal.id) return;
 
-  const handleRejectOrganizer = (data: { adminRemark: string }) => {
-    if (!rejectOrganizerModal.id) return;
-
-    rejectOrganizerMutation.mutate(
-      { organizerId: rejectOrganizerModal.id, adminRemark: data.adminRemark },
-      {
-        onSuccess: () => {
-          toast.success(t("dashboard.toast.organizerRejected"));
-          setRejectOrganizerModal({ open: false });
-        },
-      }
-    );
-  };
+  //   rejectOrganizerMutation.mutate(
+  //     { organizerId: rejectOrganizerModal.id, adminRemark: data.adminRemark },
+  //     {
+  //       onSuccess: () => {
+  //         toast.success(t("dashboard.toast.organizerRejected"));
+  //         setRejectOrganizerModal({ open: false });
+  //       },
+  //     }
+  //   );
+  // };
 
   const handleApproveEvent = (data: { commissionRate?: number; adminRemark: string }) => {
     if (!acceptEventModal.id) return;
@@ -127,89 +121,10 @@ const AdminDashboard: React.FC = () => {
       {/* Main Content */}
       <div className="p-6">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {/* Successful Events Card */}
-          <div className="bg-white glass-card-lower rounded-2xl p-6 shadow-sm border border-gray-100/50">
-            <div className="flex items-start space-x-4">
-              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                <Calendar className="h-6 w-6 text-green-600" />
-              </div>
-              <div className="flex-1">
-                <div className="text-3xl font-bold text-gray-900 mb-1">24</div>
-                <div className="text-sm text-gray-600 font-medium">
-                  {t("dashboard.successfulEvents")}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Pending Approval Card */}
-          <div className="bg-white glass-card-lower rounded-2xl p-6 shadow-sm border border-gray-100/50">
-            <div className="flex items-start space-x-4">
-              <div className="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
-                <Clock className="h-6 w-6 text-yellow-600" />
-              </div>
-              <div className="flex-1">
-                <div className="text-3xl font-bold text-gray-900 mb-1">
-                  {organizers.length + events.length}
-                </div>
-                <div className="text-sm text-gray-600 font-medium">
-                  {t("dashboard.pendingApproval")}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Organizers Card */}
-          <div className="bg-white glass-card-lower rounded-2xl p-6 shadow-sm border border-gray-100/50">
-            <div className="flex items-start space-x-4">
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                <Users className="h-6 w-6 text-blue-600" />
-              </div>
-              <div className="flex-1">
-                <div className="text-3xl font-bold text-gray-900 mb-1">8</div>
-                <div className="text-sm text-gray-600 font-medium">
-                  {t("dashboard.organizers")}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <DashboardStats organizers={organizers} events={events} />
 
         {/* Organizers Awaiting Approval Section */}
-        <div className="bg-white rounded-2xl glass-card-lower border border-gray-100/50 mt-10">
-          <div className="p-6 border-b border-gray-100">
-            <h2 className="text-lg font-semibold text-gray-900">
-              {t("dashboard.orgazinersAwaitingApproval")}
-            </h2>
-          </div>
-
-          <div className="p-6">
-            {isLoadingOrganizers ? (
-              <div className="space-y-4">
-                <ListItemSkeleton />
-                <ListItemSkeleton />
-              </div>
-            ) : organizers.length > 0 ? (
-              <div className="space-y-4">
-                {organizers.map((organizer) => (
-                  <OrganizerCard
-                    key={organizer.id}
-                    organizer={organizer}
-                    onApprove={handleApproveOrganizer}
-                    onReject={(id) => setRejectOrganizerModal({ open: true, id })}
-                    isApproving={approveOrganizerMutation.isPending}
-                  />
-                ))}
-              </div>
-            ) : (
-              <EmptyState
-                title={t("dashboard.noOrganizersAwaitingApproval")}
-                message={t("dashboard.noOrganizersAwaitingApprovalMessage")}
-              />
-            )}
-          </div>
-        </div>
+        <OrganizerApprovalList />
 
         {/* Events Awaiting Approval Section */}
         <div className="bg-white rounded-2xl glass-card-lower border border-gray-100/50 mt-10">
@@ -248,7 +163,7 @@ const AdminDashboard: React.FC = () => {
       </div>
 
       {/* Reject Organizer Modal */}
-      {rejectOrganizerModal.open && (
+      {/* {rejectOrganizerModal.open && (
         <>
           <div
             className="fixed inset-0 bg-black/30 z-40"
@@ -263,7 +178,7 @@ const AdminDashboard: React.FC = () => {
             onConfirm={handleRejectOrganizer}
           />
         </>
-      )}
+      )} */}
 
       {/* Reject Event Modal */}
       {rejectEventModal.open && (
@@ -297,6 +212,8 @@ const AdminDashboard: React.FC = () => {
             isLoading={approveEventMutation.isPending}
             onCancel={() => setAcceptEventModal({ open: false })}
             onConfirm={handleApproveEvent}
+            eventName={events.find((e) => e.id === acceptEventModal.id)?.title}
+            eventDetails={events.find((e) => e.id === acceptEventModal.id)}
           />
         </>
       )}

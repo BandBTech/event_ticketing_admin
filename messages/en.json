@@ -31,7 +31,8 @@
     "joined": "Joined",
     "tryAgainLater": "Please try again later",
     "noResultsTryAgain": "Try adjusting your search terms or filters",
-    "back": "Back"
+    "back": "Back",
+    "confirm": "Confirm"
   },
   "navigation": {
     "events": "Events",

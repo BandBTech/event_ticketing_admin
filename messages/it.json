@@ -21,7 +21,8 @@
     "joined": "Iscritto il",
     "tryAgainLater": "Riprova più tardi",
     "noResultsTryAgain": "Prova a modificare i termini di ricerca o i filtri",
-    "back": "Indietro"
+    "back": "Indietro",
+    "confirm": "Confermare"
   },
   "navigation": {
     "events": "Eventi",

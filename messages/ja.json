@@ -21,7 +21,8 @@
     "joined": "登録日",
     "tryAgainLater": "後でもう一度お試しください",
     "noResultsTryAgain": "検索条件またはフィルターを調整してみてください",
-    "back": "戻る"
+    "back": "戻る",
+    "confirm": "確認する"
   },
   "navigation": {
     "events": "イベント",
