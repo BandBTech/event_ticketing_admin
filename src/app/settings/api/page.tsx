@@ -27,6 +27,7 @@ export default function ApiSettingsPage() {
       setTimeout(() => setSaveStatus(""), 2000);
     } catch (error) {
       // Error handled silently
+      console.error(error);
       setSaveStatus("");
     }
   };
