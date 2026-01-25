@@ -243,7 +243,7 @@ export default function EventDetailsPage() {
               <>
                 <Button
                   onClick={() => setShowApproveModal(true)}
-                  className="gap-2 bg-green-600 hover:bg-green-700 text-white shadow-sm"
+                  className="gap-2 bg-success hover:bg-success/90 text-white shadow-sm"
                 >
                   <CheckIcon weight="duotone" size={18} />
                   {t("events.actions.approve", "Approve")}
@@ -274,7 +274,7 @@ export default function EventDetailsPage() {
                 <AlertDialogTrigger asChild>
                   <Button
                     variant="outline"
-                    className="gap-2 text-red-600 hover:bg-red-50 hover:text-red-700 border-red-100"
+                    className="gap-2 text-600 hover:bg-red-50 hover:text-red-700 border-red-100"
                   >
                     <TrashIcon weight="duotone" size={18} />
                     {t("events.actions.deleteEvent", "Delete")}

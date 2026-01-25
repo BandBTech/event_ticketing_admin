@@ -79,7 +79,7 @@ export default function PermissionSettingsPage() {
             {t('settings.permissions.subtitle', 'Manage system permissions and role assignments')}
           </p>
         </div>
-        <PermissionGuard permission={PERMISSIONS.PERMISSION_MANAGE}>
+        {/* <PermissionGuard permission={PERMISSIONS.PERMISSION_MANAGE}> */}
           <Button
             onClick={handleInitializeSystem}
             disabled={isLoading}
@@ -91,7 +91,7 @@ export default function PermissionSettingsPage() {
               ? t('settings.permissions.initialize.loading', 'Initializing...')
               : t('settings.permissions.initialize.button', 'Initialize System')}
           </Button>
-        </PermissionGuard>
+        {/* </PermissionGuard> */}
       </div>
 
       {/* Tabs */}

@@ -149,7 +149,7 @@ function EventApprovalModal({
               >
                 {children}
                 <DialogHeader>
-                  <DialogTitle className="text-2xl font-bold bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">{title}</DialogTitle>
+                  <DialogTitle className="text-2xl font-bold text-gray-900 mb-2">{title}</DialogTitle>
                 </DialogHeader>
 
                 <div className="space-y-4">
@@ -228,7 +228,7 @@ function EventApprovalModal({
                   <Button
                     type="submit"
                     disabled={isLoading}
-                    className="h-11 px-8 bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-md shadow-blue-500/20 transition-all duration-300 active:scale-95"
+                    className="h-11 px-8 active:scale-95"
                   >
                     {isLoading
                       ? t("common.loading")
@@ -272,7 +272,7 @@ function EventApprovalModal({
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleConfirm}
-              className="h-11 px-8 bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-md shadow-blue-500/20 transition-all duration-300 active:scale-95"
+              className="h-11 px-8 active:scale-95"
             >
               {t("common.confirm", "Confirm")}
             </AlertDialogAction>
@@ -332,7 +332,7 @@ function RejectionModal({
     <Dialog open={true} onOpenChange={(open) => !open && onCancel?.()}>
       <DialogContent className="max-w-md rounded-3xl shadow-2xl border-none bg-white/95 backdrop-blur-xl data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 duration-300">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold bg-linear-to-r from-red-600 to-orange-600 bg-clip-text text-transparent">{title}</DialogTitle>
+          <DialogTitle className="text-2xl font-bold text-gray-900">{title}</DialogTitle>
         </DialogHeader>
 
         {/* Form */}
@@ -383,8 +383,9 @@ function RejectionModal({
               </Button>
               <Button
                 type="submit"
+                variant="destructive"
                 disabled={isLoading}
-                className="h-11 px-8 bg-linear-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white shadow-md shadow-red-500/20 transition-all duration-300 active:scale-95 flex-1 sm:flex-none"
+                className="h-11 px-8 flex-1 sm:flex-none active:scale-95"
               >
                 {isLoading
                   ? t("common.loading")

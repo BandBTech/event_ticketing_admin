@@ -56,7 +56,7 @@ const EventApprovalList = () => {
 
   const handleViewEvent = (event: Event) => {
     setSelectedEvent(event);
-    router.push(`/events/eventdetails`);
+    router.push(`/events/eventdetails?id=${event.id}`);
   };
 
   const handleApproveEvent = (data: { commissionRate?: number; adminRemark: string }) => {
