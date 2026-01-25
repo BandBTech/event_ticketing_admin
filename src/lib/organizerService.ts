@@ -115,13 +115,11 @@ static async approveOrganizer(payload: {
 
   /**
    * Get organizer by ID
-   * Since there's no dedicated GET endpoint, we fetch from the list
    */
   static async getOrganizerById(id: string): Promise<Organizer | null> {
-    // Fetch with a high limit to increase chance of finding the organizer
-    // Ideally the API should support GET /admin/organizers/{id}
-    const response = await this.getOrganizers({ limit: 100 });
-    return response.organizers.find((org) => org.id === id) || null;
+    return await api.get<Organizer>(API_ENDPOINTS.GET_ORGANIZER_DETAIL(id), {
+      requiresAuth: true,
+    });
   }
 
   /**
@@ -153,6 +151,22 @@ static async approveOrganizer(payload: {
   static async deleteOrganizer(id: string): Promise<void> {
     await api.delete<void>(
       `${API_ENDPOINTS.GET_ORGANIZERS.replace('/organizers', '/organizer')}/${id}`,
+      {
+        requiresAuth: true,
+      }
+    );
+  }
+  /**
+   * Update organizer status (Activate/Deactivate)
+   */
+  static async updateOrganizerStatus(
+    id: string,
+    status: 'active' | 'inactive',
+    admin_remark: string
+  ): Promise<void> {
+    await api.put<void>(
+      API_ENDPOINTS.UPDATE_ORGANIZER_ACCOUNT_STATUS(id),
+      { status, admin_remark },
       {
         requiresAuth: true,
       }

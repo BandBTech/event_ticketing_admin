@@ -356,7 +356,7 @@
       "passwordChangedLogin": "Please login with your new password."
     }
   },
-    "pages": {
+  "pages": {
     "dashboard": "Dashboard",
     "organisers": "Organisers",
     "events": "Events",
@@ -417,7 +417,8 @@
         "editDetails": "Edit Details",
         "deleteOrganizer": "Delete Organizer",
         "sendEmail": "Send Email",
-        "processing": "Processing..."
+        "processing": "Processing...",
+        "deactivateAccount": "Deactivate Account"
       },
       "modals": {
         "approveTitle": "Approve Organizer",

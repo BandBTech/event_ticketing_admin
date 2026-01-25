@@ -20,6 +20,8 @@ export const API_ENDPOINTS = {
   GET_PENDING_ORGANIZERS: `${API_BASE_URL}/admin/organizers/pending`,
   APPROVE_ORGANIZERS: (id: string) =>
     `${API_BASE_URL}/admin/organizers/${id}/approval`,
+  GET_ORGANIZER_DETAIL: (id: string) => `${API_BASE_URL}/admin/organizers/${id}`,
+
 
   // Events
   GET_EVENTS: `${API_BASE_URL}/admin/events`,
@@ -33,4 +35,7 @@ export const API_ENDPOINTS = {
   //settings
   GET_COMPANY: `${API_BASE_URL}/admin/company-info`,
   UPDATE_COMPANY: `${API_BASE_URL}/admin/company-info`,
+
+  // User Management
+  UPDATE_ORGANIZER_ACCOUNT_STATUS: (id: string) => `${API_BASE_URL}/admin/users/${id}/status`,
 };

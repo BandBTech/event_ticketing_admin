@@ -23,6 +23,8 @@ import {
   X as XIcon,
   Warning as WarningIcon,
   ArrowUpLeftIcon,
+  MinusCircleIcon,
+  CircleNotchIcon,
 } from "@phosphor-icons/react";
 import { toast } from "sonner";
 import { queryKeys } from "@/lib/queryKeys";
@@ -60,6 +62,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatPhoneNumber } from "@/lib/utils";
+import { Loader2 } from "lucide-react";
 
 type StatusAction = "approve" | "reject" | "activate" | "deactivate";
 
@@ -206,14 +209,33 @@ function StatusModal({
     }
   }, [isOpen, action, form]);
 
-  const statusMutation = useMutation({
-    mutationFn: (data: ApprovalFormValues) => {
+  const statusUpdateMutation = useMutation({
+    mutationFn: async (data: ApprovalFormValues) => {
+        const targetStatus = action === "activate" ? "active" : "inactive";
+        await OrganizerService.updateOrganizerStatus(
+          organizer.id,
+          targetStatus,
+          data.remark || ""
+        );
+    },
+    onSuccess: () => {
+      const successMessage = t(`organizer.management.messages.${action}Success`, `Organizer ${action}d successfully`);
+      toast.success(successMessage);
+      queryClient.invalidateQueries({ queryKey: queryKeys.organizers.list });
+      queryClient.invalidateQueries({ queryKey: queryKeys.organizers.detail(organizer.id) });
+      onClose();
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || t("organizer.management.messages.updateError", "Failed to update status"));
+    },
+  });
+
+  const approvalMutation = useMutation({
+    mutationFn: async (data: ApprovalFormValues) => {
       let targetStatus = "approved";
       if (action === "reject") targetStatus = "rejected";
-      if (action === "deactivate") targetStatus = "inactive";
-      if (action === "activate") targetStatus = "approved";
 
-      return OrganizerService.approveOrganizer({
+      await OrganizerService.approveOrganizer({
         organizerId: organizer.id,
         admin_remark: data.remark || "",
         status: targetStatus,
@@ -231,8 +253,14 @@ function StatusModal({
     },
   });
 
+  const isPending = statusUpdateMutation.isPending || approvalMutation.isPending;
+
   const onSubmit = (data: ApprovalFormValues) => {
-    statusMutation.mutate(data);
+    if (action === "activate" || action === "deactivate") {
+      statusUpdateMutation.mutate(data);
+    } else {
+      approvalMutation.mutate(data);
+    }
   };
 
   const getModalConfig = () => {
@@ -322,24 +350,24 @@ function StatusModal({
               )}
             />
 
-            <DialogFooter className="gap-2 sm:gap-0">
+            <DialogFooter className="gap-2">
               <Button
                 type="button"
                 variant="outline"
                 onClick={onClose}
-                disabled={statusMutation.isPending}
+                disabled={isPending}
                 className="w-full sm:w-auto"
               >
                 {t("common.cancelButton", "Cancel")}
               </Button>
               <Button
                 type="submit"
-                disabled={statusMutation.isPending}
+                disabled={isPending}
                 className={`w-full sm:w-auto ${config.buttonClass}`}
               >
-                {statusMutation.isPending ? (
+                {isPending ? (
                   <>
-                    <ClockIcon className="mr-2 h-4 w-4 animate-spin" />
+                    <CircleNotchIcon className="mr-2 h-4 w-4 animate-spin" />
                     {t("organizer.management.actions.processing", "Processing...")}
                   </>
                 ) : (
@@ -383,18 +411,15 @@ export default function OrganizerDetailPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
             <WarningIcon weight="duotone" className="w-8 h-8 text-red-500" />
           </div>
           <h2 className="text-xl font-semibold text-gray-900 mb-2">
             {!id ? t("organizer.management.messages.noId", "No Organizer Selected") : isError ? t("common.error", "Error") : t("organizer.management.messages.notFound", "Organizer Not Found")}
           </h2>
-          <p className="text-gray-500 mb-6">
-            {!id ? t("organizer.management.messages.selectFirst", "Please select an organizer from the list.") : (error as Error)?.message || t("organizer.management.messages.notExist", "The organizer you're looking for doesn't exist.")}
-          </p>
           <button
             onClick={() => router.push("/organisers")}
-            className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="px-6 py-2.5 bg-primary text-white rounded-lg hover:bg-primary/80 transition-colors"
           >
             {t("organizer.management.backToList", "Back to Organisers")}
           </button>
@@ -415,6 +440,7 @@ export default function OrganizerDetailPage() {
     ? format(new Date(organizer.updated_at), "MMMM dd, yyyy 'at' hh:mm a")
     : "N/A";
 
+  console.log(organizer);
   const isPending = organizer.organizer_status?.toLowerCase() === "pending";
   const isApproved = organizer.organizer_status?.toLowerCase() === "approved";
   const isRejected = organizer.organizer_status?.toLowerCase() === "rejected";
@@ -452,12 +478,12 @@ export default function OrganizerDetailPage() {
                       <h1 className="text-2xl font-bold text-gray-900">
                         {organizer.first_name} {organizer.last_name}
                       </h1>
-                      {organizer.is_email_verified && (
+                      {/* {organizer.is_email_verified && (
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100">
                           <UserCheckIcon weight="duotone" className="w-3.5 h-3.5" />
                           {t("organizer.management.status.verified", "Verified")}
                         </span>
-                      )}
+                      )} */}
                       <Badge className={accountStatusConfig.color}>
                         {accountStatusConfig.label}
                       </Badge>
@@ -474,24 +500,15 @@ export default function OrganizerDetailPage() {
 
                   <div className="flex items-center gap-2 relative">
                     <div className="flex gap-2">
-                      {isPending && (
-                        <>
-                          <Button onClick={() => handleAction("approve")} className="bg-emerald-600 hover:bg-emerald-700 text-white">
-                            {t("organizer.management.actions.approve", "Approve")}
-                          </Button>
-                          <Button onClick={() => handleAction("reject")} className="bg-red-600 hover:bg-red-700 text-white">
-                            {t("organizer.management.actions.reject", "Reject")}
-                          </Button>
-                        </>
-                      )}
-                      {isApproved && (
-                        <Button onClick={() => handleAction("deactivate")} variant="outline" className="text-red-600 border-red-200 hover:bg-red-50">
-                          {t("organizer.management.actions.deactivate", "Deactivate")}
+                      {!isApproved && (
+                        <Button onClick={() => handleAction("approve")} className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                          {t("organizer.management.actions.approve", "Approve")}
                         </Button>
                       )}
-                      {(isRejected || isInactive) && (
-                        <Button onClick={() => handleAction("activate")} className="bg-blue-600 hover:bg-blue-700 text-white">
-                          {t("organizer.management.actions.activate", "Activate")}
+
+                      {isPending && (
+                        <Button onClick={() => handleAction("reject")} className="bg-destructive hover:bg-destructive/80 text-white">
+                          {t("organizer.management.actions.reject", "Reject")}
                         </Button>
                       )}
                     </div>
@@ -513,6 +530,15 @@ export default function OrganizerDetailPage() {
                           <ArrowSquareOutIcon weight="duotone" className="w-4 h-4" />
                           {t("organizer.management.actions.viewEvents", "View Events")}
                         </DropdownMenuItem>
+                        {isApproved && (
+                          <DropdownMenuItem
+                            onClick={() => handleAction("deactivate")}
+                            className="gap-2 text-red-600 focus:text-red-600 focus:bg-red-50"
+                          >
+                            <MinusCircleIcon weight="duotone" className="w-4 h-4" />
+                            {t("organizer.management.actions.deactivateAccount", "Deactivate Account")}
+                          </DropdownMenuItem>
+                        )}
                         <DropdownMenuItem disabled className="gap-2">
                           <PencilSimpleIcon weight="duotone" className="w-4 h-4" />
                           {t("organizer.management.actions.editDetails", "Edit Details")}

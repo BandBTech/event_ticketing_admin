@@ -443,7 +443,7 @@ const AdminDashboard: React.FC = () => {
             onClick={() => setRejectModal({ open: false })}
           />
           <PopupModal
-            title="Reject Organizer"
+            title={t("organizer.management.modals.rejectTitle", "Reject Organizer")}
             isApprove={false}
             showCommissionInput={false}
             onCancel={() => setRejectEventModal({ open: false })}

@@ -380,7 +380,8 @@
         "editDetails": "Modifica Dettagli",
         "deleteOrganizer": "Elimina Organizzatore",
         "sendEmail": "Invia Email",
-        "processing": "Elaborazione..."
+        "processing": "Elaborazione...",
+        "deactivateAccount": "Disattiva account"
       },
       "modals": {
         "approveTitle": "Approva Organizzatore",
@@ -429,7 +430,7 @@
     "joined": "Iscritto",
     "pleaseTryAgainLater": "Riprova più tardi"
   },
-    "users": {
+  "users": {
     "searchUsers": "cerca utenti..."
   },
   "settings": {

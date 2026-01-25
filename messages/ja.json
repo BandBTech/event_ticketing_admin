@@ -380,7 +380,8 @@
         "editDetails": "詳細編集",
         "deleteOrganizer": "主催者を削除",
         "sendEmail": "メールを送信",
-        "processing": "処理中..."
+        "processing": "処理中...",
+        "deactivateAccount": "アカウントを無効化する"
       },
       "modals": {
         "approveTitle": "主催者の承認",
@@ -429,7 +430,7 @@
     "joined": "参加済み",
     "pleaseTryAgainLater": "時間をおいて再度お試しください"
   },
-    "users": {
+  "users": {
     "searchUsers": "検索ユーザー..."
   },
   "settings": {

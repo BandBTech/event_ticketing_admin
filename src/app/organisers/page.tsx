@@ -204,7 +204,7 @@ function OrganizerCard({ organizer }: { organizer: Organizer }) {
               {t(`organizer.${statusConfig.label}`)}
             </Badge>
           </div>
-          {organizer.is_email_verified && (
+          {/* {organizer.is_email_verified && (
             <Badge
               variant="secondary"
               className="bg-blue-50 text-blue-600 hover:bg-blue-100 border-blue-100 gap-1 px-2 py-0.5"
@@ -213,7 +213,7 @@ function OrganizerCard({ organizer }: { organizer: Organizer }) {
               <UserCheckIcon weight="duotone" className="w-3.5 h-3.5" />
               {t("organizer.verified")}
             </Badge>
-          )}
+          )} */}
         </div>
 
         <div className="space-y-1 text-sm text-muted-foreground">
@@ -293,7 +293,7 @@ export default function OrganisersPage() {
   const currentPage = Number(searchParams.get("page")) || 1;
   const searchQuery = searchParams.get("search") || "";
   const statusFilter = searchParams.get("status") || "";
-  const itemsPerPage = 9;
+  const itemsPerPage = 12;
 
   // Helper to update URL params
   const updateParams = useCallback(
@@ -387,7 +387,7 @@ export default function OrganisersPage() {
   }
 
   return (
-    <div className="min-h-screen p-8 space-y-8">
+    <div className="min-h-screen p-8 space-y-8 @container">
       <div className="flex items-center justify-between gap-4">
         <div className="relative flex-1 max-w-md">
           <MagnifyingGlassIcon
@@ -412,7 +412,7 @@ export default function OrganisersPage() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 @2xl:grid-cols-2 @5xl:grid-cols-3 gap-6">
         {isLoading ? (
           Array.from({ length: 8 }).map((_, i) => (
             <OrganizerCardSkeleton key={i} />
