@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useCallback } from "react";
+import React, { useCallback } from "react";
 import {
   MagnifyingGlass as MagnifyingGlassIcon,
   Funnel as FunnelIcon,
@@ -42,6 +42,15 @@ import { queryKeys } from "@/lib/queryKeys";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
 import { formatPhoneNumber } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 import OrganizerFormDialog from "./components/OrganizerFormDialog";
 
 function getInitials(firstName: string, lastName: string) {
@@ -93,6 +102,7 @@ function getStatusConfig(status: string) {
       };
   }
 }
+
 
 function getAccountStatusConfig(status: string) {
   switch (status?.toLowerCase()) {
@@ -176,12 +186,12 @@ function OrganizerCard({ organizer }: { organizer: Organizer }) {
             <h3 className="font-bold text-lg text-gray-900 truncate pr-1 group-hover:text-primary transition-colors">
               {organizer.first_name} {organizer.last_name}
             </h3>
-            {/* <Badge
+            <Badge
               variant="outline"
               className={`text-[10px] font-bold shrink-0 ${accountStatusConfig.className}`}
             >
               {t(`organizer.${accountStatusConfig.label}`)}
-            </Badge> */}
+            </Badge>
           </div>
           <p
             className="text-sm text-muted-foreground truncate font-medium"
@@ -336,38 +346,23 @@ export default function OrganisersPage() {
     isError,
     error,
   } = useQuery<OrganizerListResponse>({
-    queryKey: queryKeys.organizers.all(currentPage, itemsPerPage),
+    queryKey: queryKeys.organizers.all({
+      page: currentPage,
+      limit: itemsPerPage,
+      search: searchQuery,
+      status: statusFilter,
+    }),
     queryFn: () =>
       OrganizerService.getOrganizers({
         page: currentPage,
         limit: itemsPerPage,
+        search: searchQuery,
+        status: statusFilter,
       }),
   });
 
-  // Client-side filtering (API doesn't support search/status)
-  const filteredOrganizers = useMemo(() => {
-    let result = response?.organizers || [];
-
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      result = result.filter(
-        (org) =>
-          org.first_name?.toLowerCase().includes(query) ||
-          org.last_name?.toLowerCase().includes(query) ||
-          org.email?.toLowerCase().includes(query) ||
-          org.phone?.includes(query)
-      );
-    }
-
-    if (statusFilter) {
-      result = result.filter(
-        (org) =>
-          org.organizer_status?.toLowerCase() === statusFilter.toLowerCase()
-      );
-    }
-
-    return result;
-  }, [response?.organizers, searchQuery, statusFilter]);
+  // Server-side filtering now, so we use response?.organizers directly
+  const filteredOrganizers = response?.organizers || [];
 
   const totalItems = response?.total || 0;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -408,13 +403,46 @@ export default function OrganisersPage() {
             />
           </div>
 
-          <Button
-            variant="outline"
-            className="h-11 gap-2 bg-background/80 backdrop-blur-sm border-gray-200"
-          >
-            <FunnelIcon weight="duotone" className="h-4 w-4" />
-            {t("common.filter")}
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className={`h-11 gap-2 bg-background/80 backdrop-blur-sm border-gray-200 ${statusFilter ? 'border-primary text-primary bg-primary/5' : ''}`}
+              >
+                <FunnelIcon
+                  weight={statusFilter ? "bold" : "duotone"}
+                  className="h-4 w-4"
+                />
+                {statusFilter
+                  ? t(`organizer.${statusFilter.toLowerCase()}`)
+                  : t("common.filter")}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuLabel>{t("organizer.status")}</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuRadioGroup
+                value={statusFilter}
+                onValueChange={(value) => updateParams({ status: value, page: "1" })}
+              >
+                <DropdownMenuRadioItem value="">
+                  {t("events.allStatus")}
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="pending">
+                  {t("organizer.pending")}
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="approved">
+                  {t("organizer.approved")}
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="rejected">
+                  {t("organizer.rejected")}
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="inactive">
+                  {t("organizer.inactive")}
+                </DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         <Button

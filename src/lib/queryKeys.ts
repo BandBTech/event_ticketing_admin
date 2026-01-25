@@ -34,9 +34,14 @@ export const queryKeys = {
    * Organizers query keys
    */
   organizers: {
-    /** Key for fetching organizers list with pagination */
-    all: (page?: number, itemsPerPage?: number) =>
-      ["organizers", page, itemsPerPage] as const,
+    /** Key for fetching organizers list with pagination and filters */
+    all: (filters?: {
+      page?: number;
+      limit?: number;
+      search?: string;
+      status?: string;
+      account_status?: string;
+    }) => ["organizers", filters] as const,
     /** Key for all organizers (used for invalidation) */
     list: ["organizers"] as const,
     /** Key for fetching a single organizer by ID */

@@ -1,3 +1,5 @@
+"use client";
+
 import { Suspense } from "react";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import DashboardHeader from "@/components/layout/dashboard-header";

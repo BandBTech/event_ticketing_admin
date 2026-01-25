@@ -78,6 +78,9 @@ export class OrganizerService {
     page?: number;
     limit?: number;
     sort?: string;
+    search?: string;
+    status?: string;
+    account_status?: string;
   }): Promise<OrganizerListResponse> {
     const params = new URLSearchParams();
 
@@ -85,6 +88,9 @@ export class OrganizerService {
       if (filters.page) params.append('page', filters.page.toString());
       if (filters.limit) params.append('limit', filters.limit.toString());
       if (filters.sort) params.append('sort', filters.sort);
+      if (filters.search) params.append('search', filters.search);
+      if (filters.status) params.append('status', filters.status);
+      if (filters.account_status) params.append('account_status', filters.account_status);
     }
 
     const query = params.toString();
