@@ -2,6 +2,7 @@
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
 import { OrganizerCard } from "./OrganizerCard";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useApproveOrganizer, usePendingOrganizers, useRejectOrganizer } from "@/hooks/useDashboard";
 import { toast } from "sonner";
 import { EmptyState } from "../EmptyState";
@@ -12,6 +13,21 @@ interface ModalState {
   open: boolean;
   id?: string;
 }
+
+const ListItemSkeleton = () => {
+  return (
+    <div className="flex flex-col sm:flex-row items-center gap-4 px-4 py-3 border-gray-100 border-b last:border-b-0">
+      <Skeleton className="w-12 h-12 rounded-full shrink-0" />
+      <div className="flex-1 min-w-0 w-full flex flex-col items-center sm:items-start gap-2">
+        <Skeleton className="h-5 w-32" />
+        <Skeleton className="h-3 w-48" />
+      </div>
+      <div className="w-full sm:w-auto flex justify-center sm:justify-end">
+        <Skeleton className="h-9 w-[180px]" />
+      </div>
+    </div>
+  );
+};
 
 const OrganizerApprovalList = () => {
   const { locale } = useLanguageStore();
@@ -52,18 +68,18 @@ const OrganizerApprovalList = () => {
     <>
       <div className="bg-white rounded-2xl glass-card-lower border border-gray-100/50 mt-4">
         <div className="px-4 py-3 border-b border-gray-200">
-          <h2 className="text-sm font-medium text-muted-foreground">
+          <h2 className="font-medium text-muted-foreground">
             {t("dashboard.orgazinersAwaitingApproval")}
           </h2>
         </div>
 
         <div>
           {isLoadingOrganizers ? (
-            <>Loading...</>
-            // <div className="space-y-4">
-            //   <ListItemSkeleton />
-            //   <ListItemSkeleton />
-            // </div>
+            <div className="space-y-0">
+              {[1, 2, 3].map((i) => (
+                <ListItemSkeleton key={i} />
+              ))}
+            </div>
           ) : organizers?.length > 0 ? (
             <>
               {organizers?.map((organizer) => (

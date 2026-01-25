@@ -22,7 +22,8 @@
     "tryAgainLater": "Riprova più tardi",
     "noResultsTryAgain": "Prova a modificare i termini di ricerca o i filtri",
     "back": "Indietro",
-    "confirm": "Confermare"
+    "confirm": "Confermare",
+    "approve": "Approvare"
   },
   "navigation": {
     "events": "Eventi",

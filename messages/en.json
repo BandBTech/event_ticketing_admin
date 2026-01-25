@@ -32,7 +32,8 @@
     "tryAgainLater": "Please try again later",
     "noResultsTryAgain": "Try adjusting your search terms or filters",
     "back": "Back",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "approve": "Approve"
   },
   "navigation": {
     "events": "Events",

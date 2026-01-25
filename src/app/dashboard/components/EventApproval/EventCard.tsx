@@ -14,6 +14,7 @@ interface EventCardProps {
   onView: (event: Event) => void;
   onApprove: (eventId: string) => void;
   onReject: (eventId: string) => void;
+  isApproving?: boolean;
 }
 
 function getInitials(title: string) {
@@ -24,12 +25,12 @@ function getInitials(title: string) {
   return (title?.[0] || "E").toUpperCase();
 }
 
-export function EventCard({ event, onView, onApprove, onReject }: EventCardProps) {
+export function EventCard({ event, onView, onApprove, onReject, isApproving }: EventCardProps) {
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
 
   return (
-    <div className="flex flex-col sm:flex-row items-center gap-4 p-4 bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+    <div className="flex flex-col sm:flex-row items-center gap-4 px-4 py-3 border-gray-100 border-b last:border-b-0 hover:bg-gray-100 transition-colors">
       {/* Event Avatar */}
       <div className="flex items-center justify-center w-12 h-12 rounded-full bg-linear-to-br from-orange-500 to-pink-600 text-white font-semibold text-lg shrink-0 shadow-sm">
         {getInitials(event.title)}
@@ -37,21 +38,21 @@ export function EventCard({ event, onView, onApprove, onReject }: EventCardProps
 
       {/* Event Info */}
       <div className="flex-1 min-w-0 text-center sm:text-left">
-        <h3 className="text-base font-semibold text-gray-900 truncate">
-          {event.title}
-        </h3>
-        {/* Commission Badge */}
-        {event.commission_rate > 0 && (
-          <div className="flex justify-center sm:justify-start mt-1 mb-2">
-            <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 border-emerald-100/50 hover:bg-emerald-100 transition-colors gap-1 shadow-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+          <h3 className="text-base font-semibold text-gray-900 truncate max-w-[200px] sm:max-w-none">
+            {event.title}
+          </h3>
+          {/* Commission Badge */}
+          {event.commission_rate > 0 && (
+            <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 border-emerald-100/50 hover:bg-emerald-100 transition-colors gap-1 shadow-xs w-fit mx-auto sm:mx-0">
               <Percent className="w-3 h-3" />
               {event.commission_rate}% {t("dashboard.commission", "Commission")}
             </Badge>
-          </div>
-        )}
+          )}
+        </div>
         {event?.description && (
           <p
-            className="text-xs text-gray-500 max-w-md line-clamp-2"
+            className="text-xs text-gray-500 max-w-md line-clamp-1 mt-0.5"
             dangerouslySetInnerHTML={{
               __html: event.description,
             }}
@@ -60,34 +61,36 @@ export function EventCard({ event, onView, onApprove, onReject }: EventCardProps
       </div>
 
       {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 shrink-0 mt-2 sm:mt-0">
+      <div className="flex flex-col sm:flex-row items-center gap-2 shrink-0">
         <Button
           variant="outline"
+          size="sm"
           onClick={() => onView(event)}
-          className="text-primary hover:bg-primary/5 w-full sm:w-auto"
+          className="text-primary hover:bg-primary/5 w-full sm:w-auto h-9"
         >
-          <ExternalLink className="w-4 h-4 mr-1" />
+          <ExternalLink className="w-3.5 h-3.5 mr-1" />
           {t("dashboard.viewEvent")}
         </Button>
-        <ButtonGroup>
+        <ButtonGroup className="w-full sm:w-auto">
           <Button
             variant="outline"
+            size="sm"
             onClick={() => onReject(event.id)}
-            className="text-destructive hover:bg-destructive/5 w-full sm:w-auto"
+            className="text-destructive hover:bg-destructive/5 w-full sm:w-auto h-9"
           >
-            <X className="w-4 h-4 mr-1" />
+            <X className="w-3.5 h-3.5 mr-1" />
             {t("dashboard.reject")}
-
           </Button>
           <Button
             variant="outline"
+            size="sm"
             onClick={() => onApprove(event.id)}
-            className="text-success hover:bg-success/5 w-full sm:w-auto"
+            disabled={isApproving}
+            className="text-success hover:bg-success/5 w-full sm:w-auto h-9"
           >
-            <Check className="w-4 h-4 mr-1" />
+            <Check className="w-3.5 h-3.5 mr-1" />
             {t("dashboard.accept")}
           </Button>
-
         </ButtonGroup>
       </div>
     </div>

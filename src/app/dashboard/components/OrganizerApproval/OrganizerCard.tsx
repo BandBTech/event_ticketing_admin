@@ -31,7 +31,7 @@ export function OrganizerCard({
   const { t } = useTranslation(locale);
 
   return (
-    <div className="flex flex-col sm:flex-row items-center gap-4 mx-4 py-3 border-gray-200 hover:bg-gray-100">
+    <div className="flex flex-col sm:flex-row items-center gap-4 px-4 py-3 border-gray-100 border-b last:border-b-0 hover:bg-gray-100">
       {/* Avatar with Initials */}
       <div className="flex items-center justify-center w-12 h-12 font-semibold text-white bg-primary rounded-full shadow-inner">
         {getInitials(organizer.first_name, organizer.last_name)}
@@ -50,8 +50,8 @@ export function OrganizerCard({
       </div>
 
       {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 shrink-0 mt-2 sm:mt-0">
-        <ButtonGroup>
+      <div className="">
+        <ButtonGroup className="max-md:w-1/2">
           <Button
             variant="outline"
             onClick={() => onReject(organizer.id)}
@@ -67,7 +67,7 @@ export function OrganizerCard({
             className="text-success hover:bg-success/5 w-full sm:w-auto"
           >
             <Check className="w-4 h-4" />
-            {t("dashboard.accept")}
+            {t("common.approve")}
           </Button>
         </ButtonGroup>
       </div>
