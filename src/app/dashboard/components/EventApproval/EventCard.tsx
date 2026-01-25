@@ -30,25 +30,18 @@ export function EventCard({ event, onView, onApprove, onReject, isApproving }: E
   const { t } = useTranslation(locale);
 
   return (
-    <div className="flex flex-col sm:flex-row items-center gap-4 px-4 py-3 border-gray-100 border-b last:border-b-0 hover:bg-gray-100 transition-colors">
+    <div className="flex flex-col @2xl:flex-row items-center gap-4 px-4 py-3 border-gray-100 border-b last:border-b-0 hover:bg-gray-100 transition-colors">
       {/* Event Avatar */}
       <div className="flex items-center justify-center w-12 h-12 rounded-full bg-linear-to-br from-orange-500 to-pink-600 text-white font-semibold text-lg shrink-0 shadow-sm">
         {getInitials(event.title)}
       </div>
 
       {/* Event Info */}
-      <div className="flex-1 min-w-0 text-center sm:text-left">
-        <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-          <h3 className="text-base font-semibold text-gray-900 truncate max-w-[200px] sm:max-w-none">
+      <div className="flex-1 min-w-0 text-center @2xl:text-left">
+        <div className="flex flex-col @2xl:flex-row @2xl:items-center gap-2">
+          <h3 className="text-base font-semibold text-gray-900 truncate max-w-[200px] @2xl:max-w-none">
             {event.title}
           </h3>
-          {/* Commission Badge */}
-          {event.commission_rate > 0 && (
-            <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 border-emerald-100/50 hover:bg-emerald-100 transition-colors gap-1 shadow-xs w-fit mx-auto sm:mx-0">
-              <Percent className="w-3 h-3" />
-              {event.commission_rate}% {t("dashboard.commission", "Commission")}
-            </Badge>
-          )}
         </div>
         {event?.description && (
           <p
@@ -61,32 +54,29 @@ export function EventCard({ event, onView, onApprove, onReject, isApproving }: E
       </div>
 
       {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row items-center gap-2 shrink-0">
+      <div className="flex flex-col @2xl:flex-row items-center gap-2 shrink-0">
         <Button
           variant="outline"
-          size="sm"
           onClick={() => onView(event)}
-          className="text-primary hover:bg-primary/5 w-full sm:w-auto h-9"
+          className="text-primary hover:bg-primary/5 w-full @2xl:w-auto"
         >
           <ExternalLink className="w-3.5 h-3.5 mr-1" />
           {t("dashboard.viewEvent")}
         </Button>
-        <ButtonGroup className="w-full sm:w-auto">
+        <ButtonGroup className="w-1/2">
           <Button
             variant="outline"
-            size="sm"
             onClick={() => onReject(event.id)}
-            className="text-destructive hover:bg-destructive/5 w-full sm:w-auto h-9"
+            className="text-destructive hover:bg-destructive/5"
           >
             <X className="w-3.5 h-3.5 mr-1" />
             {t("dashboard.reject")}
           </Button>
           <Button
             variant="outline"
-            size="sm"
             onClick={() => onApprove(event.id)}
             disabled={isApproving}
-            className="text-success hover:bg-success/5 w-full sm:w-auto h-9"
+            className="text-success hover:bg-success/5"
           >
             <Check className="w-3.5 h-3.5 mr-1" />
             {t("dashboard.accept")}

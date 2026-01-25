@@ -14,7 +14,7 @@ import {
 import { EventCard } from "./EventCard";
 import { EmptyState } from "../EmptyState";
 import { Skeleton } from "@/components/ui/skeleton";
-import PopupModal from "../PopupModal";
+import PopupModal from "./PopupModal";
 import { Event } from "@/types/event";
 
 interface ModalState {
@@ -100,7 +100,7 @@ const EventApprovalList = () => {
 
   return (
     <>
-      <div className="bg-white rounded-2xl glass-card-lower border border-gray-100/50 mt-8">
+      <div className="bg-white @container rounded-2xl glass-card-lower border border-gray-100/50 mt-8">
         <div className="px-4 py-3 border-b border-gray-100">
           <h2 className="font-medium text-muted-foreground">
             {t("dashboard.eventsAwaitingApproval")}

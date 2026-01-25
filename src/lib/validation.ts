@@ -27,7 +27,7 @@ export interface ValidationHelpers {
  * @returns Object with validation helper methods
  */
 export const createValidationHelpers = (
-  t: (key: string, fallback?: string) => string
+  t: (key: string, fallback?: string, params?: Record<string, string | number>) => string
 ): ValidationHelpers => ({
   /**
    * Required field validation
@@ -168,7 +168,7 @@ export const createValidationHelpers = (
 
 import * as z from "zod";
 
-export const createApprovalSchema = (t: (key: string, fallback?: string) => string, action: "approve" | "reject" | "activate" | "deactivate") => {
+export const createApprovalSchema = (t: (key: string, fallback?: string, params?: Record<string, string | number>) => string, action: "approve" | "reject" | "activate" | "deactivate") => {
   return z.object({
     remark: (action === "reject" || action === "deactivate")
       ? z.string()
@@ -183,6 +183,41 @@ export const createApprovalSchema = (t: (key: string, fallback?: string) => stri
 export type ApprovalFormValues = z.infer<ReturnType<typeof createApprovalSchema>>;
 
 /**
+ * Organizer Creation Schema (Admin)
+ */
+export const createOrganizerSchema = (
+  t: (key: string, fallback?: string, params?: Record<string, string | number>) => string
+) => {
+  const v = createValidationHelpers(t);
+  return z.object({
+    first_name: z
+      .string()
+      .min(1, v.required(t('auth.signup.firstName', 'First Name')))
+      .min(2, v.minLength(t('auth.signup.firstName', 'First Name'), 2))
+      .max(50, v.maxLength(t('auth.signup.firstName', 'First Name'), 50)),
+    last_name: z
+      .string()
+      .min(1, v.required(t('auth.signup.lastName', 'Last Name')))
+      .min(2, v.minLength(t('auth.signup.lastName', 'Last Name'), 2))
+      .max(50, v.maxLength(t('auth.signup.lastName', 'Last Name'), 50)),
+    email: z
+      .string()
+      .min(1, v.required(t('auth.signup.email', 'Email')))
+      .email(v.email(t('auth.signup.email', 'Email'))),
+    password: z
+      .string()
+      .min(8, v.minLength(t('auth.signup.password', 'Password'), 8))
+      .regex(/[A-Z]/, v.passwordUppercase())
+      .regex(/[a-z]/, v.passwordLowercase())
+      .regex(/[0-9]/, v.passwordNumber()),
+    phone: z.string().optional().or(z.literal('')),
+    country_code: z.string().optional().or(z.literal('')),
+  });
+};
+
+export type CreateOrganizerFormData = z.infer<ReturnType<typeof createOrganizerSchema>>;
+
+/**
  * Dashboard Event Approval Schema
  * Used for approving events with commission rate
  * 
@@ -190,7 +225,7 @@ export type ApprovalFormValues = z.infer<ReturnType<typeof createApprovalSchema>
  * - Pass `t` function to schema for translated error messages
  * - Use with `useMemo(() => createEventApprovalSchema(t), [t])`
  */
-export const createEventApprovalSchema = (t: (key: string, fallback?: string) => string) => {
+export const createEventApprovalSchema = (t: (key: string, fallback?: string, params?: Record<string, string | number>) => string) => {
   return z.object({
     commissionRate: z.string()
       .min(1, t("dashboard.validation.commissionRequired", "Commission rate is required."))
@@ -214,7 +249,7 @@ export type EventApprovalFormValues = z.infer<ReturnType<typeof createEventAppro
  * - Pass `t` function to schema for translated error messages
  * - Use with `useMemo(() => createRejectionSchema(t), [t])`
  */
-export const createRejectionSchema = (t: (key: string, fallback?: string) => string) => {
+export const createRejectionSchema = (t: (key: string, fallback?: string, params?: Record<string, string | number>) => string) => {
   return z.object({
     adminRemark: z.string()
       .min(10, t("dashboard.validation.rejectionReasonRequired", "Reason for rejection is required (min 10 characters)."))
@@ -245,7 +280,7 @@ export const PROMO_CODE_QUANTITY_MAX = 100000;
 
 // Helper for required date string validation
 const createRequiredDateSchema = (
-  t: (key: string, fallback?: string) => string,
+  t: (key: string, fallback?: string, params?: Record<string, string | number>) => string,
   fieldName: string
 ) =>
   z.string().min(1, t('event.validation.dateRequired', `${fieldName} is required.`)).superRefine((val, ctx) => {
@@ -277,7 +312,7 @@ const createRequiredDateSchema = (
 
 // Helper for required number schema
 const createRequiredNumberSchema = (
-  t: (key: string, fallback?: string) => string,
+  t: (key: string, fallback?: string, params?: Record<string, string | number>) => string,
   fieldName: string,
   minValue: number = 1,
   maxValue: number = Number.MAX_SAFE_INTEGER
@@ -301,7 +336,7 @@ const createRequiredNumberSchema = (
  * Ticket/Tier Schema
  * Used for validating individual ticket tiers
  */
-export const createTicketSchema = (t: (key: string, fallback?: string) => string) =>
+export const createTicketSchema = (t: (key: string, fallback?: string, params?: Record<string, string | number>) => string) =>
   z
     .object({
       id: z.string().optional(),
@@ -338,7 +373,7 @@ export const createTicketSchema = (t: (key: string, fallback?: string) => string
       }
     );
 
-export const createPromoCodeSchema = (t: (key: string, fallback?: string) => string) => z.object({
+export const createPromoCodeSchema = (t: (key: string, fallback?: string, params?: Record<string, string | number>) => string) => z.object({
   code: z
     .string()
     .min(1, t('event.validation.promoCodeRequired', "Promo Code is required."))
@@ -433,7 +468,7 @@ export type TicketFormData = z.infer<ReturnType<typeof createTicketSchema>>;
  * Event Schema
  * Full validation for create/edit event form
  */
-export const createEventSchema = (t: (key: string, fallback?: string) => string) =>
+export const createEventSchema = (t: (key: string, fallback?: string, params?: Record<string, string | number>) => string) =>
   z
     .object({
       name: z

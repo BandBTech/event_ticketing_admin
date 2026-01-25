@@ -16,10 +16,12 @@ export const API_ENDPOINTS = {
 
   // Organizers
   GET_ORGANIZERS: `${API_BASE_URL}/admin/organizers`,
-  CREATE_ORGANIZERS: `${API_BASE_URL}/admin/organizer`,
+  GET_SINGLE_ORGANIZER: (id: string) =>
+    `${API_BASE_URL}/admin/organizers/${id}`,
+  CREATE_ORGANIZERS: `${API_BASE_URL}/admin/users/organizers`,
   GET_PENDING_ORGANIZERS: `${API_BASE_URL}/admin/organizers/pending`,
   APPROVE_ORGANIZERS: (id: string) =>
-    `${API_BASE_URL}/admin/organizers/${id}/approval2`,
+    `${API_BASE_URL}/admin/organizers/${id}/approval`,
 
   // Events
   GET_EVENTS: `${API_BASE_URL}/admin/events`,

@@ -37,7 +37,7 @@ export function useTranslation(locale: Locale = 'en') {
     loadMessages();
   }, [locale]);
 
-  const t = (key: string, fallback?: string): string => {
+  const t = (key: string, fallback?: string, variables?: Record<string, string | number>): string => {
     const keys = key.split('.');
     let value: string | TranslationMessages = messages;
     
@@ -45,11 +45,20 @@ export function useTranslation(locale: Locale = 'en') {
       if (value && typeof value === 'object' && k in value) {
         value = value[k];
       } else {
-        return fallback || key;
+        value = fallback || key;
+        break;
       }
     }
     
-    return typeof value === 'string' ? value : fallback || key;
+    let result = typeof value === 'string' ? value : fallback || key;
+
+    if (variables) {
+      Object.entries(variables).forEach(([k, v]) => {
+        result = result.replace(new RegExp(`\\{${k}\\}`, 'g'), String(v));
+      });
+    }
+
+    return result;
   };
 
   return { t, isLoading, locale };

@@ -17,6 +17,7 @@ import {
   Clock as ClockIcon,
   Ticket as TicketIcon,
   Warning as WarningIcon,
+  UserPlusIcon,
 } from "@phosphor-icons/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
@@ -41,6 +42,7 @@ import { queryKeys } from "@/lib/queryKeys";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
 import { formatPhoneNumber } from "@/lib/utils";
+import OrganizerFormDialog from "./components/OrganizerFormDialog";
 
 function getInitials(firstName: string, lastName: string) {
   const first = firstName?.[0] || "";
@@ -174,12 +176,12 @@ function OrganizerCard({ organizer }: { organizer: Organizer }) {
             <h3 className="font-bold text-lg text-gray-900 truncate pr-1 group-hover:text-primary transition-colors">
               {organizer.first_name} {organizer.last_name}
             </h3>
-            <Badge
+            {/* <Badge
               variant="outline"
               className={`text-[10px] font-bold shrink-0 ${accountStatusConfig.className}`}
             >
               {t(`organizer.${accountStatusConfig.label}`)}
-            </Badge>
+            </Badge> */}
           </div>
           <p
             className="text-sm text-muted-foreground truncate font-medium"
@@ -294,6 +296,7 @@ export default function OrganisersPage() {
   const searchQuery = searchParams.get("search") || "";
   const statusFilter = searchParams.get("status") || "";
   const itemsPerPage = 9;
+  const [isAddDialogOpen, setIsAddDialogOpen] = React.useState(false);
 
   // Helper to update URL params
   const updateParams = useCallback(
@@ -329,6 +332,7 @@ export default function OrganisersPage() {
   const {
     data: response,
     isLoading,
+    isFetching,
     isError,
     error,
   } = useQuery<OrganizerListResponse>({
@@ -388,32 +392,47 @@ export default function OrganisersPage() {
 
   return (
     <div className="min-h-screen p-8 space-y-8">
-      <div className="flex items-center justify-between gap-4">
-        <div className="relative flex-1 max-w-md">
-          <MagnifyingGlassIcon
-            weight="duotone"
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground"
-          />
-          <Input
-            type="text"
-            placeholder={t("organizer.searchOrganizers")}
-            value={searchQuery}
-            onChange={(e) => handleSearchChange(e.target.value)}
-            className="pl-9"
-          />
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="flex items-center gap-4 w-full sm:w-auto flex-1 max-w-2xl">
+          <div className="relative flex-1">
+            <MagnifyingGlassIcon
+              weight="duotone"
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground"
+            />
+            <Input
+              type="text"
+              placeholder={t("organizer.searchOrganizers")}
+              value={searchQuery}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              className="pl-9 h-11"
+            />
+          </div>
+
+          <Button
+            variant="outline"
+            className="h-11 gap-2 bg-background/80 backdrop-blur-sm border-gray-200"
+          >
+            <FunnelIcon weight="duotone" className="h-4 w-4" />
+            {t("common.filter")}
+          </Button>
         </div>
 
         <Button
-          variant="outline"
-          className="gap-2 bg-background/80 backdrop-blur-sm"
+          onClick={() => setIsAddDialogOpen(true)}
+          className="w-full sm:w-auto gap-2 bg-primary hover:bg-primary/80 text-primary-foreground shadow-sm transition-all ease-out duration-300 active:scale-95"
         >
-          <FunnelIcon weight="duotone" className="h-4 w-4" />
-          {t("common.filter")}
+          <UserPlusIcon weight="bold" className="h-5 w-5" />
+          {t("organizer.addOrganizer", "Add Organizer")}
         </Button>
       </div>
 
+      <OrganizerFormDialog
+        open={isAddDialogOpen}
+        onOpenChange={setIsAddDialogOpen}
+      />
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {isLoading ? (
+        {isLoading || isFetching ? (
           Array.from({ length: 8 }).map((_, i) => (
             <OrganizerCardSkeleton key={i} />
           ))

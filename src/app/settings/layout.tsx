@@ -20,6 +20,8 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import DashboardHeader from "@/components/layout/dashboard-header";
 import { ProtectedRoute } from "@/components/providers/ProtectedRoute";
+import { useUIStore } from "@/store/uiStore";
+import { useSidebarResponsive } from "@/hooks/useSidebarResponsive";
 
 const menuItems = [
   {
@@ -77,15 +79,12 @@ export default function SettingsLayout({
   const pathname = usePathname();
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
-  const [collapsed, setCollapsed] = useState(false);
+  useSidebarResponsive();
 
   return (
     <ProtectedRoute>
       <div className=" flex h-screen overflow-hidden bg-gray-50/50">
-        <AppSidebar
-          collapsed={collapsed}
-          onToggle={() => setCollapsed(!collapsed)}
-        />
+        <AppSidebar />
         <div className="flex flex-1 flex-col">
           <header className="flex h-16 shrink-0 items-center gap-4 border-b bg-white px-6">
             <Suspense fallback={<div className="flex-1" />}>

@@ -503,13 +503,13 @@ export default function EventsPage() {
             <FunnelIcon weight="duotone" className="h-4 w-4" />
             {t("events.moreFilters")}
           </Button>
-          <Button
+          {/* <Button
             onClick={() => router.push("/events/createevent")}
             className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
           >
             <PlusIcon weight="bold" className="h-4 w-4" />
             {t("events.createEvent", "Create Event")}
-          </Button>
+          </Button> */}
         </div>
       </div>
 

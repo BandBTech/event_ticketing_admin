@@ -503,7 +503,11 @@
       "rejectionPlaceholder": "Please provide a reason for rejection...",
       "confirmApprove": "Approve",
       "confirmReject": "Reject",
-      "commissionRatePlaceholder": "Enter commission rate (in %)"
+      "commissionRatePlaceholder": "Enter commission rate (in %)",
+      "organizedBy": "Organized By",
+      "onboardingIncomplete": "Onboarding Incomplete",
+      "organizerNotFound": "Organizer info not available",
+      "confirmEventApproval": "Confirm Event Approval"
     },
     "toast": {
       "organizerApproved": "Organizer approved successfully!",
@@ -585,6 +589,13 @@
         "remarkTooLong": "Remark cannot exceed 500 characters"
       }
     },
+    "addOrganizer": "Add Organizer",
+    "create": {
+      "title": "Add New Organizer",
+      "description": "Create a new organizer account with pre-approved status.",
+      "success": "Organizer created successfully",
+      "error": "Failed to create organizer"
+    },
     "title": "Organizers",
     "searchOrganizers": "Search organizers...",
     "status": "Status",
@@ -606,7 +617,14 @@
     "pleaseTryAgainLater": "Please try again later"
   },
   "users": {
-    "searchUsers": "Search users..."
+    "searchUsers": "Search users...",
+    "generatePassword": {
+      "success": "Password generated successfully",
+      "successCopy": "Password generated and copied to clipboard!"
+    },
+    "create": {
+      "passwordHint": "Click the icon to generate a secure password"
+    }
   },
   "settings": {
     "security": {

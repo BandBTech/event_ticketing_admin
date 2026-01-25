@@ -454,7 +454,10 @@
       "rejectionPlaceholder": "Fornisci un motivo per il rifiuto...",
       "confirmApprove": "Approva",
       "confirmReject": "Rifiuta",
-      "commissionRatePlaceholder": "Inserisci il tasso di commissione (in%)"
+      "commissionRatePlaceholder": "Inserisci il tasso di commissione (in%)",
+      "organizedBy": "Organizzato da",
+      "onboardingIncomplete": "Onboarding incompleto",
+      "confirmEventApproval": "Conferma l'approvazione dell'evento"
     },
     "toast": {
       "organizerApproved": "Organizzatore approvato con successo!",

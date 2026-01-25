@@ -464,7 +464,10 @@
       "rejectionPlaceholder": "却下の理由を入力してください...",
       "confirmApprove": "承認",
       "confirmReject": "却下",
-      "commissionRatePlaceholder": "手数料率（%）を入力してください"
+      "commissionRatePlaceholder": "手数料率（%）を入力してください",
+      "organizedBy": "主催",
+      "onboardingIncomplete": "オンボーディングが不完全",
+      "confirmEventApproval": "イベント承認の確認"
     },
     "toast": {
       "organizerApproved": "主催者が正常に承認されました！",

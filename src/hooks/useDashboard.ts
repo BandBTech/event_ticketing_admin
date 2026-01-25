@@ -59,10 +59,7 @@ export function useApproveOrganizer() {
       queryClient.invalidateQueries({
         queryKey: queryKeys.organizers.list,
       });
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || "Failed to approve organizer.");
-    },
+    }
   });
 }
 

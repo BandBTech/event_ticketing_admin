@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 // Admin Components
-import PopupModal from "../../dashboard/components/PopupModal";
+import PopupModal from "../../dashboard/components/EventApproval/PopupModal";
 import StatusHistorySidebar from "./components/StatusHistorySidebar";
 import { SalesStatusBadge } from "@/app/components/SalesStatusBadge";
 import { EventStatusBadge } from "@/app/components/EventStatusBadge";

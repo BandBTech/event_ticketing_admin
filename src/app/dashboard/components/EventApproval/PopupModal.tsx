@@ -40,7 +40,8 @@ import { AppEvent } from "@/types/event";
 import { format } from "date-fns";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import { CalendarBlankIcon, MapPinIcon } from "@phosphor-icons/react";
+import { EventDetailCard } from "./EventDetailCard";
+import { cn } from "@/lib/utils";
 
 // Explicit form value types for better type safety
 interface ApprovalFormData {
@@ -83,9 +84,9 @@ function EventApprovalModal({
   onCancel?: () => void;
   onConfirm?: (data: { commissionRate?: number; adminRemark: string }) => void;
   isLoading?: boolean;
-  t: (key: string, fallback?: string) => string;
-    eventName?: string;
-    eventDetails?: AppEvent;
+  t: (key: string, fallback?: string, params?: Record<string, string | number>) => string;
+  eventName?: string;
+  eventDetails?: AppEvent;
 }) {
   // Schema Factory Pattern: Create schema with translated messages
   const schema = useMemo(() => createEventApprovalSchema(t), [t]);
@@ -126,93 +127,19 @@ function EventApprovalModal({
     <>
       <Dialog open={true} onOpenChange={(open) => !open && onCancel?.()}>
         <DialogContent
-          className={eventDetails ? "max-w-4xl" : "max-w-md"}
+          className={cn("rounded-3xl shadow-2xl border-none bg-white/95 backdrop-blur-xl data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 duration-300", eventDetails ? "sm:max-w-4xl" : "max-w-md")}
           showCloseButton={true}
         >
-          <DialogHeader>
+          {/* <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
-          </DialogHeader>
+          </DialogHeader> */}
 
           <div
             className={`grid ${eventDetails ? "md:grid-cols-2 gap-6" : "grid-cols-1"
               }`}
           >
             {/* Left Column - Event Details Card */}
-            {eventDetails && (
-              <div className="space-y-4">
-                <div className="relative aspect-video rounded-xl overflow-hidden bg-gray-100 border border-gray-200 shadow-sm">
-                  <Image
-                    src={eventDetails.banner_image || "/placeholder.jpg"}
-                    alt={eventDetails.title}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div className="space-y-3">
-                  <h3 className="font-bold text-lg text-gray-900 leading-tight">
-                    {eventDetails.title}
-                  </h3>
-
-                  <div className="flex flex-wrap gap-2">
-                    {(Array.isArray(eventDetails.category)
-                      ? (eventDetails.category as string[])
-                      : typeof eventDetails.category === "string"
-                        ? (eventDetails.category as string).split(",")
-                        : []
-                    )
-                      .map((tag) => tag.trim().replace(/^[{"]+|[}"]+$/g, ""))
-                      .filter(Boolean)
-                      .slice(0, 3) // Show limited tags
-                      .map((tag) => (
-                        <Badge
-                          key={tag}
-                          variant="secondary"
-                          className="bg-gray-100 text-gray-600 text-xs px-2 py-0.5"
-                        >
-                          {tag}
-                        </Badge>
-                      ))}
-                  </div>
-
-                  <div className="space-y-2 text-sm text-gray-600">
-                    <div className="flex items-center gap-2">
-                      <CalendarBlankIcon
-                        weight="duotone"
-                        className="w-4 h-4 text-primary-500"
-                      />
-                      <span>
-                        {format(new Date(eventDetails.start_date), "PPpp")}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <MapPinIcon
-                        weight="duotone"
-                        className="w-4 h-4 text-primary-500"
-                      />
-                      <span className="truncate">
-                        {eventDetails.venue_name}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-between items-center pt-3 border-t border-gray-100">
-                    <div className="text-xs text-gray-500">
-                      {t("dashboard.modal.organizerId", "Organizer")}:
-                      <span className="font-mono ml-1">
-                        {eventDetails.organizer_id?.slice(0, 8)}...
-                      </span>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-lg font-bold text-green-600">
-                        {eventDetails.price > 0
-                          ? `${eventDetails.price} NPR`
-                          : "Free"}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
+            {eventDetails && <EventDetailCard eventDetails={eventDetails} />}
 
             {/* Right Column - Approval Form */}
             <Form {...form}>
@@ -221,6 +148,9 @@ function EventApprovalModal({
                 className="space-y-4 h-full flex flex-col justify-between"
               >
                 {children}
+                <DialogHeader>
+                  <DialogTitle className="text-2xl font-bold bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">{title}</DialogTitle>
+                </DialogHeader>
 
                 <div className="space-y-4">
                   <FormField
@@ -228,7 +158,7 @@ function EventApprovalModal({
                     name="commissionRate"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>
+                        <FormLabel className="text-sm font-semibold text-gray-700">
                           {t("dashboard.modal.commissionRate")}
                           <span className="text-red-500 ml-1">*</span>
                         </FormLabel>
@@ -243,6 +173,7 @@ function EventApprovalModal({
                               "Enter commission rate (in %)"
                             )}
                             {...field}
+                            className="h-11 bg-gray-50/50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all"
                           />
                         </FormControl>
                         <div className="flex justify-between items-center min-h-[20px]">
@@ -257,7 +188,7 @@ function EventApprovalModal({
                     name="adminRemark"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>
+                        <FormLabel className="text-sm font-semibold text-gray-700">
                           {t("dashboard.modal.additionalNotes")}
                         </FormLabel>
                         <FormControl>
@@ -266,7 +197,7 @@ function EventApprovalModal({
                             placeholder={t(
                               "dashboard.modal.additionalNotesPlaceholder"
                             )}
-                            className="resize-none"
+                            className="resize-none bg-gray-50/50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all"
                             maxLength={500}
                             {...field}
                           />
@@ -284,19 +215,20 @@ function EventApprovalModal({
                 </div>
 
                 {/* Footer */}
-                <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100 mt-auto">
+                <div className="flex items-center justify-end gap-3 pt-6 border-t border-gray-100 mt-auto">
                   <Button
                     variant="outline"
                     type="button"
                     onClick={onCancel}
                     disabled={isLoading}
+                    className="h-11 px-6 border-gray-200 hover:bg-gray-50 transition-colors"
                   >
                     {t("common.cancelButton", "Cancel")}
                   </Button>
                   <Button
                     type="submit"
                     disabled={isLoading}
-                    className="bg-green-600 hover:bg-green-700 text-white"
+                    className="h-11 px-8 bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-md shadow-blue-500/20 transition-all duration-300 active:scale-95"
                   >
                     {isLoading
                       ? t("common.loading")
@@ -310,30 +242,37 @@ function EventApprovalModal({
       </Dialog>
 
       <AlertDialog open={showConfirm} onOpenChange={setShowConfirm}>
-        <AlertDialogContent>
+        <AlertDialogContent className="data-[state=open]:slide-in-from-bottom-2 duration-300">
           <AlertDialogHeader>
-            <AlertDialogTitle>
-              {t("dashboard.modal.confirmApproveTitle", "Confirm Approval")}
+            <AlertDialogTitle className="text-xl font-bold text-gray-900">
+              {t("dashboard.modal.confirmEventApproval", "Confirm Event Approval")}
             </AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogDescription className="text-gray-500 text-base">
               {eventName && (
-                <div className="mb-2 font-medium text-gray-900">
+                <div className="mb-2 font-semibold text-gray-900 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
                   {t("dashboard.modal.event", "Event")}: {eventName}
                 </div>
               )}
               {t(
-                "dashboard.modal.confirmApproveDesc",
-                "Are you sure you want to approve this event with a commission rate of {rate}%? This action cannot be undone immediately."
-              ).replace("{rate}", pendingData?.commissionRate || "0")}
+                "dashboard.modal.confirmEventApprovalDesc",
+                "Are you sure you want to approve this event with a commission rate of {rate}%? This action cannot be undone immediately.",
+                {
+                  rate: pendingData?.commissionRate || "0",
+                }
+              )}
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setShowConfirm(false)}>
+          <AlertDialogFooter className="pt-6">
+            <AlertDialogCancel
+              onClick={() => setShowConfirm(false)}
+              className="h-11 px-6 border-gray-200 hover:bg-gray-50 transition-colors"
+            >
               {t("common.cancel", "Cancel")}
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleConfirm}
-              className="bg-green-600 hover:bg-green-700 text-white"
+              className="h-11 px-8 bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-md shadow-blue-500/20 transition-all duration-300 active:scale-95"
             >
               {t("common.confirm", "Confirm")}
             </AlertDialogAction>
@@ -364,7 +303,7 @@ function RejectionModal({
   onCancel?: () => void;
   onConfirm?: (data: { commissionRate?: number; adminRemark: string }) => void;
   isLoading?: boolean;
-  t: (key: string, fallback?: string) => string;
+  t: (key: string, fallback?: string, params?: Record<string, string | number>) => string;
   remarkLabel?: string;
   placeholder?: string;
   confirmText?: string;
@@ -391,9 +330,9 @@ function RejectionModal({
 
   return (
     <Dialog open={true} onOpenChange={(open) => !open && onCancel?.()}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md rounded-3xl shadow-2xl border-none bg-white/95 backdrop-blur-xl data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 duration-300">
         <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
+          <DialogTitle className="text-2xl font-bold bg-linear-to-r from-red-600 to-orange-600 bg-clip-text text-transparent">{title}</DialogTitle>
         </DialogHeader>
 
         {/* Form */}
@@ -406,7 +345,7 @@ function RejectionModal({
               name="adminRemark"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
+                  <FormLabel className="text-sm font-semibold text-gray-700">
                     {remarkLabel || t("dashboard.modal.reasonForRejection")}
                     <span className="text-red-500 ml-1">*</span>
                   </FormLabel>
@@ -416,7 +355,7 @@ function RejectionModal({
                       placeholder={
                         placeholder || t("dashboard.modal.rejectionPlaceholder")
                       }
-                      className="resize-none"
+                      className="resize-none bg-gray-50/50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-red-500/20 transition-all"
                       maxLength={500}
                       {...field}
                     />
@@ -432,16 +371,21 @@ function RejectionModal({
             />
 
             {/* Footer */}
-            <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
+            <div className="flex items-center justify-end gap-3 pt-6 border-t border-gray-100">
               <Button
                 variant="outline"
                 type="button"
                 onClick={onCancel}
                 disabled={isLoading}
+                className="h-11 px-6 border-gray-200 hover:bg-gray-50 transition-colors"
               >
                 {t("common.cancel", "Cancel")}
               </Button>
-              <Button type="submit" disabled={isLoading} variant="destructive">
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="h-11 px-8 bg-linear-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white shadow-md shadow-red-500/20 transition-all duration-300 active:scale-95 flex-1 sm:flex-none"
+              >
                 {isLoading
                   ? t("common.loading")
                   : confirmText || t("dashboard.modal.confirmReject")}

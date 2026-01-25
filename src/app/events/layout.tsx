@@ -1,25 +1,23 @@
 // src/app/events/layout.tsx
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense } from "react";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import DashboardHeader from "@/components/layout/dashboard-header";
 import { ProtectedRoute } from "@/components/providers/ProtectedRoute";
+import { useSidebarResponsive } from "@/hooks/useSidebarResponsive";
 
 export default function EventsLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [collapsed, setCollapsed] = useState(false);
+  useSidebarResponsive();
 
   return (
     <ProtectedRoute>
       <div className=" flex h-screen overflow-hidden bg-gray-50/50">
-        <AppSidebar
-          collapsed={collapsed}
-          onToggle={() => setCollapsed(!collapsed)}
-        />
+        <AppSidebar />
         <div className="flex flex-1 flex-col">
           <header className="flex h-16 shrink-0 items-center gap-4 border-b bg-white px-6">
             <Suspense fallback={<div className="flex-1" />}>

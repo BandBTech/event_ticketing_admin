@@ -7,7 +7,7 @@ import { useApproveOrganizer, usePendingOrganizers, useRejectOrganizer } from "@
 import { toast } from "sonner";
 import { EmptyState } from "../EmptyState";
 import { useState } from "react";
-import PopupModal from "../PopupModal";
+import PopupModal from "../EventApproval/PopupModal";
 
 interface ModalState {
   open: boolean;

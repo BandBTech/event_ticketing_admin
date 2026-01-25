@@ -21,6 +21,15 @@ export interface Organizer {
   }[];
   created_at: string;
   updated_at: string;
+  onboarding?: {
+    id: string;
+    is_complete: boolean;
+    business_name: string;
+    business_description: string;
+    business_logo_url: string;
+    created_at: string;
+    updated_at: string;
+  };
 }
 
 export interface OrganizerListResponse {
@@ -40,35 +49,29 @@ export class OrganizerService {
   /**
    * Create new organizer from admin
    */
-static async createOrganizer({
-  email,
-  password,
-  first_name,
-  last_name,
-  phone,
-  country_code,
-}: {
-  email: string;
-  password: string;
-  first_name: string;
-  last_name: string;
-  phone: string;
-  country_code?: string;
-}): Promise<void> {
-  await api.post<void>(API_ENDPOINTS.CREATE_ORGANIZERS, {
-    email,
-    password,
-    first_name,
-    last_name,
-    phone,
-    country_code,
-  },
-  {
-    requiresAuth: true,
+  static async createOrganizer(data: {
+    email: string;
+    password: string;
+    first_name: string;
+    last_name: string;
+    phone?: string;
+    country_code?: string;
+  }): Promise<void> {
+    await api.post<void>(
+      API_ENDPOINTS.CREATE_ORGANIZERS,
+      {
+        email: data.email,
+        password: data.password,
+        first_name: data.first_name,
+        last_name: data.last_name,
+        phone: data.phone,
+        country_code: data.country_code,
+      },
+      {
+        requiresAuth: true,
+      }
+    );
   }
-
-);
-}
 
 
   static async getOrganizers(filters?: {
@@ -85,13 +88,13 @@ static async createOrganizer({
     }
 
     const query = params.toString();
-    return await api.get(`${API_ENDPOINTS.GET_ORGANIZERS}${query ? `?${query}` : ''}`, {
+    return await api.get<OrganizerListResponse>(`${API_ENDPOINTS.GET_ORGANIZERS}${query ? `?${query}` : ''}`, {
       requiresAuth: true,
     });
   }
 
   static async getPendingOrganizers(): Promise<OrganizerListResponse> {
-    return await api.get(API_ENDPOINTS.GET_PENDING_ORGANIZERS, {
+    return await api.get<OrganizerListResponse>(API_ENDPOINTS.GET_PENDING_ORGANIZERS, {
       requiresAuth: true,
     });
   }
@@ -117,11 +120,14 @@ static async approveOrganizer(payload: {
    * Get organizer by ID
    * Since there's no dedicated GET endpoint, we fetch from the list
    */
-  static async getOrganizerById(id: string): Promise<Organizer | null> {
+  static async getOrganizerById(id: string): Promise<Organizer> {
     // Fetch with a high limit to increase chance of finding the organizer
     // Ideally the API should support GET /admin/organizers/{id}
-    const response = await this.getOrganizers({ limit: 100 });
-    return response.organizers.find((org) => org.id === id) || null;
+    // const response = await this.getOrganizers({ limit: 100 });
+    const response = await api.get<Organizer>(`${API_ENDPOINTS.GET_SINGLE_ORGANIZER(id)}`, {
+      requiresAuth: true,
+    });
+    return response;
   }
 
   /**

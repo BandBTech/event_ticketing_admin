@@ -1,12 +1,13 @@
 "use client";
 
-import { Bell } from "lucide-react";
+import { Bell, List } from "lucide-react";
 import { usePathname } from "next/navigation";
 import React, { useMemo } from "react";
 import { useAuthStore } from "@/store/authStore";
 import { LanguageSelector } from "@/app/components/LanguageSelector/LanguageSelector";
 import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useUIStore } from "@/store/uiStore";
 
 /**
  * Get time-based greeting message
@@ -38,6 +39,7 @@ export default function DashboardHeader() {
   const { user } = useAuthStore();
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
+  const { toggleSidebar } = useUIStore();
 
   // Get user's first name or fallback
   const userName = user?.firstName || "Admin";
@@ -69,7 +71,16 @@ const headerText = matched?.isDynamic
 
   return (
     <div className="flex flex-1 items-center justify-between">
-      <h2 className="text-lg text-gray-900 font-semibold">{headerText}</h2>
+      <div className="flex items-center gap-3">
+        <button
+          title="menu-button"
+          onClick={toggleSidebar}
+          className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+        >
+          <List className="h-5 w-5 text-gray-600" />
+        </button>
+        <h2 className="text-lg text-gray-900 font-semibold">{headerText}</h2>
+      </div>
 
       <div className="flex items-center gap-3">
         <LanguageSelector />

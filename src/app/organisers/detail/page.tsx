@@ -62,6 +62,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatPhoneNumber } from "@/lib/utils";
+import { useOrganizerById } from "@/hooks/useOrganizer";
 
 type StatusAction = "approve" | "reject" | "activate" | "deactivate";
 
@@ -372,11 +373,7 @@ export default function OrganizerDetailPage() {
     isLoading,
     isError,
     error,
-  } = useQuery<Organizer | null>({
-    queryKey: queryKeys.organizers.detail(id!),
-    queryFn: () => OrganizerService.getOrganizerById(id!),
-    enabled: !!id,
-  });
+  } = useOrganizerById(id!);
 
   // const deleteMutation = useMutation({
   //   mutationFn: () => OrganizerService.deleteOrganizer(id!),
@@ -473,9 +470,9 @@ export default function OrganizerDetailPage() {
                           {t("organizer.management.status.verified", "Verified")}
                         </span>
                       )}
-                      <Badge className={accountStatusConfig.color}>
+                      {/* <Badge className={accountStatusConfig.color}>
                         {accountStatusConfig.label}
-                      </Badge>
+                      </Badge> */}
                     </div>
                     <p className="text-gray-500 mb-4">{organizer.email}</p>
 
@@ -654,12 +651,12 @@ export default function OrganizerDetailPage() {
                     {statusConfig.label}
                   </Badge>
                 </div>
-                <div className="flex items-center justify-between">
+                {/* <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-500">{t("organizer.management.status.account", "Account Status")}</span>
                   <Badge className={accountStatusConfig.color}>
                     {accountStatusConfig.label}
                   </Badge>
-                </div>
+                </div> */}
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-500">{t("organizer.management.status.verified", "Email Verified")}</span>
                   <Badge variant={organizer.is_email_verified ? "secondary" : "destructive"} className={organizer.is_email_verified ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"}>
