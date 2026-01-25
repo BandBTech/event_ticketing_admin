@@ -10,53 +10,63 @@
  */
 
 export const queryKeys = {
-    /**
-     * Admin events query keys
-     */
-    events: {
+  /**
+   * Admin events query keys
+   */
+  events: {
     /** Key for fetching admin events list with filters and pagination */
-    all: (filters?: { page?: number; limit?: number; status?: string; organizerId?: string; search?: string }) =>
-      ['adminEvents', filters] as const,
+    all: (filters?: {
+      page?: number;
+      limit?: number;
+      status?: string;
+      organizerId?: string;
+      search?: string;
+    }) => ["adminEvents", filters] as const,
     /** Key for all events (used for invalidation) */
-    list: ['adminEvents'] as const,
-        /** Key for fetching a single event by ID */
-        detail: (id: string) => ['event', id] as const,
-    },
+    list: ["adminEvents"] as const,
+    /** Key for fetching a single event by ID */
+    detail: (id: string) => ["event", id] as const,
+  },
 
-    /**
-     * Organizers query keys
-     */
-    organizers: {
-        /** Key for fetching organizers list with pagination */
-        all: (page?: number, itemsPerPage?: number) =>
-            ['organizers', page, itemsPerPage] as const,
-        /** Key for all organizers (used for invalidation) */
-        list: ['organizers'] as const,
-        /** Key for fetching a single organizer by ID */
-        detail: (id: string) => ['organizer', id] as const,
-    },
+  /**
+   * Organizers query keys
+   */
+  organizers: {
+    /** Key for fetching organizers list with pagination */
+    all: (page?: number, itemsPerPage?: number) =>
+      ["organizers", page, itemsPerPage] as const,
+    /** Key for all organizers (used for invalidation) */
+    list: ["organizers"] as const,
+    /** Key for fetching a single organizer by ID */
+    detail: (id: string) => ["organizer", id] as const,
+  },
 
-    /**
-     * Users query keys
-     */
-    users: {
-        /** Key for fetching users list with pagination */
-        all: (page?: number, itemsPerPage?: number) =>
-            ['users', page, itemsPerPage] as const,
-        /** Key for all users (used for invalidation) */
-        list: ['users'] as const,
-        /** Key for fetching a single user by ID */
-        detail: (id: string) => ['user', id] as const,
-    },
+  /**
+   * Users query keys
+   */
+  users: {
+    /** Key for fetching users list with pagination and filters */
+    all: (
+      page?: number,
+      itemsPerPage?: number,
+      search?: string,
+      status?: string,
+      accountStatus?: string,
+    ) => ["users", page, itemsPerPage, search, status, accountStatus] as const,
+    /** Key for all users (used for invalidation) */
+    list: ["users"] as const,
+    /** Key for fetching a single user by ID */
+    detail: (id: string) => ["user", id] as const,
+  },
 
   /**
    * Permissions query keys
    */
   permissions: {
     /** Key for fetching all permissions */
-    all: ['permissions'] as const,
+    all: ["permissions"] as const,
     /** Key for permission list (used for invalidation) */
-    list: ['permissions'] as const,
+    list: ["permissions"] as const,
   },
 
   /**
@@ -64,11 +74,10 @@ export const queryKeys = {
    */
   roles: {
     /** Key for fetching all roles */
-    all: ['roles'] as const,
+    all: ["roles"] as const,
     /** Key for role list (used for invalidation) */
-    list: ['roles'] as const,
+    list: ["roles"] as const,
     /** Key for fetching permissions of a specific role */
-    permissions: (roleId: string) => ['roles', roleId, 'permissions'] as const,
+    permissions: (roleId: string) => ["roles", roleId, "permissions"] as const,
   },
 } as const;
-
