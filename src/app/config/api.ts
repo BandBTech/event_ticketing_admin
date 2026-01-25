@@ -29,4 +29,8 @@ export const API_ENDPOINTS = {
 
   //users
   GET_USERS: `${API_BASE_URL}/admin/users`,
+
+  //settings
+  GET_COMPANY: `${API_BASE_URL}/admin/company-info`,
+  UPDATE_COMPANY: `${API_BASE_URL}/admin/company-info`,
 };

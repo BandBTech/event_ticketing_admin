@@ -223,6 +223,8 @@ export default function UsersPage() {
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const startItem = (currentPage - 1) * itemsPerPage + 1;
   const endItem = Math.min(currentPage * itemsPerPage, filteredData.length);
+  console.log("total pages", totalPages);
+  console.log("Filtered Data", filteredData);
 
   return (
     <div className="min-h-screen p-8 space-y-6">
@@ -410,7 +412,7 @@ export default function UsersPage() {
     )}
 
       {/* Pagination */}
-      {totalPages > 1 && (
+      {totalPages === 1 && (
         <div className="flex items-center justify-center gap-2">
           <Button
             variant="outline"
