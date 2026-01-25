@@ -34,13 +34,6 @@ interface CompanyInfo {
   youtube_url: string;
 }
 
-interface CompanyResponse {
-  success: boolean;
-  message: string;
-  data: Company;
-  timestamp: string;
-  request_id: string;
-}
 
 export class SettingService {
 

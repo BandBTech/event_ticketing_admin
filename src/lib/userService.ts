@@ -2,6 +2,7 @@ import { api } from './apiClient';
 import { API_ENDPOINTS } from '@/app/config/api';
 import {
   ApiResponse as UserApiResponse,
+  UserData,
 } from "@/types/user";
 
 
@@ -56,6 +57,12 @@ static async createOrganizer({
 
     const query = params.toString();
     return await api.get(`${API_ENDPOINTS.GET_USERS}${query ? `?${query}` : ''}`, {
+      requiresAuth: true,
+    });
+  }
+
+  static async getUsersById({ id }: { id: string }): Promise<UserData> {
+    return await api.get(`${API_ENDPOINTS.GET_USERS}/${id}`, {
       requiresAuth: true,
     });
   }

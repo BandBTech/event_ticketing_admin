@@ -37,17 +37,6 @@ import {
 } from "@/types/user";
 import { queryKeys } from "@/lib/queryKeys";
 
-interface Permission {
-  id: string;
-  name: string;
-  description: string;
-  resource: string;
-  action: string;
-  roles: string[];
-  created_at: string;
-  updated_at: string;
-}
-
 function getStatusConfig(status: string) {
   switch (status?.toLowerCase()) {
     case "approved":
@@ -392,7 +381,10 @@ export default function UsersPage() {
                             variant="outline"
                             size="sm"
                             className="gap-1.5"
-                            onClick={() => router.push(`/users/userdetail`)}
+                            onClick={() => {
+                              localStorage.setItem("user_id", user.id);
+                              router.push(`/users/userdetail?id=${user.id}`)
+                            }}
                           >
                             <EyeIcon weight="duotone" className="w-4 h-4" />
                             View

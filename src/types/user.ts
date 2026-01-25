@@ -14,6 +14,24 @@ export interface UserData {
   page: number;
   total: number;
   users: User;
+    id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  country_code: string;
+  account_status: string;
+  organizer_status: string;
+  is_email_verified: boolean;
+  admin_remark: string;
+  created_at: string;
+  created_by: string;
+  updated_at: string;
+  approved_at: string;
+  rejected_at: string;
+  organizer_id: string;
+  organizer_onboarding: UserOrganizerOnboarding;
+  roles: UserRole[];
 }
 
 export interface User {

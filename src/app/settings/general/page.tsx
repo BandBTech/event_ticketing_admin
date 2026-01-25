@@ -32,7 +32,7 @@ export default function GeneralSettingsPage() {
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
 
-  const { data: response, isLoading, isError, error } = useQuery({
+  const { data: response, isLoading, isError } = useQuery({
     queryKey: ["company"],
     queryFn: () => SettingService.getCompany({}),
   });
