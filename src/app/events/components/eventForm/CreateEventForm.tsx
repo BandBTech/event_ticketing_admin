@@ -139,7 +139,7 @@ export default function CreateEventForm({
       // Navigate away
       router.push("/events");
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       console.error("Event save error:", error);
       toast.error("Error saving event", {
         description: error?.message || "Something went wrong"

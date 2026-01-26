@@ -560,7 +560,8 @@
         "editDetails": "Edit Details",
         "deleteOrganizer": "Delete Organizer",
         "sendEmail": "Send Email",
-        "processing": "Processing..."
+        "processing": "Processing...",
+        "deactivateAccount": "Deactivate Account"
       },
       "modals": {
         "approveTitle": "Approve Organizer",

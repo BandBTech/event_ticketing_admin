@@ -17,8 +17,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
-import { CheckCircle } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
 
 interface RolePermissionsEditorProps {
   selectedRoleId: string;
@@ -104,8 +102,6 @@ export function RolePermissionsEditor({ selectedRoleId, onRoleChange }: RolePerm
     return acc;
   }, {} as Record<string, typeof allPermissions>) || {};
 
-  const selectedRole = roles?.find((r) => r.id === selectedRoleId);
-
   if (rolesLoading || permissionsLoading) {
     return <RolePermissionsEditorSkeleton />;
   }
@@ -164,6 +160,7 @@ export function RolePermissionsEditor({ selectedRoleId, onRoleChange }: RolePerm
                     <h4 className="font-medium text-gray-900 capitalize">{t(`settings.permissions.tabs.permissions`, "Permissions")}</h4>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {!category && <h4 className="text-sm font-medium text-gray-900">{category}</h4>}
                     {permissions?.map((permission) => (
                       <label
                         key={permission.id}

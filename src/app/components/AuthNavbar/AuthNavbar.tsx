@@ -1,7 +1,7 @@
 "use client"
 
 // src/components/Navbar/Navbar.tsx
-import React, { useState } from "react";
+import React from "react";
 import { Ticket } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { LanguageSelector } from "../LanguageSelector/LanguageSelector";

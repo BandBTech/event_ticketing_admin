@@ -2,7 +2,7 @@ import { CalendarIcon, CalendarStarIcon, ClockIcon, UsersIcon } from "@phosphor-
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
 
-const DashboardStats = (props: { organizers: any; events: any }) => {
+const DashboardStats = (props: { organizers: unknown[]; events: unknown[] }) => {
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
   const { organizers, events } = props;

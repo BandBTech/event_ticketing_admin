@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import CreateEventForm from "../components/eventForm/CreateEventForm";
 

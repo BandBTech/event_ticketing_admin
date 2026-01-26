@@ -105,26 +105,25 @@ export class OrganizerService {
     });
   }
 
-static async approveOrganizer(payload: {
-  organizerId: string;
-  admin_remark: string;
-  status: string;
-}): Promise<ApproveOrganizerResponse> {
-  return await api.put<ApproveOrganizerResponse>(
-    API_ENDPOINTS.APPROVE_ORGANIZERS(payload.organizerId),
-    {
-      admin_remark: payload.admin_remark,
-      status: payload.status,
-    },
-    {
-      requiresAuth: true,
-    }
-  );
-}
+  static async approveOrganizer(payload: {
+    organizerId: string;
+    admin_remark: string;
+    status: string;
+  }): Promise<ApproveOrganizerResponse> {
+    return await api.put<ApproveOrganizerResponse>(
+      API_ENDPOINTS.APPROVE_ORGANIZERS(payload.organizerId),
+      {
+        admin_remark: payload.admin_remark,
+        status: payload.status,
+      },
+      {
+        requiresAuth: true,
+      }
+    );
+  }
 
   /**
    * Get organizer by ID
-   * Since there's no dedicated GET endpoint, we fetch from the list
    */
   static async getOrganizerById(id: string): Promise<Organizer> {
     // Fetch with a high limit to increase chance of finding the organizer
@@ -165,6 +164,22 @@ static async approveOrganizer(payload: {
   static async deleteOrganizer(id: string): Promise<void> {
     await api.delete<void>(
       `${API_ENDPOINTS.GET_ORGANIZERS.replace('/organizers', '/organizer')}/${id}`,
+      {
+        requiresAuth: true,
+      }
+    );
+  }
+  /**
+   * Update organizer status (Activate/Deactivate)
+   */
+  static async updateOrganizerStatus(
+    id: string,
+    status: 'active' | 'inactive',
+    admin_remark: string
+  ): Promise<void> {
+    await api.put<void>(
+      API_ENDPOINTS.UPDATE_ORGANIZER_ACCOUNT_STATUS(id),
+      { status, admin_remark },
       {
         requiresAuth: true,
       }

@@ -260,13 +260,13 @@ export class EventService {
   /**
    * Cancel an event
    */
-  // static async cancelEvent(eventId: string, reason: string): Promise<Event> {
-  //   return await api.put<Event>(
-  //     `/admin/events/${eventId}/cancel`,
-  //     { cancellation_reason: reason },
-  //     { requiresAuth: true }
-  //   );
-  // }
+  static async cancelEvent(eventId: string, reason: string): Promise<Event> {
+    return await api.put<Event>(
+      `/admin/events/${eventId}/cancel`,
+      { cancellation_reason: reason },
+      { requiresAuth: true }
+    );
+  }
 
   /**
    * Delete an event (soft delete)

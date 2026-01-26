@@ -177,9 +177,18 @@ function OrganizerCard({ organizer }: { organizer: Organizer }) {
     <Card className="group hover:shadow-lg transition-all duration-300 flex flex-col h-full overflow-hidden border-gray-200">
       <CardHeader className="flex flex-row items-start gap-4 space-y-0 pb-4">
         <Avatar className="h-16 w-16 border border-gray-100 group-hover:scale-105 transition-transform duration-300">
+          {/* {organizer.logo ? (
+            <Image
+              src={organizer.logo}
+              alt={`${organizer.business_name}`}
+              fill
+              className="object-cover"
+            />
+          ) : ( */}
           <AvatarFallback className="text-xl font-bold bg-linear-to-br from-indigo-50 to-blue-50 text-indigo-600">
             {getInitials(organizer.first_name, organizer.last_name)}
           </AvatarFallback>
+          {/* )} */}
         </Avatar>
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
@@ -216,7 +225,7 @@ function OrganizerCard({ organizer }: { organizer: Organizer }) {
               {t(`organizer.${statusConfig.label}`)}
             </Badge>
           </div>
-          {organizer.is_email_verified && (
+          {/* {organizer.is_email_verified && (
             <Badge
               variant="secondary"
               className="bg-blue-50 text-blue-600 hover:bg-blue-100 border-blue-100 gap-1 px-2 py-0.5"
@@ -225,7 +234,7 @@ function OrganizerCard({ organizer }: { organizer: Organizer }) {
               <UserCheckIcon weight="duotone" className="w-3.5 h-3.5" />
               {t("organizer.verified")}
             </Badge>
-          )}
+          )} */}
         </div>
 
         <div className="space-y-1 text-sm text-muted-foreground">
@@ -305,7 +314,7 @@ export default function OrganisersPage() {
   const currentPage = Number(searchParams.get("page")) || 1;
   const searchQuery = searchParams.get("search") || "";
   const statusFilter = searchParams.get("status") || "";
-  const itemsPerPage = 9;
+  const itemsPerPage = 12;
   const [isAddDialogOpen, setIsAddDialogOpen] = React.useState(false);
 
   // Helper to update URL params
@@ -386,7 +395,7 @@ export default function OrganisersPage() {
   }
 
   return (
-    <div className="min-h-screen p-8 space-y-8">
+    <div className="min-h-screen p-8 space-y-8 @container">
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-4 w-full sm:w-auto flex-1 max-w-2xl">
           <div className="relative flex-1">
@@ -459,7 +468,7 @@ export default function OrganisersPage() {
         onOpenChange={setIsAddDialogOpen}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 @2xl:grid-cols-2 @5xl:grid-cols-3 gap-6">
         {isLoading || isFetching ? (
           Array.from({ length: 8 }).map((_, i) => (
             <OrganizerCardSkeleton key={i} />

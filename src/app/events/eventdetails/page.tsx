@@ -173,20 +173,35 @@ export default function EventDetailsPage() {
   // const progress = capacity > 0 ? (sold / capacity) * 100 : 0;
   // const revenue = analytics?.revenue || 0;
 
+  interface StatusHistoryItem {
+    id: string;
+    event_id: string;
+    from_status?: string;
+    old_status?: string;
+    to_status?: string;
+    new_status?: string;
+    status_type?: string;
+    reason?: string;
+    remark?: string;
+    changed_by: string;
+    changed_by_name?: string;
+    created_at: string;
+  }
+
   // Ensure statusHistory is an array
   const historyList = Array.isArray(statusHistory)
     ? statusHistory
-    : statusHistory && typeof statusHistory === 'object' && 'history' in statusHistory && Array.isArray((statusHistory as any).history)
-      ? (statusHistory as any).history
+    : statusHistory && typeof statusHistory === 'object' && 'history' in statusHistory && Array.isArray((statusHistory as { history: unknown[] }).history)
+      ? (statusHistory as { history: unknown[] }).history
       : [];
 
-  const mappedStatusHistory = historyList.map((h: any) => ({
+  const mappedStatusHistory = (historyList as StatusHistoryItem[]).map((h) => ({
     id: h.id,
     event_id: h.event_id,
-    old_status: h.from_status || h.old_status,
-    new_status: h.to_status || h.new_status,
+    old_status: h.from_status || h.old_status || 'unknown',
+    new_status: h.to_status || h.new_status || 'unknown',
     status_type: h.status_type || 'approval',
-    remark: h.reason || h.remark,
+    remark: h.reason || h.remark || '',
     changed_by: h.changed_by,
     changed_by_name: h.changed_by_name || h.changed_by || 'Unknown',
     created_at: h.created_at

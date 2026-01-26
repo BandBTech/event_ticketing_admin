@@ -48,6 +48,19 @@ export const queryKeys = {
     detail: (id: string) => ["organizer", id] as const,
   },
 
+    /**
+     * Users query keys
+     */
+    users: {
+        /** Key for fetching users list with pagination */
+        all: (page?: number, itemsPerPage?: number) =>
+            ['users', page, itemsPerPage] as const,
+        /** Key for all users (used for invalidation) */
+        list: ['users'] as const,
+        /** Key for fetching a single user by ID */
+        detail: (id: string) => ['user', id] as const,
+    },
+
   /**
    * Permissions query keys
    */

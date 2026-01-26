@@ -82,6 +82,7 @@ export default function AdminProfileModal({
       }
     } catch (error) {
       // Error handled silently
+      console.error("Error parsing phone number:", error);
     }
   };
 
@@ -100,6 +101,7 @@ export default function AdminProfileModal({
       setIsEditing(false);
     } catch (error) {
       // Error handled silently
+      console.error("Error updating profile:", error);
       toast.error("Failed to update profile");
     } finally {
       setIsSaving(false);
@@ -138,6 +140,7 @@ export default function AdminProfileModal({
       }
     } catch (error) {
       // Error handled silently
+      console.error("Error getting country from phone number:", error);
     }
     return undefined;
   };

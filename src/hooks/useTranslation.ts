@@ -25,8 +25,7 @@ export function useTranslation(locale: Locale = 'en') {
         const msgs = await translations[locale]();
         setMessages(msgs);
       } catch (error) {
-        // Translation loading error handled silently
-        // Fallback to English
+        console.error(error);
         const fallback = await translations.en();
         setMessages(fallback);
       } finally {
