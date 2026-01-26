@@ -6,6 +6,10 @@ export interface ApiResponse {
   success: boolean;
   timestamp: string;
   users: User[];
+  has_more: boolean;
+  total: number;
+  limit: number;
+  page: number;
 }
 
 export interface UserData {
@@ -14,7 +18,7 @@ export interface UserData {
   page: number;
   total: number;
   users: User;
-    id: string;
+  id: string;
   first_name: string;
   last_name: string;
   email: string;
