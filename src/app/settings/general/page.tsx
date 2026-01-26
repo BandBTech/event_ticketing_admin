@@ -1,7 +1,11 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { FloppyDiskIcon, UploadSimple, X } from "@phosphor-icons/react/dist/ssr";
+import {
+  FloppyDiskIcon,
+  UploadSimple,
+  X,
+} from "@phosphor-icons/react/dist/ssr";
 import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
 import Image from "next/image";
@@ -23,16 +27,20 @@ export default function GeneralSettingsPage() {
     website_url: "",
     youtube_url: "",
   });
-  
+
   const [previewUrl, setPreviewUrl] = useState<string>("");
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | string>("");
   const [uploadError, setUploadError] = useState("");
 
   const queryClient = useQueryClient();
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
 
-  const { data: response, isLoading, isError } = useQuery({
+  const {
+    data: response,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["company"],
     queryFn: () => SettingService.getCompany({}),
   });
@@ -59,43 +67,26 @@ export default function GeneralSettingsPage() {
   }, [response]);
 
   // Mutation for saving settings
-  const saveMutation = useMutation({
-    mutationFn: async (data: typeof settings) => {
-      let uploadedLogoUrl = data.logo_url;
-      
-      if (selectedFile) {
-        const formData = new FormData();
-        formData.append("file", selectedFile);
+const saveMutation = useMutation({
+  mutationFn: (data: typeof settings) => {
+    // Create a payload that includes the file
+    const payload = {
+      ...data,
+      logo: selectedFile, // Add the file to the payload
+    };
+        
 
-        const uploadResponse = await fetch("/api/upload", {
-          method: "POST",
-          body: formData,
-        });
-
-        if (!uploadResponse.ok) {
-          throw new Error("Failed to upload image");
-        }
-
-        const uploadData = await uploadResponse.json();
-        uploadedLogoUrl = uploadData.url;
-      }
-
-      // Then save all settings including the new logo URL
-      const settingsToSave = {
-        ...data,
-        logo_url: uploadedLogoUrl,
-      };
-
-      return await SettingService.updateCompany(settingsToSave);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["company"] });
-      setSelectedFile(null);
-    },
-    onError: (error) => {
-      console.error("Save error:", error);
-    },
-  });
+    return SettingService.updateCompany(payload);
+  },
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ["company"] });
+    setSelectedFile("");
+    setUploadError("");
+  },
+  onError: (error) => {
+    console.error("Save error:", error);
+  },
+});
 
   const handleInputChange = (field: string, value: string) => {
     setSettings((prev) => ({
@@ -129,10 +120,9 @@ export default function GeneralSettingsPage() {
   };
 
   const handleRemoveImage = () => {
-    setPreviewUrl("");
-    setSelectedFile(null);
-    handleInputChange("logo_url", "");
-    
+    setPreviewUrl(settings.logo_url || "");
+    setSelectedFile("");
+
     // Clean up object URL if it exists
     if (previewUrl && previewUrl.startsWith("blob:")) {
       URL.revokeObjectURL(previewUrl);
@@ -179,9 +169,7 @@ export default function GeneralSettingsPage() {
           <h1 className="text-2xl font-bold text-gray-900">
             {t("settings.general.title")}
           </h1>
-          <p className="text-gray-600 mt-1">
-            {t("settings.general.subtitle")}
-          </p>
+          <p className="text-gray-600 mt-1">{t("settings.general.subtitle")}</p>
         </div>
 
         <div className="p-6 space-y-6">
@@ -232,7 +220,9 @@ export default function GeneralSettingsPage() {
                 <label
                   htmlFor="logo-upload"
                   className={`inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors ${
-                    saveMutation.isPending ? "opacity-50 cursor-not-allowed" : ""
+                    saveMutation.isPending
+                      ? "opacity-50 cursor-not-allowed"
+                      : ""
                   }`}
                 >
                   <UploadSimple size={20} />
@@ -243,7 +233,7 @@ export default function GeneralSettingsPage() {
                 </p>
                 {selectedFile && (
                   <p className="text-sm text-blue-600 mt-1">
-                    Selected: {selectedFile.name}
+                    {/* Selected: {selectedFile.name} */}
                   </p>
                 )}
                 {uploadError && (
@@ -316,7 +306,9 @@ export default function GeneralSettingsPage() {
               <textarea
                 title="Description"
                 value={settings.description}
-                onChange={(e) => handleInputChange("description", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("description", e.target.value)
+                }
                 rows={4}
                 className="w-full p-3 border border-gray-300 rounded-lg text-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
               />
@@ -330,7 +322,9 @@ export default function GeneralSettingsPage() {
                 type="url"
                 title="Facebook URL"
                 value={settings.facebook_url}
-                onChange={(e) => handleInputChange("facebook_url", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("facebook_url", e.target.value)
+                }
                 className="w-full p-3 border border-gray-300 rounded-lg text-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
                 placeholder="https://facebook.com/..."
               />
@@ -344,7 +338,9 @@ export default function GeneralSettingsPage() {
                 type="url"
                 title="Instagram URL"
                 value={settings.instagram_url}
-                onChange={(e) => handleInputChange("instagram_url", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("instagram_url", e.target.value)
+                }
                 className="w-full p-3 border border-gray-300 rounded-lg text-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
                 placeholder="https://instagram.com/..."
               />
@@ -358,7 +354,9 @@ export default function GeneralSettingsPage() {
                 type="url"
                 title="LinkedIn URL"
                 value={settings.linkedin_url}
-                onChange={(e) => handleInputChange("linkedin_url", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("linkedin_url", e.target.value)
+                }
                 className="w-full p-3 border border-gray-300 rounded-lg text-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
                 placeholder="https://linkedin.com/..."
               />
@@ -372,7 +370,9 @@ export default function GeneralSettingsPage() {
                 type="url"
                 title="Twitter URL"
                 value={settings.twitter_url}
-                onChange={(e) => handleInputChange("twitter_url", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("twitter_url", e.target.value)
+                }
                 className="w-full p-3 border border-gray-300 rounded-lg text-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
                 placeholder="https://twitter.com/..."
               />
@@ -386,7 +386,9 @@ export default function GeneralSettingsPage() {
                 type="url"
                 title="Website URL"
                 value={settings.website_url}
-                onChange={(e) => handleInputChange("website_url", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("website_url", e.target.value)
+                }
                 className="w-full p-3 border border-gray-300 rounded-lg text-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
                 placeholder="https://example.com"
               />
@@ -400,7 +402,9 @@ export default function GeneralSettingsPage() {
                 type="url"
                 title="Youtube URL"
                 value={settings.youtube_url}
-                onChange={(e) => handleInputChange("youtube_url", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("youtube_url", e.target.value)
+                }
                 className="w-full p-3 border border-gray-300 rounded-lg text-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
                 placeholder="https://youtube.com/..."
               />
@@ -418,8 +422,8 @@ export default function GeneralSettingsPage() {
               {saveMutation.isPending
                 ? t("settings.profile.saving")
                 : saveMutation.isSuccess
-                ? t("settings.profile.saved")
-                : t("settings.general.saveChanges")}
+                  ? t("settings.profile.saved")
+                  : t("settings.general.saveChanges")}
             </button>
           </div>
 
