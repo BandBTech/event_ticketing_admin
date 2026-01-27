@@ -431,7 +431,55 @@
     "pleaseTryAgainLater": "時間をおいて再度お試しください"
   },
   "users": {
-    "searchUsers": "検索ユーザー..."
+    "searchUsers": "ユーザーを検索...",
+    "filter": "フィルター",
+    "clearFilters": "フィルターをクリア",
+    "loadingUsers": "ユーザーを読み込み中...",
+    "noUsersFound": "ユーザーが見つかりません",
+    "noRole": "役割なし",
+    "more": "詳細",
+    "userTable": {
+      "name": "氏名",
+      "contact": "連絡先",
+      "role": "役割",
+      "organizerStatus": "主催者ステータス",
+      "accountStatus": "アカウントステータス",
+      "verified": "認証済み",
+      "joined": "参加日",
+      "actions": "操作"
+    },
+    "userRoles": {
+      "staff": "スタッフ",
+      "organizer": "主催者",
+      "user": "ユーザー",
+      "admin": "管理者"
+    },
+    "organizerStatus": {
+      "active": "活動中",
+      "inactive": "活動停止中",
+      "suspended": "一時停止中",
+      "pending": "保留中",
+      "approved": "承認済み",
+      "rejected": "却下済み",
+      "unknown": "不明"
+    },
+    "accountStatus": {
+      "active": "有効",
+      "inactive": "無効",
+      "suspended": "利用停止中"
+    },
+    "verifiedStatus": {
+      "verified": "認証済み",
+      "unverified": "未認証"
+    },
+    "userDetail": {
+      "backToUsers": "ユーザー一覧に戻る",
+      "contactInformation": "連絡先情報",
+      "rolesAndPermissions": "ロールと権限",
+      "accountDetails": "アカウント詳細",
+      "createdOn": "作成日",
+      "updatedOn": "更新日"
+    }
   },
   "settings": {
     "security": {

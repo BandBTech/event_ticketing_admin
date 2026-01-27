@@ -14,6 +14,7 @@ import {
   Eye as EyeIcon,
   Shield as ShieldIcon,
   User as UserIcon,
+  DotsThreeVertical as DotsThreeVerticalIcon,
 } from "@phosphor-icons/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { format } from "date-fns";
@@ -34,6 +35,8 @@ import { UserService } from "@/lib/userService";
 import { useQuery } from "@tanstack/react-query";
 import { ApiResponse as UserApiResponse } from "@/types/user";
 import { queryKeys } from "@/lib/queryKeys";
+import { useTranslation } from "@/hooks/useTranslation";
+import { useLanguageStore } from "@/store/languageStore";
 
 function getStatusConfig(status: string) {
   switch (status?.toLowerCase()) {
@@ -117,6 +120,8 @@ function getAccountStatusConfig(status: string) {
 export default function UsersPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
 
   const currentPage = Number(searchParams.get("page")) || 1;
   const searchQuery = searchParams.get("search") || "";
@@ -228,7 +233,7 @@ export default function UsersPage() {
           />
           <Input
             type="text"
-            placeholder="Search users..."
+            placeholder={t("users.searchUsers")}
             value={searchQuery}
             onChange={(e) => handleSearchChange(e.target.value)}
             className="pl-9"
@@ -240,12 +245,12 @@ export default function UsersPage() {
           className="gap-2 bg-background/80 backdrop-blur-sm"
         >
           <FunnelIcon weight="duotone" className="h-4 w-4" />
-          Filter
+          {t("users.filter")}
         </Button>
       </div>
 
       {isLoading ? (
-        <div className="text-center py-12">Loading users...</div>
+        <div className="text-center py-12">{t("users.loadingUsers")}</div>
       ) : (
         <Card>
           <CardContent className="p-0">
@@ -254,14 +259,18 @@ export default function UsersPage() {
                 <TableHeader>
                   <TableRow className="bg-gray-100">
                     <TableHead className="w-16">S.N.</TableHead>
-                    <TableHead>User</TableHead>
-                    <TableHead>Contact</TableHead>
-                    <TableHead>Role</TableHead>
-                    <TableHead>Organizer Status</TableHead>
-                    <TableHead>Account Status</TableHead>
-                    <TableHead>Verified</TableHead>
-                    <TableHead>Joined</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableHead>{t("users.userTable.name")}</TableHead>
+                    <TableHead>{t("users.userTable.contact")}</TableHead>
+                    <TableHead>{t("users.userTable.role")}</TableHead>
+                    <TableHead>
+                      {t("users.userTable.organizerStatus")}
+                    </TableHead>
+                    <TableHead>{t("users.userTable.accountStatus")}</TableHead>
+                    <TableHead>{t("users.userTable.verified")}</TableHead>
+                    <TableHead>{t("users.userTable.joined")}</TableHead>
+                    <TableHead className="text-right">
+                      {t("users.userTable.actions")}
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -274,7 +283,7 @@ export default function UsersPage() {
                             className="w-12 h-12 text-muted-foreground/50"
                           />
                           <p className="text-muted-foreground">
-                            No users found
+                            {t("users.noUsersFound")}
                           </p>
                         </div>
                       </TableCell>
@@ -327,18 +336,22 @@ export default function UsersPage() {
                                         weight="duotone"
                                         className="w-3 h-3"
                                       />
-                                      {user.roles[0].name}
+
+                                      {t(
+                                        `users.userRoles.${user.roles[0].name}`,
+                                      )}
                                     </Badge>
                                     {user.roles.length > 1 && (
                                       <span className="text-xs text-muted-foreground">
-                                        +{user.roles.length - 1} more
+                                        +{user.roles.length - 1}{" "}
+                                        {t("users.more")}
                                       </span>
                                     )}
                                   </div>
                                 </>
                               ) : (
                                 <span className="text-sm text-muted-foreground">
-                                  No role
+                                  {t("users.noRole")}
                                 </span>
                               )}
                             </div>
@@ -352,7 +365,9 @@ export default function UsersPage() {
                                 weight="duotone"
                                 className="w-3.5 h-3.5"
                               />
-                              {statusConfig.label}
+                              {t(
+                                `users.organizerStatus.${statusConfig.label.toLowerCase()}`,
+                              )}
                             </Badge>
                           </TableCell>
                           <TableCell>
@@ -360,7 +375,9 @@ export default function UsersPage() {
                               variant="outline"
                               className={`text-xs font-bold ${accountStatusConfig.className}`}
                             >
-                              {accountStatusConfig.label}
+                              {t(
+                                `users.accountStatus.${accountStatusConfig.label.toLowerCase()}`,
+                              )}
                             </Badge>
                           </TableCell>
                           <TableCell>
@@ -373,11 +390,11 @@ export default function UsersPage() {
                                   weight="duotone"
                                   className="w-3.5 h-3.5"
                                 />
-                                Verified
+                                {t("users.verifiedStatus.verified")}
                               </Badge>
                             ) : (
                               <span className="text-sm text-muted-foreground">
-                                Unverified
+                                {t("users.verifiedStatus.unverified")}
                               </span>
                             )}
                           </TableCell>
@@ -389,7 +406,7 @@ export default function UsersPage() {
                               )}
                             </span>
                           </TableCell>
-                          <TableCell className="text-right">
+                          <TableCell className="text-right gap-2 flex justify-end ">
                             <Button
                               variant="outline"
                               size="sm"
@@ -400,7 +417,16 @@ export default function UsersPage() {
                               }}
                             >
                               <EyeIcon weight="duotone" className="w-4 h-4" />
-                              View
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="gap-1.5"
+                            >
+                              <DotsThreeVerticalIcon
+                                weight="duotone"
+                                className="w-4 h-4"
+                              />
                             </Button>
                           </TableCell>
                         </TableRow>
