@@ -25,6 +25,14 @@ import {
   ArrowLeft,
   MinusCircleIcon,
   CircleNotchIcon,
+  PlusCircleIcon,
+  WarningCircleIcon,
+  WarningDiamondIcon,
+  ImageIcon,
+  CalendarHeartIcon,
+  ShareFatIcon,
+  ArrowLeftIcon,
+  ArrowRightIcon,
 } from "@phosphor-icons/react";
 import { toast } from "sonner";
 import { queryKeys } from "@/lib/queryKeys";
@@ -63,8 +71,10 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatPhoneNumber } from "@/lib/utils";
 import { useOrganizerById } from "@/hooks/useOrganizer";
+import { useGetEventsByOrganizerQuery } from "@/hooks/useEvents";
 import { AvatarFallback } from "@radix-ui/react-avatar";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { EventStatusBadge } from "@/app/components/EventStatusBadge";
 
 type StatusAction = "approve" | "reject" | "activate" | "deactivate";
 
@@ -383,6 +393,84 @@ function StatusModal({
   );
 }
 
+function LatestEventsByOrganizer({ id }: { id: string }) {
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
+  const router = useRouter();
+  const { data, isLoading } = useGetEventsByOrganizerQuery(id);
+
+  if (isLoading) {
+    return <Skeleton className="h-full w-full rounded-2xl min-h-[200px]" />;
+  }
+
+  const events = data?.events || [];
+
+  return (
+    <div className="space-y-4 h-full">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-semibold text-gray-900">
+          {t("organizer.management.sections.latestEvents", "Latest Events")}
+        </h2>
+        {events.length > 0 && (
+          <Button
+            variant="ghost"
+            className="text-primary gap-2 px-0 hover:text-primary/80"
+            onClick={() => router.push(`/events?organizer_id=${id}`)}
+          >
+            {t("common.viewAll", "View All")}
+            <ArrowRightIcon className="w-4 h-4" />
+          </Button>
+        )}
+      </div>
+
+      {events.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-8 text-center text-gray-500">
+          <CalendarBlankIcon className="w-12 h-12 mb-3 text-gray-300" />
+          <p>{t("organizer.management.messages.noEvents", "No events found for this organizer")}</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {events.map((event) => (
+            <div
+              key={event.id}
+              className="flex items-center gap-4 p-2 rounded-xl bg-white border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all cursor-pointer group"
+              onClick={() => router.push(`/events/eventdetails?id=${event.id}`)}
+            >
+              <div className="aspect-16/10 h-20 rounded-lg bg-gray-50 overflow-hidden relative border border-gray-100">
+                {event.banner_image ? (
+                  <img src={event.banner_image} alt={event.title} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-gray-300">
+                    <ImageIcon weight="duotone" className="w-8 h-8" />
+                  </div>
+                )}
+              </div>
+
+              <div className="flex-1 min-w-0">
+                <h3 className="font-medium text-gray-900 truncate group-hover:text-primary transition-colors">{event.title}</h3>
+                <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
+                  <span className="flex items-center gap-1">
+                    <CalendarHeartIcon weight="duotone" className="w-4 h-4" />
+                    {format(new Date(event.start_date), "MMM d, yyyy")}
+                  </span>
+                  <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+                  <EventStatusBadge status={event.status} />
+                </div>
+              </div>
+
+              <div className="text-right pl-2">
+                <div className="font-semibold text-gray-900 text-sm">
+                  {event.price > 0 ? `$${event.price}` : 'Free'}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function OrganizerDetailPage() {
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
@@ -440,7 +528,7 @@ export default function OrganizerDetailPage() {
   console.log(organizer);
   const isPending = organizer.organizer_status?.toLowerCase() === "pending";
   const isApproved = organizer.organizer_status?.toLowerCase() === "approved";
-  const isOrganizerOnboarded = !!organizer.onboarding?.is_complete;
+  const isOrganizerOnboarded = organizer.onboarding?.is_complete;
   const isRejected = organizer.organizer_status?.toLowerCase() === "rejected";
   const isInactive = organizer.organizer_status?.toLowerCase() === "inactive";
 
@@ -461,10 +549,10 @@ export default function OrganizerDetailPage() {
         </button>
 
         {/* Oeganizer Business Information */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 mb-6">
+        <div className="bg-white rounded-2xl glass-card-lower border border-gray-100 mb-6">
           <div className="p-8">
             <div className="flex flex-col sm:flex-row sm:items-start gap-6">
-              <Avatar className="h-24 w-24 border border-gray-100 group-hover:scale-105 transition-transform duration-300">
+              <Avatar className="h-30 w-30 border border-gray-100 group-hover:scale-105 transition-transform duration-300">
                 {organizer.onboarding?.business_logo_url ? (
                   <AvatarImage
                     src={organizer.onboarding.business_logo_url}
@@ -472,7 +560,7 @@ export default function OrganizerDetailPage() {
                     className="object-cover"
                   />
                 ) : (
-                  <AvatarFallback className="text-xl font-bold bg-linear-to-br from-indigo-50 to-blue-50 text-indigo-600">
+                    <AvatarFallback className="text-xl font-bold bg-linear-to-br from-indigo-50 to-blue-50 text-indigo-600 w-full h-full grid place-items-center">
                     {getInitials(organizer.first_name, organizer.last_name)}
                   </AvatarFallback>
                 )}
@@ -483,7 +571,7 @@ export default function OrganizerDetailPage() {
                   <div>
                     <div className="flex items-center gap-3 mb-1">
                       <h1 className="text-2xl font-bold text-gray-900">
-                        {organizer.first_name} {organizer.last_name}
+                        {isOrganizerOnboarded ? organizer.onboarding?.business_name : organizer.first_name + " " + organizer.last_name}
                       </h1>
                       {/* {organizer.is_email_verified && (
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100">
@@ -502,6 +590,13 @@ export default function OrganizerDetailPage() {
                         <StatusIcon weight="duotone" className="w-4 h-4" />
                         {statusConfig.label}
                       </Badge>
+
+                      {!isOrganizerOnboarded && (
+                        <Badge className="bg-orange-100 text-orange-600 px-3 text-sm">
+                          <WarningCircleIcon weight="duotone" className="size-5!" />
+                          {t("organizer.management.status.notOnboarded", "Onboarding Incomplete")}
+                        </Badge>
+                      )}
                     </div>
                   </div>
 
@@ -537,13 +632,22 @@ export default function OrganizerDetailPage() {
                           <ArrowSquareOutIcon weight="duotone" className="w-4 h-4" />
                           {t("organizer.management.actions.viewEvents", "View Events")}
                         </DropdownMenuItem>
-                        {isApproved && (
+                        {organizer.account_status === "active" && (
                           <DropdownMenuItem
                             onClick={() => handleAction("deactivate")}
-                            className="gap-2 text-red-600 focus:text-red-600 focus:bg-red-50"
+                            className="gap-2 text-destructive "
                           >
                             <MinusCircleIcon weight="duotone" className="w-4 h-4" />
                             {t("organizer.management.actions.deactivateAccount", "Deactivate Account")}
+                          </DropdownMenuItem>
+                        )}
+                        {organizer.account_status === "inactive" && (
+                          <DropdownMenuItem
+                            onClick={() => handleAction("activate")}
+                            className="gap-2 text-success focus:text-success focus:bg-success/10"
+                          >
+                            <PlusCircleIcon weight="duotone" className="w-4 h-4" />
+                            {t("organizer.management.actions.activateAccount", "Activate Account")}
                           </DropdownMenuItem>
                         )}
                         <DropdownMenuItem disabled className="gap-2">
@@ -572,8 +676,8 @@ export default function OrganizerDetailPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white rounded-xl p-6 shadow-sm">
+          <div className="lg:col-span-2 space-y-6 ">
+            <div className="glass-card-lower p-6 rounded-2xl">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">
                 {t("organizer.management.sections.contactInfo", "Contact Information")}
               </h2>
@@ -661,7 +765,7 @@ export default function OrganizerDetailPage() {
               </div>
             </div> */}
 
-            <div className="bg-white rounded-xl p-6 shadow-sm">
+            <div className="glass-card-lower p-6 rounded-2xl">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">
                 {t("organizer.management.sections.statusSummary", "Status Summary")}
               </h2>
@@ -686,6 +790,10 @@ export default function OrganizerDetailPage() {
                 </div>
               </div>
             </div>
+
+          </div>
+          <div className="col-span-full glass-card-lower p-6 rounded-2xl">
+            <LatestEventsByOrganizer id={organizer.id} />
           </div>
         </div>
       </div>

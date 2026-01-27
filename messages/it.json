@@ -23,7 +23,12 @@
     "noResultsTryAgain": "Prova a modificare i termini di ricerca o i filtri",
     "back": "Indietro",
     "confirm": "Confermare",
-    "approve": "Approvare"
+    "approve": "Approvare",
+    "viewAll": "Visualizza tutto",
+    "viewMore": "Visualizza altro",
+    "viewCountMore": "Visualizza {count} altro",
+    "system": "Sistema",
+    "showLess": "Mostra meno"
   },
   "navigation": {
     "events": "Eventi",
@@ -190,7 +195,9 @@
       "ticketAnalytics": "Analisi Biglietti",
       "quickActions": "Azioni Rapide",
       "statusSummary": "Riepilogo Stato",
-      "statusHistory": "Cronologia Stato"
+      "statusHistory": "Cronologia Stato",
+      "financialDetails": "Dettagli finanziari",
+      "totalEarnings": "Guadagni stimati"
     },
     "fields": {
       "dateTime": "Data e Ora",
@@ -222,7 +229,9 @@
       "paused": "Vendite sospese",
       "stopped": "Le vendite si sono fermate",
       "sold_out": "Esaurito",
-      "sales_ended": "Vendite terminate"
+      "sales_ended": "Vendite terminate",
+      "on_sale": "Vendite in diretta",
+      "featured": "In primo piano"
     },
     "analytics": {
       "progress": "Avanzamento Vendite",
@@ -246,6 +255,11 @@
       "organizerId": "ID Organizzatore",
       "viewOrganizer": "Vedi Organizzatore",
       "featured": "IN PRIMO PIANO"
+    },
+    "history": {
+      "statusChanged": "Stato aggiornato da {old} a {new}",
+      "statusSet": "Stato impostato su {new}",
+      "salesChanged": "Vendite {new}"
     }
   },
   "languages": {
@@ -485,7 +499,8 @@
         "contactInfo": "Informazioni di Contatto",
         "rolesPermissions": "Ruoli e Permessi",
         "quickActions": "Azioni Rapide",
-        "statusSummary": "Riepilogo Stato"
+        "statusSummary": "Riepilogo Stato",
+        "latestEvents": "Ultimi eventi"
       },
       "status": {
         "label": "Stato",
@@ -499,7 +514,8 @@
         "pending": "In attesa",
         "approved": "Approvato",
         "rejected": "Rifiutato",
-        "unknown": "Sconosciuto"
+        "unknown": "Sconosciuto",
+        "notOnboarded": "Onboarding incompleto"
       },
       "actions": {
         "approve": "Approva",
@@ -511,7 +527,8 @@
         "deleteOrganizer": "Elimina Organizzatore",
         "sendEmail": "Invia Email",
         "processing": "Elaborazione...",
-        "deactivateAccount": "Disattiva account"
+        "deactivateAccount": "Disattiva account",
+        "activateAccount": "Attiva Conto"
       },
       "modals": {
         "approveTitle": "Approva Organizzatore",
@@ -533,7 +550,8 @@
         "activateSuccess": "Organizzatore attivato con successo",
         "updateError": "Impossibile aggiornare lo stato dell'organizzatore",
         "notFound": "Organizzatore Non Trovato",
-        "noId": "Nessun Organizzatore Selezionato"
+        "noId": "Nessun Organizzatore Selezionato",
+        "noEvents": "Nessun evento trovato per questo organizzatore"
       },
       "validation": {
         "rejectReasonRequired": "La ragione del rifiuto è richiesta (min 10 caratteri)",

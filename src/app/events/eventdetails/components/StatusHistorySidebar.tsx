@@ -69,15 +69,16 @@ export default function StatusHistorySidebar({ history, isLoading }: StatusHisto
       case 'cancelled': return <XCircle size={16} className="text-destructive" />;
       case 'pending': return <Circle size={16} weight="fill" className="text-amber-500" />;
       case 'draft': return <Circle size={16} className="text-gray-500" />;
+      case 'on_sale': return <Circle size={16} className="text-green-500" />;
       default: return <Circle size={16} className="text-blue-500" />;
     }
   };
 
   if (isLoading) {
     return (
-      <div className="rounded-xl bg-white p-6 shadow-sm space-y-4 max-h-[600px] overflow-hidden border border-gray-100">
+      <div className="rounded-2xl glass-card-lower p-6 space-y-4 max-h-[600px] overflow-hidden">
         <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2 sticky top-0 bg-white pb-2 z-20">
-          {t("sections.statusHistory", "Status History")}
+          {t("events.sections.statusHistory", "Status History")}
         </h3>
         <div className="relative space-y-6 before:absolute before:inset-0 before:ml-4 before:-translate-x-px before:h-full before:w-0.5 before:bg-slate-100">
           {[1, 2, 3].map((i) => (
@@ -105,21 +106,21 @@ export default function StatusHistorySidebar({ history, isLoading }: StatusHisto
 
   if (!historyList || historyList.length === 0) {
     return (
-      <div className="rounded-xl bg-white p-6 shadow-sm border border-gray-100 space-y-4">
+      <div className="rounded-2xl glass-card-lower p-6 space-y-4">
         <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-          {t("sections.statusHistory", "Status History")}
+          {t("events.sections.statusHistory", "Status History")}
         </h3>
         <p className="text-gray-500 text-sm">
-          {t("messages.noStatusHistory", "No status changes recorded for this event.")}
+          {t("events.messages.noStatusHistory", "No status changes recorded for this event.")}
         </p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl bg-white p-6 shadow-sm border border-gray-100 space-y-4 @container">
+    <div className="rounded-2xl glass-card-lower p-6 space-y-4 @container">
       <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2 pb-2 z-20">
-        {t("sections.statusHistory", "Status History")}
+        {t("events.sections.statusHistory", "Status History")}
       </h3>
 
       <div className="relative space-y-6 before:absolute before:inset-0 before:ml-4 before:-translate-x-px before:h-full before:w-0.5 before:bg-linear-to-b before:from-transparent before:via-slate-200 before:to-transparent max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
@@ -134,7 +135,7 @@ export default function StatusHistorySidebar({ history, isLoading }: StatusHisto
                   className="h-6 -ml-10 mt-8 mb-10 bg-white hover:bg-slate-50 border border-slate-200 rounded-full text-xs text-slate-500 px-3 flex gap-1 items-center shadow-sm w-fit"
                 >
                   <CaretDown size={12} />
-                  {t("common.viewMore", "View {count} more").replace('{count}', (historyList.length - 4).toString())}
+                  {t("common.viewCountMore", "View {count} more").replace('{count}', (historyList.length - 4).toString())}
                 </Button>
               </div>
             );
@@ -168,13 +169,16 @@ export default function StatusHistorySidebar({ history, isLoading }: StatusHisto
                 <div className="text-sm font-medium text-gray-700">
                   {historyItem.status_type === 'approval'
                     ? historyItem.old_status
-                      ? t("events.history.statusChanged", "Status updated from {old} to {new}")
-                        .replace('{old}', historyItem.old_status)
-                        .replace('{new}', historyItem.new_status)
-                      : t("events.history.statusSet", "Status set to {new}")
-                        .replace('{new}', historyItem.new_status)
-                    : t("events.history.salesChanged", "Sales {new}")
-                      .replace('{new}', historyItem.new_status)
+                      ? t("events.history.statusChanged", "Status updated from {old} to {new}", {
+                        old: historyItem.old_status,
+                        new: historyItem.new_status
+                      })
+                      : t("events.history.statusSet", "Status set to {new}", {
+                        new: historyItem.new_status
+                      })
+                    : t("events.history.salesChanged", "Sales {new}", {
+                      new: historyItem.new_status
+                    })
                   }
                 </div>
 

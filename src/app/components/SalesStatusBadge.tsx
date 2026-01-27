@@ -12,7 +12,7 @@ interface SalesStatusBadgeProps {
 }
 
 const salesStatusColors: Record<string, string> = {
-  'active': 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-50',
+  'on_sale': 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-50',
   'paused': 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-50',
   'stopped': 'bg-red-50 text-red-700 border-red-200 hover:bg-red-50',
   'sold_out': 'bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-50',

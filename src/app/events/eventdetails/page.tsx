@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { EventService } from "@/lib/eventServices";
+import { EventService, EventTierAnalytics } from "@/lib/eventServices";
 import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
 import { format, isValid } from "date-fns";
@@ -35,7 +35,8 @@ import PopupModal from "../../dashboard/components/EventApproval/PopupModal";
 import StatusHistorySidebar from "./components/StatusHistorySidebar";
 import { SalesStatusBadge } from "@/app/components/SalesStatusBadge";
 import { EventStatusBadge } from "@/app/components/EventStatusBadge";
-import { CalendarBlankIcon, CheckIcon, ClockIcon, FireIcon, MapPinIcon, ShieldCheckIcon, TicketIcon, TrashIcon, UsersIcon, XCircleIcon, XIcon } from "@phosphor-icons/react";
+import { CalendarBlankIcon, CheckIcon, ClockIcon, CurrencyCircleDollarIcon, CurrencyDollarIcon, FireIcon, MapPinIcon, ShieldCheckIcon, TicketIcon, TrashIcon, UsersIcon, XCircleIcon, XIcon } from "@phosphor-icons/react";
+import { formatDateTime } from "@/lib/utils";
 
 export default function EventDetailsPage() {
   const router = useRouter();
@@ -58,7 +59,7 @@ export default function EventDetailsPage() {
   });
 
   const { data: statusHistory, isLoading: isLoadingHistory } = useEventStatusHistory(eventId || "");
-  // const { data: analytics, isLoading: analyticsLoading } = useEventAnalyticsById(eventId || "");
+  const { data: analytics, isLoading: analyticsLoading } = useEventAnalyticsById(eventId || "");
   // Note: useEventAnalytics fetches list, not single event details usually, but assuming user request context. 
   // If analytics endpoint is global, we might not get per-event stats here unless filtered.
   // For now we use event.capacity/available logic as before for "Ticket Analytics".
@@ -163,15 +164,24 @@ export default function EventDetailsPage() {
 
 
 
+  const totalTicketsSold = analytics?.sold_seats ??
+    (event.tiers?.reduce((sum, ticket) => sum + (ticket.sold || 0), 0) || 0);
+  const totalCapacity = analytics?.total_seats ??
+    (event.tiers?.reduce((sum, ticket) => sum + ticket.quantity, 0) || 0);
+  const totalRevenue = analytics?.total_revenue ??
+    (event.tiers?.reduce((sum, ticket) => sum + ((ticket.sold || 0) * ticket.price), 0) || 0);
 
 
+  const firstTier = event.tiers?.[0];
+  const salesStartDate = firstTier?.sales_start
+    ? formatDateTime(firstTier.sales_start)
+    : 'Not set';
+  const salesEndDate = firstTier?.sales_end
+    ? formatDateTime(firstTier.sales_end)
+    : 'Not set';
 
-  // const sold = analytics?.sold_tickets || 0;
-  // const capacity = analytics?.total_tickets || event.capacity || 0;
-
-  // // Prevent division by zero
-  // const progress = capacity > 0 ? (sold / capacity) * 100 : 0;
-  // const revenue = analytics?.revenue || 0;
+  // Prevent division by zero for progress
+  const progress = totalCapacity > 0 ? (totalTicketsSold / totalCapacity) * 100 : 0;
 
   interface StatusHistoryItem {
     id: string;
@@ -423,12 +433,38 @@ export default function EventDetailsPage() {
           {/* Right Column - Sidebar */}
           <div className="space-y-6">
 
+
+            {/* Financial Details */}
+            <div className="glass-card-lower rounded-2xl p-6 border border-green-300! bg-green-100/40!">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <CurrencyCircleDollarIcon weight="duotone" className="w-5 h-5 text-gray-500" />
+                {t("events.sections.financialDetails", "Financial Details")}
+              </h2>
+              <div className="space-y-0">
+                {event.commission_rate > 0 && (
+                  <div className="flex justify-between items-center py-2">
+                    <span className="text-gray-500 text-sm">{t("events.fields.commission", "Commission Rate")}</span>
+                    <Badge variant="secondary" className="bg-emerald-600 text-white border-emerald-100 px-3 py-1 text-sm">
+                      {event.commission_rate}%
+                    </Badge>
+                  </div>
+                )}
+                <div className="flex justify-between items-center pt-1">
+                  <span className="text-gray-500 text-sm">{t("events.sections.totalEarnings", "Total Earnings")}</span>
+                  <span className="font-semibold text-emerald-700 text-lg">
+                    {event.commission_rate && totalRevenue && analytics?.tiers[0].currency && `${Math.round(Number(totalRevenue) * (1 - event.commission_rate / 100), 2)} ${analytics?.tiers[0].currency} `}
+                  </span>
+                </div>
+              </div>
+            </div>
+
             {/* Ticket Analytics (Renamed from Ticket Tiers as in Organizer, but retaining our logic) */}
-            {/* <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+            <div className="glass-card-lower rounded-2xl p-6 border border-gray-100">
               <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                 {t("events.sections.ticketAnalytics", "Ticket Analytics")}
               </h2>
               <div className="space-y-6">
+                {/* Sales Progress */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-500">{t("events.analytics.progress", "Sales Progress")}</span>
@@ -439,64 +475,99 @@ export default function EventDetailsPage() {
                   <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
                     <div
                       className="bg-blue-600 h-full rounded-full transition-all duration-500"
-                      style={{ width: `${progress}%` }}
+                      style={{ width: `${Math.min(progress, 100)}%` }}
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="p-3 bg-blue-50 rounded-lg">
-                    <p className="text-xs text-blue-600 mb-1">{t("events.analytics.sold", "Sold")}</p>
-                    <p className="text-lg font-bold text-blue-700">{sold}</p>
+                    <p className="text-xs text-blue-600 mb-1">{t("event.label.totalSold", "Total Sold")}</p>
+                    <p className="text-lg font-bold text-blue-700">{totalTicketsSold}</p>
                   </div>
                   <div className="p-3 bg-emerald-50 rounded-lg">
-                    <p className="text-xs text-emerald-600 mb-1">{t("events.analytics.revenue", "Revenue")}</p>
+                    <p className="text-xs text-emerald-600 mb-1">{t("event.label.totalRevenue", "Revenue")}</p>
                     <p className="text-lg font-bold text-emerald-700">
-                      {new Intl.NumberFormat(locale === 'ja' ? 'ja-JP' : locale === 'it' ? 'it-IT' : 'en-US', {
-                        style: 'currency',
-                        currency: 'NPR',
-                        maximumFractionDigits: 0
-                      }).format(revenue)}
+                      {event.tiers?.[0]?.currency || 'NPR'} {totalRevenue.toLocaleString()}
                     </p>
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-gray-100">
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-gray-500">{t("events.fields.price", "Price per Ticket")}</span>
-                    <span className="font-medium">{event.price} NPR</span>
-                  </div>
-                </div>
-              </div>
-            </div> */}
+                {/* Tiers List */}
+                <div className="space-y-3 pt-4 border-t border-gray-100">
+                  <h3 className="text-sm font-medium text-gray-900">{t("event.section.ticketTiers", "Ticket Tiers")}</h3>
+                  {analytics?.tiers ? (
+                    analytics.tiers.map((tier: EventTierAnalytics, index: number) => {
+                      const soldPercent = tier.total_seats > 0 ? (tier.sold_seats / tier.total_seats) * 100 : 0;
+                      return (
+                        <div key={tier.tier_id} className="space-y-2 p-3 rounded-lg bg-gray-50 border border-gray-100">
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <p className="font-medium text-gray-900">{tier.tier_name}</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="font-medium text-emerald-600">
+                                {tier.currency || 'NPR'} {tier.revenue.toLocaleString()}
+                              </p>
+                            </div>
+                          </div>
 
-            {/* Financial Details */}
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <TicketIcon weight="duotone" className="w-5 h-5 text-gray-500" />
-                {t("events.sections.financialDetails", "Financial Details")}
-              </h2>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                  <span className="text-gray-500 text-sm">{t("events.fields.price", "Ticket Price")}</span>
-                  <span className="font-semibold text-gray-900 text-lg">
-                    {event.price > 0 ? `${event.price} NPR` : "Free"}
-                  </span>
-                </div>
+                          <div className="space-y-1">
+                            <div className="w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
+                              <div className="bg-blue-500 h-full rounded-full" style={{ width: `${Math.min(soldPercent, 100)}%` }} />
+                            </div>
+                            <div className="flex justify-between items-center text-xs text-gray-600">
+                              <span>{tier.sold_seats} / {tier.total_seats} {t("common.sold", "sold")}</span>
 
-                {event.commission_rate > 0 && (
-                  <div className="flex justify-between items-center py-2">
-                    <span className="text-gray-500 text-sm">{t("events.fields.commissionRate", "Commission Rate")}</span>
-                    <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 border-emerald-100 px-3 py-1">
-                      {event.commission_rate}%
-                    </Badge>
-                  </div>
-                )}
+                              <p className="text-xs text-gray-500">
+                                {tier.currency || 'NPR'} {tier.price.toLocaleString()} / {t("common.ticket", "ticket")}
+                              </p>
+                            </div>
+
+                          </div>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    event.tiers?.map((tier, index) => {
+                      const sold = tier.sold || 0;
+                      const soldPercent = tier.quantity > 0 ? (sold / tier.quantity) * 100 : 0;
+                      const tierRevenue = sold * tier.price;
+
+                      return (
+                        <div key={tier.id} className="space-y-2 p-3 rounded-lg bg-gray-50 border border-gray-100">
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <p className="font-medium text-gray-900">{tier.tier_name}</p>
+                              <p className="text-xs text-gray-500">
+                                {tier.currency || 'NPR'} {tier.price.toLocaleString()} / {t("common.ticket", "ticket")}
+                              </p>
+                            </div>
+                            <div className="text-right">
+                              <p className="font-medium text-emerald-600">
+                                {tier.currency || 'NPR'} {tierRevenue.toLocaleString()}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="space-y-1">
+                            <div className="flex justify-end text-xs text-gray-600">
+                              <span>{sold} / {tier.quantity} {t("common.sold", "sold")}</span>
+                            </div>
+                            <div className="w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
+                              <div className="bg-blue-500 h-full rounded-full" style={{ width: `${Math.min(soldPercent, 100)}%` }} />
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
               </div>
             </div>
 
             {/* Quick Actions / Featured */}
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+            <div className="glass-card-lower rounded-2xl p-6 border border-gray-100">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">{t("events.sections.quickActions", "Quick Actions")}</h2>
               <div className="space-y-4">
                 {/* Featured Toggle Switch */}

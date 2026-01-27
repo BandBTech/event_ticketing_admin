@@ -46,6 +46,16 @@ export function useAdminEvents(filters?: AdminEventFilters) {
 }
 
 /**
+ * Hook to get latest 3 events by organizer
+ */
+export function useGetEventsByOrganizerQuery(organizerId: string) {
+  return useAdminEvents({
+    organizerId,
+    limit: 3,
+  });
+}
+
+/**
  * Hook for fetching a single event by ID
  */
 export function useEvent(eventId: string) {

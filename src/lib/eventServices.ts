@@ -41,20 +41,32 @@ interface ApproveEventResponse {
   message: string;
 }
 
-export interface EventAnalytics {
-  event_id: string;
-  event_title: string;
-  total_tickets: number;
-  sold_tickets: number;
+export interface EventTierAnalytics {
+  tier_id: string;
+  tier_name: string;
+  price: number;
+  currency?: string;
+  total_seats: number;
+  sold_seats: number;
+  available_seats: number;
   revenue: number;
-  check_ins: number;
+  sales_start?: string;
+  sales_end?: string;
+  is_active: boolean;
 }
 
 export interface EventAnalyticsResponse {
-  analytics: EventAnalytics[];
-  total: number;
-  page: number;
-  limit: number;
+  event_id: string;
+  event_title: string;
+  event_status: string;
+  sales_status: string;
+  total_seats: number;
+  sold_seats: number;
+  available_seats: number;
+  total_revenue: number;
+  tier_count: number;
+  tiers: EventTierAnalytics[];
+  created_at: string;
 }
 
 interface EventStatusHistory {
@@ -299,12 +311,13 @@ export class EventService {
    * Get single event ticket analytics
    * Uses the global admin analytics endpoint filtered by event ID
    */
-  static async getEventAnalyticsById(eventId: string): Promise<EventAnalytics | null> {
+  static async getEventAnalyticsById(eventId: string): Promise<EventAnalyticsResponse | null> {
     const response = await api.get<EventAnalyticsResponse>(
-      `/admin/events/analytics?event_id=${eventId}&limit=1`,
+      `/admin/events/${eventId}/analytics`,
       { requiresAuth: true }
     );
-    return response.analytics && response.analytics.length > 0 ? response.analytics[0] : null;
+    // return response.analytics && response.analytics.length > 0 ? response.analytics[0] : null;
+    return response;
   }
 
 

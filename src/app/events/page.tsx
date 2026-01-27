@@ -24,6 +24,7 @@ import {
   XCircle as XCircleIcon,
   WarningCircle as WarningCircleIcon,
   Plus as PlusIcon,
+  CrownIcon,
 } from "@phosphor-icons/react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -40,6 +41,7 @@ import {
 import { queryKeys } from "@/lib/queryKeys";
 import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
+import { EventStatusBadge } from "../components/EventStatusBadge";
 
 // Status configuration
 function getStatusConfig(status: string) {
@@ -162,29 +164,31 @@ function EventCard({ event }: { event: Event }) {
   return (
     <Card className="group hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col h-full border-gray-200 py-0">
       {/* Image */}
-      <div className="relative h-full overflow-hidden bg-muted">
+      <div className="relative overflow-hidden bg-muted">
         <Image
           src={event.banner_image || "/placeholder.png"}
           alt={event.title}
           width={100}
           height={100}
-          className="object-cover w-full h-full aspect-16/10 group-hover:scale-105 transition-transform duration-300"
+          className="object-cover w-full aspect-16/10 group-hover:scale-105 transition-transform duration-300"
         />
         {/* Status Badge */}
         <div className="absolute top-3 left-3">
-          <Badge
+          {/* <Badge
             variant={statusConfig.variant}
             className={`gap-1 px-2.5 py-1 backdrop-blur-md shadow-sm border-white/20 ${statusConfig.className}`}
           >
             <StatusIcon weight="duotone" className="w-3.5 h-3.5" />
             {statusConfig.label}
-          </Badge>
+          </Badge> */}
+          <EventStatusBadge status={event.status} />
         </div>
         {/* Featured Badge */}
         {event.is_featured && (
           <div className="absolute top-3 right-3">
-            <Badge className="bg-linear-to-r from-amber-500 to-orange-500 text-white border-white/20 shadow-sm">
-              Featured
+            <Badge className="bg-linear-to-r from-amber-500 to-orange-500 text-white text-sm text-shadow-md border-white/20 shadow-sm">
+              <CrownIcon weight="fill" className="size-4!" />
+              {t("events.badge.featured", "Featured")}
             </Badge>
           </div>
         )}
@@ -199,7 +203,7 @@ function EventCard({ event }: { event: Event }) {
               <Badge
                 key={tag}
                 variant="outline"
-                className="text-xs font-normal text-muted-foreground bg-muted/50 border-border"
+                className="text-xs font-normal text-muted-foreground bg-muted/50 border-border whitespace-pre-wrap break-all max-w-full rounded-xl"
               >
                 {tag}
               </Badge>
@@ -207,7 +211,7 @@ function EventCard({ event }: { event: Event }) {
             {categories.length > 3 && (
               <Badge
                 variant="outline"
-                className="text-xs font-normal text-muted-foreground bg-muted/50 border-border"
+                className="text-xs font-normal text-muted-foreground bg-muted/50 border-border whitespace-pre-wrap break-all max-w-full  rounded-xl"
               >
                 +{categories.length - 3}
               </Badge>
@@ -244,7 +248,7 @@ function EventCard({ event }: { event: Event }) {
         </div>
 
         {/* Stats Row */}
-        <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4 bg-muted/30 p-2 rounded-lg border border-border/50">
+        {/* <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4 bg-muted/30 p-2 rounded-lg border border-border/50">
           <div className="flex items-center gap-1.5" title="Capacity">
             <UsersIcon
               weight="duotone"
@@ -268,10 +272,10 @@ function EventCard({ event }: { event: Event }) {
               </div>
             </>
           )}
-        </div>
+        </div> */}
 
         {/* Actions */}
-        <div className="mt-auto pt-4 border-t border-border flex gap-2">
+        <div className="mt-auto flex gap-2">
           <Button
             variant="default"
             className="flex-1 gap-2 bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 hover:text-gray-900 shadow-sm"
@@ -280,7 +284,7 @@ function EventCard({ event }: { event: Event }) {
             <EyeIcon weight="duotone" className="w-4 h-4" />
             {t("events.details")}
           </Button>
-          <Button
+          {/* <Button
             variant="outline"
             size="icon"
             className="hover:text-primary hover:border-primary/50"
@@ -288,7 +292,7 @@ function EventCard({ event }: { event: Event }) {
             title="Edit Event"
           >
             <PencilSimpleIcon weight="duotone" className="w-4 h-4" />
-          </Button>
+          </Button> */}
         </div>
       </CardContent>
     </Card>

@@ -33,7 +33,11 @@
     "noResultsTryAgain": "Try adjusting your search terms or filters",
     "back": "Back",
     "confirm": "Confirm",
-    "approve": "Approve"
+    "approve": "Approve",
+    "viewAll": "View All",
+    "viewCountMore": "View {count} More",
+    "system": "System",
+    "showLess": "Show Less"
   },
   "navigation": {
     "events": "Events",
@@ -228,7 +232,9 @@
       "ticketAnalytics": "Ticket Analytics",
       "quickActions": "Quick Actions",
       "statusSummary": "Status Summary",
-      "statusHistory": "Status History"
+      "statusHistory": "Status History",
+      "financialDetails": "Financial Details",
+      "totalEarnings": "Estimated Earnings"
     },
     "fields": {
       "dateTime": "Date & Time",
@@ -278,12 +284,19 @@
       "paused": "Sales Paused",
       "stopped": "Sales Stopped",
       "sold_out": "Sold Out",
-      "sales_ended": "Sales Ended"
+      "sales_ended": "Sales Ended",
+      "on_sale": "Sales Live",
+      "featured": "Featured"
     },
     "analytics": {
       "progress": "Sales Progress",
       "sold": "Sold",
       "revenue": "Revenue"
+    },
+    "history": {
+      "statusChanged": "Status updated from {old} to {new}",
+      "statusSet": "Status set to {new}",
+      "salesChanged": "Sales {new}"
     }
   },
   "languages": {
@@ -535,7 +548,8 @@
         "contactInfo": "Contact Information",
         "rolesPermissions": "Roles & Permissions",
         "quickActions": "Quick Actions",
-        "statusSummary": "Status Summary"
+        "statusSummary": "Status Summary",
+        "latestEvents": "Latest Events"
       },
       "status": {
         "label": "Status",
@@ -549,7 +563,8 @@
         "pending": "Pending",
         "approved": "Approved",
         "rejected": "Rejected",
-        "unknown": "Unknown"
+        "unknown": "Unknown",
+        "notOnboarded": "Onboarding Incomplete"
       },
       "actions": {
         "approve": "Approve",
@@ -561,7 +576,8 @@
         "deleteOrganizer": "Delete Organizer",
         "sendEmail": "Send Email",
         "processing": "Processing...",
-        "deactivateAccount": "Deactivate Account"
+        "deactivateAccount": "Deactivate Account",
+        "activateAccount": "Activate Account"
       },
       "modals": {
         "approveTitle": "Approve Organizer",
@@ -583,7 +599,8 @@
         "activateSuccess": "Organizer activated successfully",
         "updateError": "Failed to update organizer status",
         "notFound": "Organizer Not Found",
-        "noId": "No Organizer Selected"
+        "noId": "No Organizer Selected",
+        "noEvents": "No events found for this organizer"
       },
       "validation": {
         "rejectReasonRequired": "Reason for rejection is required (min 10 characters)",

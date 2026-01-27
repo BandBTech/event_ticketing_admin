@@ -11,12 +11,13 @@ interface EventStatusBadgeProps {
 }
 
 const eventStatusConfig: Record<string, { color: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
-  'pending': { color: 'bg-amber-700 text-amber-100 border-amber-200', variant: 'secondary' },
-  'approved': { color: 'bg-green-700 text-green-100 border-green-200', variant: 'secondary' },
-  'rejected': { color: 'bg-red-700 text-red-100 border-red-200', variant: 'destructive' },
-  'cancelled': { color: 'bg-red-700 text-red-100 border-red-200', variant: 'destructive' },
-  'draft': { color: 'bg-gray-700 text-gray-100 border-gray-200', variant: 'secondary' },
-  'default': { color: 'bg-gray-700 text-gray-100 border-gray-200', variant: 'secondary' },
+  'pending': { color: 'bg-amber-700 text-amber-100 border-amber-600', variant: 'secondary' },
+  'approved': { color: 'bg-green-700 text-green-100 border-green-600', variant: 'secondary' },
+  'rejected': { color: 'bg-red-700! text-red-100 border-red-600', variant: 'destructive' },
+  'cancelled': { color: 'bg-red-700 text-red-100 border-red-600', variant: 'destructive' },
+  'draft': { color: 'bg-gray-700 text-gray-100 border-gray-600', variant: 'secondary' },
+  'default': { color: 'bg-gray-700 text-gray-100 border-gray-600', variant: 'secondary' },
+  'on_sale': { color: 'bg-green-700 text-green-100 border-green-600', variant: 'secondary' },
 };
 
 export function EventStatusBadge({ status, className }: EventStatusBadgeProps) {
@@ -31,7 +32,7 @@ export function EventStatusBadge({ status, className }: EventStatusBadgeProps) {
     <Badge
       variant={config.variant}
       className={cn(
-        "capitalize px-3 py-1 flex items-center gap-1.5",
+        "uppercase px-3 py-1 flex items-center gap-1.5",
         config.color,
         className
       )}

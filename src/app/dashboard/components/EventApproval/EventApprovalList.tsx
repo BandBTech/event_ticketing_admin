@@ -101,7 +101,7 @@ const EventApprovalList = () => {
   return (
     <>
       <div className="bg-white @container rounded-2xl glass-card-lower border border-gray-100/50 mt-8">
-        <div className="px-4 py-3 border-b border-gray-100">
+        <div className="px-4 py-3 border-b border-gray-200">
           <h2 className="font-medium text-muted-foreground">
             {t("dashboard.eventsAwaitingApproval")}
           </h2>

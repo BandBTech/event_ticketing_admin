@@ -65,7 +65,7 @@ static async updateCompany(settings: CompanyInfo, logoFile?: File): Promise<Comp
   if (settings.linkedin_url) formData.append('linkedin_url', settings.linkedin_url);
   if (settings.youtube_url) formData.append('youtube_url', settings.youtube_url);
 
-  return await api.put(
+  return await api.putFormData(
     API_ENDPOINTS.UPDATE_COMPANY,
     formData,
     {

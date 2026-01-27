@@ -23,7 +23,12 @@
     "noResultsTryAgain": "検索条件またはフィルターを調整してみてください",
     "back": "戻る",
     "confirm": "確認する",
-    "approve": "承認する"
+    "approve": "承認する",
+    "viewAll": "すべて見る",
+    "viewMore": "もっと見る",
+    "viewCountMore": "{count} 個以上見る",
+    "system": "システム",
+    "showLess": "表示を減らす"
   },
   "navigation": {
     "events": "イベント",
@@ -200,7 +205,9 @@
       "ticketAnalytics": "チケット分析",
       "quickActions": "クイックアクション",
       "statusSummary": "ステータス概要",
-      "statusHistory": "ステータス履歴"
+      "statusHistory": "ステータス履歴",
+      "financialDetails": "財務詳細",
+      "totalEarnings": "推定収益"
     },
     "fields": {
       "dateTime": "日時",
@@ -232,7 +239,9 @@
       "stopped": "販売停止",
       "sold_out": "完売",
       "sales_ended": "販売終了",
-      "rejected": "拒否されました"
+      "rejected": "拒否されました",
+      "on_sale": "セールスライブ",
+      "featured": "注目の"
     },
     "analytics": {
       "progress": "販売進捗",
@@ -256,6 +265,11 @@
       "organizerId": "主催者ID",
       "viewOrganizer": "主催者を表示",
       "featured": "注目の"
+    },
+    "history": {
+      "statusChanged": "ステータスが {old} から {new} に更新されました",
+      "statusSet": "ステータスが {new} に設定されました",
+      "salesChanged": "売上 {new}"
     }
   },
   "languages": {
@@ -495,7 +509,8 @@
         "contactInfo": "連絡先情報",
         "rolesPermissions": "役割と権限",
         "quickActions": "クイックアクション",
-        "statusSummary": "ステータスの概要"
+        "statusSummary": "ステータスの概要",
+        "latestEvents": "最新のイベント"
       },
       "status": {
         "label": "ステータス",
@@ -509,7 +524,8 @@
         "pending": "保留中",
         "approved": "承認済み",
         "rejected": "却下",
-        "unknown": "不明"
+        "unknown": "不明",
+        "notOnboarded": "オンボーディングが不完全"
       },
       "actions": {
         "approve": "承認",
@@ -521,7 +537,8 @@
         "deleteOrganizer": "主催者を削除",
         "sendEmail": "メールを送信",
         "processing": "処理中...",
-        "deactivateAccount": "アカウントを無効化する"
+        "deactivateAccount": "アカウントを無効化する",
+        "activateAccount": "アカウントをアクティブ化する"
       },
       "modals": {
         "approveTitle": "主催者の承認",
@@ -543,7 +560,8 @@
         "activateSuccess": "主催者が正常に有効化されました",
         "updateError": "主催者のステータス更新に失敗しました",
         "notFound": "主催者が見つかりません",
-        "noId": "主催者が選択されていません"
+        "noId": "主催者が選択されていません",
+        "noEvents": "この主催者のイベントは見つかりませんでした"
       },
       "validation": {
         "rejectReasonRequired": "却下の理由が必要です（最低10文字）",

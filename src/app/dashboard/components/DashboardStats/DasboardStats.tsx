@@ -1,11 +1,27 @@
 import { CalendarIcon, CalendarStarIcon, ClockIcon, UsersIcon } from "@phosphor-icons/react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
+import { usePendingOrganizers, usePendingEvents } from "@/hooks/useDashboard";
+import { StatCardSkeleton } from "../DashboardSkeleton";
 
-const DashboardStats = (props: { organizers: unknown[]; events: unknown[] }) => {
+const DashboardStats = () => {
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
-  const { organizers, events } = props;
+  const { data: pendingOrganizersData, isLoading: isLoadingOrganizers } = usePendingOrganizers();
+  const { data: pendingEventsData, isLoading: isLoadingEvents } = usePendingEvents();
+
+  const organizers = pendingOrganizersData?.organizers || [];
+  const events = pendingEventsData?.events || [];
+
+  if (isLoadingOrganizers && isLoadingEvents) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <StatCardSkeleton />
+        <StatCardSkeleton />
+        <StatCardSkeleton />
+      </div>
+    );
+  }
   return (
 
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
