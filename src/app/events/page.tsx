@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { EventService } from "@/lib/eventServices";
+import { OrganizerService } from "@/lib/organizerService";
 import { Event } from "@/types/event";
 import { format } from "date-fns";
 import { useEventStore } from "@/store/eventStore";
@@ -25,6 +26,7 @@ import {
   WarningCircle as WarningCircleIcon,
   Plus as PlusIcon,
   CrownIcon,
+  Percent as PercentIcon,
 } from "@phosphor-icons/react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -248,31 +250,54 @@ function EventCard({ event }: { event: Event }) {
         </div>
 
         {/* Stats Row */}
-        {/* <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4 bg-muted/30 p-2 rounded-lg border border-border/50">
-          <div className="flex items-center gap-1.5" title="Capacity">
+        {
+          event.status !== "rejected" && (
+            <div className="grid grid-cols-2 gap-4 text-sm text-muted-foreground mb-4 bg-muted/30 p-2 rounded-lg border border-border/50">
+              {/* <div className="flex items-center gap-1.5" title="Capacity">
             <UsersIcon
               weight="duotone"
               className="w-4 h-4 text-muted-foreground/70"
             />
             <span className="font-medium">{event.capacity || 0}</span>
           </div>
-          <div className="w-px h-4 bg-border" />
-          <div className="flex items-center gap-1.5" title="Available">
-            <TicketIcon
-              weight="duotone"
-              className="w-4 h-4 text-muted-foreground/70"
-            />
-            <span className="font-medium">{event.available || 0}</span>
-          </div>
-          {event.price > 0 && (
-            <>
-              <div className="w-px h-4 bg-border" />
-              <div className="flex items-center gap-1.5 text-foreground font-semibold ml-auto">
-                <span>NPR {event.price}</span>
+          <div className="w-px h-4 bg-border" /> */}
+              <div title="Titckets Sold">
+                <div className="flex items-center gap-2">
+                  <TicketIcon
+                    weight="duotone"
+                    className="w-4 h-4 text-muted-foreground/70"
+                  />
+                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-bold leading-none">
+                    Tickets Sold
+                  </span>
+                </div>
+                <span className="font-medium">{event.capacity - event.available} / {event.capacity}</span>
               </div>
-            </>
-          )}
-        </div> */}
+              {(event.status === "live" || event.status === "approved" || event.status === "pending") && (
+                <div className="flex items-center gap-3 ml-auto">
+                  <div className="flex flex-col items-end">
+                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-bold leading-none mb-1">
+                      Commission
+                    </span>
+                    <div className="flex items-center gap-0.5 text-emerald-600 font-bold">
+                      <span>{event.commission_rate || 0}%</span>
+                    </div>
+                  </div>
+                  <div className="w-px h-6 bg-border/60" />
+                  {/* <div className="flex flex-col items-end">
+                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-bold leading-none mb-1">
+                      Est. Earnings
+                    </span>
+                    <span className="text-emerald-700 font-bold">
+                      {event.tiers?.[0]?.currency || "NPR"}{" "}
+                      {((((event.capacity || 0) - (event.available || 0)) * (event.price || 0)) *
+                        ((event.commission_rate || 0) / 100)).toFixed(2)}
+                    </span>
+                  </div> */}
+                </div>
+              )}
+            </div>)
+        }
 
         {/* Actions */}
         <div className="mt-auto flex gap-2">
@@ -351,6 +376,41 @@ function StatusFilter({
   );
 }
 
+// Organizer Filter
+// function OrganizerFilter({
+//   value,
+//   onChange,
+// }: {
+//   value: string;
+//   onChange: (value: string) => void;
+// }) {
+//   const { locale } = useLanguageStore();
+//   const { t } = useTranslation(locale);
+
+//   const { data: organizersData, isLoading } = useQuery({
+//     queryKey: queryKeys.organizers.all({ all_approved: true }),
+//     queryFn: () => OrganizerService.getOrganizers({ all_approved: true }),
+//   });
+
+//   const organizers = organizersData?.organizers || [];
+
+//   return (
+//     <Select value={value || "all"} onValueChange={onChange} disabled={isLoading}>
+//       <SelectTrigger className="w-[200px] bg-background">
+//         <SelectValue placeholder={isLoading ? t("common.loading") : t("events.filterByOrganizer", "Filter by Organizer")} />
+//       </SelectTrigger>
+//       <SelectContent>
+//         <SelectItem value="all">{t("events.allOrganizers", "All Organizers")}</SelectItem>
+//         {organizers.map((organizer) => (
+//           <SelectItem key={organizer.id} value={organizer.id}>
+//             {organizer.onboarding?.business_name || `${organizer.first_name} ${organizer.last_name}`}
+//           </SelectItem>
+//         ))}
+//       </SelectContent>
+//     </Select>
+//   );
+// }
+
 export default function EventsPage() {
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
@@ -405,8 +465,15 @@ export default function EventsPage() {
   );
 
   const handleClearOrganizerFilter = useCallback(() => {
-    updateParams({ organizer_id: null });
+    updateParams({ organizer_id: null, page: null });
   }, [updateParams]);
+
+  const handleOrganizerChange = useCallback(
+    (value: string) => {
+      updateParams({ organizer_id: value === "all" ? null : value, page: null });
+    },
+    [updateParams]
+  );
 
   const {
     data: response,
@@ -467,9 +534,9 @@ export default function EventsPage() {
   }
 
   return (
-    <div className="min-h-screen p-6 space-y-6">
+    <div className="min-h-screen p-6 space-y-6 @container">
       {/* Organizer Filter Banner */}
-      {organizerId && (
+      {/* {organizerId && (
         <div className="px-4 py-3 bg-blue-50 border border-blue-200 rounded-lg flex items-center justify-between">
           <p className="text-sm text-blue-700">
             {t("events.showingEventsForOrganizer")}:{" "}
@@ -483,7 +550,7 @@ export default function EventsPage() {
             {t("events.clearFilter")}
           </Button>
         </div>
-      )}
+      )} */}
 
       {/* Search and Filters */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -502,11 +569,15 @@ export default function EventsPage() {
         </div>
 
         <div className="flex items-center gap-3">
+          {/* <OrganizerFilter
+            value={organizerId}
+            onChange={handleOrganizerChange}
+          /> */}
           <StatusFilter value={statusFilter} onChange={handleStatusChange} />
-          <Button variant="outline" className="gap-2 bg-background">
+          {/* <Button variant="outline" className="gap-2 bg-background">
             <FunnelIcon weight="duotone" className="h-4 w-4" />
             {t("events.moreFilters")}
-          </Button>
+          </Button> */}
           {/* <Button
             onClick={() => router.push("/events/createevent")}
             className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90"

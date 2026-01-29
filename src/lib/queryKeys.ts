@@ -41,6 +41,7 @@ export const queryKeys = {
       search?: string;
       status?: string;
       account_status?: string;
+      all_approved?: boolean;
     }) => ["organizers", filters] as const,
     /** Key for all organizers (used for invalidation) */
     list: ["organizers"] as const,

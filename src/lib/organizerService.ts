@@ -81,6 +81,7 @@ export class OrganizerService {
     search?: string;
     status?: string;
     account_status?: string;
+    all_approved?: boolean;
   }): Promise<OrganizerListResponse> {
     const params = new URLSearchParams();
 
@@ -91,6 +92,7 @@ export class OrganizerService {
       if (filters.search) params.append('search', filters.search);
       if (filters.status) params.append('status', filters.status);
       if (filters.account_status) params.append('account_status', filters.account_status);
+      if (filters.all_approved) params.append('all_approved', 'true');
     }
 
     const query = params.toString();

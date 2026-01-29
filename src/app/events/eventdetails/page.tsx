@@ -452,14 +452,14 @@ export default function EventDetailsPage() {
                 <div className="flex justify-between items-center pt-1">
                   <span className="text-gray-500 text-sm">{t("events.sections.totalEarnings", "Total Earnings")}</span>
                   <span className="font-semibold text-emerald-700 text-lg">
-                    {event.commission_rate && totalRevenue && analytics?.tiers[0].currency && `${Math.round(Number(totalRevenue) * (1 - event.commission_rate / 100), 2)} ${analytics?.tiers[0].currency} `}
+                    {`${((totalRevenue || 0) * (event.commission_rate || 0) / 100).toFixed(2)} ${analytics?.tiers?.[0]?.currency || event.tiers?.[0]?.currency || 'NPR'}`}
                   </span>
                 </div>
               </div>
             </div>
 
             {/* Ticket Analytics (Renamed from Ticket Tiers as in Organizer, but retaining our logic) */}
-            <div className="glass-card-lower rounded-2xl p-6 border border-gray-100">
+            <div className="glass-card-lower rounded-2xl p-6 border border-gray-100 @container">
               <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                 {t("events.sections.ticketAnalytics", "Ticket Analytics")}
               </h2>
@@ -480,10 +480,10 @@ export default function EventDetailsPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid @xs:grid-cols-2 gap-4">
                   <div className="p-3 bg-blue-50 rounded-lg">
                     <p className="text-xs text-blue-600 mb-1">{t("event.label.totalSold", "Total Sold")}</p>
-                    <p className="text-lg font-bold text-blue-700">{totalTicketsSold}</p>
+                    <p className="text-lg font-bold text-blue-700">{totalTicketsSold} / {analytics?.total_seats}</p>
                   </div>
                   <div className="p-3 bg-emerald-50 rounded-lg">
                     <p className="text-xs text-emerald-600 mb-1">{t("event.label.totalRevenue", "Revenue")}</p>
