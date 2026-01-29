@@ -642,6 +642,54 @@
     },
     "create": {
       "passwordHint": "Click the icon to generate a secure password"
+    },
+    "filter": "Filter",
+    "clearFilters": "Clear Filters",
+    "loadingUsers": "Loading users...",
+    "noUsersFound": "No users found",
+    "noRole": "No role",
+    "more": "more",
+    "userTable": {
+      "name": "Name",
+      "contact": "Contact",
+      "role": "Role",
+      "organizerStatus": "Organizer Status",
+      "accountStatus": "Account Status",
+      "verified": "Verified",
+      "joined": "Joined",
+      "actions": "Actions"
+    },
+    "userRoles": {
+      "staff": "Staff",
+      "organizer": "Organizer",
+      "user": "User",
+      "admin": "Admin"
+    },
+    "organizerStatus": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "suspended": "Suspended",
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "unknown": "Unknown"
+    },
+    "accountStatus": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "suspended": "Suspended"
+    },
+    "verifiedStatus": {
+      "verified": "Verified",
+      "unverified": "Unverified"
+    },
+    "userDetail": {
+      "backToUsers": "Back to Users",
+      "contactInformation": "Contact Information",
+      "rolesAndPermissions": "Roles & Permissions",
+      "accountDetails": "Account Details",
+      "createdOn": "Created On",
+      "updatedOn": "Updated On"
     }
   },
   "settings": {

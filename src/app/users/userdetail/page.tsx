@@ -25,16 +25,17 @@ import { UserService } from "@/lib/userService";
 import { useQuery } from "@tanstack/react-query";
 import { UserData } from "@/types/user";
 import { queryKeys } from "@/lib/queryKeys";
+import { useTranslation } from "@/hooks/useTranslation";
+import { useLanguageStore } from "@/store/languageStore";
 
 export default function OrganizerProfilePage() {
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
   const router = useRouter();
   const userId =
     typeof window !== "undefined" ? localStorage.getItem("user_id") || "" : "";
 
-  const {
-    data: response,
-    isLoading,
-  } = useQuery<UserData>({
+  const { data: response, isLoading } = useQuery<UserData>({
     queryKey: queryKeys.users.detail(userId),
     queryFn: () => UserService.getUsersById({ id: userId }),
     enabled: !!userId,
@@ -112,7 +113,7 @@ export default function OrganizerProfilePage() {
           className="gap-2"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to Users
+          {t("users.userDetail.backToUsers", "Back to Users")}
         </Button>
 
         {/* Profile Card */}
@@ -123,16 +124,17 @@ export default function OrganizerProfilePage() {
                 <CardTitle className="text-2xl">
                   {data?.first_name} {data?.last_name}
                 </CardTitle>
-                <CardDescription className="mt-1">
-                  Organizer Profile
-                </CardDescription>
               </div>
               <div className="flex gap-2">
                 <Badge className={getStatusColor(data?.organizer_status || "")}>
-                  {data?.organizer_status}
+                  {t(
+                    `users.organizerStatus.${data?.organizer_status?.toLowerCase()}`,
+                  )}
                 </Badge>
                 <Badge className={getStatusColor(data?.account_status || "")}>
-                  {data?.account_status}
+                  {t(
+                    `users.accountStatus.${data?.account_status?.toLowerCase()}`,
+                  )}
                 </Badge>
               </div>
             </div>
@@ -143,7 +145,10 @@ export default function OrganizerProfilePage() {
             <div className="space-y-3">
               <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
                 <User className="h-4 w-4" />
-                Contact Information
+                {t(
+                  "users.userDetail.contactInformation",
+                  "Contact Information",
+                )}
               </h3>
               <div className="grid gap-3 pl-6">
                 <div className="flex items-center gap-3">
@@ -155,7 +160,7 @@ export default function OrganizerProfilePage() {
                         variant="outline"
                         className="text-xs bg-green-50 text-green-700 border-green-200"
                       >
-                        Verified
+                        {t("users.verifiedStatus.verified")}
                       </Badge>
                     )}
                   </div>
@@ -175,13 +180,16 @@ export default function OrganizerProfilePage() {
             <div className="space-y-3">
               <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
                 <Shield className="h-4 w-4" />
-                Roles & Permissions
+                {t(
+                  "users.userDetail.rolesAndPermissions",
+                  "Roles & Permissions",
+                )}
               </h3>
               <div className="flex flex-wrap gap-2 pl-6">
                 {data?.roles.map((role) => (
                   <div key={role.id} className="group relative">
                     <Badge variant="secondary" className="capitalize">
-                      {role.name}
+                      {t(`users.userRoles.${role.name}`)}
                     </Badge>
                     <div className="absolute bottom-full left-0 mb-2 hidden group-hover:block z-10">
                       <div className="bg-gray-900 text-white text-xs rounded py-1 px-2 whitespace-nowrap">
@@ -210,24 +218,20 @@ export default function OrganizerProfilePage() {
             <div className="space-y-3 pt-4 border-t">
               <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
                 <Calendar className="h-4 w-4" />
-                Account Details
+                {t("users.userDetail.accountDetails", "Account Details")}
               </h3>
               <div className="grid gap-2 pl-6 text-sm text-gray-600">
                 <div className="flex justify-between">
-                  <span>Created:</span>
+                  <span>{t("users.userDetail.createdOn", "Created On")}:</span>
                   <span className="font-medium">
                     {format(new Date(data?.created_at || "N/A"), "PPp")}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Last Updated:</span>
+                  <span>{t("users.userDetail.updatedOn", "Updated On")}:</span>
                   <span className="font-medium">
                     {format(new Date(data?.updated_at || "N/A"), "PPp")}
                   </span>
-                </div>
-                <div className="flex justify-between">
-                  <span>User ID:</span>
-                  <span className="font-mono text-xs">{data?.id}</span>
                 </div>
               </div>
             </div>

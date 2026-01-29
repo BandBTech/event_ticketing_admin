@@ -14,6 +14,7 @@ import {
   Eye as EyeIcon,
   Shield as ShieldIcon,
   User as UserIcon,
+  DotsThreeVertical as DotsThreeVerticalIcon,
 } from "@phosphor-icons/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { format } from "date-fns";
@@ -32,10 +33,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { formatPhoneNumber } from "@/lib/utils";
 import { UserService } from "@/lib/userService";
 import { useQuery } from "@tanstack/react-query";
-import {
-  ApiResponse as UserApiResponse,
-} from "@/types/user";
+import { ApiResponse as UserApiResponse } from "@/types/user";
 import { queryKeys } from "@/lib/queryKeys";
+import { useTranslation } from "@/hooks/useTranslation";
+import { useLanguageStore } from "@/store/languageStore";
 
 function getStatusConfig(status: string) {
   switch (status?.toLowerCase()) {
@@ -119,24 +120,34 @@ function getAccountStatusConfig(status: string) {
 export default function UsersPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-    const {
-      data: response,
-      isLoading,
-    } = useQuery<UserApiResponse>({
-      queryKey: queryKeys.users.all(),
-      queryFn: () =>
-        UserService.getUsers({
-          page: currentPage,
-          limit: itemsPerPage,
-        }),
-    });
-    const mockUserData = response?.users || [];    
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
 
   const currentPage = Number(searchParams.get("page")) || 1;
   const searchQuery = searchParams.get("search") || "";
   const statusFilter = searchParams.get("status") || "";
   const accountStatusFilter = searchParams.get("account_status") || "";
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
+
+  const { data: response, isLoading } = useQuery<UserApiResponse>({
+    queryKey: queryKeys.users.all(
+      currentPage,
+      itemsPerPage,
+      searchQuery,
+      statusFilter,
+      accountStatusFilter,
+    ),
+    queryFn: () =>
+      UserService.getUsers({
+        page: currentPage,
+        limit: itemsPerPage,
+        search: searchQuery,
+        status: statusFilter,
+        account_status: accountStatusFilter,
+      }),
+  });
+
+  const mockUserData = response?.users || [];
 
   const updateParams = useCallback(
     (updates: Record<string, string | null>) => {
@@ -167,11 +178,10 @@ export default function UsersPage() {
     [updateParams],
   );
 
-  // Filter data
   const filteredData = useMemo(() => {
     let result = mockUserData;
 
-    if (searchQuery.trim()) {
+    if (searchQuery.trim() && !response?.users) {
       const query = searchQuery.toLowerCase();
       result = result.filter(
         (user) =>
@@ -185,14 +195,14 @@ export default function UsersPage() {
       );
     }
 
-    if (statusFilter) {
+    if (statusFilter && !response?.users) {
       result = result.filter(
         (user) =>
           user.organizer_status?.toLowerCase() === statusFilter.toLowerCase(),
       );
     }
 
-    if (accountStatusFilter) {
+    if (accountStatusFilter && !response?.users) {
       result = result.filter(
         (user) =>
           user.account_status?.toLowerCase() ===
@@ -201,17 +211,17 @@ export default function UsersPage() {
     }
 
     return result;
-  }, [searchQuery, statusFilter, accountStatusFilter, mockUserData]);
+  }, [searchQuery, statusFilter, accountStatusFilter, mockUserData, response]);
 
-  const paginatedData = useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    return filteredData.slice(startIndex, endIndex);
-  }, [filteredData, currentPage, itemsPerPage, mockUserData]);
+  const paginatedData = mockUserData;
 
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  const startItem = (currentPage - 1) * itemsPerPage + 1;
-  const endItem = Math.min(currentPage * itemsPerPage, filteredData.length);
+  const totalItems = response?.total || mockUserData.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const hasNextPage = response?.has_more ?? currentPage < totalPages;
+
+  const startItem =
+    mockUserData.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0;
+  const endItem = (currentPage - 1) * itemsPerPage + mockUserData.length;
 
   return (
     <div className="min-h-screen p-8 space-y-6">
@@ -223,7 +233,7 @@ export default function UsersPage() {
           />
           <Input
             type="text"
-            placeholder="Search users..."
+            placeholder={t("users.searchUsers")}
             value={searchQuery}
             onChange={(e) => handleSearchChange(e.target.value)}
             className="pl-9"
@@ -235,174 +245,203 @@ export default function UsersPage() {
           className="gap-2 bg-background/80 backdrop-blur-sm"
         >
           <FunnelIcon weight="duotone" className="h-4 w-4" />
-          {/* {t("common.filter")} */}
-          Filter
+          {t("users.filter")}
         </Button>
       </div>
 
       {isLoading ? (
-        <div className="text-center py-12">Loading users...</div>
-      )
-    : (
-      <Card>
-        <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-gray-100">
-                  <TableHead className="w-16">S.N.</TableHead>
-                  <TableHead>User</TableHead>
-                  <TableHead>Contact</TableHead>
-                  <TableHead>Role</TableHead>
-                  <TableHead>Organizer Status</TableHead>
-                  <TableHead>Account Status</TableHead>
-                  <TableHead>Verified</TableHead>
-                  <TableHead>Joined</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {paginatedData.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={10} className="text-center py-12">
-                      <div className="flex flex-col items-center gap-2">
-                        <UserIcon
-                          weight="duotone"
-                          className="w-12 h-12 text-muted-foreground/50"
-                        />
-                        <p className="text-muted-foreground">No users found</p>
-                      </div>
-                    </TableCell>
+        <div className="text-center py-12">{t("users.loadingUsers")}</div>
+      ) : (
+        <Card>
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-gray-100">
+                    <TableHead className="w-16">S.N.</TableHead>
+                    <TableHead>{t("users.userTable.name")}</TableHead>
+                    <TableHead>{t("users.userTable.contact")}</TableHead>
+                    <TableHead>{t("users.userTable.role")}</TableHead>
+                    <TableHead>
+                      {t("users.userTable.organizerStatus")}
+                    </TableHead>
+                    <TableHead>{t("users.userTable.accountStatus")}</TableHead>
+                    <TableHead>{t("users.userTable.verified")}</TableHead>
+                    <TableHead>{t("users.userTable.joined")}</TableHead>
+                    <TableHead className="text-right">
+                      {t("users.userTable.actions")}
+                    </TableHead>
                   </TableRow>
-                ) : (
-                  paginatedData.map((user, index) => {
-                    const statusConfig = getStatusConfig(user.organizer_status);
-                    const accountStatusConfig = getAccountStatusConfig(
-                      user.account_status,
-                    );
-                    const StatusIcon = statusConfig.icon;
-                    const serialNumber =
-                      (currentPage - 1) * itemsPerPage + index + 1;
+                </TableHeader>
+                <TableBody>
+                  {paginatedData.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={9} className="text-center py-12">
+                        <div className="flex flex-col items-center gap-2">
+                          <UserIcon
+                            weight="duotone"
+                            className="w-12 h-12 text-muted-foreground/50"
+                          />
+                          <p className="text-muted-foreground">
+                            {t("users.noUsersFound")}
+                          </p>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    paginatedData.map((user, index) => {
+                      const statusConfig = getStatusConfig(
+                        user.organizer_status,
+                      );
+                      const accountStatusConfig = getAccountStatusConfig(
+                        user.account_status,
+                      );
+                      const StatusIcon = statusConfig.icon;
+                      const serialNumber =
+                        (currentPage - 1) * itemsPerPage + index + 1;
 
-                    return (
-                      <TableRow key={user.id} className="hover:bg-muted/50">
-                        <TableCell className="font-medium text-muted-foreground">
-                          {serialNumber}
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex flex-col">
-                            <span className="font-medium text-gray-900">
-                              {user.first_name} {user.last_name}
-                            </span>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex flex-col gap-1">
-                            <span className="text-sm">{user.email}</span>
-                            <span className="text-sm text-muted-foreground">
-                              {formatPhoneNumber(user.country_code, user.phone)}
-                            </span>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex flex-col gap-1">
-                            {user.roles.length > 0 ? (
-                              <>
-                                <div className="flex items-center gap-2">
-                                  <Badge
-                                    variant="outline"
-                                    className="gap-1.5 bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100"
-                                  >
-                                    <ShieldIcon
-                                      weight="duotone"
-                                      className="w-3 h-3"
-                                    />
-                                    {user.roles[0].name}
-                                  </Badge>
-                                  {user.roles.length > 1 && (
-                                    <span className="text-xs text-muted-foreground">
-                                      +{user.roles.length - 1} more
-                                    </span>
-                                  )}
-                                </div>
-                              </>
-                            ) : (
-                              <span className="text-sm text-muted-foreground">
-                                No role
+                      return (
+                        <TableRow key={user.id} className="hover:bg-muted/50">
+                          <TableCell className="font-medium text-muted-foreground">
+                            {serialNumber}
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex flex-col">
+                              <span className="font-medium text-gray-900">
+                                {user.first_name} {user.last_name}
                               </span>
-                            )}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <Badge
-                            variant="outline"
-                            className={`gap-1.5 px-2.5 py-1 rounded-full font-semibold border ${statusConfig.className}`}
-                          >
-                            <StatusIcon
-                              weight="duotone"
-                              className="w-3.5 h-3.5"
-                            />
-                            {statusConfig.label}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <Badge
-                            variant="outline"
-                            className={`text-xs font-bold ${accountStatusConfig.className}`}
-                          >
-                            {accountStatusConfig.label}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          {user.is_email_verified ? (
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex flex-col gap-1">
+                              <span className="text-sm">{user.email}</span>
+                              <span className="text-sm text-muted-foreground">
+                                {formatPhoneNumber(
+                                  user.country_code,
+                                  user.phone,
+                                )}
+                              </span>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex flex-col gap-1">
+                              {user.roles.length > 0 ? (
+                                <>
+                                  <div className="flex items-center gap-2">
+                                    <Badge
+                                      variant="outline"
+                                      className="gap-1.5 bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100"
+                                    >
+                                      <ShieldIcon
+                                        weight="duotone"
+                                        className="w-3 h-3"
+                                      />
+
+                                      {t(
+                                        `users.userRoles.${user.roles[0].name}`,
+                                      )}
+                                    </Badge>
+                                    {user.roles.length > 1 && (
+                                      <span className="text-xs text-muted-foreground">
+                                        +{user.roles.length - 1}{" "}
+                                        {t("users.more")}
+                                      </span>
+                                    )}
+                                  </div>
+                                </>
+                              ) : (
+                                <span className="text-sm text-muted-foreground">
+                                  {t("users.noRole")}
+                                </span>
+                              )}
+                            </div>
+                          </TableCell>
+                          <TableCell>
                             <Badge
-                              variant="secondary"
-                              className="bg-blue-50 text-blue-600 hover:bg-blue-100 border-blue-100 gap-1"
+                              variant="outline"
+                              className={`gap-1.5 px-2.5 py-1 rounded-full font-semibold border ${statusConfig.className}`}
                             >
-                              <UserCheckIcon
+                              <StatusIcon
                                 weight="duotone"
                                 className="w-3.5 h-3.5"
                               />
-                              Verified
+                              {t(
+                                `users.organizerStatus.${statusConfig.label.toLowerCase()}`,
+                              )}
                             </Badge>
-                          ) : (
-                            <span className="text-sm text-muted-foreground">
-                              Unverified
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              variant="outline"
+                              className={`text-xs font-bold ${accountStatusConfig.className}`}
+                            >
+                              {t(
+                                `users.accountStatus.${accountStatusConfig.label.toLowerCase()}`,
+                              )}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            {user.is_email_verified ? (
+                              <Badge
+                                variant="secondary"
+                                className="bg-blue-50 text-blue-600 hover:bg-blue-100 border-blue-100 gap-1"
+                              >
+                                <UserCheckIcon
+                                  weight="duotone"
+                                  className="w-3.5 h-3.5"
+                                />
+                                {t("users.verifiedStatus.verified")}
+                              </Badge>
+                            ) : (
+                              <span className="text-sm text-muted-foreground">
+                                {t("users.verifiedStatus.unverified")}
+                              </span>
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            <span className="text-sm">
+                              {format(
+                                new Date(user.created_at),
+                                "MMM dd, yyyy",
+                              )}
                             </span>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          <span className="text-sm">
-                            {format(new Date(user.created_at), "MMM dd, yyyy")}
-                          </span>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="gap-1.5"
-                            onClick={() => {
-                              localStorage.setItem("user_id", user.id);
-                              router.push(`/users/userdetail?id=${user.id}`)
-                            }}
-                          >
-                            <EyeIcon weight="duotone" className="w-4 h-4" />
-                            View
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })
-                )}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-      </Card>
-    )}
+                          </TableCell>
+                          <TableCell className="text-right gap-2 flex justify-end ">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="gap-1.5"
+                              onClick={() => {
+                                localStorage.setItem("user_id", user.id);
+                                router.push(`/users/userdetail?id=${user.id}`);
+                              }}
+                            >
+                              <EyeIcon weight="duotone" className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="gap-1.5"
+                            >
+                              <DotsThreeVerticalIcon
+                                weight="duotone"
+                                className="w-4 h-4"
+                              />
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Pagination */}
-      {totalPages === 1 && (
+      {totalPages > 0 && !isLoading && (
         <div className="flex items-center justify-center gap-2">
           <Button
             variant="outline"
@@ -417,7 +456,19 @@ export default function UsersPage() {
 
           <div className="flex gap-2">
             {Array.from({ length: Math.min(totalPages, 5) }).map((_, i) => {
-              const pageNumber = i + 1;
+              let pageNumber: number;
+
+              // Show pages around current page
+              if (totalPages <= 5) {
+                pageNumber = i + 1;
+              } else if (currentPage <= 3) {
+                pageNumber = i + 1;
+              } else if (currentPage >= totalPages - 2) {
+                pageNumber = totalPages - 4 + i;
+              } else {
+                pageNumber = currentPage - 2 + i;
+              }
+
               return (
                 <Button
                   key={pageNumber}
@@ -435,10 +486,8 @@ export default function UsersPage() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() =>
-              handlePageChange(Math.min(totalPages, currentPage + 1))
-            }
-            disabled={currentPage === totalPages}
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={!hasNextPage || currentPage >= totalPages}
             className="gap-2"
           >
             Next
@@ -448,9 +497,9 @@ export default function UsersPage() {
       )}
 
       {/* Results count */}
-      {filteredData.length > 0 && (
+      {mockUserData.length > 0 && !isLoading && (
         <div className="text-center text-sm text-muted-foreground">
-          Showing {startItem}-{endItem} of {filteredData.length} users
+          Showing {startItem}-{endItem} of {totalItems} users
         </div>
       )}
     </div>

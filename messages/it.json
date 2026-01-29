@@ -579,7 +579,55 @@
     "pleaseTryAgainLater": "Riprova più tardi"
   },
   "users": {
-    "searchUsers": "cerca utenti..."
+    "searchUsers": "Cerca utenti...",
+    "filter": "Filtra",
+    "clearFilters": "Cancella filtri",
+    "loadingUsers": "Caricamento utenti...",
+    "noUsersFound": "Nessun utente trovato",
+    "noRole": "Nessun ruolo",
+    "more": "altro",
+    "userTable": {
+      "name": "Nome",
+      "contact": "Contatto",
+      "role": "Ruolo",
+      "organizerStatus": "Stato organizzatore",
+      "accountStatus": "Stato account",
+      "verified": "Verificato",
+      "joined": "Iscritto",
+      "actions": "Azioni"
+    },
+    "userRoles": {
+      "staff": "Staff",
+      "organizer": "Organizzatore",
+      "user": "Utente",
+      "admin": "amministratrice"
+    },
+    "organizerStatus": {
+      "active": "Attivo",
+      "inactive": "Inattivo",
+      "suspended": "Sospeso",
+      "pending": "In attesa",
+      "approved": "Approvato",
+      "rejected": "Rifiutato",
+      "unknown": "Sconosciuto"
+    },
+    "accountStatus": {
+      "active": "Attivo",
+      "inactive": "Inattivo",
+      "suspended": "Sospeso"
+    },
+    "verifiedStatus": {
+      "verified": "Verificato",
+      "unverified": "Non verificato"
+    },
+    "userDetail": {
+      "backToUsers": "Torna agli Utenti",
+      "contactInformation": "Informazioni di Contatto",
+      "rolesAndPermissions": "Ruoli e Permessi",
+      "accountDetails": "Dettagli Account",
+      "createdOn": "Creato il",
+      "updatedOn": "Aggiornato il"
+    }
   },
   "settings": {
     "security": {
