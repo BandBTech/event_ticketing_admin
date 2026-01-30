@@ -67,26 +67,25 @@ export default function GeneralSettingsPage() {
   }, [response]);
 
   // Mutation for saving settings
-const saveMutation = useMutation({
-  mutationFn: (data: typeof settings) => {
-    // Create a payload that includes the file
-    const payload = {
-      ...data,
-      logo: selectedFile, // Add the file to the payload
-    };
-        
+  const saveMutation = useMutation({
+    mutationFn: (data: typeof settings) => {
+      // Create a payload that includes the file
+      const payload = {
+        ...data,
+        logo: selectedFile, // Add the file to the payload
+      };
 
-    return SettingService.updateCompany(payload);
-  },
-  onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ["company"] });
-    setSelectedFile("");
-    setUploadError("");
-  },
-  onError: (error) => {
-    console.error("Save error:", error);
-  },
-});
+      return SettingService.updateCompany(payload);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["company"] });
+      setSelectedFile("");
+      setUploadError("");
+    },
+    onError: (error) => {
+      console.error("Save error:", error);
+    },
+  });
 
   const handleInputChange = (field: string, value: string) => {
     setSettings((prev) => ({
@@ -117,16 +116,6 @@ const saveMutation = useMutation({
     // Create preview URL
     const objectUrl = URL.createObjectURL(file);
     setPreviewUrl(objectUrl);
-  };
-
-  const handleRemoveImage = () => {
-    setPreviewUrl(settings.logo_url || "");
-    setSelectedFile("");
-
-    // Clean up object URL if it exists
-    if (previewUrl && previewUrl.startsWith("blob:")) {
-      URL.revokeObjectURL(previewUrl);
-    }
   };
 
   const handleSave = () => {
@@ -188,14 +177,6 @@ const saveMutation = useMutation({
                     height={120}
                     className="rounded-lg border border-gray-300 object-cover"
                   />
-                  <button
-                    type="button"
-                    onClick={handleRemoveImage}
-                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
-                    title="Remove image"
-                  >
-                    <X size={16} weight="bold" />
-                  </button>
                   {selectedFile && (
                     <div className="absolute bottom-0 left-0 right-0 bg-blue-500 text-white text-xs px-2 py-1 rounded-b-lg">
                       New image selected

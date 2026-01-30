@@ -656,7 +656,7 @@
       "organizerStatus": "Organizer Status",
       "accountStatus": "Account Status",
       "verified": "Verified",
-      "joined": "Joined",
+      "joinedDate": "Joined Date",
       "actions": "Actions"
     },
     "userRoles": {

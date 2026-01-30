@@ -603,7 +603,7 @@
       "organizerStatus": "主催者ステータス",
       "accountStatus": "アカウントステータス",
       "verified": "認証済み",
-      "joined": "参加日",
+      "joinedDate": "参加日",
       "actions": "操作"
     },
     "userRoles": {

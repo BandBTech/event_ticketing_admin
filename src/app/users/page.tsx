@@ -15,6 +15,10 @@ import {
   Shield as ShieldIcon,
   User as UserIcon,
   DotsThreeVertical as DotsThreeVerticalIcon,
+  ArrowClockwise as ArrowClockwiseIcon,
+  Power as PowerIcon,
+  Trash as TrashIcon,
+  TrashSimple as TrashSimpleIcon,
 } from "@phosphor-icons/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { format } from "date-fns";
@@ -37,6 +41,13 @@ import { ApiResponse as UserApiResponse } from "@/types/user";
 import { queryKeys } from "@/lib/queryKeys";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Power } from "lucide-react";
 
 function getStatusConfig(status: string) {
   switch (status?.toLowerCase()) {
@@ -262,12 +273,8 @@ export default function UsersPage() {
                     <TableHead>{t("users.userTable.name")}</TableHead>
                     <TableHead>{t("users.userTable.contact")}</TableHead>
                     <TableHead>{t("users.userTable.role")}</TableHead>
-                    <TableHead>
-                      {t("users.userTable.organizerStatus")}
-                    </TableHead>
                     <TableHead>{t("users.userTable.accountStatus")}</TableHead>
-                    <TableHead>{t("users.userTable.verified")}</TableHead>
-                    <TableHead>{t("users.userTable.joined")}</TableHead>
+                    <TableHead>{t("users.userTable.joinedDate")}</TableHead>
                     <TableHead className="text-right">
                       {t("users.userTable.actions")}
                     </TableHead>
@@ -359,44 +366,12 @@ export default function UsersPage() {
                           <TableCell>
                             <Badge
                               variant="outline"
-                              className={`gap-1.5 px-2.5 py-1 rounded-full font-semibold border ${statusConfig.className}`}
-                            >
-                              <StatusIcon
-                                weight="duotone"
-                                className="w-3.5 h-3.5"
-                              />
-                              {t(
-                                `users.organizerStatus.${statusConfig.label.toLowerCase()}`,
-                              )}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            <Badge
-                              variant="outline"
                               className={`text-xs font-bold ${accountStatusConfig.className}`}
                             >
                               {t(
                                 `users.accountStatus.${accountStatusConfig.label.toLowerCase()}`,
                               )}
                             </Badge>
-                          </TableCell>
-                          <TableCell>
-                            {user.is_email_verified ? (
-                              <Badge
-                                variant="secondary"
-                                className="bg-blue-50 text-blue-600 hover:bg-blue-100 border-blue-100 gap-1"
-                              >
-                                <UserCheckIcon
-                                  weight="duotone"
-                                  className="w-3.5 h-3.5"
-                                />
-                                {t("users.verifiedStatus.verified")}
-                              </Badge>
-                            ) : (
-                              <span className="text-sm text-muted-foreground">
-                                {t("users.verifiedStatus.unverified")}
-                              </span>
-                            )}
                           </TableCell>
                           <TableCell>
                             <span className="text-sm">
@@ -418,16 +393,43 @@ export default function UsersPage() {
                             >
                               <EyeIcon weight="duotone" className="w-4 h-4" />
                             </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="gap-1.5"
-                            >
-                              <DotsThreeVerticalIcon
-                                weight="duotone"
-                                className="w-4 h-4"
-                              />
-                            </Button>
+
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="gap-1.5 cursor-pointer"
+                                >
+                                  <DotsThreeVerticalIcon
+                                    weight="duotone"
+                                    className="w-4 h-4"
+                                  />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent
+                                className="w-40 rounded-xl bg-white cursor-pointer"
+                                side={"right"}
+                                align="start"
+                                sideOffset={8}
+                              >
+                                <DropdownMenuItem
+                                  // onClick={() =>
+                                  //   router.push("/settings/profile")
+                                  // }
+                                  className="cursor-pointer"
+                                >
+                                  <PowerIcon
+                                    weight="duotone"
+                                    className="mr-2 h-4 w-4 text-red-600"
+                                  />
+                                  <span className="text-red-700">
+                                    Activate
+                                  </span>
+                                </DropdownMenuItem>
+
+                              </DropdownMenuContent>
+                            </DropdownMenu>
                           </TableCell>
                         </TableRow>
                       );
@@ -451,7 +453,7 @@ export default function UsersPage() {
             className="gap-2"
           >
             <CaretLeftIcon weight="bold" className="w-4 h-4" />
-            Previous
+            {t("pagination.previous")}
           </Button>
 
           <div className="flex gap-2">
@@ -490,7 +492,7 @@ export default function UsersPage() {
             disabled={!hasNextPage || currentPage >= totalPages}
             className="gap-2"
           >
-            Next
+            {t("pagination.next")}
             <CaretRightIcon weight="bold" className="w-4 h-4" />
           </Button>
         </div>
@@ -499,7 +501,8 @@ export default function UsersPage() {
       {/* Results count */}
       {mockUserData.length > 0 && !isLoading && (
         <div className="text-center text-sm text-muted-foreground">
-          Showing {startItem}-{endItem} of {totalItems} users
+          {t("pagination.showing")} {startItem}-{endItem} {t("pagination.of")}{" "}
+          {totalItems} {t("sidebar.users")}
         </div>
       )}
     </div>

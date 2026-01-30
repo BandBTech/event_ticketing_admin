@@ -593,7 +593,7 @@
       "organizerStatus": "Stato organizzatore",
       "accountStatus": "Stato account",
       "verified": "Verificato",
-      "joined": "Iscritto",
+      "joinedDate": "Data di iscrizione",
       "actions": "Azioni"
     },
     "userRoles": {
