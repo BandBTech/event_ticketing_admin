@@ -124,7 +124,7 @@ export default function StatusHistorySidebar({ history, isLoading }: StatusHisto
       </h3>
 
       <div className="relative space-y-6 before:absolute before:inset-0 before:ml-4 before:-translate-x-px before:h-full before:w-0.5 before:bg-linear-to-b before:from-transparent before:via-slate-200 before:to-transparent max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
-        {displayItems.map((item, index) => {
+        {displayItems.map((item) => {
           if (item === 'DIVIDER') {
             return (
               <div key="divider" className="relative pl-10 z-10">

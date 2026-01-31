@@ -4,9 +4,8 @@ import React from "react";
 import { Event } from "@/types/event";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
-import { Check, X, ExternalLink, Percent } from "lucide-react";
+import { Check, X, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { ButtonGroup } from "@/components/ui/button-group";
 
 interface EventCardProps {

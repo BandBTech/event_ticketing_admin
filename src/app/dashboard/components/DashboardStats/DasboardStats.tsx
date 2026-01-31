@@ -1,4 +1,4 @@
-import { CalendarIcon, CalendarStarIcon, ClockIcon, UsersIcon } from "@phosphor-icons/react";
+import { CalendarStarIcon, ClockIcon, UsersIcon } from "@phosphor-icons/react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
 import { usePendingOrganizers, usePendingEvents } from "@/hooks/useDashboard";

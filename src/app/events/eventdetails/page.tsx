@@ -35,8 +35,8 @@ import PopupModal from "../../dashboard/components/EventApproval/PopupModal";
 import StatusHistorySidebar from "./components/StatusHistorySidebar";
 import { SalesStatusBadge } from "@/app/components/SalesStatusBadge";
 import { EventStatusBadge } from "@/app/components/EventStatusBadge";
-import { CalendarBlankIcon, CheckIcon, ClockIcon, CurrencyCircleDollarIcon, CurrencyDollarIcon, FireIcon, MapPinIcon, ShieldCheckIcon, TicketIcon, TrashIcon, UsersIcon, XCircleIcon, XIcon } from "@phosphor-icons/react";
-import { formatDateTime } from "@/lib/utils";
+import { CalendarBlankIcon, CheckIcon, ClockIcon, CurrencyCircleDollarIcon, FireIcon, MapPinIcon, ShieldCheckIcon, TrashIcon, UsersIcon, XIcon } from "@phosphor-icons/react";
+// import { formatDateTime } from "@/lib/utils";
 
 export default function EventDetailsPage() {
   const router = useRouter();
@@ -49,7 +49,6 @@ export default function EventDetailsPage() {
   // Modal States
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [showRejectModal, setShowRejectModal] = useState(false);
-  const [showCancelModal, setShowCancelModal] = useState(false);
 
   // Queries
   const { data: event, isLoading, error } = useQuery({
@@ -59,7 +58,7 @@ export default function EventDetailsPage() {
   });
 
   const { data: statusHistory, isLoading: isLoadingHistory } = useEventStatusHistory(eventId || "");
-  const { data: analytics, isLoading: analyticsLoading } = useEventAnalyticsById(eventId || "");
+  const { data: analytics } = useEventAnalyticsById(eventId || "");
   // Note: useEventAnalytics fetches list, not single event details usually, but assuming user request context. 
   // If analytics endpoint is global, we might not get per-event stats here unless filtered.
   // For now we use event.capacity/available logic as before for "Ticket Analytics".
@@ -172,13 +171,13 @@ export default function EventDetailsPage() {
     (event.tiers?.reduce((sum, ticket) => sum + ((ticket.sold || 0) * ticket.price), 0) || 0);
 
 
-  const firstTier = event.tiers?.[0];
-  const salesStartDate = firstTier?.sales_start
-    ? formatDateTime(firstTier.sales_start)
-    : 'Not set';
-  const salesEndDate = firstTier?.sales_end
-    ? formatDateTime(firstTier.sales_end)
-    : 'Not set';
+  // const firstTier = event.tiers?.[0];
+  // const salesStartDate = firstTier?.sales_start
+  //   ? formatDateTime(firstTier.sales_start)
+  //   : 'Not set';
+  // const salesEndDate = firstTier?.sales_end
+  //   ? formatDateTime(firstTier.sales_end)
+  //   : 'Not set';
 
   // Prevent division by zero for progress
   const progress = totalCapacity > 0 ? (totalTicketsSold / totalCapacity) * 100 : 0;
@@ -497,7 +496,7 @@ export default function EventDetailsPage() {
                 <div className="space-y-3 pt-4 border-t border-gray-100">
                   <h3 className="text-sm font-medium text-gray-900">{t("event.section.ticketTiers", "Ticket Tiers")}</h3>
                   {analytics?.tiers ? (
-                    analytics.tiers.map((tier: EventTierAnalytics, index: number) => {
+                    analytics.tiers.map((tier: EventTierAnalytics) => {
                       const soldPercent = tier.total_seats > 0 ? (tier.sold_seats / tier.total_seats) * 100 : 0;
                       return (
                         <div key={tier.tier_id} className="space-y-2 p-3 rounded-lg bg-gray-50 border border-gray-100">
@@ -529,7 +528,7 @@ export default function EventDetailsPage() {
                       );
                     })
                   ) : (
-                    event.tiers?.map((tier, index) => {
+                    event.tiers?.map((tier) => {
                       const sold = tier.sold || 0;
                       const soldPercent = tier.quantity > 0 ? (sold / tier.quantity) * 100 : 0;
                       const tierRevenue = sold * tier.price;

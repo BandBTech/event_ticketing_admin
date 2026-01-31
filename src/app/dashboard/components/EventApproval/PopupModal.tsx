@@ -37,9 +37,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { AppEvent } from "@/types/event";
-import { format } from "date-fns";
-import Image from "next/image";
-import { Badge } from "@/components/ui/badge";
 import { EventDetailCard } from "./EventDetailCard";
 import { cn } from "@/lib/utils";
 

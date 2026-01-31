@@ -2,19 +2,16 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { OrganizerService, Organizer } from "@/lib/organizerService";
 import { format } from "date-fns";
 import {
   DotsThreeVertical as DotsThreeVerticalIcon,
   ArrowSquareOut as ArrowSquareOutIcon,
   PencilSimple as PencilSimpleIcon,
-  UserCheck as UserCheckIcon,
   CalendarBlank as CalendarBlankIcon,
   Phone as PhoneIcon,
   Envelope as EnvelopeIcon,
-  ShieldCheck as ShieldCheckIcon,
-  Buildings as BuildingsIcon,
   CheckCircle as CheckCircleIcon,
   Clock as ClockIcon,
   XCircle as XCircleIcon,
@@ -27,17 +24,15 @@ import {
   CircleNotchIcon,
   PlusCircleIcon,
   WarningCircleIcon,
-  WarningDiamondIcon,
   ImageIcon,
   CalendarHeartIcon,
-  ShareFatIcon,
-  ArrowLeftIcon,
   ArrowRightIcon,
 } from "@phosphor-icons/react";
 import { toast } from "sonner";
 import { queryKeys } from "@/lib/queryKeys";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
+import Image from "next/image";
 
 // UI Components
 import {
@@ -438,7 +433,7 @@ function LatestEventsByOrganizer({ id }: { id: string }) {
             >
               <div className="aspect-16/10 h-20 rounded-lg bg-gray-50 overflow-hidden relative border border-gray-100">
                 {event.banner_image ? (
-                  <img src={event.banner_image} alt={event.title} className="w-full h-full object-cover" />
+                  <Image src={event.banner_image} alt={event.title} className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-gray-300">
                     <ImageIcon weight="duotone" className="w-8 h-8" />
@@ -485,7 +480,6 @@ export default function OrganizerDetailPage() {
     data: organizer,
     isLoading,
     isError,
-    error,
   } = useOrganizerById(id!);
 
   if (isLoading) {
@@ -529,8 +523,8 @@ export default function OrganizerDetailPage() {
   const isPending = organizer.organizer_status?.toLowerCase() === "pending";
   const isApproved = organizer.organizer_status?.toLowerCase() === "approved";
   const isOrganizerOnboarded = organizer.onboarding?.is_complete;
-  const isRejected = organizer.organizer_status?.toLowerCase() === "rejected";
-  const isInactive = organizer.organizer_status?.toLowerCase() === "inactive";
+  // const isRejected = organizer.organizer_status?.toLowerCase() === "rejected";
+  // const isInactive = organizer.organizer_status?.toLowerCase() === "inactive";
 
   const handleAction = (action: StatusAction) => {
     setStatusAction(action);

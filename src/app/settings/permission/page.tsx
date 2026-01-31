@@ -10,8 +10,6 @@ import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
 import { RolesTable } from "./RolesTable";
 import { RolePermissionsEditor } from "./RolePermissionsEditor";
-import { PermissionGuard } from "@/components/auth/PermissionGuard";
-import { PERMISSIONS } from "@/lib/permissions";
 
 export default function PermissionSettingsPage() {
   const { locale } = useLanguageStore();

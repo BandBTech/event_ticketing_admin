@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense } from "react";
 import {
   UserIcon,
   LockKeyIcon,
@@ -20,7 +20,6 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import DashboardHeader from "@/components/layout/dashboard-header";
 import { ProtectedRoute } from "@/components/providers/ProtectedRoute";
-import { useUIStore } from "@/store/uiStore";
 import { useSidebarResponsive } from "@/hooks/useSidebarResponsive";
 
 const menuItems = [

@@ -8,8 +8,6 @@ import { Badge } from "@/components/ui/badge";
 import {
   CalendarBlankIcon,
   MapPinIcon,
-  UserIcon,
-  EnvelopeSimpleIcon,
   WarningCircleIcon
 } from "@phosphor-icons/react";
 import { Skeleton } from "@/components/ui/skeleton";

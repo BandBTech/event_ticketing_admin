@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback } from "react";
+import type { IconProps } from "@phosphor-icons/react";
+import type { ComponentType } from "react";
 import {
   MagnifyingGlass as MagnifyingGlassIcon,
   Funnel as FunnelIcon,
@@ -8,22 +10,13 @@ import {
   CaretRight as CaretRightIcon,
   CheckCircle as CheckCircleIcon,
   XCircle as XCircleIcon,
-  Clock as ClockIcon,
-  UserMinus as UserMinusIcon,
-  UserCheck as UserCheckIcon,
   Eye as EyeIcon,
   Shield as ShieldIcon,
   User as UserIcon,
   DotsThreeVertical as DotsThreeVerticalIcon,
-  ArrowClockwise as ArrowClockwiseIcon,
-  Power as PowerIcon,
-  Trash as TrashIcon,
-  TrashSimple as TrashSimpleIcon,
-  Pen as PenIcon,
   CrownIcon,
   UsersIcon,
 } from "@phosphor-icons/react";
-import { cn } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
@@ -111,42 +104,42 @@ export default function UsersPage() {
     [updateParams],
   );
 
-  const filteredData = useMemo(() => {
-    let result = mockUserData;
+  // const filteredData = useMemo(() => {
+  //   let result = mockUserData;
 
-    if (searchQuery.trim() && !response?.users) {
-      const query = searchQuery.toLowerCase();
-      result = result.filter(
-        (user) =>
-          user.first_name?.toLowerCase().includes(query) ||
-          user.last_name?.toLowerCase().includes(query) ||
-          user.email?.toLowerCase().includes(query) ||
-          user.phone?.includes(query) ||
-          user.organizer_onboarding?.business_name
-            ?.toLowerCase()
-            .includes(query),
-      );
-    }
+  //   if (searchQuery.trim() && !response?.users) {
+  //     const query = searchQuery.toLowerCase();
+  //     result = result.filter(
+  //       (user) =>
+  //         user.first_name?.toLowerCase().includes(query) ||
+  //         user.last_name?.toLowerCase().includes(query) ||
+  //         user.email?.toLowerCase().includes(query) ||
+  //         user.phone?.includes(query) ||
+  //         user.organizer_onboarding?.business_name
+  //           ?.toLowerCase()
+  //           .includes(query),
+  //     );
+  //   }
 
-    if (statusFilter && !response?.users) {
-      result = result.filter(
-        (user) =>
-          user.organizer_status?.toLowerCase() === statusFilter.toLowerCase(),
-      );
-    }
+  //   if (statusFilter && !response?.users) {
+  //     result = result.filter(
+  //       (user) =>
+  //         user.organizer_status?.toLowerCase() === statusFilter.toLowerCase(),
+  //     );
+  //   }
 
-    if (accountStatusFilter && !response?.users) {
-      result = result.filter(
-        (user) =>
-          user.account_status?.toLowerCase() ===
-          accountStatusFilter.toLowerCase(),
-      );
-    }
+  //   if (accountStatusFilter && !response?.users) {
+  //     result = result.filter(
+  //       (user) =>
+  //         user.account_status?.toLowerCase() ===
+  //         accountStatusFilter.toLowerCase(),
+  //     );
+  //   }
 
-    return result;
-  }, [searchQuery, statusFilter, accountStatusFilter, mockUserData, response]);
+  //   return result;
+  // }, [searchQuery, statusFilter, accountStatusFilter, mockUserData, response]);
 
-  const paginatedData = mockUserData;
+  // const paginatedData = mockUserData;
 
   const ROLE_CONFIG: Record<
     string,
@@ -154,7 +147,7 @@ export default function UsersPage() {
       bg: string;
       text: string;
       border: string;
-      Icon: React.ComponentType<any>;
+      Icon: ComponentType<IconProps>;
     }
   > = {
     admin: {

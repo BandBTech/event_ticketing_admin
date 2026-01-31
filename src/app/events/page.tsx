@@ -5,28 +5,22 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { EventService } from "@/lib/eventServices";
-import { OrganizerService } from "@/lib/organizerService";
 import { Event } from "@/types/event";
 import { format } from "date-fns";
 import { useEventStore } from "@/store/eventStore";
 import {
   MagnifyingGlass as MagnifyingGlassIcon,
-  Funnel as FunnelIcon,
   CalendarBlank as CalendarBlankIcon,
   MapPin as MapPinIcon,
-  PencilSimple as PencilSimpleIcon,
   CaretLeft as CaretLeftIcon,
   CaretRight as CaretRightIcon,
   Eye as EyeIcon,
-  Users as UsersIcon,
   Ticket as TicketIcon,
   Clock as ClockIcon,
   CheckCircle as CheckCircleIcon,
   XCircle as XCircleIcon,
   WarningCircle as WarningCircleIcon,
-  Plus as PlusIcon,
   CrownIcon,
-  Percent as PercentIcon,
 } from "@phosphor-icons/react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -46,61 +40,61 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { EventStatusBadge } from "../components/EventStatusBadge";
 
 // Status configuration
-function getStatusConfig(status: string) {
-  switch (status?.toLowerCase()) {
-    case "approved":
-      return {
-        variant: "secondary" as const,
-        className:
-          "bg-emerald-100 text-emerald-700 hover:bg-emerald-200 border-none",
-        icon: CheckCircleIcon,
-        label: "Approved",
-      };
-    case "pending":
-      return {
-        variant: "secondary" as const,
-        className:
-          "bg-amber-100 text-amber-700 hover:bg-amber-200 border-none",
-        icon: ClockIcon,
-        label: "Pending",
-      };
-    case "rejected":
-      return {
-        variant: "destructive" as const,
-        className: "bg-red-100 text-red-700 hover:bg-red-200 border-none",
-        icon: XCircleIcon,
-        label: "Rejected",
-      };
-    case "draft":
-      return {
-        variant: "secondary" as const,
-        className: "bg-gray-100 text-gray-700 hover:bg-gray-200 border-none",
-        icon: WarningCircleIcon,
-        label: "Draft",
-      };
-    case "live":
-      return {
-        variant: "secondary" as const,
-        className: "bg-green-100 text-green-700 hover:bg-green-200 border-none",
-        icon: CheckCircleIcon,
-        label: "Live",
-      };
-    case "cancelled":
-      return {
-        variant: "destructive" as const,
-        className: "bg-red-100 text-red-700 hover:bg-red-200 border-none",
-        icon: XCircleIcon,
-        label: "Cancelled",
-      };
-    default:
-      return {
-        variant: "secondary" as const,
-        className: "bg-gray-100 text-gray-700 hover:bg-gray-200 border-none",
-        icon: WarningCircleIcon,
-        label: status || "Unknown",
-      };
-  }
-}
+// function getStatusConfig(status: string) {
+//   switch (status?.toLowerCase()) {
+//     case "approved":
+//       return {
+//         variant: "secondary" as const,
+//         className:
+//           "bg-emerald-100 text-emerald-700 hover:bg-emerald-200 border-none",
+//         icon: CheckCircleIcon,
+//         label: "Approved",
+//       };
+//     case "pending":
+//       return {
+//         variant: "secondary" as const,
+//         className:
+//           "bg-amber-100 text-amber-700 hover:bg-amber-200 border-none",
+//         icon: ClockIcon,
+//         label: "Pending",
+//       };
+//     case "rejected":
+//       return {
+//         variant: "destructive" as const,
+//         className: "bg-red-100 text-red-700 hover:bg-red-200 border-none",
+//         icon: XCircleIcon,
+//         label: "Rejected",
+//       };
+//     case "draft":
+//       return {
+//         variant: "secondary" as const,
+//         className: "bg-gray-100 text-gray-700 hover:bg-gray-200 border-none",
+//         icon: WarningCircleIcon,
+//         label: "Draft",
+//       };
+//     case "live":
+//       return {
+//         variant: "secondary" as const,
+//         className: "bg-green-100 text-green-700 hover:bg-green-200 border-none",
+//         icon: CheckCircleIcon,
+//         label: "Live",
+//       };
+//     case "cancelled":
+//       return {
+//         variant: "destructive" as const,
+//         className: "bg-red-100 text-red-700 hover:bg-red-200 border-none",
+//         icon: XCircleIcon,
+//         label: "Cancelled",
+//       };
+//     default:
+//       return {
+//         variant: "secondary" as const,
+//         className: "bg-gray-100 text-gray-700 hover:bg-gray-200 border-none",
+//         icon: WarningCircleIcon,
+//         label: status || "Unknown",
+//       };
+//   }
+// }
 
 // Skeleton Card
 function EventCardSkeleton() {
@@ -134,8 +128,8 @@ function EventCard({ event }: { event: Event }) {
   const { t } = useTranslation(locale);
   const router = useRouter();
   const { setSelectedEvent } = useEventStore();
-  const statusConfig = getStatusConfig(event.status);
-  const StatusIcon = statusConfig.icon;
+  // const statusConfig = getStatusConfig(event.status);
+  // const StatusIcon = statusConfig.icon;
 
   const formattedDate = event.start_date
     ? format(new Date(event.start_date), "MMM dd, yyyy")
@@ -158,10 +152,10 @@ function EventCard({ event }: { event: Event }) {
     router.push(`/events/eventdetails?id=${event.id}`);
   };
 
-  const handleEdit = () => {
-    setSelectedEvent(event);
-    router.push(`/events/edit?id=${event.id}`);
-  };
+  // const handleEdit = () => {
+  //   setSelectedEvent(event);
+  //   router.push(`/events/edit?id=${event.id}`);
+  // };
 
   return (
     <Card className="group hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col h-full border-gray-200 py-0">
@@ -464,16 +458,16 @@ export default function EventsPage() {
     [updateParams]
   );
 
-  const handleClearOrganizerFilter = useCallback(() => {
-    updateParams({ organizer_id: null, page: null });
-  }, [updateParams]);
+  // const handleClearOrganizerFilter = useCallback(() => {
+  //   updateParams({ organizer_id: null, page: null });
+  // }, [updateParams]);
 
-  const handleOrganizerChange = useCallback(
-    (value: string) => {
-      updateParams({ organizer_id: value === "all" ? null : value, page: null });
-    },
-    [updateParams]
-  );
+  // const handleOrganizerChange = useCallback(
+  //   (value: string) => {
+  //     updateParams({ organizer_id: value === "all" ? null : value, page: null });
+  //   },
+  //   [updateParams]
+  // );
 
   const {
     data: response,

@@ -9,7 +9,6 @@ import {
   Phone as PhoneIcon,
   Buildings as BuildingsIcon,
   CalendarBlank as CalendarBlankIcon,
-  UserCheck as UserCheckIcon,
   UserMinus as UserMinusIcon,
   Eye as EyeIcon,
   CheckCircle as CheckCircleIcon,

@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/form";
 import { ShadcnDateTimePicker } from "@/components/ui/shadcn-datetime-picker";
 import { TierTemplate } from "@/types/event";
-import { EventFormData, TIER_NAME_MAX } from "@/lib/validation";
+import { EventFormData } from "@/lib/validation";
 import { useTranslation } from "@/hooks/useTranslation";
 import TierNameSelector from "./TierNameSelector";
 

@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import {
   FloppyDiskIcon,
   UploadSimple,
-  X,
 } from "@phosphor-icons/react/dist/ssr";
 import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
