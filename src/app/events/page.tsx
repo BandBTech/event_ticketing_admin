@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useCallback } from "react";
+import React, { useMemo, useCallback, useEffect } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
@@ -38,6 +38,7 @@ import { queryKeys } from "@/lib/queryKeys";
 import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
 import { EventStatusBadge } from "../components/EventStatusBadge";
+import { useDebounce } from "@/hooks/useDebounce";
 
 // Status configuration
 // function getStatusConfig(status: string) {
@@ -143,8 +144,8 @@ function EventCard({ event }: { event: Event }) {
     ? event.category
     : typeof event.category === "string"
       ? (event.category as string)
-        .split(",")
-        .map((tag: string) => tag.trim().replace(/[\[\]"'{}]/g, ""))
+          .split(",")
+          .map((tag: string) => tag.trim().replace(/[\[\]"'{}]/g, ""))
       : [];
 
   const handleViewDetail = () => {
@@ -229,7 +230,8 @@ function EventCard({ event }: { event: Event }) {
             />
             <span className="truncate">
               {formattedDate}{" "}
-              <span className="text-muted-foreground/40">•</span> {formattedTime}
+              <span className="text-muted-foreground/40">•</span>{" "}
+              {formattedTime}
             </span>
           </div>
           <div className="flex items-center gap-2">
@@ -244,10 +246,9 @@ function EventCard({ event }: { event: Event }) {
         </div>
 
         {/* Stats Row */}
-        {
-          event.status !== "rejected" && (
-            <div className="grid grid-cols-2 gap-4 text-sm text-muted-foreground mb-4 bg-muted/30 p-2 rounded-lg border border-border/50">
-              {/* <div className="flex items-center gap-1.5" title="Capacity">
+        {event.status !== "rejected" && (
+          <div className="grid grid-cols-2 gap-4 text-sm text-muted-foreground mb-4 bg-muted/30 p-2 rounded-lg border border-border/50">
+            {/* <div className="flex items-center gap-1.5" title="Capacity">
             <UsersIcon
               weight="duotone"
               className="w-4 h-4 text-muted-foreground/70"
@@ -255,30 +256,34 @@ function EventCard({ event }: { event: Event }) {
             <span className="font-medium">{event.capacity || 0}</span>
           </div>
           <div className="w-px h-4 bg-border" /> */}
-              <div title="Titckets Sold">
-                <div className="flex items-center gap-2">
-                  <TicketIcon
-                    weight="duotone"
-                    className="w-4 h-4 text-muted-foreground/70"
-                  />
-                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-bold leading-none">
-                    Tickets Sold
-                  </span>
-                </div>
-                <span className="font-medium">{event.capacity - event.available} / {event.capacity}</span>
+            <div title="Titckets Sold">
+              <div className="flex items-center gap-2">
+                <TicketIcon
+                  weight="duotone"
+                  className="w-4 h-4 text-muted-foreground/70"
+                />
+                <span className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-bold leading-none">
+                  Tickets Sold
+                </span>
               </div>
-              {(event.status === "live" || event.status === "approved" || event.status === "pending") && (
-                <div className="flex items-center gap-3 ml-auto">
-                  <div className="flex flex-col items-end">
-                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-bold leading-none mb-1">
-                      Commission
-                    </span>
-                    <div className="flex items-center gap-0.5 text-emerald-600 font-bold">
-                      <span>{event.commission_rate || 0}%</span>
-                    </div>
+              <span className="font-medium">
+                {event.capacity - event.available} / {event.capacity}
+              </span>
+            </div>
+            {(event.status === "live" ||
+              event.status === "approved" ||
+              event.status === "pending") && (
+              <div className="flex items-center gap-3 ml-auto">
+                <div className="flex flex-col items-end">
+                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-bold leading-none mb-1">
+                    Commission
+                  </span>
+                  <div className="flex items-center gap-0.5 text-emerald-600 font-bold">
+                    <span>{event.commission_rate || 0}%</span>
                   </div>
-                  <div className="w-px h-6 bg-border/60" />
-                  {/* <div className="flex flex-col items-end">
+                </div>
+                <div className="w-px h-6 bg-border/60" />
+                {/* <div className="flex flex-col items-end">
                     <span className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-bold leading-none mb-1">
                       Est. Earnings
                     </span>
@@ -288,10 +293,10 @@ function EventCard({ event }: { event: Event }) {
                         ((event.commission_rate || 0) / 100)).toFixed(2)}
                     </span>
                   </div> */}
-                </div>
-              )}
-            </div>)
-        }
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Actions */}
         <div className="mt-auto flex gap-2">
@@ -417,6 +422,9 @@ export default function EventsPage() {
   const statusFilter = searchParams.get("status") || "all";
   const organizerId = searchParams.get("organizer_id") || "";
   const itemsPerPage = 9;
+  const [searchInput, setSearchInput] = React.useState(searchQuery);
+
+  const debouncedSearch = useDebounce(searchInput, 500);
 
   // Helper to update URL params
   const updateParams = useCallback(
@@ -434,28 +442,25 @@ export default function EventsPage() {
         scroll: false,
       });
     },
-    [router, searchParams]
+    [router, searchParams],
   );
 
   const handlePageChange = useCallback(
     (page: number) => {
       updateParams({ page: page === 1 ? null : page.toString() });
     },
-    [updateParams]
+    [updateParams],
   );
 
-  const handleSearchChange = useCallback(
-    (value: string) => {
-      updateParams({ search: value, page: null });
-    },
-    [updateParams]
-  );
+  useEffect(() => {
+    updateParams({ search: debouncedSearch, page: "1" });
+  }, [debouncedSearch, updateParams]);
 
   const handleStatusChange = useCallback(
     (value: string) => {
       updateParams({ status: value, page: null });
     },
-    [updateParams]
+    [updateParams],
   );
 
   // const handleClearOrganizerFilter = useCallback(() => {
@@ -502,7 +507,7 @@ export default function EventsPage() {
         event.title?.toLowerCase().includes(query) ||
         event.description?.toLowerCase().includes(query) ||
         event.venue_name?.toLowerCase().includes(query) ||
-        event.address?.toLowerCase().includes(query)
+        event.address?.toLowerCase().includes(query),
     );
   }, [response?.events, searchQuery]);
 
@@ -511,14 +516,16 @@ export default function EventsPage() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentEvents = filteredEvents.slice(
     startIndex,
-    startIndex + itemsPerPage
+    startIndex + itemsPerPage,
   );
 
   if (isError) {
     return (
       <div className="min-h-screen bg-linear-to-br from-gray-50 via-blue-50 to-purple-50 flex items-center justify-center">
         <div className="text-center text-destructive">
-          <p className="text-lg font-medium">{t("events.failedToLoadEvents")}</p>
+          <p className="text-lg font-medium">
+            {t("events.failedToLoadEvents")}
+          </p>
           <p className="text-sm text-muted-foreground mt-1">
             {(error as Error)?.message || t("events.pleaseTryAgainLater")}
           </p>
@@ -556,8 +563,8 @@ export default function EventsPage() {
           <Input
             type="text"
             placeholder={t("events.searchEvents")}
-            value={searchQuery}
-            onChange={(e) => handleSearchChange(e.target.value)}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
             className="pl-10"
           />
         </div>

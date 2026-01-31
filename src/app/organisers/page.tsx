@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import {
   MagnifyingGlass as MagnifyingGlassIcon,
   Funnel as FunnelIcon,
@@ -51,6 +51,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import OrganizerFormDialog from "./components/OrganizerFormDialog";
+import { useDebounce } from "@/hooks/useDebounce";
 
 function getInitials(firstName: string, lastName: string) {
   const first = firstName?.[0] || "";
@@ -101,7 +102,6 @@ function getStatusConfig(status: string) {
       };
   }
 }
-
 
 function getAccountStatusConfig(status: string) {
   switch (status?.toLowerCase()) {
@@ -315,6 +315,9 @@ export default function OrganisersPage() {
   const statusFilter = searchParams.get("status") || "";
   const itemsPerPage = 12;
   const [isAddDialogOpen, setIsAddDialogOpen] = React.useState(false);
+  const [searchInput, setSearchInput] = React.useState(searchQuery);
+
+  const debouncedSearch = useDebounce(searchInput, 500);
 
   // Helper to update URL params
   const updateParams = useCallback(
@@ -329,23 +332,19 @@ export default function OrganisersPage() {
       });
       router.push(`/organisers?${params.toString()}`, { scroll: false });
     },
-    [router, searchParams]
+    [router, searchParams],
   );
 
   const handlePageChange = useCallback(
     (page: number) => {
       updateParams({ page: page.toString() });
     },
-    [updateParams]
+    [updateParams],
   );
 
-  const handleSearchChange = useCallback(
-    (value: string) => {
-      // Reset to page 1 when searching
-      updateParams({ search: value, page: "1" });
-    },
-    [updateParams]
-  );
+  useEffect(() => {
+    updateParams({ search: debouncedSearch, page: "1" });
+  }, [debouncedSearch, updateParams]);
 
   const {
     data: response,
@@ -405,8 +404,8 @@ export default function OrganisersPage() {
             <Input
               type="text"
               placeholder={t("organizer.searchOrganizers")}
-              value={searchQuery}
-              onChange={(e) => handleSearchChange(e.target.value)}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
               className="pl-9 h-11"
             />
           </div>
@@ -415,7 +414,7 @@ export default function OrganisersPage() {
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
-                className={`h-11 gap-2 bg-background/80 backdrop-blur-sm border-gray-200 ${statusFilter ? 'border-primary text-primary bg-primary/5' : ''}`}
+                className={`h-11 gap-2 bg-background/80 backdrop-blur-sm border-gray-200 ${statusFilter ? "border-primary text-primary bg-primary/5" : ""}`}
               >
                 <FunnelIcon
                   weight={statusFilter ? "bold" : "duotone"}
@@ -431,7 +430,9 @@ export default function OrganisersPage() {
               <DropdownMenuSeparator />
               <DropdownMenuRadioGroup
                 value={statusFilter}
-                onValueChange={(value) => updateParams({ status: value, page: "1" })}
+                onValueChange={(value) =>
+                  updateParams({ status: value, page: "1" })
+                }
               >
                 <DropdownMenuRadioItem value="">
                   {t("events.allStatus")}

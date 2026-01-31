@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import type { IconProps } from "@phosphor-icons/react";
 import type { ComponentType } from "react";
 import {
@@ -42,6 +42,7 @@ import {
   ColumnDef,
 } from "@tanstack/react-table";
 import { User } from "@/types/user";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export default function UsersPage() {
   const router = useRouter();
@@ -54,6 +55,9 @@ export default function UsersPage() {
   const statusFilter = searchParams.get("status") || "";
   const accountStatusFilter = searchParams.get("account_status") || "";
   const itemsPerPage = 10;
+  const [searchInput, setSearchInput] = React.useState(searchQuery);
+
+  const debouncedSearch = useDebounce(searchInput, 500);
 
   const { data: response, isLoading } = useQuery<UserApiResponse>({
     queryKey: queryKeys.users.all(
@@ -97,12 +101,9 @@ export default function UsersPage() {
     [updateParams],
   );
 
-  const handleSearchChange = useCallback(
-    (value: string) => {
-      updateParams({ search: value, page: "1" });
-    },
-    [updateParams],
-  );
+  useEffect(() => {
+    updateParams({ search: debouncedSearch, page: "1" });
+  }, [debouncedSearch, updateParams]);
 
   // const filteredData = useMemo(() => {
   //   let result = mockUserData;
@@ -395,8 +396,8 @@ export default function UsersPage() {
           <Input
             type="text"
             placeholder={t("users.searchUsers")}
-            value={searchQuery}
-            onChange={(e) => handleSearchChange(e.target.value)}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
             className="pl-9"
           />
         </div>
