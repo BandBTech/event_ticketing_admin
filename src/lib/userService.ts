@@ -1,42 +1,8 @@
 import { api } from "./apiClient";
 import { API_ENDPOINTS } from "@/app/config/api";
-import { ApiResponse as UserApiResponse, UserData } from "@/types/user";
+import { ApiResponse as UserApiResponse, UserData, User } from "@/types/user";
 
 export class UserService {
-  /**
-   * Create new organizer from admin
-   */
-  static async createOrganizer({
-    email,
-    password,
-    first_name,
-    last_name,
-    phone,
-    country_code,
-  }: {
-    email: string;
-    password: string;
-    first_name: string;
-    last_name: string;
-    phone: string;
-    country_code?: string;
-  }): Promise<void> {
-    await api.post<void>(
-      API_ENDPOINTS.CREATE_ORGANIZERS,
-      {
-        email,
-        password,
-        first_name,
-        last_name,
-        phone,
-        country_code,
-      },
-      {
-        requiresAuth: true,
-      },
-    );
-  }
-
   static async getUsers(filters?: {
     page?: number;
     limit?: number;
@@ -72,5 +38,21 @@ export class UserService {
     return await api.get(`${API_ENDPOINTS.GET_USERS}/${id}`, {
       requiresAuth: true,
     });
+  }
+
+  /**
+   * Toggle user status (active/inactive)
+   * PUT /api/v1/admin/users/:id/status
+   */
+  static async toggleStatus(
+    id: string,
+    data: { status: string; admin_remark: string },
+  ): Promise<User> {
+    const response = await api.put<User>(
+      `${API_ENDPOINTS.GET_USERS}/${id}/status`,
+      data,
+      { requiresAuth: true },
+    );
+    return response;
   }
 }

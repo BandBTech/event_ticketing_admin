@@ -18,12 +18,12 @@ import {
   UsersIcon,
 } from "@phosphor-icons/react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { UserService } from "@/lib/userService";
-import { useQuery } from "@tanstack/react-query";
 import { ApiResponse as UserApiResponse } from "@/types/user";
 import { queryKeys } from "@/lib/queryKeys";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -44,6 +44,7 @@ import {
 } from "@tanstack/react-table";
 import { User } from "@/types/user";
 import { useDebounce } from "@/hooks/useDebounce";
+import { toast } from "@/lib/toast";
 
 export default function UsersPage() {
   const router = useRouter();
@@ -57,6 +58,8 @@ export default function UsersPage() {
   const roleFilter = searchParams.get("role") || "";
   const accountStatusFilter = searchParams.get("account_status") || "";
   const itemsPerPage = 10;
+  const queryClient = useQueryClient();
+  const [actionLoading, setActionLoading] = React.useState<string | null>(null);
   const [searchInput, setSearchInput] = React.useState(searchQuery);
 
   const debouncedSearch = useDebounce(searchInput, 500);
@@ -83,6 +86,39 @@ export default function UsersPage() {
 
   const mockUserData = response?.users || [];
 
+  // Mutation for toggling status
+  const toggleStatusMutation = useMutation({
+    mutationFn: (employeeId: string) =>
+      UserService.toggleStatus(employeeId, {
+        status:
+          mockUserData.find((c) => c.id === employeeId)?.account_status ===
+          "active"
+            ? "inactive"
+            : "active",
+        admin_remark: "Status toggled by admin",
+      }),
+    onMutate: (employeeId) => {
+      setActionLoading(employeeId);
+    },
+    onSuccess: (_, employeeId) => {
+      const employee = mockUserData.find((c) => c.id === employeeId);
+      toast.success(
+        `User ${
+          employee?.account_status === "active" ? "deactivated" : "activated"
+        } successfully`,
+      );
+      queryClient.invalidateQueries({
+        queryKey: ["users"],
+      });
+    },
+    onError: (err) => {
+      toast.error("Failed to update user status");
+    },
+    onSettled: () => {
+      setActionLoading(null);
+    },
+  });
+
   const updateParams = useCallback(
     (updates: Record<string, string | null>) => {
       const params = new URLSearchParams(searchParams.toString());
@@ -97,6 +133,11 @@ export default function UsersPage() {
     },
     [router, searchParams],
   );
+
+  // Handler functions
+  const handleToggleStatus = (user: User) => {
+    toggleStatusMutation.mutate(user.id);
+  };
 
   const handlePageChange = useCallback(
     (page: number) => {
@@ -322,10 +363,10 @@ export default function UsersPage() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuItem
-                //   onClick={(e) => {
-                //     e.stopPropagation();
-                //     handleViewDetails(employee);
-                //   }}
+                  onClick={() => {
+                    localStorage.setItem("user_id", user.id);
+                    router.push(`/users/userdetail?id=${user.id}`);
+                  }}
                 >
                   <div className="flex justify-start items-center bg-gray-50 text-gray-700">
                     <EyeIcon weight="duotone" className="mr-2 h-4 w-4" />
@@ -333,10 +374,10 @@ export default function UsersPage() {
                   </div>
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                // onClick={(e) => {
-                //   e.stopPropagation();
-                //   handleToggleStatus(employee);
-                // }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleToggleStatus(user);
+                  }}
                 >
                   {user.account_status === "active" ? (
                     <div className="flex justify-start items-center bg-red-50 text-red-700">
