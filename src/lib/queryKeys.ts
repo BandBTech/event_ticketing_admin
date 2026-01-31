@@ -59,8 +59,9 @@ export const queryKeys = {
       itemsPerPage?: number,
       search?: string,
       status?: string,
+      role?: string,
       accountStatus?: string,
-    ) => ["users", page, itemsPerPage, search, status, accountStatus] as const,
+    ) => ["users", page, itemsPerPage, search, status, role, accountStatus] as const,
     /** Key for all users (used for invalidation) */
     list: ["users"] as const,
     /** Key for fetching a single user by ID */

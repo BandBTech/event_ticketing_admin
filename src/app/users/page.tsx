@@ -32,6 +32,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DataTable } from "@/components/ui/data-table";
@@ -53,6 +54,7 @@ export default function UsersPage() {
   const currentPage = Number(searchParams.get("page")) || 1;
   const searchQuery = searchParams.get("search") || "";
   const statusFilter = searchParams.get("status") || "";
+  const roleFilter = searchParams.get("role") || "";
   const accountStatusFilter = searchParams.get("account_status") || "";
   const itemsPerPage = 10;
   const [searchInput, setSearchInput] = React.useState(searchQuery);
@@ -65,6 +67,7 @@ export default function UsersPage() {
       itemsPerPage,
       searchQuery,
       statusFilter,
+      roleFilter,
       accountStatusFilter,
     ),
     queryFn: () =>
@@ -73,6 +76,7 @@ export default function UsersPage() {
         limit: itemsPerPage,
         search: searchQuery,
         status: statusFilter,
+        role: roleFilter,
         account_status: accountStatusFilter,
       }),
   });
@@ -402,13 +406,107 @@ export default function UsersPage() {
           />
         </div>
 
-        <Button
-          variant="outline"
-          className="gap-2 bg-background/80 backdrop-blur-sm"
-        >
-          <FunnelIcon weight="duotone" className="h-4 w-4" />
-          {t("users.filter")}
-        </Button>
+        <div className="flex gap-6">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className="gap-2 bg-background/80 backdrop-blur-sm"
+              >
+                <FunnelIcon weight="duotone" className="h-4 w-4" />
+                {t("users.filterByRole")}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem
+                className={roleFilter === "admin" ? "bg-muted font-medium" : ""}
+                onClick={() => updateParams({ role: "admin", page: "1" })}
+              >
+                {t("users.userRoles.admin")}
+              </DropdownMenuItem>
+
+              <DropdownMenuItem
+                className={
+                  roleFilter === "organizer" ? "bg-muted font-medium" : ""
+                }
+                onClick={() => updateParams({ role: "organizer", page: "1" })}
+              >
+                {t("users.userRoles.organizer")}
+              </DropdownMenuItem>
+
+              <DropdownMenuItem
+                className={roleFilter === "staff" ? "bg-muted font-medium" : ""}
+                onClick={() => updateParams({ role: "staff", page: "1" })}
+              >
+                {t("users.userRoles.staff")}
+              </DropdownMenuItem>
+
+              <DropdownMenuItem
+                className={roleFilter === "user" ? "bg-muted font-medium" : ""}
+                onClick={() => updateParams({ role: "user", page: "1" })}
+              >
+                {t("users.userRoles.user")}
+              </DropdownMenuItem>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuItem
+                className={`text-red-600 font-medium ${
+                  !roleFilter ? "hidden" : ""
+                }`}
+                onClick={() => updateParams({ role: null, page: "1" })}
+              >
+                {t("users.clearFilters")}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className="gap-2 bg-background/80 backdrop-blur-sm"
+              >
+                <FunnelIcon weight="duotone" className="h-4 w-4" />
+                {t("users.filterByAccountStatus")}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem
+                className={
+                  statusFilter === "active" ? "bg-muted font-medium" : ""
+                }
+                onClick={() => updateParams({ status: "active", page: "1" })}
+              >
+                {t("users.accountStatus.active")}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className={
+                  statusFilter === "inactive" ? "bg-muted font-medium" : ""
+                }
+                onClick={() => updateParams({ status: "inactive", page: "1" })}
+              >
+                {t("users.accountStatus.inactive")}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className={
+                  statusFilter === "suspended" ? "bg-muted font-medium" : ""
+                }
+                onClick={() => updateParams({ status: "suspended", page: "1" })}
+              >
+                {t("users.accountStatus.suspended")}
+              </DropdownMenuItem>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuItem
+                className={`text-red-600 font-medium ${!statusFilter ? "hidden" : ""}`}
+                onClick={() => updateParams({ status: null, page: "1" })}
+              >
+                {t("users.clearFilters")}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
 
       {/* Table Container */}

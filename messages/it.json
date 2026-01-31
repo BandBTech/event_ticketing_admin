@@ -581,6 +581,8 @@
   "users": {
     "searchUsers": "Cerca utenti...",
     "filter": "Filtra",
+    "filterByAccountStatus": "Filtra per Stato Account",
+    "filterByRole": "Filtra per Ruolo",
     "clearFilters": "Cancella filtri",
     "loadingUsers": "Caricamento utenti...",
     "noUsersFound": "Nessun utente trovato",

@@ -42,6 +42,7 @@ export class UserService {
     limit?: number;
     search?: string;
     status?: string;
+    role?: string;
     account_status?: string;
     sort?: string;
   }): Promise<UserApiResponse> {
@@ -52,6 +53,7 @@ export class UserService {
       if (filters.limit) params.append("limit", filters.limit.toString());
       if (filters.search) params.append("search", filters.search);
       if (filters.status) params.append("status", filters.status);
+      if (filters.role) params.append("role", filters.role);
       if (filters.account_status)
         params.append("account_status", filters.account_status);
       if (filters.sort) params.append("sort", filters.sort);

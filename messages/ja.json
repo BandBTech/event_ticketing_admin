@@ -591,6 +591,8 @@
   "users": {
     "searchUsers": "ユーザーを検索...",
     "filter": "フィルター",
+    "filterByAccountStatus": "アカウントステータスでフィルター",
+    "filterByRole": "役割でフィルター",
     "clearFilters": "フィルターをクリア",
     "loadingUsers": "ユーザーを読み込み中...",
     "noUsersFound": "ユーザーが見つかりません",

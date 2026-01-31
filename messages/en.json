@@ -644,6 +644,8 @@
       "passwordHint": "Click the icon to generate a secure password"
     },
     "filter": "Filter",
+    "filterByAccountStatus": "Filter By Account Status",
+    "filterByRole": "Filter By Role",
     "clearFilters": "Clear Filters",
     "loadingUsers": "Loading users...",
     "noUsersFound": "No users found",
