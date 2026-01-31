@@ -596,6 +596,9 @@
     "noUsersFound": "ユーザーが見つかりません",
     "noRole": "役割なし",
     "more": "詳細",
+    "viewDetails": "詳細を表示",
+    "activate": "有効化",
+    "deactivate": "無効化",
     "userTable": {
       "name": "氏名",
       "contact": "連絡先",

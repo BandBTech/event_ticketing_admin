@@ -649,6 +649,9 @@
     "noUsersFound": "No users found",
     "noRole": "No role",
     "more": "more",
+    "viewDetails": "View Details",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
     "userTable": {
       "name": "Name",
       "contact": "Contact",

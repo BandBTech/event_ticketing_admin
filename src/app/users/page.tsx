@@ -19,22 +19,16 @@ import {
   Power as PowerIcon,
   Trash as TrashIcon,
   TrashSimple as TrashSimpleIcon,
+  Pen as PenIcon,
+  CrownIcon,
+  UsersIcon,
 } from "@phosphor-icons/react";
+import { cn } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Card, CardContent } from "@/components/ui/card";
-import { formatPhoneNumber } from "@/lib/utils";
 import { UserService } from "@/lib/userService";
 import { useQuery } from "@tanstack/react-query";
 import { ApiResponse as UserApiResponse } from "@/types/user";
@@ -47,86 +41,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Power } from "lucide-react";
-
-function getStatusConfig(status: string) {
-  switch (status?.toLowerCase()) {
-    case "approved":
-      return {
-        className:
-          "bg-green-50 text-green-700 hover:bg-green-100 border-green-200",
-        icon: CheckCircleIcon,
-        label: "Approved",
-      };
-    case "pending":
-      return {
-        className:
-          "bg-yellow-50 text-yellow-700 hover:bg-yellow-100 border-yellow-200",
-        icon: ClockIcon,
-        label: "Pending",
-      };
-    case "rejected":
-      return {
-        className: "bg-rose-50 text-rose-700 hover:bg-rose-100 border-rose-200",
-        icon: XCircleIcon,
-        label: "Rejected",
-      };
-    case "suspended":
-      return {
-        className:
-          "bg-slate-50 text-slate-700 hover:bg-slate-100 border-slate-200",
-        icon: UserMinusIcon,
-        label: "Suspended",
-      };
-    default:
-      return {
-        className: "bg-gray-50 text-gray-700 hover:bg-gray-100 border-gray-200",
-        icon: ClockIcon,
-        label: status || "Unknown",
-      };
-  }
-}
-
-function getAccountStatusConfig(status: string) {
-  switch (status?.toLowerCase()) {
-    case "active":
-      return {
-        className:
-          "bg-green-600 text-white hover:bg-green-700 border-transparent",
-        label: "Active",
-      };
-    case "inactive":
-      return {
-        className:
-          "bg-slate-500 text-white hover:bg-slate-600 border-transparent",
-        label: "Inactive",
-      };
-    case "pending":
-      return {
-        className:
-          "bg-yellow-600 text-white hover:bg-yellow-700 border-transparent",
-        label: "Pending",
-      };
-    case "suspended":
-      return {
-        className:
-          "bg-rose-600 text-white hover:bg-rose-700 border-transparent",
-        label: "Suspended",
-      };
-    case "rejected":
-      return {
-        className:
-          "bg-orange-600 text-white hover:bg-orange-700 border-transparent",
-        label: "Rejected",
-      };
-    default:
-      return {
-        className:
-          "bg-gray-500 text-white hover:bg-gray-600 border-transparent",
-        label: status || "Unknown",
-      };
-  }
-}
+import { DataTable } from "@/components/ui/data-table";
+import {
+  useReactTable,
+  getCoreRowModel,
+  getFilteredRowModel,
+  ColumnDef,
+} from "@tanstack/react-table";
+import { User } from "@/types/user";
 
 export default function UsersPage() {
   const router = useRouter();
@@ -226,6 +148,241 @@ export default function UsersPage() {
 
   const paginatedData = mockUserData;
 
+  const ROLE_CONFIG: Record<
+    string,
+    {
+      bg: string;
+      text: string;
+      border: string;
+      Icon: React.ComponentType<any>;
+    }
+  > = {
+    admin: {
+      bg: "bg-red-50",
+      text: "text-red-700",
+      border: "border-red-200",
+      Icon: CrownIcon,
+    },
+    organizer: {
+      bg: "bg-indigo-50",
+      text: "text-indigo-700",
+      border: "border-indigo-200",
+      Icon: ShieldIcon,
+    },
+    staff: {
+      bg: "bg-emerald-50",
+      text: "text-emerald-700",
+      border: "border-emerald-200",
+      Icon: UsersIcon,
+    },
+    user: {
+      bg: "bg-gray-50",
+      text: "text-gray-700",
+      border: "border-gray-200",
+      Icon: UserIcon,
+    },
+  };
+
+  // Table columns
+  const columns: ColumnDef<User>[] = React.useMemo(
+    () => [
+      {
+        accessorFn: (row) => `${row.first_name} ${row.last_name}`,
+        id: "name",
+        header: t("users.userTable.name"),
+      },
+      {
+        accessorKey: "contact",
+        header: t("users.userTable.contact"),
+        cell: ({ row }) => {
+          const { email, phone, country_code } = row.original;
+
+          return (
+            <div className="flex flex-col gap-0.5">
+              <span className="text-sm text-foreground">{email || "-"}</span>
+
+              <span className="text-xs text-muted-foreground">
+                {phone ? `${country_code ?? ""} ${phone}` : "-"}
+              </span>
+            </div>
+          );
+        },
+      },
+      {
+        id: "role",
+        header: t("users.userTable.role"),
+        cell: ({ row }) => {
+          const roles = row.original.roles;
+
+          if (!roles || roles.length === 0) {
+            return (
+              <span className="text-sm text-muted-foreground">
+                {t("users.noRole")}
+              </span>
+            );
+          }
+
+          // highest priority role first
+          const ROLE_PRIORITY = ["admin", "organizer", "staff", "user"];
+
+          const primaryRole =
+            roles
+              .map((r) => r.name.toLowerCase())
+              .sort(
+                (a, b) => ROLE_PRIORITY.indexOf(a) - ROLE_PRIORITY.indexOf(b),
+              )[0] ?? "user";
+
+          const config = ROLE_CONFIG[primaryRole] ?? ROLE_CONFIG.user;
+          const Icon = config.Icon;
+
+          return (
+            <div className="flex items-center gap-2">
+              <Badge
+                variant="outline"
+                className={`gap-1.5 ${config.bg} ${config.text} ${config.border}`}
+              >
+                <Icon weight="duotone" className="w-3 h-3" />
+                {t(`users.userRoles.${primaryRole}`)}
+              </Badge>
+
+              {roles.length > 1 && (
+                <span className="text-xs text-muted-foreground">
+                  +{roles.length - 1} {t("users.more")}
+                </span>
+              )}
+            </div>
+          );
+        },
+      },
+      {
+        accessorKey: "account_status",
+        header: t("users.userTable.accountStatus"),
+        cell: ({ row }) => {
+          const accountStatus = row.original.account_status;
+
+          return (
+            <div className="flex items-center gap-2">
+              {accountStatus === "active" ? (
+                <div>
+                  <Badge
+                    variant="outline"
+                    className="gap-1.5 bg-green-50 text-green-700"
+                  >
+                    <CheckCircleIcon weight="duotone" className="w-3 h-3" />
+                    {t(`users.organizerStatus.${accountStatus}`)}
+                  </Badge>
+                </div>
+              ) : (
+                <div>
+                  <Badge
+                    variant="outline"
+                    className="gap-1.5 bg-red-50 text-red-700"
+                  >
+                    <XCircleIcon weight="duotone" className="w-3 h-3" />
+                    {t(`users.organizerStatus.${accountStatus}`)}
+                  </Badge>
+                </div>
+              )}
+            </div>
+          );
+        },
+      },
+      {
+        id: "joinedDate",
+        header: t("users.userTable.joinedDate"),
+        cell: ({ row }) => {
+          const createdAt = row.original.created_at;
+
+          return (
+            <span className="text-sm">
+              {createdAt ? format(new Date(createdAt), "MMM dd, yyyy") : "-"}
+            </span>
+          );
+        },
+      },
+      {
+        id: "actions",
+        // header: "Actions",
+        cell: ({ row }) => {
+          const user = row.original;
+
+          //   if (actionLoading === employee.id) {
+          //     return (
+          //       <div className="h-8 w-8 flex items-center p-0">
+          //         <EyeIcon className="w-4 h-4 text-amber-900 animate-spin" />
+          //       </div>
+          //     );
+          //   }
+
+          return (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <span className="sr-only">Open menu</span>
+                  <DotsThreeVerticalIcon weight="duotone" className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem
+                //   onClick={(e) => {
+                //     e.stopPropagation();
+                //     handleViewDetails(employee);
+                //   }}
+                >
+                  <div className="flex justify-start items-center bg-gray-50 text-gray-700">
+                    <EyeIcon weight="duotone" className="mr-2 h-4 w-4" />
+                    {t(`users.viewDetails`)}
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                // onClick={(e) => {
+                //   e.stopPropagation();
+                //   handleToggleStatus(employee);
+                // }}
+                >
+                  {user.account_status === "active" ? (
+                    <div className="flex justify-start items-center bg-red-50 text-red-700">
+                      <XCircleIcon weight="duotone" className="mr-2 h-4 w-4" />
+                      {t(`users.deactivate`)}
+                    </div>
+                  ) : (
+                    <div className="flex justify-start items-center bg-green-50 text-green-700">
+                      <CheckCircleIcon
+                        weight="duotone"
+                        className="mr-2 h-4 w-4"
+                      />
+                      {t(`users.activate`)}
+                    </div>
+                  )}
+                </DropdownMenuItem>
+                {/* <DropdownMenuItem
+                          className="text-red-600"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteClick(employee);
+                          }}
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Delete
+                        </DropdownMenuItem> */}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          );
+        },
+        enableSorting: false,
+        enableHiding: false,
+      },
+    ],
+    [t],
+  );
+
+  const table = useReactTable({
+    data: mockUserData,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+  });
+
   const totalItems = response?.total || mockUserData.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const hasNextPage = response?.has_more ?? currentPage < totalPages;
@@ -260,187 +417,16 @@ export default function UsersPage() {
         </Button>
       </div>
 
-      {isLoading ? (
-        <div className="text-center py-12">{t("users.loadingUsers")}</div>
-      ) : (
-        <Card>
-          <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow className="bg-gray-100">
-                    <TableHead className="w-16">S.N.</TableHead>
-                    <TableHead>{t("users.userTable.name")}</TableHead>
-                    <TableHead>{t("users.userTable.contact")}</TableHead>
-                    <TableHead>{t("users.userTable.role")}</TableHead>
-                    <TableHead>{t("users.userTable.accountStatus")}</TableHead>
-                    <TableHead>{t("users.userTable.joinedDate")}</TableHead>
-                    <TableHead className="text-right">
-                      {t("users.userTable.actions")}
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {paginatedData.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={9} className="text-center py-12">
-                        <div className="flex flex-col items-center gap-2">
-                          <UserIcon
-                            weight="duotone"
-                            className="w-12 h-12 text-muted-foreground/50"
-                          />
-                          <p className="text-muted-foreground">
-                            {t("users.noUsersFound")}
-                          </p>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    paginatedData.map((user, index) => {
-                      const statusConfig = getStatusConfig(
-                        user.organizer_status,
-                      );
-                      const accountStatusConfig = getAccountStatusConfig(
-                        user.account_status,
-                      );
-                      const StatusIcon = statusConfig.icon;
-                      const serialNumber =
-                        (currentPage - 1) * itemsPerPage + index + 1;
-
-                      return (
-                        <TableRow key={user.id} className="hover:bg-muted/50">
-                          <TableCell className="font-medium text-muted-foreground">
-                            {serialNumber}
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex flex-col">
-                              <span className="font-medium text-gray-900">
-                                {user.first_name} {user.last_name}
-                              </span>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex flex-col gap-1">
-                              <span className="text-sm">{user.email}</span>
-                              <span className="text-sm text-muted-foreground">
-                                {formatPhoneNumber(
-                                  user.country_code,
-                                  user.phone,
-                                )}
-                              </span>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex flex-col gap-1">
-                              {user.roles.length > 0 ? (
-                                <>
-                                  <div className="flex items-center gap-2">
-                                    <Badge
-                                      variant="outline"
-                                      className="gap-1.5 bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100"
-                                    >
-                                      <ShieldIcon
-                                        weight="duotone"
-                                        className="w-3 h-3"
-                                      />
-
-                                      {t(
-                                        `users.userRoles.${user.roles[0].name}`,
-                                      )}
-                                    </Badge>
-                                    {user.roles.length > 1 && (
-                                      <span className="text-xs text-muted-foreground">
-                                        +{user.roles.length - 1}{" "}
-                                        {t("users.more")}
-                                      </span>
-                                    )}
-                                  </div>
-                                </>
-                              ) : (
-                                <span className="text-sm text-muted-foreground">
-                                  {t("users.noRole")}
-                                </span>
-                              )}
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <Badge
-                              variant="outline"
-                              className={`text-xs font-bold ${accountStatusConfig.className}`}
-                            >
-                              {t(
-                                `users.accountStatus.${accountStatusConfig.label.toLowerCase()}`,
-                              )}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            <span className="text-sm">
-                              {format(
-                                new Date(user.created_at),
-                                "MMM dd, yyyy",
-                              )}
-                            </span>
-                          </TableCell>
-                          <TableCell className="text-right gap-2 flex justify-end ">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="gap-1.5"
-                              onClick={() => {
-                                localStorage.setItem("user_id", user.id);
-                                router.push(`/users/userdetail?id=${user.id}`);
-                              }}
-                            >
-                              <EyeIcon weight="duotone" className="w-4 h-4" />
-                            </Button>
-
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  className="gap-1.5 cursor-pointer"
-                                >
-                                  <DotsThreeVerticalIcon
-                                    weight="duotone"
-                                    className="w-4 h-4"
-                                  />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent
-                                className="w-40 rounded-xl bg-white cursor-pointer"
-                                side={"right"}
-                                align="start"
-                                sideOffset={8}
-                              >
-                                <DropdownMenuItem
-                                  // onClick={() =>
-                                  //   router.push("/settings/profile")
-                                  // }
-                                  className="cursor-pointer"
-                                >
-                                  <PowerIcon
-                                    weight="duotone"
-                                    className="mr-2 h-4 w-4 text-red-600"
-                                  />
-                                  <span className="text-red-700">
-                                    Activate
-                                  </span>
-                                </DropdownMenuItem>
-
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })
-                  )}
-                </TableBody>
-              </Table>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      {/* Table Container */}
+      <DataTable
+        table={table}
+        columns={columns}
+        loadingMessage={t("users.loadingUsers")}
+        emptyIcon={<UserIcon className="w-8 h-8 text-gray-400" />}
+        emptyMessage={t("users.noUsersFound")}
+        showSerialNumber
+        serialNumberStart={(currentPage - 1) * itemsPerPage + 1}
+      />
 
       {/* Pagination */}
       {totalPages > 0 && !isLoading && (
@@ -450,13 +436,13 @@ export default function UsersPage() {
             size="sm"
             onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
             disabled={currentPage === 1}
-            className="gap-2"
+            className="gap-2 bg-gray-50"
           >
             <CaretLeftIcon weight="bold" className="w-4 h-4" />
             {t("pagination.previous")}
           </Button>
 
-          <div className="flex gap-2">
+          <div className="flex gap-2 bg-gray-50">
             {Array.from({ length: Math.min(totalPages, 5) }).map((_, i) => {
               let pageNumber: number;
 
