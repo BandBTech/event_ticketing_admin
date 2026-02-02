@@ -65,11 +65,7 @@ export function RolePermissionsEditor({ selectedRoleId, onRoleChange }: RolePerm
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.roles.permissions(selectedRoleId) });
       setHasChanges(false);
-      toast.success(t('settings.permissions.roleEditor.saveSuccess', 'Permissions updated successfully'));
-    },
-    onError: () => {
-      toast.error(t('settings.permissions.roleEditor.saveError', 'Failed to update permissions'));
-    },
+    }
   });
 
   const handlePermissionToggle = (permissionName: string) => {

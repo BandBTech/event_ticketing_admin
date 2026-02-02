@@ -14,8 +14,8 @@ export interface AppEvent {
   available: number;
   price: number;
   commission_rate: number;
-  status: "draft" | "pending" | "approved" | "rejected" | "live" | "cancelled" | "held";
-  sales_status: "active" | "inactive" | "soldout";
+  status: "draft" | "pending" | "approved" | "rejected" | "on_sale" | "live" | "hold" | "scheduled" | "cancelled" | "completed";
+  sales_status: "active" | "paused" | "stopped" | "sold_out";
   is_featured: boolean;
   is_cancelled: boolean;
   organizer_id: string;

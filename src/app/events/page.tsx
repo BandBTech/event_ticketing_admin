@@ -270,9 +270,9 @@ function EventCard({ event }: { event: Event }) {
                 {event.capacity - event.available} / {event.capacity}
               </span>
             </div>
-            {(event.status === "live" ||
+            {(event.status === "on_sale" ||
               event.status === "approved" ||
-              event.status === "pending") && (
+              event.status === "completed") && (
               <div className="flex items-center gap-3 ml-auto">
                 <div className="flex flex-col items-end">
                   <span className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-bold leading-none mb-1">

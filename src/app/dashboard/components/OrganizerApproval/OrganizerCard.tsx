@@ -7,6 +7,7 @@ import { useLanguageStore } from "@/store/languageStore";
 import { Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
+import { useRouter } from "next/navigation";
 
 interface OrganizerCardProps {
   organizer: Organizer;
@@ -29,9 +30,13 @@ export function OrganizerCard({
 }: OrganizerCardProps) {
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
+  const router = useRouter();
 
   return (
-    <div className="flex flex-col sm:flex-row items-center gap-4 px-4 py-3 border-gray-100 border-b last:border-b-0 hover:bg-gray-100">
+    <div
+      className="flex flex-col sm:flex-row items-center gap-4 px-4 py-3 border-gray-100 border-b last:border-b-0 hover:bg-gray-100 cursor-pointer"
+      onClick={() => router.push(`/organisers/detail?id=${organizer.id}`)}
+    >
       {/* Avatar with Initials */}
       <div className="flex items-center justify-center w-12 h-12 font-semibold text-white bg-primary rounded-full shadow-inner">
         {getInitials(organizer.first_name, organizer.last_name)}
@@ -54,7 +59,10 @@ export function OrganizerCard({
         <ButtonGroup className="max-md:w-1/2">
           <Button
             variant="outline"
-            onClick={() => onReject(organizer.id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onReject(organizer.id);
+            }}
             className="text-destructive hover:bg-destructive/5 w-full sm:w-auto"
           >
             <X className="w-4 h-4" />
@@ -62,7 +70,10 @@ export function OrganizerCard({
           </Button>
           <Button
             variant="outline"
-            onClick={() => onApprove(organizer.id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onApprove(organizer.id);
+            }}
             disabled={isApproving}
             className="text-success hover:bg-success/5 w-full sm:w-auto"
           >

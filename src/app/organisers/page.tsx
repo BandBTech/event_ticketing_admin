@@ -173,7 +173,10 @@ function OrganizerCard({ organizer }: { organizer: Organizer }) {
     : "N/A";
 
   return (
-    <Card className="group hover:shadow-lg transition-all duration-300 flex flex-col h-full overflow-hidden border-gray-200">
+    <Card
+      className="group hover:shadow-lg transition-all duration-300 flex flex-col h-full overflow-hidden border-gray-200 cursor-pointer"
+      onClick={() => router.push(`/organisers/detail?id=${organizer.id}`)}
+    >
       <CardHeader className="flex flex-row items-start gap-4 space-y-0 pb-4">
         <Avatar className="h-16 w-16 border border-gray-100 group-hover:scale-105 transition-transform duration-300">
           {/* {organizer.logo ? (
@@ -262,14 +265,20 @@ function OrganizerCard({ organizer }: { organizer: Organizer }) {
         <Button
           variant="outline"
           className="flex-1 gap-2"
-          onClick={() => router.push(`/organisers/detail?id=${organizer.id}`)}
+          onClick={(e) => {
+            e.stopPropagation();
+            router.push(`/organisers/detail?id=${organizer.id}`);
+          }}
         >
           <EyeIcon weight="duotone" className="w-4.5 h-4.5" />
           {t("organizer.profile")}
         </Button>
         <Button
           className="flex-1 gap-2 bg-blue-600 hover:bg-blue-700 text-white"
-          onClick={() => router.push(`/events?organizer_id=${organizer.id}`)}
+          onClick={(e) => {
+            e.stopPropagation();
+            router.push(`/events?organizer_id=${organizer.id}`);
+          }}
         >
           <TicketIcon weight="duotone" className="w-4.5 h-4.5" />
           {t("organizer.events")}
