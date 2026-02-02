@@ -1,6 +1,12 @@
 import { api } from './apiClient';
 import { API_ENDPOINTS } from '@/app/config/api';
 
+export interface AllOrganizers {
+  id: string;
+  business_name: string;
+  logo: string;
+}
+
 /**
  * Organizer Types
  */
@@ -74,6 +80,23 @@ export class OrganizerService {
   }
 
 
+  static async getOrganizers(filters: { all_approved: true } & {
+    page?: number;
+    limit?: number;
+    sort?: string;
+    search?: string;
+    status?: string;
+    account_status?: string;
+  }): Promise<AllOrganizers[]>;
+  static async getOrganizers(filters?: {
+    page?: number;
+    limit?: number;
+    sort?: string;
+    search?: string;
+    status?: string;
+    account_status?: string;
+    all_approved?: false | undefined;
+  }): Promise<OrganizerListResponse>;
   static async getOrganizers(filters?: {
     page?: number;
     limit?: number;
@@ -82,7 +105,7 @@ export class OrganizerService {
     status?: string;
     account_status?: string;
     all_approved?: boolean;
-  }): Promise<OrganizerListResponse> {
+  }): Promise<OrganizerListResponse | AllOrganizers[]> {
     const params = new URLSearchParams();
 
     if (filters) {
@@ -96,9 +119,15 @@ export class OrganizerService {
     }
 
     const query = params.toString();
-    return await api.get<OrganizerListResponse>(`${API_ENDPOINTS.GET_ORGANIZERS}${query ? `?${query}` : ''}`, {
+    const result = await api.get<OrganizerListResponse | AllOrganizers[]>(`${API_ENDPOINTS.GET_ORGANIZERS}${query ? `?${query}` : ''}`, {
       requiresAuth: true,
     });
+
+    if (filters?.all_approved) {
+      return (Array.isArray(result) ? result : (result?.organizers || [])) as AllOrganizers[];
+    }
+
+    return result;
   }
 
   static async getPendingOrganizers(): Promise<OrganizerListResponse> {

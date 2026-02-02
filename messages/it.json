@@ -138,7 +138,7 @@
     "tryAdjustingSearch": "Prova ad aggiustare i termini di ricerca o i filtri",
     "failedToLoadEvents": "Caricamento eventi fallito",
     "pleaseTryAgainLater": "Per favore, riprova più tardi",
-    "showingEventsForOrganizer": "Visualizzazione eventi per l'ID organizzatore",
+    "showingEventsForOrganizer": "Visualizzazione degli eventi per organizzatore",
     "clearFilter": "Pulisci filtro",
     "goBack": "Torna indietro",
     "backToEvents": "Torna agli Eventi",
@@ -260,7 +260,9 @@
       "statusChanged": "Stato aggiornato da {old} a {new}",
       "statusSet": "Stato impostato su {new}",
       "salesChanged": "Vendite {new}"
-    }
+    },
+    "filterByOrganizer": "Filtra per Organizzatore",
+    "allOrganizers": "Tutti gli organizzatori"
   },
   "languages": {
     "en": "English",
@@ -576,7 +578,8 @@
     "tryAdjustingSearchParams": "Prova a modificare i termini di ricerca o i filtri",
     "noOrganizersRegisteredYet": "Nessun organizzatore è ancora registrato",
     "joined": "Iscritto",
-    "pleaseTryAgainLater": "Riprova più tardi"
+    "pleaseTryAgainLater": "Riprova più tardi",
+    "addOrganizer": "Aggiungi organizzatore"
   },
   "users": {
     "searchUsers": "Cerca utenti...",

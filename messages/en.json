@@ -163,7 +163,7 @@
     "tryAdjustingSearch": "Try adjusting your search terms or filters",
     "failedToLoadEvents": "Failed to load events",
     "pleaseTryAgainLater": "Please try again later",
-    "showingEventsForOrganizer": "Showing events for organizer ID",
+    "showingEventsForOrganizer": "Showing events by organizer",
     "clearFilter": "Clear filter",
     "goBack": "Go Back",
     "backToEvents": "Back to Events",
@@ -297,7 +297,9 @@
       "statusChanged": "Status updated from {old} to {new}",
       "statusSet": "Status set to {new}",
       "salesChanged": "Sales {new}"
-    }
+    },
+    "filterByOrganizer": "Filter by Organizer",
+    "allOrganizers": "All Organizers"
   },
   "languages": {
     "en": "English",

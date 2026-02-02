@@ -138,7 +138,7 @@
     "tryAdjustingSearch": "検索条件やフィルターを調整してみてください",
     "failedToLoadEvents": "イベントの読み込みに失敗しました",
     "pleaseTryAgainLater": "後ほど再度お試しください",
-    "showingEventsForOrganizer": "主催者IDのイベントを表示しています",
+    "showingEventsForOrganizer": "主催者ごとにイベントを表示",
     "clearFilter": "フィルターをクリア",
     "goBack": "戻る",
     "backToEvents": "イベント一覧に戻る",
@@ -270,7 +270,9 @@
       "statusChanged": "ステータスが {old} から {new} に更新されました",
       "statusSet": "ステータスが {new} に設定されました",
       "salesChanged": "売上 {new}"
-    }
+    },
+    "filterByOrganizer": "主催者でフィルターする",
+    "allOrganizers": "主催者全員"
   },
   "languages": {
     "en": "English",
@@ -586,7 +588,8 @@
     "tryAdjustingSearchParams": "検索キーワードや絞り込み条件を調整してください",
     "noOrganizersRegisteredYet": "登録されている主催者はいません",
     "joined": "参加済み",
-    "pleaseTryAgainLater": "時間をおいて再度お試しください"
+    "pleaseTryAgainLater": "時間をおいて再度お試しください",
+    "addOrganizer": "オーガナイザーの追加"
   },
   "users": {
     "searchUsers": "ユーザーを検索...",
