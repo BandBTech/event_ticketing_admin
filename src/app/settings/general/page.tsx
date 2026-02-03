@@ -146,7 +146,7 @@ export default function GeneralSettingsPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["company"] });
-      toast.success("Company information updated successfully");
+      toast.success(t("settings.general.companyInfoUpdated"));
       setSelectedFile("");
       setUploadError("");
     },
@@ -162,13 +162,13 @@ export default function GeneralSettingsPage() {
 
     // Validate file type
     if (!file.type.startsWith("image/")) {
-      setUploadError("Please upload an image file");
+      setUploadError(t("settings.general.pleaseUploadImageFile"));
       return;
     }
 
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      setUploadError("Image Dimension must be 500 pixels or less.");
+      setUploadError(t("settings.general.imageDimension"));
       return;
     }
 
@@ -197,7 +197,7 @@ export default function GeneralSettingsPage() {
     return (
       <div className="max-w-4xl mx-auto p-6">
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <p className="text-gray-500">Loading...</p>
+          <p className="text-gray-500">{t("settings.general.loading")}...</p>
         </div>
       </div>
     );
@@ -207,7 +207,7 @@ export default function GeneralSettingsPage() {
     return (
       <div className="max-w-4xl mx-auto p-6">
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <p className="text-red-500">Error loading settings</p>
+          <p className="text-red-500">{t("settings.general.errorLoadingSettings")}</p>
         </div>
       </div>
     );
@@ -227,7 +227,7 @@ export default function GeneralSettingsPage() {
           {/* Logo Upload Section */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Company Logo
+              {t("settings.general.companyLogo")}
             </label>
             <div className="flex items-start gap-4">
               {previewUrl ? (
@@ -241,13 +241,13 @@ export default function GeneralSettingsPage() {
                   />
                   {selectedFile && (
                     <div className="absolute bottom-0 left-0 right-0 bg-blue-500 text-white text-xs px-2 py-1 rounded-b-lg">
-                      New image selected
+                       {t("settings.general.newImageSelected")}
                     </div>
                   )}
                 </div>
               ) : (
                 <div className="w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center bg-gray-50">
-                  <span className="text-gray-400 text-sm">No logo</span>
+                  <span className="text-gray-400 text-sm"> {t("settings.general.noLogo")}</span>
                 </div>
               )}
 
@@ -269,10 +269,10 @@ export default function GeneralSettingsPage() {
                   }`}
                 >
                   <UploadSimple size={20} />
-                  {selectedFile ? "Change Logo" : "Upload Logo"}
+                  {selectedFile ? "Change Logo" : t("settings.general.uploadLogo")}
                 </label>
                 <p className="text-sm text-gray-500 mt-2">
-                  Image Dimension must be 500 pixels or less.
+                  {t("settings.general.imageDimension")}
                 </p>
                 {selectedFile && (
                   <p className="text-sm text-blue-600 mt-1">
@@ -294,12 +294,12 @@ export default function GeneralSettingsPage() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="name">Name</FieldLabel>
+                  <FieldLabel htmlFor="name">{t("settings.general.name")}</FieldLabel>
                   <Input
                     {...field}
                     id="name"
                     maxLength={255}
-                    placeholder="Enter valid name"
+                    placeholder={t("settings.general.enterName")}
                     aria-invalid={fieldState.invalid}
                   />
                   <div className="flex justify-between items-center">
@@ -324,16 +324,16 @@ export default function GeneralSettingsPage() {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="address">
-                    Address{" "}
+                    {t("settings.general.address")}{" "}
                     <span className="text-gray-400 font-normal">
-                      (Optional)
+                      ({t("settings.general.optional")})
                     </span>
                   </FieldLabel>
                   <Input
                     {...field}
                     id="address"
                     maxLength={255}
-                    placeholder="Enter valid address"
+                    placeholder={t("settings.general.enterAddress")}
                     aria-invalid={fieldState.invalid}
                   />
                   <div className="flex justify-between items-center">
@@ -357,14 +357,12 @@ export default function GeneralSettingsPage() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="address">Email</FieldLabel>
+                  <FieldLabel htmlFor="email">{t("settings.general.email")}</FieldLabel>
                   <Input
                     {...field}
                     id="email"
-                    placeholder="Enter valid email address"
+                    placeholder={t("settings.general.enterEmailAddress")}
                     aria-invalid={fieldState.invalid}
-                    // readOnly
-                    // disabled
                     className="bg-gray-50 text-gray-700"
                   />
                   {fieldState.invalid && (
@@ -381,15 +379,15 @@ export default function GeneralSettingsPage() {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="phone">
-                    Contact Number{" "}
+                    {t("settings.general.contactNumber")}{" "}
                     <span className="text-gray-400 font-normal">
-                      (Optional)
+                      ({t("settings.general.optional")})
                     </span>
                   </FieldLabel>
                   <PhoneInput
                     id="contactNumber"
                     defaultCountry={country}
-                    placeholder="Enter phone number"
+                    placeholder={t("settings.general.enterPhoneNumber")}
                     value={field.value}
                     onChange={field.onChange}
                     onBlur={field.onBlur}
@@ -426,16 +424,16 @@ export default function GeneralSettingsPage() {
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor="description">
-                      Description{" "}
+                      {t("settings.general.description")}{" "}
                       <span className="text-gray-400 font-normal">
-                        (Optional)
+                        ({t("settings.general.optional")})
                       </span>
                     </FieldLabel>
                     <Textarea
                       {...field}
                       id="description"
                       maxLength={255}
-                      placeholder="Enter valid description"
+                      placeholder={t("settings.general.enterDescription")}
                       aria-invalid={fieldState.invalid}
                     />
                     <div className="flex justify-between items-center">
@@ -461,16 +459,16 @@ export default function GeneralSettingsPage() {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="facebook_url">
-                    Facebook URL{" "}
+                    {t("settings.general.facebookURL")}{" "}
                     <span className="text-gray-400 font-normal">
-                      (Optional)
+                      ({t("settings.general.optional")})
                     </span>
                   </FieldLabel>
                   <Input
                     {...field}
                     id="facebook_url"
                     maxLength={255}
-                    placeholder="Enter valid Facebook URL"
+                    placeholder={t("settings.general.enterFacebookURL")}
                     aria-invalid={fieldState.invalid}
                   />
                   <div className="flex justify-between items-center">
@@ -495,16 +493,16 @@ export default function GeneralSettingsPage() {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="instagram_url">
-                    Instagram URL{" "}
+                    {t("settings.general.instagramURL")}{" "}
                     <span className="text-gray-400 font-normal">
-                      (Optional)
+                      ({t("settings.general.optional")})
                     </span>
                   </FieldLabel>
                   <Input
                     {...field}
                     id="instagram_url"
                     maxLength={255}
-                    placeholder="Enter valid Instagram URL"
+                    placeholder={t("settings.general.enterInstagramURL")}
                     aria-invalid={fieldState.invalid}
                   />
                   <div className="flex justify-between items-center">
@@ -529,16 +527,16 @@ export default function GeneralSettingsPage() {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="linkedin_url">
-                    LinkedIn URL{" "}
+                    {t("settings.general.linkedinURL")}{" "}
                     <span className="text-gray-400 font-normal">
-                      (Optional)
+                      ({t("settings.general.optional")})
                     </span>
                   </FieldLabel>
                   <Input
                     {...field}
                     id="linkedin_url"
                     maxLength={255}
-                    placeholder="Enter valid LinkedIn URL"
+                    placeholder={t("settings.general.enterLinkedInURL")}
                     aria-invalid={fieldState.invalid}
                   />
                   <div className="flex justify-between items-center">
@@ -563,16 +561,16 @@ export default function GeneralSettingsPage() {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="twitter_url">
-                    Twitter URL{" "}
+                    {t("settings.general.twitterURL")}{" "}
                     <span className="text-gray-400 font-normal">
-                      (Optional)
+                      ({t("settings.general.optional")})
                     </span>
                   </FieldLabel>
                   <Input
                     {...field}
                     id="twitter_url"
                     maxLength={255}
-                    placeholder="Enter valid Twitter URL"
+                    placeholder={t("settings.general.enterTwitterURL")}
                     aria-invalid={fieldState.invalid}
                   />
                   <div className="flex justify-between items-center">
@@ -597,16 +595,16 @@ export default function GeneralSettingsPage() {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="website_url">
-                    Website URL{" "}
+                    {t("settings.general.websiteURL")}{" "}
                     <span className="text-gray-400 font-normal">
-                      (Optional)
+                      ({t("settings.general.optional")})
                     </span>
                   </FieldLabel>
                   <Input
                     {...field}
                     id="website_url"
                     maxLength={255}
-                    placeholder="Enter valid Website URL"
+                    placeholder={t("settings.general.enterWebsiteURL")}
                     aria-invalid={fieldState.invalid}
                   />
                   <div className="flex justify-between items-center">
@@ -631,16 +629,16 @@ export default function GeneralSettingsPage() {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="youtube_url">
-                    Youtube URL{" "}
+                    {t("settings.general.youtubeURL")}{" "}
                     <span className="text-gray-400 font-normal">
-                      (Optional)
+                      ({t("settings.general.optional")})
                     </span>
                   </FieldLabel>
                   <Input
                     {...field}
                     id="youtube_url"
                     maxLength={255}
-                    placeholder="Enter valid Youtube URL"
+                    placeholder={t("settings.general.enterYouTubeURL")}
                     aria-invalid={fieldState.invalid}
                   />
                   <div className="flex justify-between items-center">
