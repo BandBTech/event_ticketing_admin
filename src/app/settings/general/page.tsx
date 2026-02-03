@@ -1,30 +1,100 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import {
-  FloppyDiskIcon,
-  UploadSimple,
-} from "@phosphor-icons/react/dist/ssr";
+import { UploadSimple } from "@phosphor-icons/react/dist/ssr";
 import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
 import Image from "next/image";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { PhoneInput } from "@/components/ui/phone-input";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { SettingService } from "@/lib/settingService";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import type { Country } from "react-phone-number-input";
+import { isValidPhoneNumber } from "libphonenumber-js";
+import { toast } from "@/lib/toast";
+
+export const nameValidationRegex = /^[A-Za-z\s'-]+$/;
+
+/**
+ * Creates a firstName Zod schema with proper validation.
+ * - Required, min 2 characters
+ * - Only allows letters, spaces, hyphens, and apostrophes
+ */
+export const createNameSchema = () =>
+  z
+    .string()
+    .min(1, "Name is required.")
+    .min(2, "Name must be at least 2 characters.")
+    .max(100, "Name must be at most 100 characters.")
+    .regex(
+      nameValidationRegex,
+      "Name can only contain letters, spaces, hyphens, and apostrophes.",
+    );
+
+export const optionalUrl = z
+  .string()
+  .trim()
+  .optional()
+  .or(z.literal(""))
+  .refine((val) => !val || z.string().url().safeParse(val).success, {
+    message: "Please enter a valid URL.",
+  });
+
+// Zod validation schema
+const companyInfoFormSchema = z.object({
+  name: createNameSchema(),
+  email: z
+    .string()
+    .min(1, "Email is required.")
+    .email("Please enter a valid email address."),
+  description: z.string().optional(),
+  phone: z
+    .string()
+    .refine(
+      (val) => !val || isValidPhoneNumber(val, { defaultCountry: "DK" }),
+      {
+        message: "Please enter a valid phone number.",
+      },
+    )
+    .optional(),
+  address: z.string().optional(),
+  logo_url: optionalUrl,
+  facebook_url: optionalUrl,
+  instagram_url: optionalUrl,
+  linkedin_url: optionalUrl,
+  twitter_url: optionalUrl,
+  website_url: optionalUrl,
+  youtube_url: optionalUrl,
+});
+
+type CompanyInfoFormValues = z.infer<typeof companyInfoFormSchema>;
 
 export default function GeneralSettingsPage() {
-  const [settings, setSettings] = useState({
-    name: "",
-    address: "",
-    email: "",
-    description: "",
-    phone: "",
-    logo_url: "",
-    facebook_url: "",
-    instagram_url: "",
-    linkedin_url: "",
-    twitter_url: "",
-    website_url: "",
-    youtube_url: "",
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [country, setCountry] = useState<Country>("NP");
+
+  const form = useForm<CompanyInfoFormValues>({
+    resolver: zodResolver(companyInfoFormSchema),
+    defaultValues: {
+      name: "",
+      address: "",
+      email: "",
+      description: "",
+      phone: "",
+      logo_url: "",
+      facebook_url: "",
+      instagram_url: "",
+      linkedin_url: "",
+      twitter_url: "",
+      website_url: "",
+      youtube_url: "",
+    },
+    mode: "onChange",
   });
 
   const [previewUrl, setPreviewUrl] = useState<string>("");
@@ -46,52 +116,45 @@ export default function GeneralSettingsPage() {
 
   useEffect(() => {
     if (response) {
-      const companyData = {
-        name: response?.name || "",
-        address: response?.address || "",
-        email: response?.email || "",
-        description: response?.description || "",
-        phone: response?.phone || "",
-        logo_url: response?.logo_url || "",
-        facebook_url: response?.facebook_url || "",
-        instagram_url: response?.instagram_url || "",
-        linkedin_url: response?.linkedin_url || "",
-        twitter_url: response?.twitter_url || "",
-        website_url: response?.website_url || "",
-        youtube_url: response?.youtube_url || "",
-      };
-      setSettings(companyData);
-      setPreviewUrl(response?.logo_url || "");
-    }
-  }, [response]);
+      form.reset({
+        name: response.name || "",
+        address: response.address || "",
+        email: response.email || "",
+        description: response.description || "",
+        phone: response.phone || "",
+        logo_url: response.logo_url || "",
+        facebook_url: response.facebook_url || "",
+        instagram_url: response.instagram_url || "",
+        linkedin_url: response.linkedin_url || "",
+        twitter_url: response.twitter_url || "",
+        website_url: response.website_url || "",
+        youtube_url: response.youtube_url || "",
+      });
 
-  // Mutation for saving settings
+      setPreviewUrl(response.logo_url || "");
+    }
+  }, [response, form]);
+
   const saveMutation = useMutation({
-    mutationFn: (data: typeof settings) => {
-      // Create a payload that includes the file
+    mutationFn: (data: CompanyInfoFormValues) => {
       const payload = {
         ...data,
-        logo: selectedFile, // Add the file to the payload
+        logo: selectedFile,
       };
 
       return SettingService.updateCompany(payload);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["company"] });
+      toast.success("Company information updated successfully");
       setSelectedFile("");
       setUploadError("");
     },
     onError: (error) => {
       console.error("Save error:", error);
+      // toast.error("Failed to update company information");
     },
   });
-
-  const handleInputChange = (field: string, value: string) => {
-    setSettings((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -105,7 +168,7 @@ export default function GeneralSettingsPage() {
 
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      setUploadError("Image size should be less than 5MB");
+      setUploadError("Image Dimension must be 500 pixels or less.");
       return;
     }
 
@@ -117,10 +180,6 @@ export default function GeneralSettingsPage() {
     setPreviewUrl(objectUrl);
   };
 
-  const handleSave = () => {
-    saveMutation.mutate(settings);
-  };
-
   // Cleanup preview URL on unmount
   useEffect(() => {
     return () => {
@@ -129,6 +188,10 @@ export default function GeneralSettingsPage() {
       }
     };
   }, [previewUrl]);
+
+  const onSubmit = (values: CompanyInfoFormValues) => {
+    saveMutation.mutate(values);
+  };
 
   if (isLoading) {
     return (
@@ -160,7 +223,7 @@ export default function GeneralSettingsPage() {
           <p className="text-gray-600 mt-1">{t("settings.general.subtitle")}</p>
         </div>
 
-        <div className="p-6 space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 space-y-6">
           {/* Logo Upload Section */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -209,7 +272,7 @@ export default function GeneralSettingsPage() {
                   {selectedFile ? "Change Logo" : "Upload Logo"}
                 </label>
                 <p className="text-sm text-gray-500 mt-2">
-                  JPG, PNG or WEBP. Max size 5MB.
+                  Image Dimension must be 500 pixels or less.
                 </p>
                 {selectedFile && (
                   <p className="text-sm text-blue-600 mt-1">
@@ -225,180 +288,384 @@ export default function GeneralSettingsPage() {
 
           {/* Rest of form fields */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Name
-              </label>
-              <input
-                type="text"
-                title="Name"
-                value={settings.name}
-                onChange={(e) => handleInputChange("name", e.target.value)}
-                className="w-full p-3 border border-gray-300 text-gray-500 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-              />
-            </div>
+            {/* Name */}
+            <Controller
+              name="name"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="name">Name</FieldLabel>
+                  <Input
+                    {...field}
+                    id="name"
+                    maxLength={255}
+                    placeholder="Enter valid name"
+                    aria-invalid={fieldState.invalid}
+                  />
+                  <div className="flex justify-between items-center">
+                    <p>
+                      {" "}
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </p>
+                    {/* <p className="text-xs font-normal text-left text-muted-foreground">
+                      {field.value?.length || 0} /255 characters
+                    </p> */}
+                  </div>
+                </Field>
+              )}
+            />
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Address
-              </label>
-              <input
-                type="text"
-                title="Address"
-                value={settings.address}
-                onChange={(e) => handleInputChange("address", e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg text-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-              />
-            </div>
+            {/* Address */}
+            <Controller
+              name="address"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="address">
+                    Address{" "}
+                    <span className="text-gray-400 font-normal">
+                      (Optional)
+                    </span>
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id="address"
+                    maxLength={255}
+                    placeholder="Enter valid address"
+                    aria-invalid={fieldState.invalid}
+                  />
+                  <div className="flex justify-between items-center">
+                    <p>
+                      {" "}
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </p>
+                    {/* <p className="text-xs font-normal text-left text-muted-foreground">
+                      {field.value?.length || 0} /255 characters
+                    </p> */}
+                  </div>
+                </Field>
+              )}
+            />
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email
-              </label>
-              <input
-                type="email"
-                title="Email"
-                value={settings.email}
-                onChange={(e) => handleInputChange("email", e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg text-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                placeholder="support@example.com"
-              />
-            </div>
+            {/* Email */}
+            <Controller
+              name="email"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="address">Email</FieldLabel>
+                  <Input
+                    {...field}
+                    id="email"
+                    placeholder="Enter valid email address"
+                    aria-invalid={fieldState.invalid}
+                    // readOnly
+                    // disabled
+                    className="bg-gray-50 text-gray-700"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Phone
-              </label>
-              <input
-                type="text"
-                title="Phone"
-                value={settings.phone}
-                onChange={(e) => handleInputChange("phone", e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg text-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                placeholder="9845784574"
-              />
-            </div>
+            {/* Contact Number */}
+            <Controller
+              name="phone"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="phone">
+                    Contact Number{" "}
+                    <span className="text-gray-400 font-normal">
+                      (Optional)
+                    </span>
+                  </FieldLabel>
+                  <PhoneInput
+                    id="contactNumber"
+                    defaultCountry={country}
+                    placeholder="Enter phone number"
+                    value={field.value}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                    onKeyDown={(e) => {
+                      // Only allow numbers and control keys
+                      if (
+                        !/^\d$/.test(e.key) &&
+                        ![
+                          "Backspace",
+                          "Delete",
+                          "ArrowLeft",
+                          "ArrowRight",
+                          "Tab",
+                        ].includes(e.key)
+                      ) {
+                        e.preventDefault();
+                      }
+                    }}
+                    aria-invalid={fieldState.invalid}
+                    className="flex-1"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Description
-              </label>
-              <textarea
-                title="Description"
-                value={settings.description}
-                onChange={(e) =>
-                  handleInputChange("description", e.target.value)
-                }
-                rows={4}
-                className="w-full p-3 border border-gray-300 rounded-lg text-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
+              {/* Description */}
+              <Controller
+                name="description"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="description">
+                      Description{" "}
+                      <span className="text-gray-400 font-normal">
+                        (Optional)
+                      </span>
+                    </FieldLabel>
+                    <Textarea
+                      {...field}
+                      id="description"
+                      maxLength={255}
+                      placeholder="Enter valid description"
+                      aria-invalid={fieldState.invalid}
+                    />
+                    <div className="flex justify-between items-center">
+                      <p>
+                        {" "}
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </p>
+                      {/* <p className="text-xs font-normal text-left text-muted-foreground">
+                        {field.value?.length || 0} /255 characters
+                      </p> */}
+                    </div>
+                  </Field>
+                )}
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Facebook URL
-              </label>
-              <input
-                type="url"
-                title="Facebook URL"
-                value={settings.facebook_url}
-                onChange={(e) =>
-                  handleInputChange("facebook_url", e.target.value)
-                }
-                className="w-full p-3 border border-gray-300 rounded-lg text-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                placeholder="https://facebook.com/..."
-              />
-            </div>
+            {/* Facebook URL */}
+            <Controller
+              name="facebook_url"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="facebook_url">
+                    Facebook URL{" "}
+                    <span className="text-gray-400 font-normal">
+                      (Optional)
+                    </span>
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id="facebook_url"
+                    maxLength={255}
+                    placeholder="Enter valid Facebook URL"
+                    aria-invalid={fieldState.invalid}
+                  />
+                  <div className="flex justify-between items-center">
+                    <p>
+                      {" "}
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </p>
+                    {/* <p className="text-xs font-normal text-left text-muted-foreground">
+                      {field.value?.length || 0} /255 characters
+                    </p> */}
+                  </div>
+                </Field>
+              )}
+            />
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Instagram URL
-              </label>
-              <input
-                type="url"
-                title="Instagram URL"
-                value={settings.instagram_url}
-                onChange={(e) =>
-                  handleInputChange("instagram_url", e.target.value)
-                }
-                className="w-full p-3 border border-gray-300 rounded-lg text-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                placeholder="https://instagram.com/..."
-              />
-            </div>
+            {/* Instagram URL */}
+            <Controller
+              name="instagram_url"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="instagram_url">
+                    Instagram URL{" "}
+                    <span className="text-gray-400 font-normal">
+                      (Optional)
+                    </span>
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id="instagram_url"
+                    maxLength={255}
+                    placeholder="Enter valid Instagram URL"
+                    aria-invalid={fieldState.invalid}
+                  />
+                  <div className="flex justify-between items-center">
+                    <p>
+                      {" "}
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </p>
+                    {/* <p className="text-xs font-normal text-left text-muted-foreground">
+                      {field.value?.length || 0} /255 characters
+                    </p> */}
+                  </div>
+                </Field>
+              )}
+            />
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                LinkedIn URL
-              </label>
-              <input
-                type="url"
-                title="LinkedIn URL"
-                value={settings.linkedin_url}
-                onChange={(e) =>
-                  handleInputChange("linkedin_url", e.target.value)
-                }
-                className="w-full p-3 border border-gray-300 rounded-lg text-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                placeholder="https://linkedin.com/..."
-              />
-            </div>
+            {/* Linkedin URL */}
+            <Controller
+              name="linkedin_url"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="linkedin_url">
+                    LinkedIn URL{" "}
+                    <span className="text-gray-400 font-normal">
+                      (Optional)
+                    </span>
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id="linkedin_url"
+                    maxLength={255}
+                    placeholder="Enter valid LinkedIn URL"
+                    aria-invalid={fieldState.invalid}
+                  />
+                  <div className="flex justify-between items-center">
+                    <p>
+                      {" "}
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </p>
+                    {/* <p className="text-xs font-normal text-left text-muted-foreground">
+                      {field.value?.length || 0} /255 characters
+                    </p> */}
+                  </div>
+                </Field>
+              )}
+            />
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Twitter URL
-              </label>
-              <input
-                type="url"
-                title="Twitter URL"
-                value={settings.twitter_url}
-                onChange={(e) =>
-                  handleInputChange("twitter_url", e.target.value)
-                }
-                className="w-full p-3 border border-gray-300 rounded-lg text-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                placeholder="https://twitter.com/..."
-              />
-            </div>
+            {/* Twitter URL */}
+            <Controller
+              name="twitter_url"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="twitter_url">
+                    Twitter URL{" "}
+                    <span className="text-gray-400 font-normal">
+                      (Optional)
+                    </span>
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id="twitter_url"
+                    maxLength={255}
+                    placeholder="Enter valid Twitter URL"
+                    aria-invalid={fieldState.invalid}
+                  />
+                  <div className="flex justify-between items-center">
+                    <p>
+                      {" "}
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </p>
+                    {/* <p className="text-xs font-normal text-left text-muted-foreground">
+                      {field.value?.length || 0} /255 characters
+                    </p> */}
+                  </div>
+                </Field>
+              )}
+            />
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Website URL
-              </label>
-              <input
-                type="url"
-                title="Website URL"
-                value={settings.website_url}
-                onChange={(e) =>
-                  handleInputChange("website_url", e.target.value)
-                }
-                className="w-full p-3 border border-gray-300 rounded-lg text-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                placeholder="https://example.com"
-              />
-            </div>
+            {/* Website URL */}
+            <Controller
+              name="website_url"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="website_url">
+                    Website URL{" "}
+                    <span className="text-gray-400 font-normal">
+                      (Optional)
+                    </span>
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id="website_url"
+                    maxLength={255}
+                    placeholder="Enter valid Website URL"
+                    aria-invalid={fieldState.invalid}
+                  />
+                  <div className="flex justify-between items-center">
+                    <p>
+                      {" "}
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </p>
+                    {/* <p className="text-xs font-normal text-left text-muted-foreground">
+                      {field.value?.length || 0} /255 characters
+                    </p> */}
+                  </div>
+                </Field>
+              )}
+            />
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Youtube URL
-              </label>
-              <input
-                type="url"
-                title="Youtube URL"
-                value={settings.youtube_url}
-                onChange={(e) =>
-                  handleInputChange("youtube_url", e.target.value)
-                }
-                className="w-full p-3 border border-gray-300 rounded-lg text-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                placeholder="https://youtube.com/..."
-              />
-            </div>
+            {/* Youtube URL */}
+            <Controller
+              name="youtube_url"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="youtube_url">
+                    Youtube URL{" "}
+                    <span className="text-gray-400 font-normal">
+                      (Optional)
+                    </span>
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id="youtube_url"
+                    maxLength={255}
+                    placeholder="Enter valid Youtube URL"
+                    aria-invalid={fieldState.invalid}
+                  />
+                  <div className="flex justify-between items-center">
+                    <p>
+                      {" "}
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </p>
+                    {/* <p className="text-xs font-normal text-left text-muted-foreground">
+                      {field.value?.length || 0} /255 characters
+                    </p> */}
+                  </div>
+                </Field>
+              )}
+            />
           </div>
 
           {/* Save Button */}
           <div className="flex justify-end pt-4">
             <button
-              onClick={handleSave}
+              type="submit"
               disabled={saveMutation.isPending}
-              className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-6 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
             >
-              <FloppyDiskIcon size={20} weight="fill" />
               {saveMutation.isPending
                 ? t("settings.profile.saving")
                 : saveMutation.isSuccess
@@ -406,21 +673,7 @@ export default function GeneralSettingsPage() {
                   : t("settings.general.saveChanges")}
             </button>
           </div>
-
-          {/* Error Message */}
-          {saveMutation.isError && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-              Failed to save settings. Please try again.
-            </div>
-          )}
-
-          {/* Success Message */}
-          {saveMutation.isSuccess && (
-            <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
-              Settings saved successfully!
-            </div>
-          )}
-        </div>
+        </form>
       </div>
     </div>
   );
