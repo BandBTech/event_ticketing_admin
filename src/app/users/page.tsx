@@ -17,6 +17,15 @@ import {
   CrownIcon,
   UsersIcon,
 } from "@phosphor-icons/react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { flexRender } from "@tanstack/react-table";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
@@ -121,17 +130,19 @@ export default function UsersPage() {
 
   const updateParams = useCallback(
     (updates: Record<string, string | null>) => {
-      const params = new URLSearchParams(searchParams.toString());
+      const params = new URLSearchParams(window.location.search);
+
       Object.entries(updates).forEach(([key, value]) => {
-        if (value === null || value === "") {
+        if (!value) {
           params.delete(key);
         } else {
           params.set(key, value);
         }
       });
+
       router.push(`/users?${params.toString()}`, { scroll: false });
     },
-    [router, searchParams],
+    [router],
   );
 
   // Handler functions
@@ -551,7 +562,7 @@ export default function UsersPage() {
       </div>
 
       {/* Table Container */}
-      <DataTable
+      {/* <DataTable
         table={table}
         columns={columns}
         loadingMessage={t("users.loadingUsers")}
@@ -559,7 +570,77 @@ export default function UsersPage() {
         emptyMessage={t("users.noUsersFound")}
         showSerialNumber
         serialNumberStart={(currentPage - 1) * itemsPerPage + 1}
-      />
+      /> */}
+
+      <div className="rounded-lg border bg-background">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {/* Serial number header */}
+                <TableHead className="w-16 text-center">SN</TableHead>
+
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : (header.column.columnDef.header as React.ReactNode)}
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
+          </TableHeader>
+
+          <TableBody>
+            {/* Loading */}
+            {isLoading && (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length + 1}
+                  className="text-center py-10 text-muted-foreground"
+                >
+                  {t("users.loadingUsers")}
+                </TableCell>
+              </TableRow>
+            )}
+
+            {/* Empty */}
+            {!isLoading && table.getRowModel().rows.length === 0 && (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length + 1}
+                  className="text-center py-10"
+                >
+                  <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                    <UserIcon className="w-8 h-8" />
+                    <span>{t("users.noUsersFound")}</span>
+                  </div>
+                </TableCell>
+              </TableRow>
+            )}
+
+            {/* Rows */}
+            {!isLoading &&
+              table.getRowModel().rows.map((row, index) => (
+                <TableRow key={row.id}>
+                  {/* Serial number */}
+                  <TableCell className="text-center text-sm text-muted-foreground">
+                    {(currentPage - 1) * itemsPerPage + index + 1}
+                  </TableCell>
+
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+      </div>
 
       {/* Pagination */}
       {totalPages > 0 && !isLoading && (
