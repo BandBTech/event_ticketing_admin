@@ -16,7 +16,10 @@ import {
   DotsThreeVertical as DotsThreeVerticalIcon,
   CrownIcon,
   UsersIcon,
+  Spinner,
 } from "@phosphor-icons/react";
+import { CaretUp, CaretDown, CaretUpDown } from "@phosphor-icons/react";
+
 import {
   Table,
   TableBody,
@@ -51,6 +54,7 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   ColumnDef,
+    SortingState,
 } from "@tanstack/react-table";
 import { User } from "@/types/user";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -71,6 +75,8 @@ export default function UsersPage() {
   const queryClient = useQueryClient();
   const [actionLoading, setActionLoading] = React.useState<string | null>(null);
   const [searchInput, setSearchInput] = React.useState(searchQuery);
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+
 
   const debouncedSearch = useDebounce(searchInput, 500);
 
@@ -162,7 +168,8 @@ export default function UsersPage() {
 
   useEffect(() => {
     updateParams({ search: debouncedSearch, page: "1" });
-  }, [debouncedSearch, updateParams]);
+    updateParams({ sort: sorting[0]?.id || "", page: "1" });
+  }, [debouncedSearch, sorting, updateParams]);
 
   // const filteredData = useMemo(() => {
   //   let result = mockUserData;
@@ -243,6 +250,7 @@ export default function UsersPage() {
         accessorFn: (row) => `${row.first_name} ${row.last_name}`,
         id: "name",
         header: t("users.userTable.name"),
+        enableSorting: true,
       },
       {
         accessorKey: "contact",
@@ -260,6 +268,7 @@ export default function UsersPage() {
             </div>
           );
         },
+        enableSorting: true,
       },
       {
         id: "role",
@@ -306,6 +315,7 @@ export default function UsersPage() {
             </div>
           );
         },
+        enableSorting: false,
       },
       {
         accessorKey: "account_status",
@@ -339,19 +349,21 @@ export default function UsersPage() {
             </div>
           );
         },
+        enableSorting: false,
       },
       {
         id: "joinedDate",
+        accessorFn: (row) => new Date(row.created_at).getTime(),
         header: t("users.userTable.joinedDate"),
         cell: ({ row }) => {
           const createdAt = row.original.created_at;
-
           return (
             <span className="text-sm">
               {createdAt ? format(new Date(createdAt), "MMM dd, yyyy") : "-"}
             </span>
           );
         },
+        enableSorting: true,
       },
       {
         id: "actions",
@@ -359,13 +371,13 @@ export default function UsersPage() {
         cell: ({ row }) => {
           const user = row.original;
 
-          //   if (actionLoading === employee.id) {
-          //     return (
-          //       <div className="h-8 w-8 flex items-center p-0">
-          //         <EyeIcon className="w-4 h-4 text-amber-900 animate-spin" />
-          //       </div>
-          //     );
-          //   }
+          if (actionLoading === user.id) {
+            return (
+              <div className="h-8 w-8 flex items-center p-0">
+                <Spinner className="w-4 h-4 text-amber-900 animate-spin" />
+              </div>
+            );
+          }
 
           return (
             <DropdownMenu>
@@ -387,37 +399,43 @@ export default function UsersPage() {
                     {t(`users.viewDetails`)}
                   </div>
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleToggleStatus(user);
-                  }}
-                >
-                  {user.account_status === "active" ? (
-                    <div className="flex justify-start items-center bg-red-50 text-red-700">
-                      <XCircleIcon weight="duotone" className="mr-2 h-4 w-4" />
-                      {t(`users.deactivate`)}
-                    </div>
-                  ) : (
-                    <div className="flex justify-start items-center bg-green-50 text-green-700">
-                      <CheckCircleIcon
-                        weight="duotone"
-                        className="mr-2 h-4 w-4"
-                      />
-                      {t(`users.activate`)}
-                    </div>
-                  )}
-                </DropdownMenuItem>
+
+                {!user.roles.some((r) => r.name.toLowerCase() === "admin") && (
+                  <DropdownMenuItem
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleToggleStatus(user);
+                    }}
+                  >
+                    {user.account_status === "active" ? (
+                      <div className="flex justify-start items-center bg-red-50 text-red-700">
+                        <XCircleIcon
+                          weight="duotone"
+                          className="mr-2 h-4 w-4"
+                        />
+                        {t(`users.deactivate`)}
+                      </div>
+                    ) : (
+                      <div className="flex justify-start items-center bg-green-50 text-green-700">
+                        <CheckCircleIcon
+                          weight="duotone"
+                          className="mr-2 h-4 w-4"
+                        />
+                        {t(`users.activate`)}
+                      </div>
+                    )}
+                  </DropdownMenuItem>
+                )}
                 {/* <DropdownMenuItem
-                          className="text-red-600"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteClick(employee);
-                          }}
-                        >
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          Delete
-                        </DropdownMenuItem> */}
+                    className="text-red-600"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteClick(user);
+                    }}
+                  >
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    Delete
+                  </DropdownMenuItem> */}
               </DropdownMenuContent>
             </DropdownMenu>
           );
@@ -584,10 +602,36 @@ export default function UsersPage() {
                 <TableHead className="w-16 text-center">SN</TableHead>
 
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : (header.column.columnDef.header as React.ReactNode)}
+                  <TableHead
+                    key={header.id}
+                    className={
+                      header.column.getCanSort()
+                        ? "cursor-pointer select-none"
+                        : ""
+                    }
+                    onClick={header.column.getToggleSortingHandler()}
+                  >
+                    <div className="flex items-center gap-1">
+                      {header.isPlaceholder
+                        ? null
+                        : (header.column.columnDef.header as React.ReactNode)}
+
+                      {header.column.getCanSort() && (
+                        <>
+                          {header.column.getIsSorted() === "asc" && (
+                            <CaretUp weight="bold" className="w-3 h-3" />
+                          )}
+
+                          {header.column.getIsSorted() === "desc" && (
+                            <CaretDown weight="bold" className="w-3 h-3" />
+                          )}
+
+                          {!header.column.getIsSorted() && (
+                            <CaretUpDown className="w-3 h-3 text-muted-foreground" />
+                          )}
+                        </>
+                      )}
+                    </div>
                   </TableHead>
                 ))}
               </TableRow>
