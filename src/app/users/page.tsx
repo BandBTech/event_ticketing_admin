@@ -37,6 +37,7 @@ import { ApiResponse as UserApiResponse } from "@/types/user";
 import { queryKeys } from "@/lib/queryKeys";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -92,6 +93,8 @@ export default function UsersPage() {
         account_status: accountStatusFilter,
       }),
   });
+
+  const SKELETON_ROWS = itemsPerPage;
 
   const mockUserData = response?.users || [];
 
@@ -572,9 +575,9 @@ export default function UsersPage() {
         serialNumberStart={(currentPage - 1) * itemsPerPage + 1}
       /> */}
 
-      <div className="rounded-lg border bg-background">
+      <div className="rounded-lg border bg-background max-h-[60vh] overflow-auto">
         <Table>
-          <TableHeader>
+          <TableHeader className="sticky top-0 bg-background z-10">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {/* Serial number header */}
@@ -593,23 +596,29 @@ export default function UsersPage() {
 
           <TableBody>
             {/* Loading */}
-            {isLoading && (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length + 1}
-                  className="text-center py-10 text-muted-foreground"
-                >
-                  {t("users.loadingUsers")}
-                </TableCell>
-              </TableRow>
-            )}
+            {isLoading &&
+              Array.from({ length: SKELETON_ROWS }).map((_, rowIndex) => (
+                <TableRow key={`skeleton-${rowIndex}`}>
+                  {/* SN skeleton */}
+                  <TableCell className="text-center">
+                    <Skeleton className="h-4 w-6 mx-auto" />
+                  </TableCell>
+
+                  {/* Column skeletons */}
+                  {columns.map((_, colIndex) => (
+                    <TableCell key={colIndex}>
+                      <Skeleton className="h-4 w-full max-w-[220px]" />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
 
             {/* Empty */}
             {!isLoading && table.getRowModel().rows.length === 0 && (
               <TableRow>
                 <TableCell
                   colSpan={columns.length + 1}
-                  className="text-center py-10"
+                  className="text-center py-10 h-[50vh]"
                 >
                   <div className="flex flex-col items-center gap-2 text-muted-foreground">
                     <UserIcon className="w-8 h-8" />
