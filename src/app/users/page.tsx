@@ -17,6 +17,7 @@ import {
   CrownIcon,
   UsersIcon,
   Spinner,
+  UserCircleIcon
 } from "@phosphor-icons/react";
 import { CaretUp, CaretDown, CaretUpDown } from "@phosphor-icons/react";
 
@@ -241,6 +242,12 @@ export default function UsersPage() {
       border: "border-gray-200",
       Icon: UserIcon,
     },
+    manager: {
+      bg: "bg-amber-50",
+      text: "text-amber-700",
+      border: "border-amber-200",
+      Icon: UserCircleIcon,
+    },
   };
 
   // Table columns
@@ -285,7 +292,7 @@ export default function UsersPage() {
           }
 
           // highest priority role first
-          const ROLE_PRIORITY = ["admin", "organizer", "staff", "user"];
+          const ROLE_PRIORITY = ["admin", "organizer", "staff", "user", "manager"];
 
           const primaryRole =
             roles

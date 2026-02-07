@@ -608,7 +608,8 @@
       "staff": "Staff",
       "organizer": "Organizzatore",
       "user": "Utente",
-      "admin": "amministratrice"
+      "admin": "amministratrice",
+      "manager": "Manager"
     },
     "organizerStatus": {
       "active": "Attivo",

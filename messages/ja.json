@@ -618,7 +618,8 @@
       "staff": "スタッフ",
       "organizer": "主催者",
       "user": "ユーザー",
-      "admin": "管理者"
+      "admin": "管理者",
+      "manager": "マネージャー"
     },
     "organizerStatus": {
       "active": "活動中",

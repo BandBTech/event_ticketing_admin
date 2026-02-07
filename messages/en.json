@@ -670,7 +670,8 @@
       "staff": "Staff",
       "organizer": "Organizer",
       "user": "User",
-      "admin": "Admin"
+      "admin": "Admin",
+      "manager": "Manager"
     },
     "organizerStatus": {
       "active": "Active",
