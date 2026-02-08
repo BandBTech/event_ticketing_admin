@@ -17,6 +17,7 @@ import { z } from "zod";
 import type { Country } from "react-phone-number-input";
 import { isValidPhoneNumber } from "libphonenumber-js";
 import { toast } from "@/lib/toast";
+import LoadingSkeleton from "./components/LoadingSkeleton";
 
 export const nameValidationRegex = /^[A-Za-z\s'-]+$/;
 
@@ -193,15 +194,12 @@ export default function GeneralSettingsPage() {
     saveMutation.mutate(values);
   };
 
-  if (isLoading) {
-    return (
-      <div className="max-w-4xl mx-auto p-6">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <p className="text-gray-500">{t("settings.general.loading")}...</p>
-        </div>
-      </div>
-    );
-  }
+if (isLoading) {
+  return (
+    <LoadingSkeleton />
+  );
+}
+
 
   if (isError) {
     return (
@@ -298,7 +296,7 @@ export default function GeneralSettingsPage() {
                   <Input
                     {...field}
                     id="name"
-                    maxLength={255}
+                    maxLength={100}
                     placeholder={t("settings.general.enterName")}
                     aria-invalid={fieldState.invalid}
                   />
@@ -309,9 +307,9 @@ export default function GeneralSettingsPage() {
                         <FieldError errors={[fieldState.error]} />
                       )}
                     </p>
-                    {/* <p className="text-xs font-normal text-left text-muted-foreground">
-                      {field.value?.length || 0} /255 characters
-                    </p> */}
+                    <p className="text-xs font-normal text-left text-muted-foreground">
+                      {field.value?.length || 0} /100 characters
+                    </p>
                   </div>
                 </Field>
               )}
@@ -332,7 +330,7 @@ export default function GeneralSettingsPage() {
                   <Input
                     {...field}
                     id="address"
-                    maxLength={255}
+                    maxLength={100}
                     placeholder={t("settings.general.enterAddress")}
                     aria-invalid={fieldState.invalid}
                   />
@@ -343,9 +341,9 @@ export default function GeneralSettingsPage() {
                         <FieldError errors={[fieldState.error]} />
                       )}
                     </p>
-                    {/* <p className="text-xs font-normal text-left text-muted-foreground">
-                      {field.value?.length || 0} /255 characters
-                    </p> */}
+                    <p className="text-xs font-normal text-left text-muted-foreground">
+                      {field.value?.length || 0} /100 characters
+                    </p>
                   </div>
                 </Field>
               )}
@@ -432,7 +430,7 @@ export default function GeneralSettingsPage() {
                     <Textarea
                       {...field}
                       id="description"
-                      maxLength={255}
+                      maxLength={500}
                       placeholder={t("settings.general.enterDescription")}
                       aria-invalid={fieldState.invalid}
                     />
@@ -443,9 +441,9 @@ export default function GeneralSettingsPage() {
                           <FieldError errors={[fieldState.error]} />
                         )}
                       </p>
-                      {/* <p className="text-xs font-normal text-left text-muted-foreground">
-                        {field.value?.length || 0} /255 characters
-                      </p> */}
+                      <p className="text-xs font-normal text-left text-muted-foreground">
+                        {field.value?.length || 0} /500 characters
+                      </p>
                     </div>
                   </Field>
                 )}
@@ -467,7 +465,7 @@ export default function GeneralSettingsPage() {
                   <Input
                     {...field}
                     id="facebook_url"
-                    maxLength={255}
+                    maxLength={100}
                     placeholder={t("settings.general.enterFacebookURL")}
                     aria-invalid={fieldState.invalid}
                   />
@@ -478,9 +476,9 @@ export default function GeneralSettingsPage() {
                         <FieldError errors={[fieldState.error]} />
                       )}
                     </p>
-                    {/* <p className="text-xs font-normal text-left text-muted-foreground">
-                      {field.value?.length || 0} /255 characters
-                    </p> */}
+                    <p className="text-xs font-normal text-left text-muted-foreground">
+                      {field.value?.length || 0} /100 characters
+                    </p>
                   </div>
                 </Field>
               )}
@@ -501,7 +499,7 @@ export default function GeneralSettingsPage() {
                   <Input
                     {...field}
                     id="instagram_url"
-                    maxLength={255}
+                    maxLength={100}
                     placeholder={t("settings.general.enterInstagramURL")}
                     aria-invalid={fieldState.invalid}
                   />
@@ -512,9 +510,9 @@ export default function GeneralSettingsPage() {
                         <FieldError errors={[fieldState.error]} />
                       )}
                     </p>
-                    {/* <p className="text-xs font-normal text-left text-muted-foreground">
-                      {field.value?.length || 0} /255 characters
-                    </p> */}
+                    <p className="text-xs font-normal text-left text-muted-foreground">
+                      {field.value?.length || 0} /100 characters
+                    </p>
                   </div>
                 </Field>
               )}
@@ -535,7 +533,7 @@ export default function GeneralSettingsPage() {
                   <Input
                     {...field}
                     id="linkedin_url"
-                    maxLength={255}
+                    maxLength={100}
                     placeholder={t("settings.general.enterLinkedInURL")}
                     aria-invalid={fieldState.invalid}
                   />
@@ -546,9 +544,9 @@ export default function GeneralSettingsPage() {
                         <FieldError errors={[fieldState.error]} />
                       )}
                     </p>
-                    {/* <p className="text-xs font-normal text-left text-muted-foreground">
-                      {field.value?.length || 0} /255 characters
-                    </p> */}
+                    <p className="text-xs font-normal text-left text-muted-foreground">
+                      {field.value?.length || 0} /100 characters
+                    </p>
                   </div>
                 </Field>
               )}
@@ -569,7 +567,7 @@ export default function GeneralSettingsPage() {
                   <Input
                     {...field}
                     id="twitter_url"
-                    maxLength={255}
+                    maxLength={100}
                     placeholder={t("settings.general.enterTwitterURL")}
                     aria-invalid={fieldState.invalid}
                   />
@@ -580,9 +578,9 @@ export default function GeneralSettingsPage() {
                         <FieldError errors={[fieldState.error]} />
                       )}
                     </p>
-                    {/* <p className="text-xs font-normal text-left text-muted-foreground">
-                      {field.value?.length || 0} /255 characters
-                    </p> */}
+                    <p className="text-xs font-normal text-left text-muted-foreground">
+                      {field.value?.length || 0} /100 characters
+                    </p>
                   </div>
                 </Field>
               )}
@@ -603,7 +601,7 @@ export default function GeneralSettingsPage() {
                   <Input
                     {...field}
                     id="website_url"
-                    maxLength={255}
+                    maxLength={100}
                     placeholder={t("settings.general.enterWebsiteURL")}
                     aria-invalid={fieldState.invalid}
                   />
@@ -614,9 +612,9 @@ export default function GeneralSettingsPage() {
                         <FieldError errors={[fieldState.error]} />
                       )}
                     </p>
-                    {/* <p className="text-xs font-normal text-left text-muted-foreground">
-                      {field.value?.length || 0} /255 characters
-                    </p> */}
+                    <p className="text-xs font-normal text-left text-muted-foreground">
+                      {field.value?.length || 0} /100 characters
+                    </p>
                   </div>
                 </Field>
               )}
@@ -637,7 +635,7 @@ export default function GeneralSettingsPage() {
                   <Input
                     {...field}
                     id="youtube_url"
-                    maxLength={255}
+                    maxLength={100}
                     placeholder={t("settings.general.enterYouTubeURL")}
                     aria-invalid={fieldState.invalid}
                   />
@@ -648,9 +646,9 @@ export default function GeneralSettingsPage() {
                         <FieldError errors={[fieldState.error]} />
                       )}
                     </p>
-                    {/* <p className="text-xs font-normal text-left text-muted-foreground">
-                      {field.value?.length || 0} /255 characters
-                    </p> */}
+                    <p className="text-xs font-normal text-left text-muted-foreground">
+                      {field.value?.length || 0} /100 characters
+                    </p>
                   </div>
                 </Field>
               )}
