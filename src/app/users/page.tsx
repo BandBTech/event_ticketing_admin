@@ -522,6 +522,13 @@ export default function UsersPage() {
               </DropdownMenuItem>
 
               <DropdownMenuItem
+                className={roleFilter === "manager" ? "bg-muted font-medium" : ""}
+                onClick={() => updateParams({ role: "manager", page: "1" })}
+              >
+                {t("users.userRoles.manager")}
+              </DropdownMenuItem>
+
+              <DropdownMenuItem
                 className={roleFilter === "user" ? "bg-muted font-medium" : ""}
                 onClick={() => updateParams({ role: "user", page: "1" })}
               >
