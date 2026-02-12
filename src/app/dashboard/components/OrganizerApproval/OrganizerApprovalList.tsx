@@ -1,6 +1,7 @@
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
 import { OrganizerCard } from "./OrganizerCard";
+import { useOrganizerStore } from "@/store/organizerStore";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   useApproveOrganizer,
@@ -9,7 +10,7 @@ import {
 } from "@/hooks/useDashboard";
 import { toast } from "sonner";
 import { EmptyState } from "../EmptyState";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PopupModal from "../EventApproval/PopupModal";
 
 interface ModalState {
@@ -44,6 +45,16 @@ const OrganizerApprovalList = ({
 
   const { data: pendingOrganizersData, isLoading: isLoadingOrganizers } =
     usePendingOrganizers();
+
+  const setTotalPendingOrganizers = useOrganizerStore(
+    (state) => state.setTotalPendingOrganizers,
+  );
+
+  useEffect(() => {
+    const total = pendingOrganizersData?.organizers?.length || 0;
+    setTotalPendingOrganizers(total);
+  }, [pendingOrganizersData, setTotalPendingOrganizers]);
+
   const approveOrganizerMutation = useApproveOrganizer();
   const rejectOrganizerMutation = useRejectOrganizer();
 

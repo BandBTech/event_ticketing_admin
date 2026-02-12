@@ -11,6 +11,8 @@ import { useUIStore } from "@/store/uiStore";
 import { CalendarClock, Users } from "lucide-react";
 import OrganizerApprovalList from "@/app/dashboard/components/OrganizerApproval/OrganizerApprovalList";
 import EventApprovalList from "@/app/dashboard/components/EventApproval/EventApprovalList";
+import { useEventStore } from "@/store/eventStore";
+import { useOrganizerStore } from "@/store/organizerStore";
 
 /**
  * Get time-based greeting message
@@ -46,8 +48,8 @@ export default function DashboardHeader() {
   const [isPendingEventOpen, setIsPendingEventOpen] = React.useState(false);
   const [isPendingOrganizerOpen, setIsPendingOrganizerOpen] =
     React.useState(false);
-  const pendingEvents = 5;
-  const pendingOrganizers = 2;
+  const pendingEvents = useEventStore((state) => state.totalPendingEvents);
+  const pendingOrganizers = useOrganizerStore((state) => state.totalPendingOrganizers);
 
   // Get user's first name or fallback
   const userName = user?.firstName || "Admin";

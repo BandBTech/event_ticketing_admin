@@ -2,8 +2,6 @@
 
 import React from "react";
 import { DashboardStats } from "./components/DashboardStats";
-import { OrganizerApprovalList } from "./components/OrganizerApproval";
-import { EventApprovalList } from "./components/EventApproval";
 
 const AdminDashboard: React.FC = () => {
   // TanStack Query hooks for stats
@@ -14,12 +12,6 @@ const AdminDashboard: React.FC = () => {
       <div className="p-6">
         {/* Stats Cards */}
         <DashboardStats />
-
-        {/* Organizers Awaiting Approval Section */}
-        {/* <OrganizerApprovalList /> */}
-
-        {/* Events Awaiting Approval Section */}
-        {/* <EventApprovalList /> */}
       </div>
     </div>
   );

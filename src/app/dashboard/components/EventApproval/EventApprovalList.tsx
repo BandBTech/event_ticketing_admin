@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -60,6 +60,13 @@ const EventApprovalList = ({
   // TanStack Query hooks
   const { data: pendingEventsData, isLoading: isLoadingEvents } =
     usePendingEvents();
+
+  const setTotalPendingEvents = useEventStore((state) => state.setTotalPendingEvents);
+
+  useEffect(() => {
+    const total = pendingEventsData?.events?.length || 0;
+    setTotalPendingEvents(total);
+  }, [pendingEventsData, setTotalPendingEvents]);
 
   // Mutation hooks
   const approveEventMutation = useApproveEvent();
