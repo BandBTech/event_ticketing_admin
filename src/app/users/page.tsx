@@ -17,7 +17,7 @@ import {
   CrownIcon,
   UsersIcon,
   Spinner,
-  UserCircleIcon
+  UserCircleIcon,
 } from "@phosphor-icons/react";
 import { CaretUp, CaretDown, CaretUpDown } from "@phosphor-icons/react";
 
@@ -55,11 +55,12 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   ColumnDef,
-    SortingState,
+  SortingState,
 } from "@tanstack/react-table";
 import { User } from "@/types/user";
 import { useDebounce } from "@/hooks/useDebounce";
 import { toast } from "@/lib/toast";
+import { log } from "console";
 
 export default function UsersPage() {
   const router = useRouter();
@@ -78,14 +79,13 @@ export default function UsersPage() {
   const [searchInput, setSearchInput] = React.useState(searchQuery);
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
-
   const debouncedSearch = useDebounce(searchInput, 500);
 
   const { data: response, isLoading } = useQuery<UserApiResponse>({
     queryKey: queryKeys.users.all(
       currentPage,
       itemsPerPage,
-      searchQuery,
+      debouncedSearch,
       statusFilter,
       roleFilter,
       accountStatusFilter,
@@ -94,7 +94,7 @@ export default function UsersPage() {
       UserService.getUsers({
         page: currentPage,
         limit: itemsPerPage,
-        search: searchQuery,
+        search: debouncedSearch,
         status: statusFilter,
         role: roleFilter,
         account_status: accountStatusFilter,
@@ -292,7 +292,13 @@ export default function UsersPage() {
           }
 
           // highest priority role first
-          const ROLE_PRIORITY = ["admin", "organizer", "staff", "user", "manager"];
+          const ROLE_PRIORITY = [
+            "admin",
+            "organizer",
+            "staff",
+            "user",
+            "manager",
+          ];
 
           const primaryRole =
             roles
@@ -461,7 +467,7 @@ export default function UsersPage() {
     getFilteredRowModel: getFilteredRowModel(),
   });
 
-  const totalItems = response?.total || mockUserData.length;
+  const totalItems = response?.pagination?.total || mockUserData.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const hasNextPage = response?.has_more ?? currentPage < totalPages;
 
@@ -522,7 +528,9 @@ export default function UsersPage() {
               </DropdownMenuItem>
 
               <DropdownMenuItem
-                className={roleFilter === "manager" ? "bg-muted font-medium" : ""}
+                className={
+                  roleFilter === "manager" ? "bg-muted font-medium" : ""
+                }
                 onClick={() => updateParams({ role: "manager", page: "1" })}
               >
                 {t("users.userRoles.manager")}
