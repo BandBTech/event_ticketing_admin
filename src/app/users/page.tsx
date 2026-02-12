@@ -82,14 +82,17 @@ export default function UsersPage() {
   const debouncedSearch = useDebounce(searchInput, 500);
 
   const { data: response, isLoading } = useQuery<UserApiResponse>({
-    queryKey: queryKeys.users.all(
+    queryKey: [
+      "users",
       currentPage,
       itemsPerPage,
       debouncedSearch,
       statusFilter,
       roleFilter,
       accountStatusFilter,
-    ),
+      sorting,
+    ],
+
     queryFn: () =>
       UserService.getUsers({
         page: currentPage,
@@ -98,6 +101,7 @@ export default function UsersPage() {
         status: statusFilter,
         role: roleFilter,
         account_status: accountStatusFilter,
+        sort: sorting.length ? sorting[0].id : undefined,
       }),
   });
 
@@ -260,6 +264,7 @@ export default function UsersPage() {
         enableSorting: true,
       },
       {
+        id: "email",
         accessorKey: "contact",
         header: t("users.userTable.contact"),
         cell: ({ row }) => {
@@ -365,7 +370,7 @@ export default function UsersPage() {
         enableSorting: false,
       },
       {
-        id: "joinedDate",
+        id: "created_at",
         accessorFn: (row) => new Date(row.created_at).getTime(),
         header: t("users.userTable.joinedDate"),
         cell: ({ row }) => {
@@ -463,8 +468,12 @@ export default function UsersPage() {
   const table = useReactTable({
     data: mockUserData,
     columns,
+    state: {
+      sorting,
+    },
+    onSortingChange: setSorting,
+    manualSorting: true,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
   });
 
   const totalItems = response?.pagination?.total || mockUserData.length;
