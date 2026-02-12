@@ -805,7 +805,23 @@
       "square": "Square",
       "currency": "Currency",
       "processingFee": "Processing Fee (%)",
-      "saveChanges": "Save Changes"
+      "saveChanges": "Save Changes",
+      "apiKey": "API Key",
+      "apiSecret": "API Secret",
+      "webhookSecret": "Webhook Secret",
+      "isEnabled": "Is Enabled",
+      "isTestMode": "Is Test Mode",
+      "displayName": "Display Name",
+      "gatewayName": "Gateway Name",
+      "enterApiKey": "Enter API Key",
+      "enterApiSecret": "Enter API Secret",
+      "enterWebhookSecret": "Enter Webhook Secret",
+      "enterDisplayName": "Enter Display Name",
+      "enterGatewayName": "Enter Gateway Name",
+      "cancel": "Cancel",
+      "createPaymentMethod": "Create Payment Method",
+      "create": "Create"
+      
     },
     "notifications": {
       "title": "Notification Settings",
