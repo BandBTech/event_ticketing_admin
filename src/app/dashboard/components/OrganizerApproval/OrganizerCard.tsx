@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Organizer } from "@/lib/organizerService";
+import { Organizer } from "@/services/organizerService";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
 import { Check, X } from "lucide-react";

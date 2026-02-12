@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { X, Mail, Phone, CheckCircle, User, Save } from "lucide-react";
-import { authService } from "@/lib/authService";
+import { authService } from "@/services/authService";
 import type { Country } from "react-phone-number-input";
 import { toast } from "sonner";
 import { PhoneInput } from "@/components/ui/phone-input";

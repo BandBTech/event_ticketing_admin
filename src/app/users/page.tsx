@@ -36,7 +36,7 @@ import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { UserService } from "@/lib/userService";
+import { UserService } from "@/services/userService";
 import { ApiResponse as UserApiResponse } from "@/types/user";
 import { queryKeys } from "@/lib/queryKeys";
 import { useTranslation } from "@/hooks/useTranslation";

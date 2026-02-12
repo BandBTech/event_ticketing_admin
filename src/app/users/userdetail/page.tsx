@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
-import { UserService } from "@/lib/userService";
+import { UserService } from "@/services/userService";
 import { useQuery } from "@tanstack/react-query";
 import { UserData } from "@/types/user";
 import { queryKeys } from "@/lib/queryKeys";

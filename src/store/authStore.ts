@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { authService, AuthError } from '@/lib/authService';
+import { authService, AuthError } from '@/services/authService';
 import { tokenManager } from '@/lib/tokenManager';
 import { AuthUser, LoginRequest } from '@/types/auth';
 

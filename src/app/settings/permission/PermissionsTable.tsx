@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { adminService } from "@/lib/adminService";
+import { adminService } from "@/services/adminService";
 import { queryKeys } from "@/lib/queryKeys";
 import { Permission } from "@/types/permissions";
 import {

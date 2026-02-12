@@ -1,4 +1,4 @@
-import { api } from './apiClient';
+import { api } from '../lib/apiClient';
 import { Event, CreateEventData, UpdateEventRequest } from '@/types/event';
 
 /**

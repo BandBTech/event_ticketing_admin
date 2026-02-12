@@ -1,7 +1,7 @@
 import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useQuery } from "@tanstack/react-query";
-import { OrganizerService, AllOrganizers } from "@/lib/organizerService";
+import { OrganizerService, AllOrganizers } from "@/services/organizerService";
 import { queryKeys } from "@/lib/queryKeys";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";

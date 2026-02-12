@@ -10,8 +10,8 @@ import { createValidationHelpers } from "@/lib/validation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "@/hooks/useTranslation";
-import { AuthError } from "@/lib/authService";
-import { OrganizerService } from "@/lib/organizerService";
+import { AuthError } from "@/services/authService";
+import { OrganizerService } from "@/services/organizerService";
 import { useRouter } from "next/navigation";
 
 const createBasicInfoSchema = (

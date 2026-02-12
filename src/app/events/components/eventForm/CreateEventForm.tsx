@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { EventFormData, createEventSchema } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Resolver, SubmitHandler, useForm } from "react-hook-form";
-import { EventService } from "@/lib/eventServices";
+import { EventService } from "@/services/eventServices";
 import { Event, CreateEventData, UpdateEventRequest } from "@/types/event";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

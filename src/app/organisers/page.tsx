@@ -24,7 +24,7 @@ import {
   OrganizerService,
   Organizer,
   OrganizerListResponse,
-} from "@/lib/organizerService";
+} from "@/services/organizerService";
 import { format } from "date-fns";
 import {
   Card,
