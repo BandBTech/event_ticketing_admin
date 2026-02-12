@@ -315,7 +315,8 @@
     "profile": "Profile",
     "logout": "Logout",
     "admin": "Admin",
-    "users": "Users"
+    "users": "Users",
+    "transactions": "Transactions"
   },
   "auth": {
     "login": {
@@ -485,7 +486,8 @@
     "events": "Events",
     "reports": "Reports",
     "settings": "Settings",
-    "users": "Users"
+    "users": "Users",
+    "transactions": "Transactions"
   },
   "dashboard": {
     "greeting": {

@@ -15,6 +15,7 @@ import {
   SignOut,
   User,
   Ticket,
+  ArrowsLeftRight 
 } from "@phosphor-icons/react";
 
 import { useAuthStore } from "@/store/authStore";
@@ -43,6 +44,7 @@ export function AppSidebar() {
     { href: "/organisers", labelKey: "sidebar.organizers", icon: SquaresFour },
     { href: "/events", labelKey: "sidebar.events", icon: CalendarBlank },
     { href: "/users", labelKey: "sidebar.users", icon: User },
+    { href: "/transactions", labelKey: "sidebar.transactions", icon: ArrowsLeftRight  },
     { href: "/reports", labelKey: "sidebar.reports", icon: FileText },
     { href: "/settings", labelKey: "sidebar.settings", icon: Gear },
   ], []);

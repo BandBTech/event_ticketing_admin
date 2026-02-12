@@ -47,7 +47,8 @@
     "profile": "プロフィール",
     "logout": "ログアウト",
     "admin": "管理者",
-    "users": "ユーザー"
+    "users": "ユーザー",
+    "transactions": "取引"
   },
   "hero": {
     "badge": "ネパール最高のイベントプラットフォーム",
@@ -447,7 +448,8 @@
     "events": "イベント",
     "reports": "レポート",
     "settings": "設定",
-    "users": "ユーザー"
+    "users": "ユーザー",
+    "transactions": "取引"
   },
   "dashboard": {
     "greeting": {

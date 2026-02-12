@@ -47,7 +47,8 @@
     "profile": "Profilo",
     "logout": "Esci",
     "admin": "Admin",
-    "users": "Utenti"
+    "users": "Utenti",
+    "transactions": "Transazioni"
   },
   "hero": {
     "badge": "La Piattaforma Eventi Premier del Nepal",
@@ -437,7 +438,8 @@
     "events": "Eventi",
     "reports": "Rapporti",
     "settings": "Impostazioni",
-    "users": "Utenti"
+    "users": "Utenti",
+    "transactions": "Transazioni"
   },
   "dashboard": {
     "greeting": {
