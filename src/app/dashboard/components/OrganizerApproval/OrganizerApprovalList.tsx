@@ -1,9 +1,12 @@
-
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
 import { OrganizerCard } from "./OrganizerCard";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useApproveOrganizer, usePendingOrganizers, useRejectOrganizer } from "@/hooks/useDashboard";
+import {
+  useApproveOrganizer,
+  usePendingOrganizers,
+  useRejectOrganizer,
+} from "@/hooks/useDashboard";
 import { toast } from "sonner";
 import { EmptyState } from "../EmptyState";
 import { useState } from "react";
@@ -29,7 +32,13 @@ const ListItemSkeleton = () => {
   );
 };
 
-const OrganizerApprovalList = () => {
+const OrganizerApprovalList = ({
+  isOpen,
+  setIsOpen,
+}: {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}) => {
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
 
@@ -38,7 +47,9 @@ const OrganizerApprovalList = () => {
   const approveOrganizerMutation = useApproveOrganizer();
   const rejectOrganizerMutation = useRejectOrganizer();
 
-  const [rejectOrganizerModal, setRejectOrganizerModal] = useState<ModalState>({ open: false });
+  const [rejectOrganizerModal, setRejectOrganizerModal] = useState<ModalState>({
+    open: false,
+  });
 
   const handleApproveOrganizer = (organizerId: string) => {
     approveOrganizerMutation.mutate(organizerId, {
@@ -58,19 +69,28 @@ const OrganizerApprovalList = () => {
           toast.success(t("dashboard.toast.organizerRejected"));
           setRejectOrganizerModal({ open: false });
         },
-      }
+      },
     );
   };
-
 
   const organizers = pendingOrganizersData?.organizers || [];
   return (
     <>
-      <div className="bg-white rounded-2xl glass-card-lower border border-gray-100/50 mt-4">
-        <div className="px-4 py-3 border-b border-gray-200">
+      <div
+        className={`fixed top-0 right-0 h-full z-50 w-[400px] bg-white rounded-l-2xl border shadow-xl transform transition-transform duration-700 ease-in-out ${
+          isOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        <div className="px-4 py-3 border-b border-gray-200 flex justify-between items-center">
           <h2 className="font-medium text-muted-foreground">
             {t("dashboard.orgazinersAwaitingApproval")}
           </h2>
+          <button
+            className="text-gray-500 font-bold hover:text-gray-700"
+            onClick={() => setIsOpen(false)}
+          >
+            ✕
+          </button>
         </div>
 
         <div>

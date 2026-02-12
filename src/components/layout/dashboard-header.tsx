@@ -8,6 +8,9 @@ import { LanguageSelector } from "@/app/components/LanguageSelector/LanguageSele
 import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useUIStore } from "@/store/uiStore";
+import { CalendarClock, Users } from "lucide-react";
+import OrganizerApprovalList from "@/app/dashboard/components/OrganizerApproval/OrganizerApprovalList";
+import EventApprovalList from "@/app/dashboard/components/EventApproval/EventApprovalList";
 
 /**
  * Get time-based greeting message
@@ -33,7 +36,6 @@ const pageHeaders: {
   { prefix: "/settings", titleKey: "pages.settings" },
 ];
 
-
 export default function DashboardHeader() {
   const rawPath = usePathname() ?? "/";
   const pathname = rawPath.replace(/\/+$/, "") || "/";
@@ -41,15 +43,19 @@ export default function DashboardHeader() {
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
   const { toggleSidebar } = useUIStore();
+  const [isPendingEventOpen, setIsPendingEventOpen] = React.useState(false);
+  const [isPendingOrganizerOpen, setIsPendingOrganizerOpen] =
+    React.useState(false);
+  const pendingEvents = 5;
+  const pendingOrganizers = 2;
 
   // Get user's first name or fallback
   const userName = user?.firstName || "Admin";
 
   // Dynamic greeting for dashboard
-const dynamicGreeting = useMemo(() => {
-  return `${getGreeting({ t })}, ${userName}!`;
-}, [userName, t]);
-
+  const dynamicGreeting = useMemo(() => {
+    return `${getGreeting({ t })}, ${userName}!`;
+  }, [userName, t]);
 
   // Pick the best match (longest prefix first)
   const matched = pageHeaders
@@ -59,16 +65,15 @@ const dynamicGreeting = useMemo(() => {
       (p) =>
         pathname === p.prefix ||
         pathname.startsWith(p.prefix + "/") ||
-        pathname.startsWith(p.prefix)
+        pathname.startsWith(p.prefix),
     );
 
   // Use dynamic greeting for dashboard
-const headerText = matched?.isDynamic
-  ? dynamicGreeting
-  : matched?.titleKey
-  ? t(matched.titleKey)
-  : t("pages.dashboard");
-
+  const headerText = matched?.isDynamic
+    ? dynamicGreeting
+    : matched?.titleKey
+      ? t(matched.titleKey)
+      : t("pages.dashboard");
 
   return (
     <div className="flex flex-1 items-center justify-between">
@@ -84,12 +89,65 @@ const headerText = matched?.isDynamic
       </div>
 
       <div className="flex items-center gap-3">
+        {pathname === "/dashboard" && (
+          <div className="relative">
+            <button
+              title="Pending Events"
+              onClick={() => setIsPendingEventOpen(true)}
+              className="flex items-center justify-center w-9 h-9 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors"
+            >
+              <CalendarClock className="h-4 w-4 text-gray-700" />
+            </button>
+
+            {pendingEvents > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
+                {pendingEvents > 99 ? "99+" : pendingEvents}
+              </span>
+            )}
+          </div>
+        )}
+        {pathname === "/dashboard" && (
+          <div className="relative">
+            <button
+              title="Pending Organizers"
+              onClick={() => setIsPendingOrganizerOpen(true)}
+              className="flex items-center justify-center w-9 h-9 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors"
+            >
+              <Users className="h-4 w-4 text-gray-700" />
+            </button>
+
+            {pendingOrganizers > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
+                {pendingOrganizers > 99 ? "99+" : pendingOrganizers}
+              </span>
+            )}
+          </div>
+        )}
         <LanguageSelector />
 
-        <button title="notification-button" className="flex items-center justify-center w-9 h-9 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors">
+        {/* Notification Bell */}
+        <button
+          title="notification-button"
+          className="flex items-center justify-center w-9 h-9 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors"
+        >
           <Bell className="h-4 w-4 text-gray-700" />
         </button>
       </div>
+
+      {/* Pending Events Modal */}
+      {isPendingEventOpen && (
+        <EventApprovalList
+          isOpen={isPendingEventOpen}
+          setIsOpen={setIsPendingEventOpen}
+        />
+      )}
+      {/* Pending Organizers Modal */}
+      {isPendingOrganizerOpen && (
+        <OrganizerApprovalList
+          isOpen={isPendingOrganizerOpen}
+          setIsOpen={setIsPendingOrganizerOpen}
+        />
+      )}
     </div>
   );
 }

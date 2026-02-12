@@ -148,7 +148,7 @@ export function OrganizerFilterSelect({
                     <Avatar className="h-6 w-6">
                       <AvatarImage src={organizer.logo} alt={organizer.business_name} />
                       <AvatarFallback className="text-xs">
-                        {organizer.business_name.charAt(0)}
+                        {organizer.business_name?.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
                     <span className="truncate">{organizer.business_name}</span>

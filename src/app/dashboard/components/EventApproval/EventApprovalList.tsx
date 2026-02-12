@@ -37,18 +37,29 @@ const ListItemSkeleton = () => {
   );
 };
 
-const EventApprovalList = () => {
+const EventApprovalList = ({
+  isOpen,
+  setIsOpen,
+}: {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}) => {
   const router = useRouter();
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
   const setSelectedEvent = useEventStore((state) => state.setSelectedEvent);
 
   // Modal state
-  const [rejectEventModal, setRejectEventModal] = useState<ModalState>({ open: false });
-  const [acceptEventModal, setAcceptEventModal] = useState<ModalState>({ open: false });
+  const [rejectEventModal, setRejectEventModal] = useState<ModalState>({
+    open: false,
+  });
+  const [acceptEventModal, setAcceptEventModal] = useState<ModalState>({
+    open: false,
+  });
 
   // TanStack Query hooks
-  const { data: pendingEventsData, isLoading: isLoadingEvents } = usePendingEvents();
+  const { data: pendingEventsData, isLoading: isLoadingEvents } =
+    usePendingEvents();
 
   // Mutation hooks
   const approveEventMutation = useApproveEvent();
@@ -59,7 +70,10 @@ const EventApprovalList = () => {
     router.push(`/events/eventdetails?id=${event.id}`);
   };
 
-  const handleApproveEvent = (data: { commissionRate?: number; adminRemark: string }) => {
+  const handleApproveEvent = (data: {
+    commissionRate?: number;
+    adminRemark: string;
+  }) => {
     if (!acceptEventModal.id) return;
 
     if (!data.commissionRate) {
@@ -78,7 +92,7 @@ const EventApprovalList = () => {
           toast.success(t("dashboard.toast.eventApproved"));
           setAcceptEventModal({ open: false });
         },
-      }
+      },
     );
   };
 
@@ -92,7 +106,7 @@ const EventApprovalList = () => {
           toast.success(t("dashboard.toast.eventRejected"));
           setRejectEventModal({ open: false });
         },
-      }
+      },
     );
   };
 
@@ -100,11 +114,21 @@ const EventApprovalList = () => {
 
   return (
     <>
-      <div className="bg-white @container rounded-2xl glass-card-lower border border-gray-100/50 mt-8">
-        <div className="px-4 py-3 border-b border-gray-200">
+      <div
+        className={`fixed top-0 right-0 h-full z-50 w-[400px] bg-white rounded-l-2xl border shadow-xl transform transition-transform duration-700 ease-in-out ${
+          isOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        <div className="px-4 py-3 border-b border-gray-200 flex justify-between items-center">
           <h2 className="font-medium text-muted-foreground">
             {t("dashboard.eventsAwaitingApproval")}
           </h2>
+          <button
+            className="text-gray-500 font-bold hover:text-gray-700"
+            onClick={() => setIsOpen(false)}
+          >
+            ✕
+          </button>
         </div>
 
         <div>
