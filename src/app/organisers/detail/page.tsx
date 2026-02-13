@@ -427,13 +427,13 @@ function LatestEventsByOrganizer({ id }: { id: string }) {
         <div className="space-y-3">
           {events.map((event) => (
             <div
-              key={event.id}
+              key={event?.id}
               className="flex items-center gap-4 p-2 rounded-xl bg-white border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all cursor-pointer group"
-              onClick={() => router.push(`/events/eventdetails?id=${event.id}`)}
+              onClick={() => router.push(`/events/eventdetails?id=${event?.id}`)}
             >
               <div className="aspect-16/10 h-20 rounded-lg bg-gray-50 overflow-hidden relative border border-gray-100">
-                {event.banner_image ? (
-                  <Image src={event.banner_image} alt={event.title} className="w-full h-full object-cover" />
+                {event?.banner_image ? (
+                  <Image src={event?.banner_image} alt={event?.title || "Event Image"} fill className="object-cover" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-gray-300">
                     <ImageIcon weight="duotone" className="w-8 h-8" />
@@ -442,20 +442,20 @@ function LatestEventsByOrganizer({ id }: { id: string }) {
               </div>
 
               <div className="flex-1 min-w-0">
-                <h3 className="font-medium text-gray-900 truncate group-hover:text-primary transition-colors">{event.title}</h3>
+                <h3 className="font-medium text-gray-900 truncate group-hover:text-primary transition-colors">{event?.title}</h3>
                 <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
                   <span className="flex items-center gap-1">
                     <CalendarHeartIcon weight="duotone" className="w-4 h-4" />
-                    {format(new Date(event.start_date), "MMM d, yyyy")}
+                    {format(new Date(event?.start_date), "MMM d, yyyy")}
                   </span>
                   <span className="w-1 h-1 rounded-full bg-gray-300"></span>
-                  <EventStatusBadge status={event.status} />
+                  <EventStatusBadge status={event?.status} />
                 </div>
               </div>
 
               <div className="text-right pl-2">
                 <div className="font-semibold text-gray-900 text-sm">
-                  {event.price > 0 ? `$${event.price}` : 'Free'}
+                  {event?.price > 0 ? `$${event?.price}` : 'Free'}
                 </div>
               </div>
             </div>
@@ -507,22 +507,21 @@ export default function OrganizerDetailPage() {
     );
   }
 
-  const statusConfig = getStatusConfig(organizer.organizer_status, t);
-  const accountStatusConfig = getAccountStatusConfig(organizer.account_status, t);
+  const statusConfig = getStatusConfig(organizer?.organizer_status, t);
+  const accountStatusConfig = getAccountStatusConfig(organizer?.account_status, t);
   const StatusIcon = statusConfig.icon;
 
-  const formattedCreatedDate = organizer.created_at
+  const formattedCreatedDate = organizer?.created_at
     ? format(new Date(organizer.created_at), "MMMM dd, yyyy 'at' hh:mm a")
     : "N/A";
 
-  const formattedUpdatedDate = organizer.updated_at
+  const formattedUpdatedDate = organizer?.updated_at
     ? format(new Date(organizer.updated_at), "MMMM dd, yyyy 'at' hh:mm a")
     : "N/A";
 
-  console.log(organizer);
-  const isPending = organizer.organizer_status?.toLowerCase() === "pending";
-  const isApproved = organizer.organizer_status?.toLowerCase() === "approved";
-  const isOrganizerOnboarded = organizer.onboarding?.is_complete;
+  const isPending = organizer?.organizer_status?.toLowerCase() === "pending";
+  const isApproved = organizer?.organizer_status?.toLowerCase() === "approved";
+  const isOrganizerOnboarded = organizer?.is_onboarding_complete;
   // const isRejected = organizer.organizer_status?.toLowerCase() === "rejected";
   // const isInactive = organizer.organizer_status?.toLowerCase() === "inactive";
 
@@ -547,15 +546,15 @@ export default function OrganizerDetailPage() {
           <div className="p-8">
             <div className="flex flex-col sm:flex-row sm:items-start gap-6">
               <Avatar className="h-30 w-30 border border-gray-100 group-hover:scale-105 transition-transform duration-300">
-                {organizer.onboarding?.business_logo_url ? (
+                {organizer?.onboarding?.business_logo_url ? (
                   <AvatarImage
-                    src={organizer.onboarding.business_logo_url}
-                    alt={`${organizer.onboarding.business_name}`}
+                    src={organizer?.onboarding?.business_logo_url}
+                    alt={`${organizer?.onboarding?.business_name}`}
                     className="object-cover"
                   />
                 ) : (
                     <AvatarFallback className="text-xl font-bold bg-linear-to-br from-indigo-50 to-blue-50 text-indigo-600 w-full h-full grid place-items-center">
-                    {getInitials(organizer.first_name, organizer.last_name)}
+                      {getInitials(organizer?.first_name, organizer?.last_name)}
                   </AvatarFallback>
                 )}
               </Avatar>
@@ -565,7 +564,7 @@ export default function OrganizerDetailPage() {
                   <div>
                     <div className="flex items-center gap-3 mb-1">
                       <h1 className="text-2xl font-bold text-gray-900">
-                        {isOrganizerOnboarded ? organizer.onboarding?.business_name : organizer.first_name + " " + organizer.last_name}
+                        {isOrganizerOnboarded ? organizer?.onboarding?.business_name : organizer?.first_name + " " + organizer?.last_name}
                       </h1>
                       {/* {organizer.is_email_verified && (
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100">
@@ -573,11 +572,11 @@ export default function OrganizerDetailPage() {
                           {t("organizer.management.status.verified", "Verified")}
                         </span>
                       )} */}
-                      <Badge className={accountStatusConfig.color}>
-                        {accountStatusConfig.label}
+                      <Badge className={accountStatusConfig?.color}>
+                        {accountStatusConfig?.label}
                       </Badge>
                     </div>
-                    <p className="text-gray-500 mb-4">{organizer.email}</p>
+                    <p className="text-gray-500 mb-4">{organizer?.email}</p>
 
                     <div className="flex flex-wrap gap-2">
                       <Badge variant={statusConfig.variant} className={`gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border ${statusConfig.color}`}>
@@ -620,13 +619,13 @@ export default function OrganizerDetailPage() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-48">
                         <DropdownMenuItem
-                          onClick={() => router.push(`/events?organizer_id=${organizer.id}`)}
+                          onClick={() => router.push(`/events?organizer_id=${organizer?.id}`)}
                           className="gap-2"
                         >
                           <ArrowSquareOutIcon weight="duotone" className="w-4 h-4" />
                           {t("organizer.management.actions.viewEvents", "View Events")}
                         </DropdownMenuItem>
-                        {organizer.account_status === "active" && (
+                        {organizer?.account_status === "active" && (
                           <DropdownMenuItem
                             onClick={() => handleAction("deactivate")}
                             className="gap-2 text-destructive "
@@ -635,7 +634,7 @@ export default function OrganizerDetailPage() {
                             {t("organizer.management.actions.deactivateAccount", "Deactivate Account")}
                           </DropdownMenuItem>
                         )}
-                        {organizer.account_status === "inactive" && (
+                        {organizer?.account_status === "inactive" && (
                           <DropdownMenuItem
                             onClick={() => handleAction("activate")}
                             className="gap-2 text-success focus:text-success focus:bg-success/10"
@@ -682,11 +681,11 @@ export default function OrganizerDetailPage() {
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">{t("profile.email", "Email Address")}</p>
-                    <p className="font-medium text-gray-900">{organizer.email}</p>
+                    <p className="font-medium text-gray-900">{organizer?.email}</p>
                   </div>
                 </div>
 
-                {organizer.phone && (
+                {organizer?.phone && (
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center">
                       <PhoneIcon weight="duotone" className="w-5 h-5 text-green-600" />
@@ -694,7 +693,7 @@ export default function OrganizerDetailPage() {
                     <div>
                       <p className="text-sm text-gray-500">{t("profile.phone", "Phone Number")}</p>
                       <p className="font-medium text-gray-900">
-                        {formatPhoneNumber(organizer.country_code, organizer.phone)}
+                        {formatPhoneNumber(organizer?.country_code, organizer?.phone)}
                       </p>
                     </div>
                   </div>
@@ -766,20 +765,20 @@ export default function OrganizerDetailPage() {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-500">{t("organizer.management.status.organizer", "Organizer Status")}</span>
-                  <Badge variant={statusConfig.variant} className={statusConfig.color}>
-                    {statusConfig.label}
+                  <Badge variant={statusConfig?.variant} className={statusConfig?.color}>
+                    {statusConfig?.label}
                   </Badge>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-500">{t("organizer.management.status.account", "Account Status")}</span>
-                  <Badge className={accountStatusConfig.color}>
-                    {accountStatusConfig.label}
+                  <Badge className={accountStatusConfig?.color}>
+                    {accountStatusConfig?.label}
                   </Badge>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-500">{t("organizer.management.status.verified", "Email Verified")}</span>
-                  <Badge variant={organizer.is_email_verified ? "secondary" : "destructive"} className={organizer.is_email_verified ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"}>
-                    {organizer.is_email_verified ? t("common.yes", "Yes") : t("common.no", "No")}
+                  <Badge variant={organizer?.is_email_verified ? "secondary" : "destructive"} className={organizer?.is_email_verified ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"}>
+                    {organizer?.is_email_verified ? t("common.yes", "Yes") : t("common.no", "No")}
                   </Badge>
                 </div>
               </div>
@@ -787,7 +786,7 @@ export default function OrganizerDetailPage() {
 
           </div>
           <div className="col-span-full glass-card-lower p-6 rounded-2xl">
-            <LatestEventsByOrganizer id={organizer.id} />
+            <LatestEventsByOrganizer id={organizer?.id} />
           </div>
         </div>
       </div>

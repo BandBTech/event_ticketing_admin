@@ -39,6 +39,8 @@ import { createOrganizerSchema, CreateOrganizerFormData } from "@/lib/validation
 import { useTranslation } from "@/hooks/useTranslation";
 import { toast } from "sonner";
 import { queryKeys } from "@/lib/queryKeys";
+import { PasswordRequirements } from "@/app/components/PasswordRequirements";
+import { useLanguageStore } from "@/store/languageStore";
 
 interface OrganizerFormDialogProps {
   open: boolean;
@@ -83,7 +85,8 @@ export default function OrganizerFormDialog({
   open,
   onOpenChange,
 }: OrganizerFormDialogProps) {
-  const { t } = useTranslation();
+  const { locale } = useLanguageStore()
+  const { t } = useTranslation(locale);
   const queryClient = useQueryClient();
   const [defaultCountry, setDefaultCountry] = useState<Country>("NP");
 
@@ -101,6 +104,8 @@ export default function OrganizerFormDialog({
     },
     mode: 'onChange'
   });
+
+  const { errors } = form.formState;
 
   useEffect(() => {
     const detectCountry = async () => {
@@ -310,11 +315,21 @@ export default function OrganizerFormDialog({
                         <ArrowsClockwiseIcon weight="duotone" size={20} />
                       </button>
                     </div>
-                    <p className="text-[11px] text-muted-foreground mt-1.5 flex items-center gap-1">
-                      <span className="w-1 h-1 rounded-full bg-blue-500" />
-                      {t('users.create.passwordHint', "Click the icon to generate a secure password")}
-                    </p>
-                    <TranslatedFormMessage t={t} />
+                    {errors.password &&
+                      errors.password.message !== "Invalid input" &&
+                      // Filter out messages that are already covered by PasswordRequirements
+                      !errors.password.message?.includes("must be at least 8 characters") &&
+                      !errors.password.message?.includes("uppercase and one lowercase") &&
+                      !errors.password.message?.includes("special character") &&
+                      !errors.password.message?.includes("numeric digit") && (
+                        <p
+                          className="text-sm text-destructive"
+                          role="alert"
+                        >
+                          {errors.password.message}
+                        </p>
+                      )}
+                    <PasswordRequirements password={field.value} />
                   </FormItem>
                 )}
               />

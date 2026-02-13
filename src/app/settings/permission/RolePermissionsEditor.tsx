@@ -151,12 +151,11 @@ export function RolePermissionsEditor({ selectedRoleId, onRoleChange }: RolePerm
             {/* Permission Categories */}
             <div className="space-y-3">
               {Object.entries(groupedPermissions).map(([category, permissions]) => (
-                <>
+                <div key={category} className="space-y-3">
                   <div className="bg-gray-50/80 py-3 ">
-                    <h4 className="font-medium text-gray-900 capitalize">{t(`settings.permissions.tabs.permissions`, "Permissions")}</h4>
+                    <h4 className="font-medium text-gray-900 capitalize">{category}</h4>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {!category && <h4 className="text-sm font-medium text-gray-900">{category}</h4>}
                     {permissions?.map((permission) => (
                       <label
                         key={permission.id}
@@ -177,7 +176,7 @@ export function RolePermissionsEditor({ selectedRoleId, onRoleChange }: RolePerm
                       </label>
                     ))}
                   </div>
-                </>
+                </div>
               ))}
             </div>
 

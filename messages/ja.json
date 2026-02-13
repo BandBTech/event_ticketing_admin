@@ -440,6 +440,12 @@
       "networkError": "ネットワークエラー。接続を確認してください。",
       "serverError": "問題が発生しました。もう一度お試しください。",
       "passwordChangedLogin": "新しいパスワードでログインしてください。"
+    },
+    "passwordRequirements": {
+      "minLength": "少なくとも 8 文字で構成する必要があります",
+      "upperLower": "少なくとも 1 つの大文字と 1 つの小文字を含める必要があります",
+      "specialChar": "少なくとも 1 つの特殊文字を含める必要があります",
+      "number": "少なくとも 1 桁の数字が含まれている必要があります"
     }
   },
   "pages": {
@@ -591,7 +597,11 @@
     "noOrganizersRegisteredYet": "登録されている主催者はいません",
     "joined": "参加済み",
     "pleaseTryAgainLater": "時間をおいて再度お試しください",
-    "addOrganizer": "オーガナイザーの追加"
+    "addOrganizer": "オーガナイザーの追加",
+    "create": {
+      "title": "新しいオーガナイザーを追加",
+      "description": "事前承認ステータスの新しい主催者アカウントを作成します。"
+    }
   },
   "users": {
     "searchUsers": "ユーザーを検索...",

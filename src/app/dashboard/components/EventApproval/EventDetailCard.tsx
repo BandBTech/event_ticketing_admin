@@ -29,6 +29,7 @@ export function EventDetailCard({ eventDetails }: EventDetailCardProps) {
     data: organizer,
     isLoading: organizerLoading,
   } = useOrganizerById(eventDetails.organizer_id);
+  console.log("organizer", organizer);
 
   const categories = useMemo(() => {
     if (!eventDetails.category) return [];
@@ -129,13 +130,13 @@ export function EventDetailCard({ eventDetails }: EventDetailCardProps) {
             </div>
           ) : organizer ? (
             <Link
-              href={`/organisers/detail?id=${organizer.id}`}
+                href={`/organisers/detail?id=${organizer?.id}`}
               className="flex items-center gap-3 p-2 -mx-2 rounded-lg hover:bg-gray-50 transition-colors group"
             >
               <Avatar className="h-10 w-10 border border-gray-200">
-                {organizer.onboarding?.business_logo_url && (
+                  {organizer.logo && (
                   <AvatarImage
-                    src={organizer.onboarding.business_logo_url}
+                      src={organizer.logo}
                     className="object-cover"
                   />
                 )}
@@ -146,8 +147,7 @@ export function EventDetailCard({ eventDetails }: EventDetailCardProps) {
 
               <div className="min-w-0">
                 <div className="text-sm font-bold text-gray-900 truncate group-hover:text-primary transition-colors">
-                  {organizer.onboarding?.business_name ||
-                    `${organizer.first_name} ${organizer.last_name}`}
+                    {organizer.name}
                 </div>
               </div>
               {!organizer.onboarding?.is_complete && (

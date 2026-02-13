@@ -478,6 +478,12 @@
       "networkError": "Network error. Please check your connection.",
       "serverError": "Something went wrong. Please try again.",
       "passwordChangedLogin": "Please login with your new password."
+    },
+    "passwordRequirements": {
+      "minLength": "Must consist of at least 8 characters",
+      "upperLower": "Must contain at least one uppercase and one lowercase letter",
+      "specialChar": "Must contain at least one special character",
+      "number": "Must contain at least one numeric digit"
     }
   },
   "pages": {

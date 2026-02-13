@@ -430,6 +430,12 @@
       "networkError": "Errore di rete. Controlla la tua connessione.",
       "serverError": "Qualcosa è andato storto. Riprova.",
       "passwordChangedLogin": "Accedi con la tua nuova password."
+    },
+    "passwordRequirements": {
+      "minLength": "Deve contenere almeno 8 caratteri",
+      "upperLower": "Deve contenere almeno una lettera maiuscola e una minuscola",
+      "specialChar": "Deve contenere almeno un carattere speciale",
+      "number": "Deve contenere almeno una cifra numerica"
     }
   },
   "pages": {
@@ -581,7 +587,11 @@
     "noOrganizersRegisteredYet": "Nessun organizzatore è ancora registrato",
     "joined": "Iscritto",
     "pleaseTryAgainLater": "Riprova più tardi",
-    "addOrganizer": "Aggiungi organizzatore"
+    "addOrganizer": "Aggiungi organizzatore",
+    "create": {
+      "title": "Aggiungi nuovo organizzatore",
+      "description": "Crea un nuovo account organizzatore con stato pre-approvato."
+    }
   },
   "users": {
     "searchUsers": "Cerca utenti...",

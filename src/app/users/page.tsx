@@ -628,7 +628,7 @@ export default function UsersPage() {
                     <div className="flex items-center gap-1">
                       {header.isPlaceholder
                         ? null
-                        : (header.column.columnDef.header as React.ReactNode)}
+                        : flexRender(header.column.columnDef.header, header.getContext())}
 
                       {header.column.getCanSort() && (
                         <>

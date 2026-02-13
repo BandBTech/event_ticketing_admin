@@ -13,8 +13,6 @@ export interface AllOrganizers {
 export interface Organizer {
   id: string;
   email: string;
-  first_name: string;
-  last_name: string;
   phone: string;
   country_code: string;
   is_email_verified: boolean;
@@ -27,15 +25,10 @@ export interface Organizer {
   }[];
   created_at: string;
   updated_at: string;
-  onboarding?: {
-    id: string;
-    is_complete: boolean;
-    business_name: string;
-    business_description: string;
-    business_logo_url: string;
-    created_at: string;
-    updated_at: string;
-  };
+  name: string;
+  logo: string;
+  description: string;
+  is_onboarding_complete: boolean;
 }
 
 export interface OrganizerListResponse {

@@ -41,7 +41,7 @@ export function OrganizerFilterSelect({
     return [];
   }, [organizersData]);
 
-  const selectedOrganizer = organizers.find((org) => org.id === value);
+  const selectedOrganizer = organizers?.find((org) => org.id === value);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -60,9 +60,9 @@ export function OrganizerFilterSelect({
               <Avatar className="h-5 w-5 shrink-0">
                 {selectedOrganizer ? (
                   <>
-                    <AvatarImage src={selectedOrganizer.logo} alt={selectedOrganizer.business_name} />
+                      <AvatarImage src={selectedOrganizer?.logo} alt={selectedOrganizer?.business_name} />
                     <AvatarFallback className="text-[10px]">
-                      {selectedOrganizer.business_name.charAt(0)}
+                        {selectedOrganizer?.business_name?.charAt(0)}
                     </AvatarFallback>
                   </>
                 ) : (
@@ -72,7 +72,7 @@ export function OrganizerFilterSelect({
                 )}
               </Avatar>
               <span className="truncate">
-                {selectedOrganizer ? selectedOrganizer.business_name : t("events.filterByOrganizer", "Filter by Organizer")}
+                  {selectedOrganizer ? selectedOrganizer?.business_name : t("events.filterByOrganizer", "Filter by Organizer")}
               </span>
             </div>
           )}
@@ -103,7 +103,7 @@ export function OrganizerFilterSelect({
         <Command
           filter={(value, search) => {
             const name = value.split("|")[1] || value;
-            if (name.toLowerCase().includes(search.toLowerCase())) return 1;
+            if (name?.toLowerCase().includes(search.toLowerCase())) return 1;
             return 0;
           }}
         >
@@ -137,25 +137,25 @@ export function OrganizerFilterSelect({
               </CommandItem>
               {organizers.map((organizer) => (
                 <CommandItem
-                  key={organizer.id}
-                  value={`${organizer.id}|${organizer.business_name}`}
+                  key={organizer?.id}
+                  value={`${organizer?.id}|${organizer?.business_name}`}
                   onSelect={() => {
-                    onChange(organizer.id);
+                    onChange(organizer?.id);
                     setOpen(false);
                   }}
                 >
                   <div className="flex items-center flex-1 gap-2 overflow-hidden w-full">
                     <Avatar className="h-6 w-6">
-                      <AvatarImage src={organizer.logo} alt={organizer.business_name} />
+                      <AvatarImage src={organizer.logo} alt={organizer?.business_name} />
                       <AvatarFallback className="text-xs">
-                        {organizer.business_name.charAt(0)}
+                        {organizer?.business_name?.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="truncate">{organizer.business_name}</span>
+                    <span className="truncate">{organizer?.business_name}</span>
                     <Check
                       className={cn(
                         "ml-auto h-4 w-4 shrink-0",
-                        value === organizer.id ? "opacity-100" : "opacity-0"
+                        value === organizer?.id ? "opacity-100" : "opacity-0"
                       )}
                     />
                   </div>

@@ -77,7 +77,7 @@ export const addEvent = (event: Omit<Event, "id">): Event => {
 };
 
 export const getEventById = (id: string): Event | undefined => {
-  return events.find((event) => event.id === id);
+  return events?.find((event) => event.id === id);
 };
 
 export default function Events() {
@@ -107,14 +107,14 @@ export default function Events() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {(events as Event[]).map((event) => (
           <div
-            key={event.id}
+            key={event?.id}
             className="rounded-xl shadow-md hover:shadow-lg transition-transform hover:-translate-y-1 overflow-hidden flex flex-col h-full" // Added flex flex-col h-full
           >
             {/* Image */}
             <div className="relative h-40">
               <Image
-                src={event.banner_image}
-                alt={event.title}
+                src={event?.banner_image}
+                alt={event?.title}
                 fill={true}
                 className="w-full h-full object-cover"
               />
@@ -140,7 +140,7 @@ export default function Events() {
               {/* Added flex flex-col flex-1 */}
               {/* Tags */}
               <div className="flex text-gray-700 flex-wrap gap-2">
-                {event.tags.map((tag) => (
+                {event?.tags?.map((tag) => (
                   <span
                     key={tag}
                     className="text-xs bg-gray-200 px-2 py-1 rounded-lg"
@@ -151,12 +151,12 @@ export default function Events() {
               </div>
               {/* Title */}
               <h3 className="text-lg font-semibold text-gray-900">
-                {event.title}
+                {event?.title}
               </h3>
               {/* Date & Location */}
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <Calendar className="w-4 h-4" />
-                {event.date}
+                {event?.date}
               </div>
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <MapPin className="w-4 h-4" />
@@ -167,7 +167,7 @@ export default function Events() {
                 <div className="my-4 border-t border-gray-300" />
                 <div className="flex justify-between items-center">
                   <Link
-                    href={`/organizerDashboard/pages/eventdetails/${event.id}`}
+                    href={`/organizerDashboard/pages/eventdetails/${event?.id}`}
                     className="flex items-center gap-2 border border-gray-300 hover:no-underline rounded-lg p-2 text-sm text-gray-700 font-medium hover:bg-gray-100 hover:shadow-lg"
                   >
                     {t("common.viewDetail", "View Detail")} <ArrowRight className="w-4 h-4" />
