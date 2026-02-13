@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { EventService } from "@/lib/eventServices";
+import { EventService } from "@/services/eventServices";
 import { queryKeys } from "@/lib/queryKeys";
 import CreateEventForm from "../components/eventForm/CreateEventForm";
 import { Skeleton } from "@/components/ui/skeleton";

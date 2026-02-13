@@ -34,7 +34,7 @@ import { Button } from "@/components/ui/button";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { cn } from "@/lib/utils";
 
-import { OrganizerService } from "@/lib/organizerService";
+import { OrganizerService } from "@/services/organizerService";
 import { createOrganizerSchema, CreateOrganizerFormData } from "@/lib/validation";
 import { useTranslation } from "@/hooks/useTranslation";
 import { toast } from "sonner";

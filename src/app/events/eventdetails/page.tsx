@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { EventService, EventTierAnalytics } from "@/lib/eventServices";
+import { EventService, EventTierAnalytics } from "@/services/eventServices";
 import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
 import { format, isValid } from "date-fns";

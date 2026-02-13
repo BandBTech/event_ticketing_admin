@@ -6,8 +6,8 @@ import {
   AuthApiResponse,
   AuthApiError 
 } from '@/types/auth';
-import { tokenManager } from './tokenManager';
-import { api } from './apiClient';
+import { tokenManager } from '../lib/tokenManager';
+import { api } from '../lib/apiClient';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://sandbox.timroticket.com/api/v1';
 

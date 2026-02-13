@@ -763,7 +763,22 @@
       "square": "Square",
       "currency": "通貨",
       "processingFee": "決済手数料（%）",
-      "saveChanges": "変更を保存"
+      "saveChanges": "変更を保存",
+      "apiKey": "APIキー",
+      "apiSecret": "APIシークレット",
+      "webhookSecret": "Webhookシークレット",
+      "isEnabled": "有効",
+      "isTestMode": "テストモード",
+      "displayName": "表示名",
+      "gatewayName": "ゲートウェイ名",
+      "enterApiKey": "APIキーを入力",
+      "enterApiSecret": "APIシークレットを入力",
+      "enterWebhookSecret": "Webhookシークレットを入力",
+      "enterDisplayName": "表示名を入力",
+      "enterGatewayName": "ゲートウェイ名を入力",
+      "cancel": "キャンセル",
+      "createPaymentMethod": "支払い方法を作成",
+      "create": "作成"
     },
     "notifications": {
       "title": "通知設定",

@@ -16,7 +16,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useAuthStore } from "@/store/authStore";
-import { AuthError } from "@/lib/authService";
+import { AuthError } from "@/services/authService";
 import { toast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import Link from "next/link";

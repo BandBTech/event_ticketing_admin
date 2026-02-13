@@ -14,7 +14,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { authService } from "@/lib/authService";
+import { authService } from "@/services/authService";
 import { useAuthStore } from "@/store/authStore";
 
 

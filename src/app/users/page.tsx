@@ -17,7 +17,7 @@ import {
   CrownIcon,
   UsersIcon,
   Spinner,
-  UserCircleIcon
+  UserCircleIcon,
 } from "@phosphor-icons/react";
 import { CaretUp, CaretDown, CaretUpDown } from "@phosphor-icons/react";
 
@@ -36,7 +36,7 @@ import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { UserService } from "@/lib/userService";
+import { UserService } from "@/services/userService";
 import { ApiResponse as UserApiResponse } from "@/types/user";
 import { queryKeys } from "@/lib/queryKeys";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -55,11 +55,12 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   ColumnDef,
-    SortingState,
+  SortingState,
 } from "@tanstack/react-table";
 import { User } from "@/types/user";
 import { useDebounce } from "@/hooks/useDebounce";
 import { toast } from "@/lib/toast";
+import { log } from "console";
 
 export default function UsersPage() {
   const router = useRouter();
@@ -78,26 +79,29 @@ export default function UsersPage() {
   const [searchInput, setSearchInput] = React.useState(searchQuery);
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
-
   const debouncedSearch = useDebounce(searchInput, 500);
 
   const { data: response, isLoading } = useQuery<UserApiResponse>({
-    queryKey: queryKeys.users.all(
+    queryKey: [
+      "users",
       currentPage,
       itemsPerPage,
-      searchQuery,
+      debouncedSearch,
       statusFilter,
       roleFilter,
       accountStatusFilter,
-    ),
+      sorting,
+    ],
+
     queryFn: () =>
       UserService.getUsers({
         page: currentPage,
         limit: itemsPerPage,
-        search: searchQuery,
+        search: debouncedSearch,
         status: statusFilter,
         role: roleFilter,
         account_status: accountStatusFilter,
+        sort: sorting.length ? sorting[0].id : undefined,
       }),
   });
 
@@ -260,6 +264,7 @@ export default function UsersPage() {
         enableSorting: true,
       },
       {
+        id: "email",
         accessorKey: "contact",
         header: t("users.userTable.contact"),
         cell: ({ row }) => {
@@ -292,7 +297,13 @@ export default function UsersPage() {
           }
 
           // highest priority role first
-          const ROLE_PRIORITY = ["admin", "organizer", "staff", "user", "manager"];
+          const ROLE_PRIORITY = [
+            "admin",
+            "organizer",
+            "staff",
+            "user",
+            "manager",
+          ];
 
           const primaryRole =
             roles
@@ -359,7 +370,7 @@ export default function UsersPage() {
         enableSorting: false,
       },
       {
-        id: "joinedDate",
+        id: "created_at",
         accessorFn: (row) => new Date(row.created_at).getTime(),
         header: t("users.userTable.joinedDate"),
         cell: ({ row }) => {
@@ -457,11 +468,15 @@ export default function UsersPage() {
   const table = useReactTable({
     data: mockUserData,
     columns,
+    state: {
+      sorting,
+    },
+    onSortingChange: setSorting,
+    manualSorting: true,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
   });
 
-  const totalItems = response?.total || mockUserData.length;
+  const totalItems = response?.pagination?.total || mockUserData.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const hasNextPage = response?.has_more ?? currentPage < totalPages;
 
@@ -522,7 +537,9 @@ export default function UsersPage() {
               </DropdownMenuItem>
 
               <DropdownMenuItem
-                className={roleFilter === "manager" ? "bg-muted font-medium" : ""}
+                className={
+                  roleFilter === "manager" ? "bg-muted font-medium" : ""
+                }
                 onClick={() => updateParams({ role: "manager", page: "1" })}
               >
                 {t("users.userRoles.manager")}

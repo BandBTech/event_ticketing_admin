@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { OrganizerService } from "@/lib/organizerService";
+import { OrganizerService } from "@/services/organizerService";
 import { queryKeys } from "@/lib/queryKeys";
 
 export const useOrganizerById = (id: string) => {

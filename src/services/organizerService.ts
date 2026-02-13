@@ -1,4 +1,4 @@
-import { api } from './apiClient';
+import { api } from '../lib/apiClient';
 import { API_ENDPOINTS } from '@/app/config/api';
 
 export interface AllOrganizers {

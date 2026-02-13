@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { OrganizerService, Organizer } from "@/lib/organizerService";
+import { OrganizerService, Organizer } from "@/services/organizerService";
 import { format } from "date-fns";
 import {
   DotsThreeVertical as DotsThreeVerticalIcon,

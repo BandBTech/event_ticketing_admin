@@ -10,6 +10,7 @@ export interface ApiResponse {
   total: number;
   limit: number;
   page: number;
+  pagination: { total: number; limit: number; page: number; has_more: boolean };
 }
 
 export interface UserData {

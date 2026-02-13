@@ -1,8 +1,8 @@
 "use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { OrganizerService, type OrganizerListResponse } from "@/lib/organizerService";
-import { EventService } from "@/lib/eventServices";
+import { OrganizerService, type OrganizerListResponse } from "@/services/organizerService";
+import { EventService } from "@/services/eventServices";
 import { queryKeys } from "@/lib/queryKeys";
 import { toast } from "sonner";
 import type { Event } from "@/types/event";

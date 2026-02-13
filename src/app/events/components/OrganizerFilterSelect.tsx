@@ -1,7 +1,7 @@
 import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useQuery } from "@tanstack/react-query";
-import { OrganizerService, AllOrganizers } from "@/lib/organizerService";
+import { OrganizerService, AllOrganizers } from "@/services/organizerService";
 import { queryKeys } from "@/lib/queryKeys";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -60,9 +60,9 @@ export function OrganizerFilterSelect({
               <Avatar className="h-5 w-5 shrink-0">
                 {selectedOrganizer ? (
                   <>
-                      <AvatarImage src={selectedOrganizer?.logo} alt={selectedOrganizer?.business_name} />
+                    <AvatarImage src={selectedOrganizer?.logo} alt={selectedOrganizer?.business_name} />
                     <AvatarFallback className="text-[10px]">
-                        {selectedOrganizer?.business_name?.charAt(0)}
+                      {selectedOrganizer?.business_name?.charAt(0)}
                     </AvatarFallback>
                   </>
                 ) : (
@@ -72,7 +72,7 @@ export function OrganizerFilterSelect({
                 )}
               </Avatar>
               <span className="truncate">
-                  {selectedOrganizer ? selectedOrganizer?.business_name : t("events.filterByOrganizer", "Filter by Organizer")}
+                {selectedOrganizer ? selectedOrganizer?.business_name : t("events.filterByOrganizer", "Filter by Organizer")}
               </span>
             </div>
           )}

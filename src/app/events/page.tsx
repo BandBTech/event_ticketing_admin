@@ -3,7 +3,7 @@
 import React, { useMemo, useCallback, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { EventService } from "@/lib/eventServices";
+import { EventService } from "@/services/eventServices";
 import {
   MagnifyingGlass as MagnifyingGlassIcon,
   CalendarBlank as CalendarBlankIcon,
@@ -16,7 +16,7 @@ import { queryKeys } from "@/lib/queryKeys";
 import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useDebounce } from "@/hooks/useDebounce";
-import { OrganizerService, AllOrganizers, OrganizerListResponse } from "@/lib/organizerService";
+import { OrganizerService, AllOrganizers, OrganizerListResponse } from "@/services/organizerService";
 import AnimatedBox from "@/components/AnimatedBox";
 import { EventCardSkeleton } from "./components/EventCardSkeleton";
 import { EventCard } from "./components/EventCard";

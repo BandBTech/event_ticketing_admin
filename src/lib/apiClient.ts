@@ -4,7 +4,7 @@
  */
 
 import { tokenManager } from './tokenManager';
-import { AuthError } from './authService';
+import { AuthError } from '../services/authService';
 import { toast } from './toast';
 
 // API Configuration

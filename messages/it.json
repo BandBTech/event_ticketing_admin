@@ -752,7 +752,22 @@
       "square": "Square",
       "currency": "Valuta",
       "processingFee": "Commissione di Elaborazione (%)",
-      "saveChanges": "Salva Modifiche"
+      "saveChanges": "Salva Modifiche",
+      "apiKey": "Chiave API",
+      "apiSecret": "Segreto API",
+      "webhookSecret": "Segreto Webhook",
+      "isEnabled": "Abilitato",
+      "isTestMode": "Modalità Test",
+      "displayName": "Nome Visualizzato",
+      "gatewayName": "Nome Gateway",
+      "enterApiKey": "Inserisci chiave API",
+      "enterApiSecret": "Inserisci segreto API",
+      "enterWebhookSecret": "Inserisci segreto Webhook",
+      "enterDisplayName": "Inserisci nome visualizzato",
+      "enterGatewayName": "Inserisci nome gateway",
+      "cancel": "Annulla",
+      "createPaymentMethod": "creare metodo di pagamento",
+      "create": "creare"
     },
     "notifications": {
       "title": "Impostazioni Notifiche",

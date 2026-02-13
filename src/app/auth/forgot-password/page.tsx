@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
-import { authService, AuthError } from "@/lib/authService";
+import { authService, AuthError } from "@/services/authService";
 import { toast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
