@@ -60,9 +60,9 @@ export function OrganizerFilterSelect({
               <Avatar className="h-5 w-5 shrink-0">
                 {selectedOrganizer ? (
                   <>
-                    <AvatarImage src={selectedOrganizer?.logo} alt={selectedOrganizer?.business_name} />
+                      <AvatarImage src={selectedOrganizer?.logo} alt={selectedOrganizer?.name} />
                     <AvatarFallback className="text-[10px]">
-                      {selectedOrganizer?.business_name?.charAt(0)}
+                        {selectedOrganizer?.name?.charAt(0)}
                     </AvatarFallback>
                   </>
                 ) : (
@@ -72,7 +72,7 @@ export function OrganizerFilterSelect({
                 )}
               </Avatar>
               <span className="truncate">
-                {selectedOrganizer ? selectedOrganizer?.business_name : t("events.filterByOrganizer", "Filter by Organizer")}
+                  {selectedOrganizer ? selectedOrganizer?.name : t("events.filterByOrganizer", "Filter by Organizer")}
               </span>
             </div>
           )}
@@ -138,7 +138,7 @@ export function OrganizerFilterSelect({
               {organizers.map((organizer) => (
                 <CommandItem
                   key={organizer?.id}
-                  value={`${organizer?.id}|${organizer?.business_name}`}
+                  value={`${organizer?.id}|${organizer?.name}`}
                   onSelect={() => {
                     onChange(organizer?.id);
                     setOpen(false);
@@ -146,12 +146,12 @@ export function OrganizerFilterSelect({
                 >
                   <div className="flex items-center flex-1 gap-2 overflow-hidden w-full">
                     <Avatar className="h-6 w-6">
-                      <AvatarImage src={organizer.logo} alt={organizer?.business_name} />
+                      <AvatarImage src={organizer.logo} alt={organizer?.name} />
                       <AvatarFallback className="text-xs">
-                        {organizer?.business_name?.charAt(0)}
+                        {organizer?.name?.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="truncate">{organizer?.business_name}</span>
+                    <span className="truncate">{organizer?.name}</span>
                     <Check
                       className={cn(
                         "ml-auto h-4 w-4 shrink-0",

@@ -64,7 +64,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatPhoneNumber } from "@/lib/utils";
+import { formatPhoneNumber, getInitials } from "@/lib/utils";
 import { useOrganizerById } from "@/hooks/useOrganizer";
 import { useGetEventsByOrganizerQuery } from "@/hooks/useEvents";
 import { AvatarFallback } from "@radix-ui/react-avatar";
@@ -72,12 +72,6 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { EventStatusBadge } from "@/app/components/EventStatusBadge";
 
 type StatusAction = "approve" | "reject" | "activate" | "deactivate";
-
-function getInitials(firstName: string, lastName: string) {
-  const first = firstName?.[0] || "";
-  const last = lastName?.[0] || "";
-  return (first + last).toUpperCase();
-}
 
 function getStatusConfig(status: string, t: (key: string, fallback?: string) => string) {
   switch (status?.toLowerCase()) {
@@ -274,7 +268,7 @@ function StatusModal({
       case "approve":
         return {
           title: t("organizer.management.modals.approveTitle", "Approve Organizer"),
-          description: t("organizer.management.modals.approveDesc", "Are you sure you want to approve {name}?").replace("{name}", `${organizer.first_name} ${organizer.last_name}`),
+          description: t("organizer.management.modals.approveDesc", "Are you sure you want to approve {name}?").replace("{name}", `${organizer.name}`),
           buttonText: t("organizer.management.actions.approve", "Approve"),
           buttonClass: "bg-emerald-600 hover:bg-emerald-700 text-white",
           icon: CheckIcon,
@@ -283,7 +277,7 @@ function StatusModal({
       case "reject":
         return {
           title: t("organizer.management.modals.rejectTitle", "Reject Organizer"),
-          description: t("organizer.management.modals.rejectDesc", "Are you sure you want to reject {name}?").replace("{name}", `${organizer.first_name} ${organizer.last_name}`),
+          description: t("organizer.management.modals.rejectDesc", "Are you sure you want to reject {name}?").replace("{name}", `${organizer.name}`),
           buttonText: t("organizer.management.actions.reject", "Reject"),
           buttonClass: "bg-red-600 hover:bg-red-700 text-white",
           icon: XIcon,
@@ -292,7 +286,7 @@ function StatusModal({
       case "deactivate":
         return {
           title: t("organizer.management.modals.deactivateTitle", "Deactivate Organizer"),
-          description: t("organizer.management.modals.deactivateDesc", "Are you sure you want to deactivate {name}'s account?").replace("{name}", `${organizer.first_name} ${organizer.last_name}`),
+          description: t("organizer.management.modals.deactivateDesc", "Are you sure you want to deactivate {name}'s account?").replace("{name}", `${organizer.name}`),
           buttonText: t("organizer.management.actions.deactivate", "Deactivate"),
           buttonClass: "bg-gray-600 hover:bg-gray-700 text-white",
           icon: UserMinusIcon,
@@ -301,7 +295,7 @@ function StatusModal({
       case "activate":
         return {
           title: t("organizer.management.modals.activateTitle", "Activate Organizer"),
-          description: t("organizer.management.modals.activateDesc", "Are you sure you want to activate {name}'s account?").replace("{name}", `${organizer.first_name} ${organizer.last_name}`),
+          description: t("organizer.management.modals.activateDesc", "Are you sure you want to activate {name}'s account?").replace("{name}", `${organizer.name}`),
           buttonText: t("organizer.management.actions.activate", "Activate"),
           buttonClass: "bg-blue-600 hover:bg-blue-700 text-white",
           icon: CheckCircleIcon,
@@ -546,15 +540,15 @@ export default function OrganizerDetailPage() {
           <div className="p-8">
             <div className="flex flex-col sm:flex-row sm:items-start gap-6">
               <Avatar className="h-30 w-30 border border-gray-100 group-hover:scale-105 transition-transform duration-300">
-                {organizer?.onboarding?.business_logo_url ? (
+                {organizer?.logo ? (
                   <AvatarImage
-                    src={organizer?.onboarding?.business_logo_url}
-                    alt={`${organizer?.onboarding?.business_name}`}
+                    src={organizer?.logo}
+                    alt={`${organizer?.name}`}
                     className="object-cover"
                   />
                 ) : (
                     <AvatarFallback className="text-xl font-bold bg-linear-to-br from-indigo-50 to-blue-50 text-indigo-600 w-full h-full grid place-items-center">
-                      {getInitials(organizer?.first_name, organizer?.last_name)}
+                      {getInitials(organizer?.name)}
                   </AvatarFallback>
                 )}
               </Avatar>
@@ -564,7 +558,7 @@ export default function OrganizerDetailPage() {
                   <div>
                     <div className="flex items-center gap-3 mb-1">
                       <h1 className="text-2xl font-bold text-gray-900">
-                        {isOrganizerOnboarded ? organizer?.onboarding?.business_name : organizer?.first_name + " " + organizer?.last_name}
+                        {organizer?.name}
                       </h1>
                       {/* {organizer.is_email_verified && (
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100">

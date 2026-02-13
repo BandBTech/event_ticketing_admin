@@ -177,3 +177,20 @@ export function formatRelativeTime(date: Date | string | number | null | undefin
     return "";
   }
 }
+
+/**
+ * Get initials from a name
+ * @param name - Name to get initials from
+ * @returns Initials of the name
+ */
+export function getInitials(name: string | { first_name: string, last_name: string }) {
+  if (typeof name === "string") {
+    const names = name.split(" ");
+    const first = names[0]?.[0] || "";
+    const last = names[names.length - 1]?.[0] || "";
+    return (first + last).toUpperCase();
+  } else if (name.first_name && name.last_name) {
+    return (name.first_name[0] + name.last_name[0]).toUpperCase();
+  }
+  return "";
+}

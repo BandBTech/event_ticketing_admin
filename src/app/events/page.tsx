@@ -199,7 +199,7 @@ export default function EventsPage() {
           <div className="px-4 py-3 bg-blue-50 border border-blue-200 rounded-lg flex items-center justify-between">
             <p className="text-sm text-blue-700">
               {t("events.showingEventsForOrganizer")} -{" "}
-              <strong>{currentOrganizer?.business_name || organizerId}</strong>
+              <strong>{currentOrganizer?.name || organizerId}</strong>
             </p>
             <Button
               variant="link"

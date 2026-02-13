@@ -6,20 +6,14 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
 import { Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ButtonGroup } from "@/components/ui/button-group";
 import { useRouter } from "next/navigation";
+import { getInitials } from "@/lib/utils";
 
 interface OrganizerCardProps {
   organizer: Organizer;
   onApprove: (organizerId: string) => void;
   onReject: (organizerId: string) => void;
   isApproving?: boolean;
-}
-
-function getInitials(firstName: string, lastName: string) {
-  const first = firstName?.[0] || "";
-  const last = lastName?.[0] || "";
-  return (first + last).toUpperCase();
 }
 
 export function OrganizerCard({
@@ -40,14 +34,14 @@ export function OrganizerCard({
       {/* Avatar with Initials */}
       <div className="w-8 h-8 rounded-full shrink-0 overflow-hidden">
         <div className="w-full h-full bg-gray-300 flex items-center justify-center text-white font-semibold text-lg">
-          {getInitials(organizer.first_name, organizer.last_name)}
+          {getInitials(organizer.name)}
         </div>
       </div>
 
       {/* Profile Info */}
       <div className="flex-1 min-w-0 text-center sm:text-left">
         <h3 className="text-base font-semibold text-gray-900 truncate">
-          {organizer.first_name} {organizer.last_name}
+          {organizer.name}
         </h3>
         {organizer.email && (
           <p className="text-xs text-gray-500 truncate">{organizer.email}</p>

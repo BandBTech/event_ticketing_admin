@@ -3,7 +3,7 @@ import { API_ENDPOINTS } from '@/app/config/api';
 
 export interface AllOrganizers {
   id: string;
-  business_name: string;
+  name: string;
   logo: string;
 }
 

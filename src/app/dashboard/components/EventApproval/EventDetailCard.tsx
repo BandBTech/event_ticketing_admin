@@ -16,6 +16,7 @@ import { useOrganizerById } from "@/hooks/useOrganizer";
 import { AppEvent } from "@/types/event";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
+import { getInitials } from "@/lib/utils";
 
 interface EventDetailCardProps {
   eventDetails: AppEvent;
@@ -41,21 +42,6 @@ export function EventDetailCard({ eventDetails }: EventDetailCardProps) {
     }
     return [];
   }, [eventDetails.category]);
-
-  const initials = useMemo(() => {
-    if (organizer?.onboarding?.business_name) {
-      const name = organizer.onboarding.business_name;
-      const parts = name.split(" ");
-      if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
-      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-    }
-    if (organizer) {
-      return (
-        (organizer.first_name?.[0] || "") + (organizer.last_name?.[0] || "")
-      ).toUpperCase();
-    }
-    return "";
-  }, [organizer]);
 
   return (
     <div className="space-y-4 pr-6 border-r border-gray-200">
@@ -141,7 +127,7 @@ export function EventDetailCard({ eventDetails }: EventDetailCardProps) {
                   />
                 )}
                 <AvatarFallback className="bg-primary/10 text-primary font-bold text-xs">
-                  {initials}
+                    {getInitials(organizer.name)}
                 </AvatarFallback>
               </Avatar>
 
@@ -150,7 +136,7 @@ export function EventDetailCard({ eventDetails }: EventDetailCardProps) {
                     {organizer.name}
                 </div>
               </div>
-              {!organizer.onboarding?.is_complete && (
+                {!organizer.is_onboarding_complete && (
                 <div className="text-xs text-warning truncate flex items-center gap-1 ml-auto">
                   <WarningCircleIcon size={16} />
                   {t("dashboard.modal.onboardingIncomplete", "Onboarding Incomplete")}
