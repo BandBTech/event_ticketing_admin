@@ -139,7 +139,7 @@ export default function TransactionsPage() {
         accessorKey: "amount",
         enableSorting: false,
         cell: ({ row }) => (
-          <span className="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-gray-700">
+          <span className="px-2 py-1 text-xs font-medium rounded-full">
             {row.original.currency} {row.original.amount}
           </span>
         ),
@@ -150,7 +150,7 @@ export default function TransactionsPage() {
         accessorKey: "commission_amount",
         enableSorting: false,
         cell: ({ row }) => (
-          <span className="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-700">
+          <span className="px-2 py-1 text-xs font-medium rounded-full">
             {row.original.currency} {row.original.commission_amount}
           </span>
         ),
@@ -161,7 +161,7 @@ export default function TransactionsPage() {
         accessorKey: "organizer_share",
         enableSorting: false,
         cell: ({ row }) => (
-          <span className="px-2 py-1 text-xs font-medium rounded-full bg-purple-100 text-purple-700">
+          <span className="px-2 py-1 text-xs font-medium rounded-full">
             {row.original.currency} {row.original.organizer_share}
           </span>
         ),
