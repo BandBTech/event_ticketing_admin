@@ -44,4 +44,8 @@ export const API_ENDPOINTS = {
   //PAYMENT GATEWAYS
   GET_PAYMENT_GATEWAYS: `${API_BASE_URL}/admin/payment-gateways`,
   CREATE_PAYMENT_GATEWAY: `${API_BASE_URL}/admin/payment-gateways`,
+
+  // Transactions
+  CREATE_TRANSACTION: `${API_BASE_URL}/admin/transactions`,
+  GET_TRANSACTIONS: `${API_BASE_URL}/admin/transactions`,
 };
