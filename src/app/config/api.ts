@@ -40,4 +40,8 @@ export const API_ENDPOINTS = {
 
   // User Management
   UPDATE_ORGANIZER_ACCOUNT_STATUS: (id: string) => `${API_BASE_URL}/admin/users/${id}/status`,
+
+  //PAYMENT GATEWAYS
+  GET_PAYMENT_GATEWAYS: `${API_BASE_URL}/admin/payment-gateways`,
+  CREATE_PAYMENT_GATEWAY: `${API_BASE_URL}/admin/payment-gateways`,
 };
