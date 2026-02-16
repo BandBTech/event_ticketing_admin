@@ -35,7 +35,10 @@ import { PhoneInput } from "@/components/ui/phone-input";
 import { cn } from "@/lib/utils";
 
 import { OrganizerService } from "@/services/organizerService";
-import { createOrganizerSchema, CreateOrganizerFormData } from "@/lib/validation";
+import {
+  createOrganizerSchema,
+  CreateOrganizerFormData,
+} from "@/lib/validation";
 import { useTranslation } from "@/hooks/useTranslation";
 import { toast } from "sonner";
 import { queryKeys } from "@/lib/queryKeys";
@@ -85,7 +88,7 @@ export default function OrganizerFormDialog({
   open,
   onOpenChange,
 }: OrganizerFormDialogProps) {
-  const { locale } = useLanguageStore()
+  const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
   const queryClient = useQueryClient();
   const [defaultCountry, setDefaultCountry] = useState<Country>("NP");
@@ -102,7 +105,7 @@ export default function OrganizerFormDialog({
       phone: "",
       country_code: "",
     },
-    mode: 'onChange'
+    mode: "onChange",
   });
 
   const { errors } = form.formState;
@@ -150,11 +153,24 @@ export default function OrganizerFormDialog({
   const handleGeneratePassword = () => {
     const newPassword = generateStrongPassword();
     form.setValue("password", newPassword, { shouldValidate: true });
-    navigator.clipboard.writeText(newPassword).then(() => {
-      toast.success(t('users.generatePassword.successCopy', "Password generated and copied to clipboard!"));
-    }).catch(() => {
-      toast.success(t('users.generatePassword.success', "Password generated successfully"));
-    });
+    navigator.clipboard
+      .writeText(newPassword)
+      .then(() => {
+        toast.success(
+          t(
+            "users.generatePassword.successCopy",
+            "Password generated and copied to clipboard!",
+          ),
+        );
+      })
+      .catch(() => {
+        toast.success(
+          t(
+            "users.generatePassword.success",
+            "Password generated successfully",
+          ),
+        );
+      });
   };
 
   const createMutation = useMutation({
@@ -167,11 +183,15 @@ export default function OrganizerFormDialog({
         phone: data.phone || undefined,
         country_code: data.country_code || undefined,
       }),
-    onSuccess: () => {
-      toast.success(t('organizer.create.success', "Organizer created successfully"));
-      queryClient.invalidateQueries({ queryKey: queryKeys.organizers.all() });
+    onSuccess: async () => {
+      toast.success(
+        t("organizer.create.success", "Organizer created successfully"),
+      );
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.organizers.list,
+      });
       onOpenChange(false);
-    }
+    },
   });
 
   const onSubmit = (data: CreateOrganizerFormData) => {
@@ -180,20 +200,32 @@ export default function OrganizerFormDialog({
 
   const isPending = createMutation.isPending;
 
+  // Prevent dialog dismissal (overlay/Escape) while mutation is in-flight
+  const handleOpenChange = (open: boolean) => {
+    if (!open && isPending) return;
+    onOpenChange(open);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[520px] shadow-2xl border-none bg-white/90 backdrop-blur-xl data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 duration-300">
         <DialogHeader className="space-y-3">
           <DialogTitle className="text-2xl font-bold bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-            {t('organizer.create.title', "Add New Organizer")}
+            {t("organizer.create.title", "Add New Organizer")}
           </DialogTitle>
           <DialogDescription className="text-gray-500 text-base">
-            {t('organizer.create.description', "Create a new organizer account with pre-approved status.")}
+            {t(
+              "organizer.create.description",
+              "Create a new organizer account with pre-approved status.",
+            )}
           </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 pt-4">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-6 pt-4"
+          >
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
@@ -201,19 +233,27 @@ export default function OrganizerFormDialog({
                 render={({ field, fieldState }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-semibold text-gray-700">
-                      {t('auth.signup.firstName', "First Name")}
+                      {t("auth.signup.firstName", "First Name")}
                     </FormLabel>
                     <div className="relative group">
                       <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none transition-colors group-focus-within:text-blue-600">
-                        <UserIcon weight="duotone" size={22} className="text-gray-400" />
+                        <UserIcon
+                          weight="duotone"
+                          size={22}
+                          className="text-gray-400"
+                        />
                       </div>
                       <FormControl>
                         <Input
-                          placeholder={t('auth.signup.firstNamePlaceholder', "Enter first name")}
+                          placeholder={t(
+                            "auth.signup.firstNamePlaceholder",
+                            "Enter first name",
+                          )}
                           {...field}
                           className={cn(
                             "h-12 pl-12 pr-4 bg-gray-50/50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all duration-200",
-                            fieldState.error && "border-destructive focus:ring-destructive/20"
+                            fieldState.error &&
+                              "border-destructive focus:ring-destructive/20",
                           )}
                         />
                       </FormControl>
@@ -228,19 +268,27 @@ export default function OrganizerFormDialog({
                 render={({ field, fieldState }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-semibold text-gray-700">
-                      {t('auth.signup.lastName', "Last Name")}
+                      {t("auth.signup.lastName", "Last Name")}
                     </FormLabel>
                     <div className="relative group">
                       <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none transition-colors group-focus-within:text-blue-600">
-                        <UserIcon weight="duotone" size={22} className="text-gray-400" />
+                        <UserIcon
+                          weight="duotone"
+                          size={22}
+                          className="text-gray-400"
+                        />
                       </div>
                       <FormControl>
                         <Input
-                          placeholder={t('auth.signup.lastNamePlaceholder', "Enter last name")}
+                          placeholder={t(
+                            "auth.signup.lastNamePlaceholder",
+                            "Enter last name",
+                          )}
                           {...field}
                           className={cn(
                             "h-12 pl-12 pr-4 bg-gray-50/50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all duration-200",
-                            fieldState.error && "border-destructive focus:ring-destructive/20"
+                            fieldState.error &&
+                              "border-destructive focus:ring-destructive/20",
                           )}
                         />
                       </FormControl>
@@ -258,20 +306,28 @@ export default function OrganizerFormDialog({
                 render={({ field, fieldState }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-semibold text-gray-700">
-                      {t('auth.signup.email', "Email Address")}
+                      {t("auth.signup.email", "Email Address")}
                     </FormLabel>
                     <div className="relative group">
                       <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none transition-colors group-focus-within:text-blue-600">
-                        <EnvelopeIcon weight="duotone" size={22} className="text-gray-400" />
+                        <EnvelopeIcon
+                          weight="duotone"
+                          size={22}
+                          className="text-gray-400"
+                        />
                       </div>
                       <FormControl>
                         <Input
-                          placeholder={t('auth.signup.emailPlaceholder', "Enter email address")}
+                          placeholder={t(
+                            "auth.signup.emailPlaceholder",
+                            "Enter email address",
+                          )}
                           type="email"
                           {...field}
                           className={cn(
                             "h-12 pl-12 pr-4 bg-gray-50/50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all duration-200",
-                            fieldState.error && "border-destructive focus:ring-destructive/20"
+                            fieldState.error &&
+                              "border-destructive focus:ring-destructive/20",
                           )}
                         />
                       </FormControl>
@@ -289,11 +345,15 @@ export default function OrganizerFormDialog({
                 render={({ field, fieldState }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-semibold text-gray-700">
-                      {t('auth.signup.password', "Password")}
+                      {t("auth.signup.password", "Password")}
                     </FormLabel>
                     <div className="relative group">
                       <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none transition-colors group-focus-within:text-blue-600">
-                        <KeyIcon weight="duotone" size={22} className="text-gray-400" />
+                        <KeyIcon
+                          weight="duotone"
+                          size={22}
+                          className="text-gray-400"
+                        />
                       </div>
                       <FormControl>
                         <Input
@@ -302,7 +362,8 @@ export default function OrganizerFormDialog({
                           {...field}
                           className={cn(
                             "h-12 pl-12 pr-14 bg-gray-50/50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all duration-200",
-                            fieldState.error && "border-destructive focus:ring-destructive/20"
+                            fieldState.error &&
+                              "border-destructive focus:ring-destructive/20",
                           )}
                         />
                       </FormControl>
@@ -318,14 +379,15 @@ export default function OrganizerFormDialog({
                     {errors.password &&
                       errors.password.message !== "Invalid input" &&
                       // Filter out messages that are already covered by PasswordRequirements
-                      !errors.password.message?.includes("must be at least 8 characters") &&
-                      !errors.password.message?.includes("uppercase and one lowercase") &&
+                      !errors.password.message?.includes(
+                        "must be at least 8 characters",
+                      ) &&
+                      !errors.password.message?.includes(
+                        "uppercase and one lowercase",
+                      ) &&
                       !errors.password.message?.includes("special character") &&
                       !errors.password.message?.includes("numeric digit") && (
-                        <p
-                          className="text-sm text-destructive"
-                          role="alert"
-                        >
+                        <p className="text-sm text-destructive" role="alert">
                           {errors.password.message}
                         </p>
                       )}
@@ -342,18 +404,23 @@ export default function OrganizerFormDialog({
                 render={({ field, fieldState }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-semibold text-gray-700">
-                      {t('auth.signup.phone', "Contact Number")}
-                      <span className="text-muted-foreground text-xs font-normal ml-1.5 opacity-70">{t('common.optional', "(optional)")}</span>
+                      {t("auth.signup.phone", "Contact Number")}
+                      <span className="text-muted-foreground text-xs font-normal ml-1.5 opacity-70">
+                        {t("common.optional", "(optional)")}
+                      </span>
                     </FormLabel>
                     <FormControl>
                       <PhoneInput
                         value={field.value || ""}
                         onChange={(value) => field.onChange(value)}
                         defaultCountry={defaultCountry}
-                        placeholder={t('auth.signup.phonePlaceholder', "981-234-5678")}
+                        placeholder={t(
+                          "auth.signup.phonePlaceholder",
+                          "981-234-5678",
+                        )}
                         className={cn(
                           "transition-all duration-200",
-                          fieldState.error && "border-destructive"
+                          fieldState.error && "border-destructive",
                         )}
                       />
                     </FormControl>
@@ -371,13 +438,11 @@ export default function OrganizerFormDialog({
                 disabled={isPending}
                 className="h-11 px-6 border-gray-200 hover:bg-gray-50 transition-colors"
               >
-                {t('common.cancel', "Cancel")}
+                {t("common.cancel", "Cancel")}
               </Button>
-              <Button
-                type="submit"
-                disabled={isPending}>
+              <Button type="submit" disabled={isPending}>
                 {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {t('common.create', "Create Organizer")}
+                {t("common.create", "Create Organizer")}
               </Button>
             </DialogFooter>
           </form>

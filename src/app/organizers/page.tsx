@@ -185,6 +185,7 @@ export default function OrganizersPage() {
 
   return (
     <div className="min-h-screen p-8 space-y-8 @container">
+      {/* Search, Filter and Add Organizer Action */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-4 w-full sm:w-auto flex-1 max-w-2xl">
           <div className="relative flex-1">

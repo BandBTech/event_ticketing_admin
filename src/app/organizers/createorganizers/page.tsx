@@ -25,7 +25,7 @@ import { OrganizerService } from "@/services/organizerService";
 import { useRouter } from "next/navigation";
 
 const createBasicInfoSchema = (
-  t: (key: string, fallback?: string) => string
+  t: (key: string, fallback?: string) => string,
 ) => {
   const v = createValidationHelpers(t);
 
@@ -77,7 +77,7 @@ export default function AddOrganizerPage() {
 
       toast.success(
         "auth.toast.otpSent",
-        "Verification code sent to your email"
+        "Verification code sent to your email",
       );
       router.push("/organizers");
     } catch (error) {
@@ -85,7 +85,7 @@ export default function AddOrganizerPage() {
         toast.error(
           "",
           error.message || "Registration failed. Please try again.",
-          error.details
+          error.details,
         );
       } else {
         toast.error("", "Registration failed. Please try again.");
@@ -116,7 +116,7 @@ export default function AddOrganizerPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
       <div>
-        <Navbar title="Create Organizer" addMessage="" handleOpen={() => { }} />
+        <Navbar title="Create Organizer" addMessage="" handleOpen={() => {}} />
       </div>
       <div className="max-w-4xl mx-auto px-4 py-6">
         <div className="bg-white rounded-lg shadow-sm">
@@ -161,7 +161,7 @@ export default function AddOrganizerPage() {
                     placeholder="Enter First Name"
                     className={cn(
                       "h-12 pl-16 pr-4 login-input",
-                      errors.firstName && "border-destructive"
+                      errors.firstName && "border-destructive",
                     )}
                     {...basicInfoForm.register("firstName")}
                   />
@@ -203,7 +203,7 @@ export default function AddOrganizerPage() {
                     placeholder="Enter Last Name"
                     className={cn(
                       "h-12 pl-16 pr-4 login-input",
-                      errors.lastName && "border-destructive"
+                      errors.lastName && "border-destructive",
                     )}
                     {...basicInfoForm.register("lastName")}
                   />
@@ -247,7 +247,7 @@ export default function AddOrganizerPage() {
                     placeholder="Enter Email Address"
                     className={cn(
                       "h-12 pl-16 pr-4 login-input",
-                      errors.email && "border-destructive"
+                      errors.email && "border-destructive",
                     )}
                     {...basicInfoForm.register("email")}
                   />
@@ -288,7 +288,7 @@ export default function AddOrganizerPage() {
                     placeholder={t("auth.login.passwordPlaceholder")}
                     className={cn(
                       "h-12 pl-16 pr-16 login-input",
-                      errors.password && "border-destructive"
+                      errors.password && "border-destructive",
                     )}
                     {...basicInfoForm.register("password")}
                   />
@@ -346,11 +346,11 @@ export default function AddOrganizerPage() {
                     defaultCountry={defaultCountry}
                     placeholder={t(
                       "auth.signup.phonePlaceholder",
-                      "981-234-5678"
+                      "981-234-5678",
                     )}
                     className={cn(
                       basicInfoForm.formState.errors.phone &&
-                      "border-destructive"
+                        "border-destructive",
                     )}
                   />
                 )}
