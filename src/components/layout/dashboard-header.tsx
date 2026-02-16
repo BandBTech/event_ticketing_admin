@@ -34,6 +34,9 @@ const pageHeaders: {
   { prefix: "/events", titleKey: "pages.events" },
   { prefix: "/users", titleKey: "pages.users" },
   { prefix: "/transactions", titleKey: "pages.transactions" },
+  { prefix: "/auditlogs", titleKey: "pages.auditlogs" },
+  { prefix: "/refunds", titleKey: "pages.refunds" },
+  { prefix: "/payouts", titleKey: "pages.payouts" },
   { prefix: "/reports", titleKey: "pages.reports" },
   { prefix: "/settings", titleKey: "pages.settings" },
 ];

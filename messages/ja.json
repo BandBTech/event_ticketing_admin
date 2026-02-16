@@ -455,7 +455,10 @@
     "reports": "レポート",
     "settings": "設定",
     "users": "ユーザー",
-    "transactions": "取引"
+    "transactions": "取引",
+    "auditlogs": "監査ログ",
+    "refunds": "返金",
+    "payouts": "支払い"
   },
   "dashboard": {
     "greeting": {
@@ -658,6 +661,40 @@
       "accountDetails": "アカウント詳細",
       "createdOn": "作成日",
       "updatedOn": "更新日"
+    }
+  },
+  "transactions": {
+    "searchTransactions": "取引を検索...",
+    "searchRefunds": "返金を検索...",
+    "searchAuditLogs": "監査ログを検索...",
+    "searchPayouts": "支払いを検索...",
+    "refund": "返金",
+    "auditLogs": "監査ログ",
+    "payouts": "支払い",
+    "filter": "フィルター",
+    "table": {
+      "event": "イベント",
+      "user": "ユーザー",
+      "ticket": "チケット",
+      "amount": "金額",
+      "commission": "手数料",
+      "organizer_share": "主催者取り分",
+      "gateway": "決済ゲートウェイ",
+      "status": "ステータス",
+      "date": "日付"
+    },
+    "paymentGateway": "決済ゲートウェイ",
+    "status": "ステータス",
+    "gateway": {
+      "cash": "現金",
+      "creditCard": "クレジットカード",
+      "stripe": "Stripe"
+    },
+    "transactionStatus": {
+      "completed": "完了",
+      "pending": "保留中",
+      "failed": "失敗",
+      "refunded": "返金済み"
     }
   },
   "settings": {

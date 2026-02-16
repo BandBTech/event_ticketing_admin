@@ -18,6 +18,7 @@ import {
   User as UserIcon,
   DotsThreeVertical as DotsThreeVerticalIcon,
   NotepadIcon,
+  ArrowsLeftRight,
 } from "@phosphor-icons/react";
 import { BanknoteArrowUp, CreditCard, Logs } from "lucide-react";
 import { CaretUp, CaretDown, CaretUpDown } from "@phosphor-icons/react";
@@ -253,8 +254,8 @@ export default function TransactionsPage() {
   const handleOpenrefunds = () => {
     router.push(`/refunds`);
   };
-  const handleOpenPayouts = () => {
-    router.push(`/payouts`);
+  const handleOpenTransactions = () => {
+    router.push(`/transactions`);
   };
 
   const totalItems = response?.pagination.total ?? 0;
@@ -273,7 +274,7 @@ export default function TransactionsPage() {
             />
             <Input
               type="text"
-              placeholder={t("transactions.searchTransactions")}
+              placeholder={t("transactions.searchPayouts")}
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               className="pl-9"
@@ -282,28 +283,28 @@ export default function TransactionsPage() {
 
           <div className="flex gap-2">
             <Button
-              variant="outline"
               onClick={handleOpenrefunds}
+              variant="outline"
               className="gap-2 bg-background/80 backdrop-blur-sm"
             >
               <BanknoteArrowUp className="h-4 w-4" />
               {t("transactions.refund")}
             </Button>
             <Button
-              variant="outline"
               onClick={handleOpenLogs}
+              variant="outline"
               className="gap-2 bg-background/80 backdrop-blur-sm"
             >
               <Logs className="h-4 w-4" />
               {t("transactions.auditLogs")}
             </Button>
             <Button
-              onClick={handleOpenPayouts}
+              onClick={handleOpenTransactions}
               variant="outline"
               className="gap-2 bg-background/80 backdrop-blur-sm"
             >
-              <CreditCard className="h-4 w-4" />
-              {t("transactions.payouts")}
+              <ArrowsLeftRight className="h-4 w-4" />
+              {t("sidebar.transactions")}
             </Button>
           </div>
         </div>

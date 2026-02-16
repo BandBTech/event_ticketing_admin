@@ -445,7 +445,10 @@
     "reports": "Rapporti",
     "settings": "Impostazioni",
     "users": "Utenti",
-    "transactions": "Transazioni"
+    "transactions": "Transazioni",
+    "auditlogs": "Registri di controllo",
+    "refunds": "Rimborsi",
+    "payouts": "Pagamenti"
   },
   "dashboard": {
     "greeting": {
@@ -648,6 +651,40 @@
       "accountDetails": "Dettagli Account",
       "createdOn": "Creato il",
       "updatedOn": "Aggiornato il"
+    }
+  },
+  "transactions": {
+    "searchTransactions": "Cerca transazioni...",
+    "searchRefunds": "Cerca rimborsi...",
+    "searchAuditLogs": "Cerca registri di controllo...",
+    "searchPayouts": "Cerca pagamenti...",
+    "refund": "Rimborsa",
+    "auditLogs": "Registri di controllo",
+    "payouts": "Pagamenti",
+    "filter": "Filtra",
+    "table": {
+      "event": "Evento",
+      "user": "Utente",
+      "ticket": "Biglietto",
+      "amount": "Importo",
+      "commission": "Commissione",
+      "organizer_share": "Quota organizzatore",
+      "gateway": "Gateway",
+      "status": "Stato",
+      "date": "Data"
+    },
+    "paymentGateway": "Gateway di pagamento",
+    "status": "Stato",
+    "gateway": {
+      "cash": "Contanti",
+      "creditCard": "Carta di credito",
+      "stripe": "Stripe"
+    },
+    "transactionStatus": {
+      "completed": "Completato",
+      "pending": "In sospeso",
+      "failed": "Fallito",
+      "refunded": "Rimborsato"
     }
   },
   "settings": {
