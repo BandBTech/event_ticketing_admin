@@ -111,10 +111,10 @@ const Sidebar: React.FC<SidebarProps> = ({
       link: "/dashboard",
     },
     {
-      id: "organisers",
-      label: "Organisers",
+      id: "organizers",
+      label: "Organizers",
       icon: LayoutDashboard,
-      link: "/organisers",
+      link: "/organizers",
     },
     {
       id: "events",

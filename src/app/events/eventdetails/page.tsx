@@ -591,7 +591,7 @@ export default function EventDetailsPage() {
                   <Button
                     variant="outline"
                     className="w-full justify-center gap-2"
-                    onClick={() => router.push(`/organisers/detail?id=${event.organizer_id}`)}
+                    onClick={() => router.push(`/organizers/detail?id=${event.organizer_id}`)}
                   >
                     <UsersIcon weight="duotone" size={18} />
                     {t("events.actions.viewOrganizer", "View Organizer")}

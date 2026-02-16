@@ -491,10 +491,10 @@ export default function OrganizerDetailPage() {
             {!id ? t("organizer.management.messages.noId", "No Organizer Selected") : isError ? t("common.error", "Error") : t("organizer.management.messages.notFound", "Organizer Not Found")}
           </h2>
           <button
-            onClick={() => router.push("/organisers")}
+            onClick={() => router.push("/organizers")}
             className="px-6 py-2.5 bg-primary text-white rounded-lg hover:bg-primary/80 transition-colors"
           >
-            {t("organizer.management.backToList", "Back to Organisers")}
+            {t("organizer.management.backToList", "Back to Organizers")}
           </button>
         </div>
       </div>
@@ -528,11 +528,11 @@ export default function OrganizerDetailPage() {
     <div className="min-h-screen @container">
       <div className="max-w-5xl mx-auto px-6 py-8">
         <button
-          onClick={() => router.push("/organisers")}
+          onClick={() => router.push("/organizers")}
           className="flex items-center gap-1 text-gray-600 hover:text-gray-900 mb-2 group hover:bg-gray-200 p-2 px-4 rounded-lg"
         >
           <ArrowLeft weight="duotone" className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-          <span className="font-medium">{t("organizer.management.backToList", "Back to Organisers")}</span>
+          <span className="font-medium">{t("organizer.management.backToList", "Back to Organizers")}</span>
         </button>
 
         {/* Oeganizer Business Information */}
@@ -547,8 +547,8 @@ export default function OrganizerDetailPage() {
                     className="object-cover"
                   />
                 ) : (
-                    <AvatarFallback className="text-xl font-bold bg-linear-to-br from-indigo-50 to-blue-50 text-indigo-600 w-full h-full grid place-items-center">
-                      {getInitials(organizer?.name)}
+                  <AvatarFallback className="text-xl font-bold bg-linear-to-br from-indigo-50 to-blue-50 text-indigo-600 w-full h-full grid place-items-center">
+                    {getInitials(organizer?.name)}
                   </AvatarFallback>
                 )}
               </Avatar>

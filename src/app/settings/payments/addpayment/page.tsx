@@ -75,7 +75,7 @@ export default function AddPaymentPage() {
         "auth.toast.otpSent",
         "Verification code sent to your email",
       );
-      router.push("/organisers");
+      router.push("/organizers");
     } catch (error) {
       if (error instanceof AuthError) {
         toast.error(

@@ -1,4 +1,4 @@
-// src/app/organisers/layout.tsx
+// src/app/organizers/layout.tsx
 "use client";
 
 import { Suspense } from "react";
@@ -7,7 +7,7 @@ import DashboardHeader from "@/components/layout/dashboard-header";
 import { ProtectedRoute } from "@/components/providers/ProtectedRoute";
 import { useSidebarResponsive } from "@/hooks/useSidebarResponsive";
 
-export default function OrganisersLayout({
+export default function OrganizersLayout({
   children,
 }: {
   children: React.ReactNode;

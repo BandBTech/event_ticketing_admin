@@ -94,7 +94,7 @@ function EmptyState({ searchQuery }: { searchQuery: string }) {
   );
 }
 
-export default function OrganisersPage() {
+export default function OrganizersPage() {
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
   const router = useRouter();
@@ -121,7 +121,7 @@ export default function OrganisersPage() {
           params.set(key, value);
         }
       });
-      router.push(`/organisers?${params.toString()}`, { scroll: false });
+      router.push(`/organizers?${params.toString()}`, { scroll: false });
     },
     [router, searchParams],
   );

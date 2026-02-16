@@ -79,7 +79,7 @@ export default function AddOrganizerPage() {
         "auth.toast.otpSent",
         "Verification code sent to your email"
       );
-      router.push("/organisers");
+      router.push("/organizers");
     } catch (error) {
       if (error instanceof AuthError) {
         toast.error(
@@ -116,7 +116,7 @@ export default function AddOrganizerPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
       <div>
-        <Navbar title="Create Organiser" addMessage="" handleOpen={() => {}} />
+        <Navbar title="Create Organizer" addMessage="" handleOpen={() => { }} />
       </div>
       <div className="max-w-4xl mx-auto px-4 py-6">
         <div className="bg-white rounded-lg shadow-sm">
@@ -350,7 +350,7 @@ export default function AddOrganizerPage() {
                     )}
                     className={cn(
                       basicInfoForm.formState.errors.phone &&
-                        "border-destructive"
+                      "border-destructive"
                     )}
                   />
                 )}

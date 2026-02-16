@@ -116,7 +116,7 @@ export function EventDetailCard({ eventDetails }: EventDetailCardProps) {
             </div>
           ) : organizer ? (
             <Link
-                href={`/organisers/detail?id=${organizer?.id}`}
+                href={`/organizers/detail?id=${organizer?.id}`}
               className="flex items-center gap-3 p-2 -mx-2 rounded-lg hover:bg-gray-50 transition-colors group"
             >
               <Avatar className="h-10 w-10 border border-gray-200">

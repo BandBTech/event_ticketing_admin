@@ -30,7 +30,7 @@ const pageHeaders: {
   isDynamic?: boolean;
 }[] = [
   { prefix: "/dashboard", isDynamic: true },
-  { prefix: "/organisers", titleKey: "pages.organisers" },
+    { prefix: "/organizers", titleKey: "pages.organizers" },
   { prefix: "/events", titleKey: "pages.events" },
   { prefix: "/users", titleKey: "pages.users" },
   { prefix: "/transactions", titleKey: "pages.transactions" },

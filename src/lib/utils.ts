@@ -183,14 +183,19 @@ export function formatRelativeTime(date: Date | string | number | null | undefin
  * @param name - Name to get initials from
  * @returns Initials of the name
  */
-export function getInitials(name: string | { first_name: string, last_name: string }) {
+export function getInitials(name: string | { first_name: string, last_name?: string } | null | undefined) {
+  if (!name) return "";
+
+  console.log(typeof name);
   if (typeof name === "string") {
     const names = name.split(" ");
     const first = names[0]?.[0] || "";
     const last = names[names.length - 1]?.[0] || "";
     return (first + last).toUpperCase();
-  } else if (name.first_name && name.last_name) {
-    return (name.first_name[0] + name.last_name[0]).toUpperCase();
+  } else if (typeof name === "object" && name.first_name) {
+    const first = name.first_name[0] || "";
+    const last = name.last_name?.[0] || "";
+    return (first + last).toUpperCase();
   }
   return "";
 }

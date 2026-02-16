@@ -488,7 +488,7 @@
   },
   "pages": {
     "dashboard": "Dashboard",
-    "organisers": "Organisers",
+    "organizers": "Organizers",
     "events": "Events",
     "reports": "Reports",
     "settings": "Settings",
@@ -553,7 +553,7 @@
     "management": {
       "title": "Organizer Management",
       "details": "Organizer Details",
-      "backToList": "Back to Organisers",
+      "backToList": "Back to Organizers",
       "sections": {
         "contactInfo": "Contact Information",
         "rolesPermissions": "Roles & Permissions",
@@ -637,10 +637,10 @@
     "suspended": "Suspended",
     "verified": "Verified",
     "unverified": "Unverified",
-    "noOrganizerFound": "No organisers found",
+    "noOrganizerFound": "No organizers found",
     "failedToLoadOrganizers": "Failed to load organizers",
     "tryAdjustingSearchParams": "Try adjusting your search terms or filters",
-    "noOrganizersRegisteredYet": "No organisers have registered yet.",
+    "noOrganizersRegisteredYet": "No organizers have registered yet.",
     "joined": "Joined",
     "pleaseTryAgainLater": "Please try again later"
   },

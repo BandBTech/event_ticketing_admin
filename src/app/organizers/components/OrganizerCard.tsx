@@ -98,7 +98,7 @@ function OrganizerCard({ organizer }: { organizer: Organizer }) {
   return (
     <Card
       className="group hover:shadow-lg transition-all duration-300 flex flex-col h-full overflow-hidden border-gray-200 cursor-pointer"
-      onClick={() => router.push(`/organisers/detail?id=${organizer?.id}`)}
+      onClick={() => router.push(`/organizers/detail?id=${organizer?.id}`)}
     >
       <CardHeader className="flex flex-row items-start gap-4 space-y-0 pb-4">
         <Avatar className="h-16 w-16 border border-gray-100 group-hover:scale-105 transition-transform duration-300">
@@ -189,7 +189,7 @@ function OrganizerCard({ organizer }: { organizer: Organizer }) {
           className="flex-1 gap-2"
           onClick={(e) => {
             e.stopPropagation();
-            router.push(`/organisers/detail?id=${organizer.id}`);
+            router.push(`/organizers/detail?id=${organizer.id}`);
           }}
         >
           <EyeIcon weight="duotone" className="w-4.5 h-4.5" />

@@ -41,7 +41,7 @@ export function AppSidebar() {
   // Define navLinks with translation keys
   const navLinks = useMemo(() => [
     { href: "/dashboard", labelKey: "sidebar.dashboard", icon: Gauge },
-    { href: "/organisers", labelKey: "sidebar.organizers", icon: SquaresFour },
+    { href: "/organizers", labelKey: "sidebar.organizers", icon: SquaresFour },
     { href: "/events", labelKey: "sidebar.events", icon: CalendarBlank },
     { href: "/users", labelKey: "sidebar.users", icon: User },
     { href: "/transactions", labelKey: "sidebar.transactions", icon: ArrowsLeftRight  },

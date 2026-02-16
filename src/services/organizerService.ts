@@ -26,6 +26,8 @@ export interface Organizer {
   created_at: string;
   updated_at: string;
   name: string;
+  first_name?: string;
+  last_name?: string;
   logo: string;
   description: string;
   is_onboarding_complete: boolean;

@@ -25,23 +25,29 @@ export function OrganizerCard({
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
   const router = useRouter();
+  console.log(organizer);
 
   return (
     <div
       className="flex flex-col sm:flex-row items-center gap-4 px-4 py-3 border-gray-100 border-b last:border-b-0"
-      onClick={() => router.push(`/organisers/detail?id=${organizer.id}`)}
+      onClick={() => router.push(`/organizers/detail?id=${organizer.id}`)}
     >
       {/* Avatar with Initials */}
       <div className="w-8 h-8 rounded-full shrink-0 overflow-hidden">
         <div className="w-full h-full bg-gray-300 flex items-center justify-center text-white font-semibold text-lg">
-          {getInitials(organizer.name)}
+          {organizer?.name
+            ? getInitials(organizer.name)
+            : getInitials({
+              first_name: organizer?.first_name || "",
+              last_name: organizer?.last_name || "",
+            })}
         </div>
       </div>
 
       {/* Profile Info */}
       <div className="flex-1 min-w-0 text-center sm:text-left">
         <h3 className="text-base font-semibold text-gray-900 truncate">
-          {organizer.name}
+          {organizer.name || `${organizer.first_name} ${organizer.last_name}`}
         </h3>
         {organizer.email && (
           <p className="text-xs text-gray-500 truncate">{organizer.email}</p>
