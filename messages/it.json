@@ -216,7 +216,8 @@
       "eventEndsOn": "L'evento termina il",
       "venueName": "Nome della sede",
       "tags": "Tag",
-      "markFeatured": "Contrassegna come in primo piano"
+      "markFeatured": "Contrassegna come in primo piano",
+      "eventDescription": "Descrizione dell'evento"
     },
     "badge": {
       "approved": "Approvato",

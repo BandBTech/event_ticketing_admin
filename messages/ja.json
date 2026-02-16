@@ -226,7 +226,8 @@
       "eventStartsOn": "イベント開始日",
       "venueName": "会場名",
       "tags": "タグ",
-      "markFeatured": "注目としてマークする"
+      "markFeatured": "注目としてマークする",
+      "eventDescription": "イベントの説明"
     },
     "badge": {
       "approved": "承認された",
@@ -925,5 +926,10 @@
     "of": "/",
     "organizers": "件の主催者",
     "events": "件のイベント"
+  },
+  "event": {
+    "fields": {
+      "eventDescription": "イベントの説明"
+    }
   }
 }

@@ -237,6 +237,7 @@
       "totalEarnings": "Estimated Earnings"
     },
     "fields": {
+      "eventDescription": "Event Description",
       "dateTime": "Date & Time",
       "location": "Location",
       "price": "Price",
@@ -974,5 +975,10 @@
     "of": "of",
     "organizers": "organizers",
     "events": "events"
+  },
+  "event": {
+    "fields": {
+      "eventDescription": "Event Description"
+    }
   }
 }

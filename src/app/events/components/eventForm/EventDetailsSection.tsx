@@ -178,10 +178,10 @@ export function EventDetailsSection({
         {/* Description Editor */}
         <div className="space-y-2">
           <Label
-            required
             className={cn("inline-block", descriptionError && "text-red-500")}
           >
-            {t("event.field.eventDescription", "Event Description")}{" "}
+            {t("events.fields.eventDescription", "Event Description")}{" "}
+            <span className="text-red-500">*</span>
           </Label>
           <div
             className={cn(
