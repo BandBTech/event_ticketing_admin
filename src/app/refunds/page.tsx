@@ -18,6 +18,7 @@ import {
   User as UserIcon,
   DotsThreeVertical as DotsThreeVerticalIcon,
   NotepadIcon,
+  ArrowsLeftRight,
 } from "@phosphor-icons/react";
 import { BanknoteArrowUp, CreditCard, Logs } from "lucide-react";
 import { CaretUp, CaretDown, CaretUpDown } from "@phosphor-icons/react";
@@ -235,7 +236,6 @@ export default function TransactionsPage() {
     ],
     [t],
   );
-
   const table = useReactTable({
     data: response?.transactions || [],
     columns,
@@ -250,8 +250,8 @@ export default function TransactionsPage() {
   const handleOpenLogs = () => {
     router.push(`/auditlogs`);
   };
-  const handleOpenrefunds = () => {
-    router.push(`/refunds`);
+  const handleOpenTransactions = () => {
+    router.push(`/transactions`);
   };
   const handleOpenPayouts = () => {
     router.push(`/payouts`);
@@ -273,7 +273,7 @@ export default function TransactionsPage() {
             />
             <Input
               type="text"
-              placeholder={t("transactions.searchTransactions")}
+              placeholder={t("transactions.searchRefunds")}
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               className="pl-9"
@@ -282,16 +282,16 @@ export default function TransactionsPage() {
 
           <div className="flex gap-2">
             <Button
+              onClick={handleOpenTransactions}
               variant="outline"
-              onClick={handleOpenrefunds}
               className="gap-2 bg-background/80 backdrop-blur-sm"
             >
-              <BanknoteArrowUp className="h-4 w-4" />
-              {t("transactions.refund")}
+              <ArrowsLeftRight className="h-4 w-4" />
+              {t("sidebar.transactions")}
             </Button>
             <Button
-              variant="outline"
               onClick={handleOpenLogs}
+              variant="outline"
               className="gap-2 bg-background/80 backdrop-blur-sm"
             >
               <Logs className="h-4 w-4" />

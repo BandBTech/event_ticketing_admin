@@ -493,7 +493,10 @@
     "reports": "Reports",
     "settings": "Settings",
     "users": "Users",
-    "transactions": "Transactions"
+    "transactions": "Transactions",
+    "auditlogs": "Audit Logs",
+    "refunds": "Refunds",
+    "payouts": "Payouts"
   },
   "dashboard": {
     "greeting": {
@@ -708,6 +711,40 @@
       "updatedOn": "Updated On"
     }
   },
+  "transactions": {
+    "searchTransactions": "Search transactions...",
+    "searchRefunds": "Search refunds...",
+    "searchAuditLogs": "Search audit logs...",
+    "searchPayouts": "Search payouts...",
+    "refund": "Refund",
+    "auditLogs": "Audit Logs",
+    "payouts": "Payouts",
+    "filter": "Filter",
+    "table": {
+      "event": "Event",
+      "user": "User",
+      "ticket": "Ticket",
+      "amount": "Amount",
+      "commission": "Commission",
+      "organizer_share": "Organizer Share",
+      "gateway": "Gateway",
+      "status": "Status",
+      "date": "Date"
+    },
+    "paymentGateway": "Payment Gateway",
+    "status": "Status",
+    "gateway": {
+      "cash": "Cash",
+      "creditCard": "Credit Card",
+      "stripe": "Stripe"
+    },
+    "transactionStatus": {
+      "completed": "Completed",
+      "pending": "Pending",
+      "failed": "Failed",
+      "refunded": "Refunded"
+    }
+  },
   "settings": {
     "security": {
       "title": "Security Settings",
@@ -827,7 +864,6 @@
       "cancel": "Cancel",
       "createPaymentMethod": "Create Payment Method",
       "create": "Create"
-      
     },
     "notifications": {
       "title": "Notification Settings",
