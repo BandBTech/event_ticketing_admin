@@ -46,7 +46,9 @@ const PromoCodeCard = ({ index, control, onDelete }: PromoCodeCardProps) => {
           name={`promoCodes.${index}.code`}
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="inline-block">{t("event.field.promoCode", "Promo Code")} <span className="text-red-500">*</span></FormLabel>
+              <FormLabel required className="inline-block">
+                {t("event.field.promoCode", "Promo Code")}{" "}
+              </FormLabel>
               <FormControl>
                 <Input
                   className="h-13 md:text-md"
@@ -61,7 +63,8 @@ const PromoCodeCard = ({ index, control, onDelete }: PromoCodeCardProps) => {
               <div className="flex justify-between items-center -mt-1 min-h-[20px]">
                 <TranslatedFormMessage t={t} className="mt-0" />
                 <div className="text-xs text-muted-foreground ml-auto">
-                  {field.value?.length || 0}/{PROMO_CODE_NAME_MAX} {t("common.characters", "characters")}
+                  {field.value?.length || 0}/{PROMO_CODE_NAME_MAX}{" "}
+                  {t("common.characters", "characters")}
                 </div>
               </div>
             </FormItem>
@@ -73,16 +76,33 @@ const PromoCodeCard = ({ index, control, onDelete }: PromoCodeCardProps) => {
           name={`promoCodes.${index}.discountType`}
           render={({ field, fieldState }) => (
             <FormItem>
-              <FormLabel className="inline-block">{t("event.field.discountType", "Discount Type")} <span className="text-red-500">*</span></FormLabel>
+              <FormLabel required className="inline-block">
+                {t("event.field.discountType", "Discount Type")}
+              </FormLabel>
               <Select value={field.value} onValueChange={field.onChange}>
                 <FormControl>
-                  <SelectTrigger className={cn("h-13 md:text-md", !!fieldState.error && "border-red-500 focus:ring-red-500/20")}>
-                    <SelectValue placeholder={t("event.placeholder.discountType", "Select discount type")} />
+                  <SelectTrigger
+                    className={cn(
+                      "h-13 md:text-md",
+                      !!fieldState.error &&
+                        "border-red-500 focus:ring-red-500/20",
+                    )}
+                  >
+                    <SelectValue
+                      placeholder={t(
+                        "event.placeholder.discountType",
+                        "Select discount type",
+                      )}
+                    />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="amount">{t("event.option.amountFixed", "Amount (Fixed)")}</SelectItem>
-                  <SelectItem value="percentage">{t("event.option.percentage", "Percentage (%)")}</SelectItem>
+                  <SelectItem value="amount">
+                    {t("event.option.amountFixed", "Amount (Fixed)")}
+                  </SelectItem>
+                  <SelectItem value="percentage">
+                    {t("event.option.percentage", "Percentage (%)")}
+                  </SelectItem>
                 </SelectContent>
               </Select>
               <div className="flex justify-between items-center -mt-1">
@@ -97,19 +117,25 @@ const PromoCodeCard = ({ index, control, onDelete }: PromoCodeCardProps) => {
           name={`promoCodes.${index}.amount`}
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="inline-block">
+              <FormLabel required className="inline-block">
                 {isPercentage
                   ? t("event.field.discountPercentage", "Percentage (%)")
-                  : t("event.field.discountAmount", "Discount Amount")
-                } <span className="text-red-500">*</span>
+                  : t("event.field.discountAmount", "Discount Amount")}
               </FormLabel>
               <FormControl>
                 <Input
                   className="h-13 md:text-md"
                   type="number"
-                  placeholder={isPercentage
-                    ? t("event.placeholder.discountPercentage", "Enter discount percentage")
-                    : t("event.placeholder.discountAmount", "Enter discount amount")
+                  placeholder={
+                    isPercentage
+                      ? t(
+                          "event.placeholder.discountPercentage",
+                          "Enter discount percentage",
+                        )
+                      : t(
+                          "event.placeholder.discountAmount",
+                          "Enter discount amount",
+                        )
                   }
                   {...field}
                   onChange={(e) => {
@@ -136,12 +162,17 @@ const PromoCodeCard = ({ index, control, onDelete }: PromoCodeCardProps) => {
           name={`promoCodes.${index}.quantity`}
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="inline-block">{t("event.field.discountQuantity", "Quantity")} <span className="text-red-500">*</span></FormLabel>
+              <FormLabel required className="inline-block">
+                {t("event.field.discountQuantity", "Quantity")}{" "}
+              </FormLabel>
               <FormControl>
                 <Input
                   className="h-13 md:text-md"
                   type="number"
-                  placeholder={t("event.placeholder.quantity", "Enter quantity")}
+                  placeholder={t(
+                    "event.placeholder.quantity",
+                    "Enter quantity",
+                  )}
                   {...field}
                   onChange={(e) => {
                     const val = e.target.value;

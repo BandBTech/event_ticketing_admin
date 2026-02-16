@@ -81,7 +81,11 @@ function EventApprovalModal({
   onCancel?: () => void;
   onConfirm?: (data: { commissionRate?: number; adminRemark: string }) => void;
   isLoading?: boolean;
-  t: (key: string, fallback?: string, params?: Record<string, string | number>) => string;
+  t: (
+    key: string,
+    fallback?: string,
+    params?: Record<string, string | number>,
+  ) => string;
   eventName?: string;
   eventDetails?: AppEvent;
 }) {
@@ -89,7 +93,7 @@ function EventApprovalModal({
   const schema = useMemo(() => createEventApprovalSchema(t), [t]);
   const [showConfirm, setShowConfirm] = React.useState(false);
   const [pendingData, setPendingData] = React.useState<ApprovalFormData | null>(
-    null
+    null,
   );
 
   const form = useForm<ApprovalFormData>({
@@ -124,7 +128,10 @@ function EventApprovalModal({
     <>
       <Dialog open={true} onOpenChange={(open) => !open && onCancel?.()}>
         <DialogContent
-          className={cn("rounded-3xl shadow-2xl border-none bg-white/95 backdrop-blur-xl data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 duration-300", eventDetails ? "sm:max-w-4xl" : "max-w-md")}
+          className={cn(
+            "rounded-3xl shadow-2xl border-none bg-white/95 backdrop-blur-xl data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 duration-300",
+            eventDetails ? "sm:max-w-4xl" : "max-w-md",
+          )}
           showCloseButton={true}
         >
           {/* <DialogHeader>
@@ -132,8 +139,9 @@ function EventApprovalModal({
           </DialogHeader> */}
 
           <div
-            className={`grid ${eventDetails ? "md:grid-cols-2 gap-6" : "grid-cols-1"
-              }`}
+            className={`grid ${
+              eventDetails ? "md:grid-cols-2 gap-6" : "grid-cols-1"
+            }`}
           >
             {/* Left Column - Event Details Card */}
             {eventDetails && <EventDetailCard eventDetails={eventDetails} />}
@@ -146,7 +154,9 @@ function EventApprovalModal({
               >
                 {children}
                 <DialogHeader>
-                  <DialogTitle className="text-2xl font-bold text-gray-900 mb-2">{title}</DialogTitle>
+                  <DialogTitle className="text-2xl font-bold text-gray-900 mb-2">
+                    {title}
+                  </DialogTitle>
                 </DialogHeader>
 
                 <div className="space-y-4">
@@ -167,7 +177,7 @@ function EventApprovalModal({
                             max="100"
                             placeholder={t(
                               "dashboard.modal.commissionRatePlaceholder",
-                              "Enter commission rate (in %)"
+                              "Enter commission rate (in %)",
                             )}
                             {...field}
                             className="h-11 bg-gray-50/50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all"
@@ -192,7 +202,7 @@ function EventApprovalModal({
                           <Textarea
                             rows={4}
                             placeholder={t(
-                              "dashboard.modal.additionalNotesPlaceholder"
+                              "dashboard.modal.additionalNotesPlaceholder",
                             )}
                             className="resize-none bg-gray-50/50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all"
                             maxLength={500}
@@ -242,7 +252,10 @@ function EventApprovalModal({
         <AlertDialogContent className="data-[state=open]:slide-in-from-bottom-2 duration-300">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-xl font-bold text-gray-900">
-              {t("dashboard.modal.confirmEventApproval", "Confirm Event Approval")}
+              {t(
+                "dashboard.modal.confirmEventApproval",
+                "Confirm Event Approval",
+              )}
             </AlertDialogTitle>
             <AlertDialogDescription className="text-gray-500 text-base">
               {eventName && (
@@ -256,7 +269,7 @@ function EventApprovalModal({
                 "Are you sure you want to approve this event with a commission rate of {rate}%? This action cannot be undone immediately.",
                 {
                   rate: pendingData?.commissionRate || "0",
-                }
+                },
               )}
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -300,7 +313,11 @@ function RejectionModal({
   onCancel?: () => void;
   onConfirm?: (data: { commissionRate?: number; adminRemark: string }) => void;
   isLoading?: boolean;
-  t: (key: string, fallback?: string, params?: Record<string, string | number>) => string;
+  t: (
+    key: string,
+    fallback?: string,
+    params?: Record<string, string | number>,
+  ) => string;
   remarkLabel?: string;
   placeholder?: string;
   confirmText?: string;
@@ -329,7 +346,9 @@ function RejectionModal({
     <Dialog open={true} onOpenChange={(open) => !open && onCancel?.()}>
       <DialogContent className="max-w-md rounded-3xl shadow-2xl border-none bg-white/95 backdrop-blur-xl data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 duration-300">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-gray-900">{title}</DialogTitle>
+          <DialogTitle className="text-2xl font-bold text-gray-900">
+            {title}
+          </DialogTitle>
         </DialogHeader>
 
         {/* Form */}

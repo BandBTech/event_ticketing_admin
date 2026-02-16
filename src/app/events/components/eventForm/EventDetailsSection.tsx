@@ -2,7 +2,11 @@
 
 import { useCallback } from "react";
 import { Control, useWatch } from "react-hook-form";
-import { EventFormData, EVENT_TITLE_MAX, EVENT_DESC_MAX } from "@/lib/validation";
+import {
+  EventFormData,
+  EVENT_TITLE_MAX,
+  EVENT_DESC_MAX,
+} from "@/lib/validation";
 import { useTranslation } from "@/hooks/useTranslation";
 import { Label } from "@/components/ui/label";
 import {
@@ -56,19 +60,19 @@ export function EventDetailsSection({
 
   // Watch description for character count
   const description = useWatch({ control, name: "description" }) || "";
-  const descriptionTextLength = description.replace(/<[^>]*>/g, '').length;
+  const descriptionTextLength = description.replace(/<[^>]*>/g, "").length;
 
   const handleHtmlChange = useCallback(
     (html: string) => {
       // Strip HTML tags to check for real content
-      const textContent = html.replace(/<[^>]*>/g, '').trim();
+      const textContent = html.replace(/<[^>]*>/g, "").trim();
       const valueToSet = textContent ? html : "";
       onDescriptionChange(valueToSet);
       if (valueToSet) {
         onDescriptionClearError();
       }
     },
-    [onDescriptionChange, onDescriptionClearError]
+    [onDescriptionChange, onDescriptionClearError],
   );
 
   return (
@@ -80,10 +84,13 @@ export function EventDetailsSection({
         <div className="grid @2xl:grid-cols-2 gap-5">
           <ImageUploader
             label={t("event.field.uploadBanner", "Upload Banner")}
-            helperText={t("event.helperText.bannerImage", "Upload banner image or drag & drop")}
+            helperText={t(
+              "event.helperText.bannerImage",
+              "Upload banner image or drag & drop",
+            )}
             helperTextSize={t(
               "event.helperText.bannerImageSize",
-              "Recommended: PNG/JPG file of 1920x1200px with size up to 5MB"
+              "Recommended: PNG/JPG file of 1920x1200px with size up to 5MB",
             )}
             value={imageRemoved ? "" : imagePreview || initialBannerImage || ""}
             onChange={(file) => {
@@ -91,7 +98,10 @@ export function EventDetailsSection({
             }}
             onRemove={onImageRemove}
             error={imageError}
-            browseButtonText={t("event.helperText.bannerImageBrowse", "Browse File")}
+            browseButtonText={t(
+              "event.helperText.bannerImageBrowse",
+              "Browse File",
+            )}
             required
           />
 
@@ -101,22 +111,25 @@ export function EventDetailsSection({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="inline-block">
+                  <FormLabel className="inline-block" required>
                     {t("event.field.eventTitle", "Event Title")}{" "}
-                    <span className="text-red-500">*</span>
                   </FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
                         className="h-13 md:text-md"
-                        placeholder={t("event.placeholder.eventTitle", "Enter event title")}
+                        placeholder={t(
+                          "event.placeholder.eventTitle",
+                          "Enter event title",
+                        )}
                         maxLength={EVENT_TITLE_MAX}
                         {...field}
                       />
                       <div className="flex justify-between items-center mt-1 min-h-[20px]">
                         <TranslatedFormMessage t={t} className="mt-0" />
                         <div className="text-xs text-muted-foreground ml-auto">
-                          {field.value?.length || 0}/{EVENT_TITLE_MAX} {t("common.characters", "characters")}
+                          {field.value?.length || 0}/{EVENT_TITLE_MAX}{" "}
+                          {t("common.characters", "characters")}
                         </div>
                       </div>
                     </div>
@@ -130,15 +143,17 @@ export function EventDetailsSection({
               name="tags"
               render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel className="inline-block">
+                  <FormLabel required className="inline-block">
                     {t("event.field.categoryTags", "Category Tags")}{" "}
-                    <span className="text-red-500">*</span>
                   </FormLabel>
                   <FormControl>
                     <CategoryTagsSelector
                       value={field.value}
                       onChange={field.onChange}
-                      placeholder={t("event.placeholder.categoryTags", "Enter category tags separated by commas")}
+                      placeholder={t(
+                        "event.placeholder.categoryTags",
+                        "Enter category tags separated by commas",
+                      )}
                       maxTags={5}
                       maxChars={50}
                       className="min-h-13 md:text-md"
@@ -148,7 +163,10 @@ export function EventDetailsSection({
                   <div className="flex justify-between items-start -mt-1 min-h-[20px]">
                     <TranslatedFormMessage t={t} className="mt-0" />
                     <div className="text-xs text-muted-foreground ml-auto">
-                      {field.value?.length || 0}/5 {t("common.tags", "tags")} | {t("common.max", "Max")} 50 {t("common.characters", "characters")}/{t("common.tag", "tag")}
+                      {field.value?.length || 0}/5 {t("common.tags", "tags")} |{" "}
+                      {t("common.max", "Max")} 50{" "}
+                      {t("common.characters", "characters")}/
+                      {t("common.tag", "tag")}
                     </div>
                   </div>
                 </FormItem>
@@ -160,17 +178,17 @@ export function EventDetailsSection({
         {/* Description Editor */}
         <div className="space-y-2">
           <Label
+            required
             className={cn("inline-block", descriptionError && "text-red-500")}
           >
             {t("event.field.eventDescription", "Event Description")}{" "}
-            <span className="text-red-500">*</span>
           </Label>
           <div
             className={cn(
               "rounded-lg border transition-colors",
               descriptionError
                 ? "border-red-500 ring-1 ring-red-500/20"
-                : "border-gray-300"
+                : "border-gray-300",
             )}
           >
             <Editor
@@ -179,7 +197,7 @@ export function EventDetailsSection({
               onHtmlChange={handleHtmlChange}
               placeholder={t(
                 "event.placeholder.eventDescription",
-                "Write about your event..."
+                "Write about your event...",
               )}
             />
           </div>
@@ -188,9 +206,12 @@ export function EventDetailsSection({
               <p className="text-xs font-medium text-destructive mt-0 flex items-center gap-1">
                 {t(descriptionError)}
               </p>
-            ) : <div />}
+            ) : (
+              <div />
+            )}
             <div className="text-xs text-muted-foreground ml-auto">
-              {descriptionTextLength}/{EVENT_DESC_MAX} {t("common.characters", "characters")}
+              {descriptionTextLength}/{EVENT_DESC_MAX}{" "}
+              {t("common.characters", "characters")}
             </div>
           </div>
         </div>

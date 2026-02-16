@@ -232,7 +232,10 @@ export default function OrganizerFormDialog({
                 name="first_name"
                 render={({ field, fieldState }) => (
                   <FormItem>
-                    <FormLabel className="text-sm font-semibold text-gray-700">
+                    <FormLabel
+                      required
+                      className="text-sm font-semibold text-gray-700"
+                    >
                       {t("auth.signup.firstName", "First Name")}
                     </FormLabel>
                     <div className="relative group">
@@ -267,7 +270,10 @@ export default function OrganizerFormDialog({
                 name="last_name"
                 render={({ field, fieldState }) => (
                   <FormItem>
-                    <FormLabel className="text-sm font-semibold text-gray-700">
+                    <FormLabel
+                      required
+                      className="text-sm font-semibold text-gray-700"
+                    >
                       {t("auth.signup.lastName", "Last Name")}
                     </FormLabel>
                     <div className="relative group">
@@ -305,7 +311,10 @@ export default function OrganizerFormDialog({
                 name="email"
                 render={({ field, fieldState }) => (
                   <FormItem>
-                    <FormLabel className="text-sm font-semibold text-gray-700">
+                    <FormLabel
+                      required
+                      className="text-sm font-semibold text-gray-700"
+                    >
                       {t("auth.signup.email", "Email Address")}
                     </FormLabel>
                     <div className="relative group">
@@ -344,7 +353,10 @@ export default function OrganizerFormDialog({
                 name="password"
                 render={({ field, fieldState }) => (
                   <FormItem>
-                    <FormLabel className="text-sm font-semibold text-gray-700">
+                    <FormLabel
+                      required
+                      className="text-sm font-semibold text-gray-700"
+                    >
                       {t("auth.signup.password", "Password")}
                     </FormLabel>
                     <div className="relative group">

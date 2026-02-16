@@ -73,7 +73,10 @@ import { EventStatusBadge } from "@/app/components/EventStatusBadge";
 
 type StatusAction = "approve" | "reject" | "activate" | "deactivate";
 
-function getStatusConfig(status: string, t: (key: string, fallback?: string) => string) {
+function getStatusConfig(
+  status: string,
+  t: (key: string, fallback?: string) => string,
+) {
   switch (status?.toLowerCase()) {
     case "approved":
       return {
@@ -117,7 +120,10 @@ function getStatusConfig(status: string, t: (key: string, fallback?: string) => 
   }
 }
 
-function getAccountStatusConfig(status: string, t: (key: string, fallback?: string) => string) {
+function getAccountStatusConfig(
+  status: string,
+  t: (key: string, fallback?: string) => string,
+) {
   switch (status?.toLowerCase()) {
     case "active":
       return {
@@ -194,7 +200,10 @@ function StatusModal({
   t: (key: string, fallback?: string) => string;
 }) {
   const queryClient = useQueryClient();
-  const approvalSchema = useMemo(() => createApprovalSchema(t, action), [action, t]);
+  const approvalSchema = useMemo(
+    () => createApprovalSchema(t, action),
+    [action, t],
+  );
 
   const form = useForm<ApprovalFormValues>({
     resolver: zodResolver(approvalSchema),
@@ -215,18 +224,29 @@ function StatusModal({
       await OrganizerService.updateOrganizerStatus(
         organizer.id,
         targetStatus,
-        data.remark || ""
+        data.remark || "",
       );
     },
     onSuccess: () => {
-      const successMessage = t(`organizer.management.messages.${action}Success`, `Organizer ${action}d successfully`);
+      const successMessage = t(
+        `organizer.management.messages.${action}Success`,
+        `Organizer ${action}d successfully`,
+      );
       toast.success(successMessage);
       queryClient.invalidateQueries({ queryKey: queryKeys.organizers.list });
-      queryClient.invalidateQueries({ queryKey: queryKeys.organizers.detail(organizer.id) });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.organizers.detail(organizer.id),
+      });
       onClose();
     },
     onError: (error: Error) => {
-      toast.error(error.message || t("organizer.management.messages.updateError", "Failed to update status"));
+      toast.error(
+        error.message ||
+          t(
+            "organizer.management.messages.updateError",
+            "Failed to update status",
+          ),
+      );
     },
   });
 
@@ -242,18 +262,30 @@ function StatusModal({
       });
     },
     onSuccess: () => {
-      const successMessage = t(`organizer.management.messages.${action}Success`, `Organizer ${action}d successfully`);
+      const successMessage = t(
+        `organizer.management.messages.${action}Success`,
+        `Organizer ${action}d successfully`,
+      );
       toast.success(successMessage);
       queryClient.invalidateQueries({ queryKey: queryKeys.organizers.list });
-      queryClient.invalidateQueries({ queryKey: queryKeys.organizers.detail(organizer.id) });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.organizers.detail(organizer.id),
+      });
       onClose();
     },
     onError: (error: Error) => {
-      toast.error(error.message || t("organizer.management.messages.updateError", "Failed to update status"));
+      toast.error(
+        error.message ||
+          t(
+            "organizer.management.messages.updateError",
+            "Failed to update status",
+          ),
+      );
     },
   });
 
-  const isPending = statusUpdateMutation.isPending || approvalMutation.isPending;
+  const isPending =
+    statusUpdateMutation.isPending || approvalMutation.isPending;
 
   const onSubmit = (data: ApprovalFormValues) => {
     if (action === "activate" || action === "deactivate") {
@@ -267,8 +299,14 @@ function StatusModal({
     switch (action) {
       case "approve":
         return {
-          title: t("organizer.management.modals.approveTitle", "Approve Organizer"),
-          description: t("organizer.management.modals.approveDesc", "Are you sure you want to approve {name}?").replace("{name}", `${organizer.name}`),
+          title: t(
+            "organizer.management.modals.approveTitle",
+            "Approve Organizer",
+          ),
+          description: t(
+            "organizer.management.modals.approveDesc",
+            "Are you sure you want to approve {name}?",
+          ).replace("{name}", `${organizer.name}`),
           buttonText: t("organizer.management.actions.approve", "Approve"),
           buttonClass: "bg-emerald-600 hover:bg-emerald-700 text-white",
           icon: CheckIcon,
@@ -276,8 +314,14 @@ function StatusModal({
         };
       case "reject":
         return {
-          title: t("organizer.management.modals.rejectTitle", "Reject Organizer"),
-          description: t("organizer.management.modals.rejectDesc", "Are you sure you want to reject {name}?").replace("{name}", `${organizer.name}`),
+          title: t(
+            "organizer.management.modals.rejectTitle",
+            "Reject Organizer",
+          ),
+          description: t(
+            "organizer.management.modals.rejectDesc",
+            "Are you sure you want to reject {name}?",
+          ).replace("{name}", `${organizer.name}`),
           buttonText: t("organizer.management.actions.reject", "Reject"),
           buttonClass: "bg-red-600 hover:bg-red-700 text-white",
           icon: XIcon,
@@ -285,17 +329,32 @@ function StatusModal({
         };
       case "deactivate":
         return {
-          title: t("organizer.management.modals.deactivateTitle", "Deactivate Organizer"),
-          description: t("organizer.management.modals.deactivateDesc", "Are you sure you want to deactivate {name}'s account?").replace("{name}", `${organizer.name}`),
-          buttonText: t("organizer.management.actions.deactivate", "Deactivate"),
+          title: t(
+            "organizer.management.modals.deactivateTitle",
+            "Deactivate Organizer",
+          ),
+          description: t(
+            "organizer.management.modals.deactivateDesc",
+            "Are you sure you want to deactivate {name}'s account?",
+          ).replace("{name}", `${organizer.name}`),
+          buttonText: t(
+            "organizer.management.actions.deactivate",
+            "Deactivate",
+          ),
           buttonClass: "bg-gray-600 hover:bg-gray-700 text-white",
           icon: UserMinusIcon,
           iconClass: "bg-gray-100 text-gray-600",
         };
       case "activate":
         return {
-          title: t("organizer.management.modals.activateTitle", "Activate Organizer"),
-          description: t("organizer.management.modals.activateDesc", "Are you sure you want to activate {name}'s account?").replace("{name}", `${organizer.name}`),
+          title: t(
+            "organizer.management.modals.activateTitle",
+            "Activate Organizer",
+          ),
+          description: t(
+            "organizer.management.modals.activateDesc",
+            "Are you sure you want to activate {name}'s account?",
+          ).replace("{name}", `${organizer.name}`),
           buttonText: t("organizer.management.actions.activate", "Activate"),
           buttonClass: "bg-blue-600 hover:bg-blue-700 text-white",
           icon: CheckCircleIcon,
@@ -310,11 +369,15 @@ function StatusModal({
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <div className={`mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full ${config.iconClass}`}>
+          <div
+            className={`mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full ${config.iconClass}`}
+          >
             <config.icon weight="duotone" className="h-6 w-6" />
           </div>
           <DialogTitle className="text-center">{config.title}</DialogTitle>
-          <DialogDescription className="text-center">{config.description}</DialogDescription>
+          <DialogDescription className="text-center">
+            {config.description}
+          </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -324,16 +387,26 @@ function StatusModal({
               name="remark"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    {t("organizer.management.modals.remarkLabel", "Admin Remark")}
-                    {(action === "reject" || action === "deactivate") && <span className="text-red-500">*</span>}
+                  <FormLabel
+                    required={action === "reject" || action === "deactivate"}
+                  >
+                    {t(
+                      "organizer.management.modals.remarkLabel",
+                      "Admin Remark",
+                    )}
                   </FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder={
                         action === "reject" || action === "deactivate"
-                          ? t("organizer.management.modals.rejectPlaceholder", "Please provide a reason...")
-                          : t("organizer.management.modals.remarkPlaceholder", "Add a note...")
+                          ? t(
+                              "organizer.management.modals.rejectPlaceholder",
+                              "Please provide a reason...",
+                            )
+                          : t(
+                              "organizer.management.modals.remarkPlaceholder",
+                              "Add a note...",
+                            )
                       }
                       className="resize-none"
                       maxLength={500}
@@ -343,7 +416,8 @@ function StatusModal({
                   <div className="flex justify-between items-center -mt-1 min-h-[20px]">
                     <TranslatedFormMessage t={t} className="mt-0" />
                     <div className="text-xs text-muted-foreground ml-auto">
-                      {field.value?.length || 0}/500 {t("common.characters", "characters")}
+                      {field.value?.length || 0}/500{" "}
+                      {t("common.characters", "characters")}
                     </div>
                   </div>
                 </FormItem>
@@ -368,7 +442,10 @@ function StatusModal({
                 {isPending ? (
                   <>
                     <CircleNotchIcon className="mr-2 h-4 w-4 animate-spin" />
-                    {t("organizer.management.actions.processing", "Processing...")}
+                    {t(
+                      "organizer.management.actions.processing",
+                      "Processing...",
+                    )}
                   </>
                 ) : (
                   config.buttonText
@@ -415,7 +492,12 @@ function LatestEventsByOrganizer({ id }: { id: string }) {
       {events.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-8 text-center text-gray-500">
           <CalendarBlankIcon className="w-12 h-12 mb-3 text-gray-300" />
-          <p>{t("organizer.management.messages.noEvents", "No events found for this organizer")}</p>
+          <p>
+            {t(
+              "organizer.management.messages.noEvents",
+              "No events found for this organizer",
+            )}
+          </p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -423,11 +505,18 @@ function LatestEventsByOrganizer({ id }: { id: string }) {
             <div
               key={event?.id}
               className="flex items-center gap-4 p-2 rounded-xl bg-white border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all cursor-pointer group"
-              onClick={() => router.push(`/events/eventdetails?id=${event?.id}`)}
+              onClick={() =>
+                router.push(`/events/eventdetails?id=${event?.id}`)
+              }
             >
               <div className="aspect-16/10 h-20 rounded-lg bg-gray-50 overflow-hidden relative border border-gray-100">
                 {event?.banner_image ? (
-                  <Image src={event?.banner_image} alt={event?.title || "Event Image"} fill className="object-cover" />
+                  <Image
+                    src={event?.banner_image}
+                    alt={event?.title || "Event Image"}
+                    fill
+                    className="object-cover"
+                  />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-gray-300">
                     <ImageIcon weight="duotone" className="w-8 h-8" />
@@ -436,7 +525,9 @@ function LatestEventsByOrganizer({ id }: { id: string }) {
               </div>
 
               <div className="flex-1 min-w-0">
-                <h3 className="font-medium text-gray-900 truncate group-hover:text-primary transition-colors">{event?.title}</h3>
+                <h3 className="font-medium text-gray-900 truncate group-hover:text-primary transition-colors">
+                  {event?.title}
+                </h3>
                 <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
                   <span className="flex items-center gap-1">
                     <CalendarHeartIcon weight="duotone" className="w-4 h-4" />
@@ -449,7 +540,7 @@ function LatestEventsByOrganizer({ id }: { id: string }) {
 
               <div className="text-right pl-2">
                 <div className="font-semibold text-gray-900 text-sm">
-                  {event?.price > 0 ? `$${event?.price}` : 'Free'}
+                  {event?.price > 0 ? `$${event?.price}` : "Free"}
                 </div>
               </div>
             </div>
@@ -470,11 +561,7 @@ export default function OrganizerDetailPage() {
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [statusAction, setStatusAction] = useState<StatusAction>("approve");
 
-  const {
-    data: organizer,
-    isLoading,
-    isError,
-  } = useOrganizerById(id!);
+  const { data: organizer, isLoading, isError } = useOrganizerById(id!);
 
   if (isLoading) {
     return <DetailPageSkeleton />;
@@ -488,7 +575,14 @@ export default function OrganizerDetailPage() {
             <WarningIcon weight="duotone" className="w-8 h-8 text-red-500" />
           </div>
           <h2 className="text-xl font-semibold text-gray-900 mb-2">
-            {!id ? t("organizer.management.messages.noId", "No Organizer Selected") : isError ? t("common.error", "Error") : t("organizer.management.messages.notFound", "Organizer Not Found")}
+            {!id
+              ? t("organizer.management.messages.noId", "No Organizer Selected")
+              : isError
+                ? t("common.error", "Error")
+                : t(
+                    "organizer.management.messages.notFound",
+                    "Organizer Not Found",
+                  )}
           </h2>
           <button
             onClick={() => router.push("/organizers")}
@@ -502,7 +596,10 @@ export default function OrganizerDetailPage() {
   }
 
   const statusConfig = getStatusConfig(organizer?.organizer_status, t);
-  const accountStatusConfig = getAccountStatusConfig(organizer?.account_status, t);
+  const accountStatusConfig = getAccountStatusConfig(
+    organizer?.account_status,
+    t,
+  );
   const StatusIcon = statusConfig.icon;
 
   const formattedCreatedDate = organizer?.created_at
@@ -531,8 +628,13 @@ export default function OrganizerDetailPage() {
           onClick={() => router.push("/organizers")}
           className="flex items-center gap-1 text-gray-600 hover:text-gray-900 mb-2 group hover:bg-gray-200 p-2 px-4 rounded-lg"
         >
-          <ArrowLeft weight="duotone" className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-          <span className="font-medium">{t("organizer.management.backToList", "Back to Organizers")}</span>
+          <ArrowLeft
+            weight="duotone"
+            className="w-5 h-5 group-hover:-translate-x-1 transition-transform"
+          />
+          <span className="font-medium">
+            {t("organizer.management.backToList", "Back to Organizers")}
+          </span>
         </button>
 
         {/* Oeganizer Business Information */}
@@ -573,15 +675,24 @@ export default function OrganizerDetailPage() {
                     <p className="text-gray-500 mb-4">{organizer?.email}</p>
 
                     <div className="flex flex-wrap gap-2">
-                      <Badge variant={statusConfig.variant} className={`gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border ${statusConfig.color}`}>
+                      <Badge
+                        variant={statusConfig.variant}
+                        className={`gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border ${statusConfig.color}`}
+                      >
                         <StatusIcon weight="duotone" className="w-4 h-4" />
                         {statusConfig.label}
                       </Badge>
 
                       {!isOrganizerOnboarded && (
                         <Badge className="bg-orange-100 text-orange-600 px-3 text-sm">
-                          <WarningCircleIcon weight="duotone" className="size-5!" />
-                          {t("organizer.management.status.notOnboarded", "Onboarding Incomplete")}
+                          <WarningCircleIcon
+                            weight="duotone"
+                            className="size-5!"
+                          />
+                          {t(
+                            "organizer.management.status.notOnboarded",
+                            "Onboarding Incomplete",
+                          )}
                         </Badge>
                       )}
                     </div>
@@ -590,13 +701,19 @@ export default function OrganizerDetailPage() {
                   <div className="flex items-center gap-2 relative">
                     <div className="flex gap-2">
                       {!isApproved && (
-                        <Button onClick={() => handleAction("approve")} className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                        <Button
+                          onClick={() => handleAction("approve")}
+                          className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                        >
                           {t("organizer.management.actions.approve", "Approve")}
                         </Button>
                       )}
 
                       {isPending && (
-                        <Button onClick={() => handleAction("reject")} className="bg-destructive hover:bg-destructive/80 text-white">
+                        <Button
+                          onClick={() => handleAction("reject")}
+                          className="bg-destructive hover:bg-destructive/80 text-white"
+                        >
                           {t("organizer.management.actions.reject", "Reject")}
                         </Button>
                       )}
@@ -608,24 +725,41 @@ export default function OrganizerDetailPage() {
                           title="dropdown-manager"
                           className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors border border-gray-200"
                         >
-                          <DotsThreeVerticalIcon weight="duotone" className="w-5 h-5" />
+                          <DotsThreeVerticalIcon
+                            weight="duotone"
+                            className="w-5 h-5"
+                          />
                         </button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-48">
                         <DropdownMenuItem
-                          onClick={() => router.push(`/events?organizer_id=${organizer?.id}`)}
+                          onClick={() =>
+                            router.push(`/events?organizer_id=${organizer?.id}`)
+                          }
                           className="gap-2"
                         >
-                          <ArrowSquareOutIcon weight="duotone" className="w-4 h-4" />
-                          {t("organizer.management.actions.viewEvents", "View Events")}
+                          <ArrowSquareOutIcon
+                            weight="duotone"
+                            className="w-4 h-4"
+                          />
+                          {t(
+                            "organizer.management.actions.viewEvents",
+                            "View Events",
+                          )}
                         </DropdownMenuItem>
                         {organizer?.account_status === "active" && (
                           <DropdownMenuItem
                             onClick={() => handleAction("deactivate")}
                             className="gap-2 text-destructive "
                           >
-                            <MinusCircleIcon weight="duotone" className="w-4 h-4" />
-                            {t("organizer.management.actions.deactivateAccount", "Deactivate Account")}
+                            <MinusCircleIcon
+                              weight="duotone"
+                              className="w-4 h-4"
+                            />
+                            {t(
+                              "organizer.management.actions.deactivateAccount",
+                              "Deactivate Account",
+                            )}
                           </DropdownMenuItem>
                         )}
                         {organizer?.account_status === "inactive" && (
@@ -633,14 +767,20 @@ export default function OrganizerDetailPage() {
                             onClick={() => handleAction("activate")}
                             className="gap-2 text-success focus:text-success focus:bg-success/10"
                           >
-                            <PlusCircleIcon weight="duotone" className="w-4 h-4" />
-                            {t("organizer.management.actions.activateAccount", "Activate Account")}
+                            <PlusCircleIcon
+                              weight="duotone"
+                              className="w-4 h-4"
+                            />
+                            {t(
+                              "organizer.management.actions.activateAccount",
+                              "Activate Account",
+                            )}
                           </DropdownMenuItem>
                         )}
-                        <DropdownMenuItem disabled className="gap-2">
+                        {/* <DropdownMenuItem disabled className="gap-2">
                           <PencilSimpleIcon weight="duotone" className="w-4 h-4" />
                           {t("organizer.management.actions.editDetails", "Edit Details")}
-                        </DropdownMenuItem>
+                        </DropdownMenuItem> */}
                         {/* <DropdownMenuSeparator /> */}
                         {/* <DropdownMenuItem
                           onClick={() => {
@@ -666,28 +806,46 @@ export default function OrganizerDetailPage() {
           <div className="lg:col-span-2 space-y-6 ">
             <div className="glass-card-lower p-6 rounded-2xl">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                {t("organizer.management.sections.contactInfo", "Contact Information")}
+                {t(
+                  "organizer.management.sections.contactInfo",
+                  "Contact Information",
+                )}
               </h2>
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
-                    <EnvelopeIcon weight="duotone" className="w-5 h-5 text-blue-600" />
+                    <EnvelopeIcon
+                      weight="duotone"
+                      className="w-5 h-5 text-blue-600"
+                    />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">{t("profile.email", "Email Address")}</p>
-                    <p className="font-medium text-gray-900">{organizer?.email}</p>
+                    <p className="text-sm text-gray-500">
+                      {t("profile.email", "Email Address")}
+                    </p>
+                    <p className="font-medium text-gray-900">
+                      {organizer?.email}
+                    </p>
                   </div>
                 </div>
 
                 {organizer?.phone && (
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center">
-                      <PhoneIcon weight="duotone" className="w-5 h-5 text-green-600" />
+                      <PhoneIcon
+                        weight="duotone"
+                        className="w-5 h-5 text-green-600"
+                      />
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">{t("profile.phone", "Phone Number")}</p>
+                      <p className="text-sm text-gray-500">
+                        {t("profile.phone", "Phone Number")}
+                      </p>
                       <p className="font-medium text-gray-900">
-                        {formatPhoneNumber(organizer?.country_code, organizer?.phone)}
+                        {formatPhoneNumber(
+                          organizer?.country_code,
+                          organizer?.phone,
+                        )}
                       </p>
                     </div>
                   </div>
@@ -695,21 +853,31 @@ export default function OrganizerDetailPage() {
 
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center">
-                    <CalendarBlankIcon weight="duotone" className="w-5 h-5 text-purple-600" />
+                    <CalendarBlankIcon
+                      weight="duotone"
+                      className="w-5 h-5 text-purple-600"
+                    />
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Joined</p>
-                    <p className="font-medium text-gray-900">{formattedCreatedDate}</p>
+                    <p className="font-medium text-gray-900">
+                      {formattedCreatedDate}
+                    </p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-lg bg-orange-50 flex items-center justify-center">
-                    <CalendarBlankIcon weight="duotone" className="w-5 h-5 text-orange-600" />
+                    <CalendarBlankIcon
+                      weight="duotone"
+                      className="w-5 h-5 text-orange-600"
+                    />
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Last Updated</p>
-                    <p className="font-medium text-gray-900">{formattedUpdatedDate}</p>
+                    <p className="font-medium text-gray-900">
+                      {formattedUpdatedDate}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -754,30 +922,58 @@ export default function OrganizerDetailPage() {
 
             <div className="glass-card-lower p-6 rounded-2xl">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                {t("organizer.management.sections.statusSummary", "Status Summary")}
+                {t(
+                  "organizer.management.sections.statusSummary",
+                  "Status Summary",
+                )}
               </h2>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-500">{t("organizer.management.status.organizer", "Organizer Status")}</span>
-                  <Badge variant={statusConfig?.variant} className={statusConfig?.color}>
+                  <span className="text-sm text-gray-500">
+                    {t(
+                      "organizer.management.status.organizer",
+                      "Organizer Status",
+                    )}
+                  </span>
+                  <Badge
+                    variant={statusConfig?.variant}
+                    className={statusConfig?.color}
+                  >
                     {statusConfig?.label}
                   </Badge>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-500">{t("organizer.management.status.account", "Account Status")}</span>
+                  <span className="text-sm text-gray-500">
+                    {t("organizer.management.status.account", "Account Status")}
+                  </span>
                   <Badge className={accountStatusConfig?.color}>
                     {accountStatusConfig?.label}
                   </Badge>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-500">{t("organizer.management.status.verified", "Email Verified")}</span>
-                  <Badge variant={organizer?.is_email_verified ? "secondary" : "destructive"} className={organizer?.is_email_verified ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"}>
-                    {organizer?.is_email_verified ? t("common.yes", "Yes") : t("common.no", "No")}
+                  <span className="text-sm text-gray-500">
+                    {t(
+                      "organizer.management.status.verified",
+                      "Email Verified",
+                    )}
+                  </span>
+                  <Badge
+                    variant={
+                      organizer?.is_email_verified ? "secondary" : "destructive"
+                    }
+                    className={
+                      organizer?.is_email_verified
+                        ? "bg-emerald-100 text-emerald-700"
+                        : "bg-red-100 text-red-700"
+                    }
+                  >
+                    {organizer?.is_email_verified
+                      ? t("common.yes", "Yes")
+                      : t("common.no", "No")}
                   </Badge>
                 </div>
               </div>
             </div>
-
           </div>
           <div className="col-span-full glass-card-lower p-6 rounded-2xl">
             <LatestEventsByOrganizer id={organizer?.id} />
