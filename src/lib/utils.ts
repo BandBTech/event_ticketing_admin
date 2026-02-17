@@ -186,7 +186,6 @@ export function formatRelativeTime(date: Date | string | number | null | undefin
 export function getInitials(name: string | { first_name: string, last_name?: string } | null | undefined) {
   if (!name) return "";
 
-  console.log(typeof name);
   if (typeof name === "string") {
     const names = name.split(" ");
     const first = names[0]?.[0] || "";

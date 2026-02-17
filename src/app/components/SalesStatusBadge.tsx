@@ -26,8 +26,6 @@ export function SalesStatusBadge({ status, className, showAlways = false }: Sale
 
   const displayStatus = status || "";
 
-  console.log(displayStatus);
-
   if (displayStatus === 'active') {
     return
   }

@@ -25,7 +25,6 @@ export function OrganizerCard({
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
   const router = useRouter();
-  console.log(organizer);
 
   return (
     <div

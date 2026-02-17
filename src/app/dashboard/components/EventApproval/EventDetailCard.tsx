@@ -30,7 +30,6 @@ export function EventDetailCard({ eventDetails }: EventDetailCardProps) {
     data: organizer,
     isLoading: organizerLoading,
   } = useOrganizerById(eventDetails.organizer_id);
-  console.log("organizer", organizer);
 
   const categories = useMemo(() => {
     if (!eventDetails.category) return [];

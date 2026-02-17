@@ -136,7 +136,6 @@ const DateTimeInput = React.forwardRef<HTMLInputElement, DateTimeInputProps>((op
     if (!allHasValue) return undefined;
     const date = parse(inputStr, formatStr, value ? new Date(value) : new Date());
     const year = getYear(date);
-    // console.log('inputValue', {allHasValue, validSegments, inputStr, formatStr, date, year});
     if (year >= 1000 && year <= 9999) {
       return date;
     }
@@ -151,7 +150,6 @@ const DateTimeInput = React.forwardRef<HTMLInputElement, DateTimeInputProps>((op
     }
     if (!inputValue) return;
     if (value?.getTime() !== inputValue.getTime()) {
-      // console.log('inputValueChanged', {formatStr, inputStr, value, inputValue, });
       onChange?.(inputValue);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
