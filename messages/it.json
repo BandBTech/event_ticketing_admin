@@ -48,6 +48,7 @@
     "logout": "Esci",
     "admin": "Admin",
     "users": "Utenti",
+    "billings": "Fatturazioni",
     "transactions": "Transazioni"
   },
   "hero": {
@@ -446,6 +447,7 @@
     "reports": "Rapporti",
     "settings": "Impostazioni",
     "users": "Utenti",
+    "billings": "Fatturazioni",
     "transactions": "Transazioni",
     "auditlogs": "Registri di controllo",
     "refunds": "Rimborsi",
@@ -652,6 +654,17 @@
       "accountDetails": "Dettagli Account",
       "createdOn": "Creato il",
       "updatedOn": "Aggiornato il"
+    }
+  },
+  "billings": {
+    "searchBills": "Cerca fatture",
+    "filterByStatus": "Filtra per stato",
+    "status": {
+      "pending": "In sospeso",
+      "paid": "Pagata",
+      "overdue": "Scaduta",
+      "cancelled": "Annullata",
+      "clearFilter": "Pulisci filtro"
     }
   },
   "transactions": {

@@ -317,6 +317,7 @@
     "logout": "Logout",
     "admin": "Admin",
     "users": "Users",
+    "billings": "Billings",
     "transactions": "Transactions"
   },
   "auth": {
@@ -494,6 +495,7 @@
     "reports": "Reports",
     "settings": "Settings",
     "users": "Users",
+    "billings": "Billings",
     "transactions": "Transactions",
     "auditlogs": "Audit Logs",
     "refunds": "Refunds",
@@ -710,6 +712,17 @@
       "accountDetails": "Account Details",
       "createdOn": "Created On",
       "updatedOn": "Updated On"
+    }
+  },
+  "billings": {
+    "searchBills": "Search bills",
+    "filterByStatus": "Filter By Status",
+    "status": {
+      "pending": "Pending",
+      "paid": "Paid",
+      "overdue": "Overdue",
+      "cancelled": "Cancelled",
+      "clearFilter": "Clear filter"
     }
   },
   "transactions": {

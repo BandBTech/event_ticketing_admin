@@ -48,6 +48,7 @@
     "logout": "ログアウト",
     "admin": "管理者",
     "users": "ユーザー",
+    "billings": "請求書",
     "transactions": "取引"
   },
   "hero": {
@@ -456,6 +457,7 @@
     "reports": "レポート",
     "settings": "設定",
     "users": "ユーザー",
+    "billings": "請求書",
     "transactions": "取引",
     "auditlogs": "監査ログ",
     "refunds": "返金",
@@ -662,6 +664,17 @@
       "accountDetails": "アカウント詳細",
       "createdOn": "作成日",
       "updatedOn": "更新日"
+    }
+  },
+  "billings": {
+    "searchBills": "請求書を検索",
+    "filterByStatus": "ステータスでフィルター",
+    "status": {
+      "pending": "保留中",
+      "paid": "支払済み",
+      "overdue": "期限超過",
+      "cancelled": "キャンセル済み",
+      "clearFilter": "フィルターをクリア"
     }
   },
   "transactions": {

@@ -15,7 +15,8 @@ import {
   SignOut,
   User,
   Ticket,
-  ArrowsLeftRight 
+  ArrowsLeftRight,
+  InvoiceIcon,
 } from "@phosphor-icons/react";
 
 import { useAuthStore } from "@/store/authStore";
@@ -36,18 +37,35 @@ export function AppSidebar() {
   const { user, logout } = useAuthStore();
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
-  const { isCollapsed: collapsed, toggleCollapse: onToggle, sidebarOpen, setSidebarOpen } = useUIStore();
+  const {
+    isCollapsed: collapsed,
+    toggleCollapse: onToggle,
+    sidebarOpen,
+    setSidebarOpen,
+  } = useUIStore();
 
   // Define navLinks with translation keys
-  const navLinks = useMemo(() => [
-    { href: "/dashboard", labelKey: "sidebar.dashboard", icon: Gauge },
-    { href: "/organizers", labelKey: "sidebar.organizers", icon: SquaresFour },
-    { href: "/events", labelKey: "sidebar.events", icon: CalendarBlank },
-    { href: "/users", labelKey: "sidebar.users", icon: User },
-    { href: "/transactions", labelKey: "sidebar.transactions", icon: ArrowsLeftRight  },
-    { href: "/reports", labelKey: "sidebar.reports", icon: FileText },
-    { href: "/settings", labelKey: "sidebar.settings", icon: Gear },
-  ], []);
+  const navLinks = useMemo(
+    () => [
+      { href: "/dashboard", labelKey: "sidebar.dashboard", icon: Gauge },
+      {
+        href: "/organizers",
+        labelKey: "sidebar.organizers",
+        icon: SquaresFour,
+      },
+      { href: "/events", labelKey: "sidebar.events", icon: CalendarBlank },
+      { href: "/users", labelKey: "sidebar.users", icon: User },
+      { href: "/billings", labelKey: "sidebar.billings", icon: InvoiceIcon },
+      {
+        href: "/transactions",
+        labelKey: "sidebar.transactions",
+        icon: ArrowsLeftRight,
+      },
+      { href: "/reports", labelKey: "sidebar.reports", icon: FileText },
+      { href: "/settings", labelKey: "sidebar.settings", icon: Gear },
+    ],
+    [],
+  );
 
   const handleLogout = async () => {
     try {
@@ -60,7 +78,8 @@ export function AppSidebar() {
 
   // Get user display name
   const displayName = user
-    ? `${user.firstName || ""} ${user.lastName || ""}`.trim() || t("sidebar.admin", "Admin")
+    ? `${user.firstName || ""} ${user.lastName || ""}`.trim() ||
+      t("sidebar.admin", "Admin")
     : t("sidebar.admin", "Admin");
   const displayEmail = user?.email || "";
 
@@ -75,8 +94,9 @@ export function AppSidebar() {
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 md:relative flex flex-col h-screen bg-white border-r border-gray-200 transition-all duration-300 ${collapsed ? "w-20" : "w-56"
-          } ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
+        className={`fixed inset-y-0 left-0 z-50 md:relative flex flex-col h-screen bg-white border-r border-gray-200 transition-all duration-300 ${
+          collapsed ? "w-20" : "w-56"
+        } ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
       >
         {/* Header with Logo and Collapse Button */}
         <div className="flex items-center justify-between px-4 py-5 border-b border-gray-100">
@@ -90,9 +110,12 @@ export function AppSidebar() {
               <button
                 title="toggle-button"
                 onClick={onToggle}
-                  className="hidden md:block p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
-                >
-                <CaretDoubleLeft weight="bold" className="size-4 text-gray-500" />
+                className="hidden md:block p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                <CaretDoubleLeft
+                  weight="bold"
+                  className="size-4 text-gray-500"
+                />
               </button>
             </>
           )}
@@ -116,26 +139,34 @@ export function AppSidebar() {
               (href !== "/dashboard" && pathname.startsWith(href));
 
             return (
-              <Link key={href} href={href} className="no-underline" onClick={() => setSidebarOpen(false)}>
+              <Link
+                key={href}
+                href={href}
+                className="no-underline"
+                onClick={() => setSidebarOpen(false)}
+              >
                 <div
-                  className={`group flex items-center gap-3 px-3 py-2.5 cursor-pointer transition-all relative ${isActive
-                    ? "bg-blue-50 text-blue-700 font-medium before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[2px] before:bg-blue-600 before:shadow-md"
-                    : "hover:bg-gray-50 text-gray-700 hover:text-gray-900"
-                    } ${collapsed ? "justify-center" : ""}`}
+                  className={`group flex items-center gap-3 px-3 py-2.5 cursor-pointer transition-all relative ${
+                    isActive
+                      ? "bg-blue-50 text-blue-700 font-medium before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[2px] before:bg-blue-600 before:shadow-md"
+                      : "hover:bg-gray-50 text-gray-700 hover:text-gray-900"
+                  } ${collapsed ? "justify-center" : ""}`}
                 >
                   <Icon
                     weight="duotone"
-                    className={`${isActive
-                      ? "text-blue-600"
-                      : "text-gray-500 group-hover:text-gray-700"
+                    className={`${
+                      isActive
+                        ? "text-blue-600"
+                        : "text-gray-500 group-hover:text-gray-700"
                     }`}
                     size={22}
                   />
                   {!collapsed && (
                     <span
-                      className={`text-sm ${isActive
-                        ? "text-blue-700 font-medium"
-                        : "text-gray-700 font-normal"
+                      className={`text-sm ${
+                        isActive
+                          ? "text-blue-700 font-medium"
+                          : "text-gray-700 font-normal"
                       }`}
                     >
                       {t(labelKey)}
@@ -152,7 +183,8 @@ export function AppSidebar() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <div
-                className={`flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg transition-colors ${collapsed ? "justify-center" : ""
+                className={`flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg transition-colors ${
+                  collapsed ? "justify-center" : ""
                 }`}
               >
                 <div className="relative w-9 h-9 shrink-0 bg-gray-300 rounded-full flex items-center justify-center">
@@ -164,7 +196,10 @@ export function AppSidebar() {
                     <span className="text-sm text-gray-800 font-medium truncate">
                       {displayName}
                     </span>
-                    <CaretRight weight="bold" className="h-4 w-4 text-gray-400 shrink-0 ml-1" />
+                    <CaretRight
+                      weight="bold"
+                      className="h-4 w-4 text-gray-400 shrink-0 ml-1"
+                    />
                   </div>
                 )}
               </div>
@@ -184,7 +219,9 @@ export function AppSidebar() {
                   <p className="text-sm font-semibold text-gray-900 truncate">
                     {displayName}
                   </p>
-                  <p className="text-xs text-gray-500 truncate">{displayEmail}</p>
+                  <p className="text-xs text-gray-500 truncate">
+                    {displayEmail}
+                  </p>
                 </div>
               </div>
 
@@ -197,7 +234,9 @@ export function AppSidebar() {
                 className="cursor-pointer"
               >
                 <User weight="duotone" className="mr-2 h-4 w-4 text-gray-600" />
-                <span className="text-gray-700">{t("sidebar.profile", "Profile")}</span>
+                <span className="text-gray-700">
+                  {t("sidebar.profile", "Profile")}
+                </span>
               </DropdownMenuItem>
 
               <DropdownMenuSeparator />

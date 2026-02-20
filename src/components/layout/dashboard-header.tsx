@@ -30,9 +30,10 @@ const pageHeaders: {
   isDynamic?: boolean;
 }[] = [
   { prefix: "/dashboard", isDynamic: true },
-    { prefix: "/organizers", titleKey: "pages.organizers" },
+  { prefix: "/organizers", titleKey: "pages.organizers" },
   { prefix: "/events", titleKey: "pages.events" },
   { prefix: "/users", titleKey: "pages.users" },
+  { prefix: "/billings", titleKey: "pages.billings" },
   { prefix: "/transactions", titleKey: "pages.transactions" },
   { prefix: "/auditlogs", titleKey: "pages.auditlogs" },
   { prefix: "/refunds", titleKey: "pages.refunds" },
@@ -52,7 +53,9 @@ export default function DashboardHeader() {
   const [isPendingOrganizerOpen, setIsPendingOrganizerOpen] =
     React.useState(false);
   const pendingEvents = useEventStore((state) => state.totalPendingEvents);
-  const pendingOrganizers = useOrganizerStore((state) => state.totalPendingOrganizers);
+  const pendingOrganizers = useOrganizerStore(
+    (state) => state.totalPendingOrganizers,
+  );
 
   // Get user's first name or fallback
   const userName = user?.firstName || "Admin";
