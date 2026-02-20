@@ -13,6 +13,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { AuthError } from "@/services/authService";
 import { OrganizerService } from "@/services/organizerService";
 import { useRouter } from "next/navigation";
+import { PaymentGatewayService } from "@/services/paymentService";
 
 const createBasicInfoSchema = (
   t: (key: string, fallback?: string) => string,
@@ -20,16 +21,15 @@ const createBasicInfoSchema = (
   const v = createValidationHelpers(t);
 
   return z.object({
-    api_key: z
+    api_key: z.string().max(50, v.maxLength("API Key", 50)).optional(),
+
+    api_secret: z.string().max(50, v.maxLength("API Secret", 50)).optional(),
+
+    webhook_secret: z
       .string()
-      .min(1, v.required("API Key"))
-      .min(3, v.minLength("API Key", 3))
-      .max(50, v.maxLength("API Key", 50)),
-    api_secret: z
-      .string()
-      .min(1, v.required("API Secret"))
-      .min(3, v.minLength("API Secret", 3))
-      .max(50, v.maxLength("API Secret", 50)),
+      .max(50, v.maxLength("Webhook Secret", 50))
+      .optional(),
+
     display_name: z
       .string()
       .min(1, v.required("Display Name"))
@@ -40,16 +40,11 @@ const createBasicInfoSchema = (
       .min(1, v.required("Gateway Name"))
       .min(3, v.minLength("Gateway Name", 3))
       .max(50, v.maxLength("Gateway Name", 50)),
-    webhook_secret: z
-      .string()
-      .min(1, v.required("Webhook Secret"))
-      .min(3, v.minLength("Webhook Secret", 3))
-      .max(50, v.maxLength("Webhook Secret", 50)),
-    is_enabled: z.boolean(),
-    is_test_mode: z.boolean(),
+
+    is_enabled: z.boolean().optional(),
+    is_test_mode: z.boolean().optional(),
   });
 };
-
 export default function AddPaymentPage() {
   const router = useRouter();
   const { locale } = useLanguageStore();
@@ -69,7 +64,7 @@ export default function AddPaymentPage() {
         is_test_mode: isTestMode,
       };
 
-      //  await OrganizerService.createPaymentGateway(payload);
+      await PaymentGatewayService.createPaymentGateway(payload);
 
       toast.success(
         "auth.toast.otpSent",
@@ -92,7 +87,7 @@ export default function AddPaymentPage() {
 
   const handleBack = () => {
     router.back();
-  }
+  };
 
   const basicInfoSchema = createBasicInfoSchema(t);
   type BasicInfoData = z.infer<typeof basicInfoSchema>;
@@ -192,6 +187,7 @@ export default function AddPaymentPage() {
                   {t("settings.payments.isEnabled")}
                 </FieldLabel>
                 <button
+                  type="button"
                   onClick={() => setIsEnabled(!isEnabled)}
                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 ${
                     isEnabled ? "bg-green-500" : "bg-gray-300"
@@ -209,6 +205,7 @@ export default function AddPaymentPage() {
                   {t("settings.payments.isTestMode")}
                 </FieldLabel>
                 <button
+                  type="button"
                   onClick={() => setIsTestMode(!isTestMode)}
                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 ${
                     isTestMode ? "bg-green-500" : "bg-gray-300"
@@ -313,9 +310,10 @@ export default function AddPaymentPage() {
             {/* Action Buttons */}
             <div className="px-6 py-4 bg-gray-50 rounded-b-lg">
               <div className="flex items-center justify-between">
-                <button 
-                onClick={handleBack}
-                className="px-6 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+                <button
+                  onClick={handleBack}
+                  className="px-6 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
+                >
                   {t("settings.payments.cancel")}
                 </button>
                 <div className="flex space-x-3">

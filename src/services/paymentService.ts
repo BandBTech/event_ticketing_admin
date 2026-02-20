@@ -1,17 +1,20 @@
 import { api } from "../lib/apiClient";
 import { API_ENDPOINTS } from "@/app/config/api";
-import {PaymentGatewayConfig, PaymentGatewayListResponse} from "@/types/payment";
+import {
+  PaymentGatewayConfig,
+  PaymentGatewayListResponse,
+} from "@/types/payment";
 
 export class PaymentGatewayService {
   /**
    * Create new payment gateway from admin
    */
   static async createPaymentGateway(data: {
-    api_key: string;
-    api_secret: string;
-    webhook_secret: string;
+    api_key: string | undefined;
+    api_secret: string | undefined;
     display_name: string;
     gateway_name: string;
+    webhook_secret: string | undefined;
     is_enabled: boolean;
     is_test_mode: boolean;
   }): Promise<void> {
