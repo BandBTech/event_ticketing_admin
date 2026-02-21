@@ -48,4 +48,13 @@ export class TransactionService {
 
     return result;
   }
+
+
+
+      static async getTransactionById(id: string): Promise<Transaction> {
+        const response = await api.get<Transaction>(API_ENDPOINTS.GET_TRANSACTION_BY_ID(id), {
+          requiresAuth: true,
+        });
+        return response;
+      }
 }

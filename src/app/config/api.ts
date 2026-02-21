@@ -50,6 +50,7 @@ export const API_ENDPOINTS = {
   // Transactions
   CREATE_TRANSACTION: `${API_BASE_URL}/admin/transactions`,
   GET_TRANSACTIONS: `${API_BASE_URL}/admin/transactions`,
+  GET_TRANSACTION_BY_ID: (id: string) => `${API_BASE_URL}/admin/transactions/${id}`,
 
   //Auditlogs
   CREATE_AUDITLOG: `${API_BASE_URL}/admin/payments/audit-logs`,

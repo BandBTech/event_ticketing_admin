@@ -11,13 +11,11 @@ import {
   Funnel as FunnelIcon,
   CaretLeft as CaretLeftIcon,
   CaretRight as CaretRightIcon,
-  CheckCircle as CheckCircleIcon,
-  XCircle as XCircleIcon,
   Eye as EyeIcon,
-  Shield as ShieldIcon,
   User as UserIcon,
   DotsThreeVertical as DotsThreeVerticalIcon,
-  NotepadIcon,
+  ArrowClockwiseIcon,
+  CoinsIcon,
 } from "@phosphor-icons/react";
 import { BanknoteArrowUp, CreditCard, Logs } from "lucide-react";
 import { CaretUp, CaretDown, CaretUpDown } from "@phosphor-icons/react";
@@ -40,9 +38,7 @@ import {
 import {
   useReactTable,
   getCoreRowModel,
-  getFilteredRowModel,
   ColumnDef,
-  SortingState,
 } from "@tanstack/react-table";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -62,7 +58,7 @@ export default function TransactionsPage() {
   const { t } = useTranslation(locale);
 
   const currentPage = Number(searchParams.get("page")) || 1;
-  const itemsPerPage = 10;
+  const itemsPerPage = 20;
   const SKELETON_ROWS = itemsPerPage;
   const [filterType, setFilterType] = useState<TransactionType | "">("");
   const [filterStatus, setFilterStatus] = useState<TransactionStatus | "">("");
@@ -82,7 +78,14 @@ export default function TransactionsPage() {
       : undefined;
 
   const { data: response, isLoading } = useQuery<TransactionListResponse>({
-    queryKey: ["transactions", currentPage, itemsPerPage, filter, sort, debouncedSearch],
+    queryKey: [
+      "transactions",
+      currentPage,
+      itemsPerPage,
+      filter,
+      sort,
+      debouncedSearch,
+    ],
     queryFn: () =>
       TransactionService.getTransactions({
         page: currentPage,
@@ -158,6 +161,11 @@ export default function TransactionsPage() {
         cell: ({ row }) => (
           <span className="px-2 py-1 text-xs font-medium rounded-full">
             {row.original.currency} {row.original.commission_amount}
+            {row.original.commission_rate && (
+              <span className="ml-1 text-gray-500">
+                ({row.original.commission_rate}%)
+              </span>
+            )}
           </span>
         ),
       },
@@ -225,16 +233,78 @@ export default function TransactionsPage() {
         },
       },
       {
-        id: "date",
-        header: t("transactions.table.date"),
-        accessorKey: "created_at",
+        id: "actions",
+        // header: "Actions",
+        cell: ({ row }) => {
+          const transaction = row.original;
+
+          // if (actionLoading === user.id) {
+          //   return (
+          //     <div className="h-8 w-8 flex items-center p-0">
+          //       <Spinner className="w-4 h-4 text-amber-900 animate-spin" />
+          //     </div>
+          //   );
+          // }
+
+          return (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <span className="sr-only">Open menu</span>
+                  <DotsThreeVerticalIcon weight="duotone" className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem
+                  onClick={() => {
+                    router.push(
+                      `/transactions/transactiondetail?id=${transaction.id}`,
+                    );
+                  }}
+                >
+                  <div className="flex justify-start items-center bg-gray-50 text-gray-700">
+                    <EyeIcon weight="duotone" className="mr-2 h-4 w-4" />
+                    {t(`users.viewDetails`)}
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                // onClick={() => {
+                //   router.push(`/users/userdetail?id=${user.id}`);
+                // }}
+                >
+                  <div className="flex justify-start items-center bg-gray-50 text-gray-700">
+                    <CoinsIcon weight="duotone" className="mr-2 h-4 w-4" />
+                    {/* {t(`users.viewDetails`)} */}
+                    View Payment
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                // onClick={() => {
+                //   router.push(`/users/userdetail?id=${user.id}`);
+                // }}
+                >
+                  <div className="flex justify-start items-center bg-gray-50 text-gray-700">
+                    <BanknoteArrowUp className="mr-2 h-4 w-4" />
+                    {/* {t(`users.viewDetails`)} */}
+                    Refund
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="text-red-600"
+                  // onClick={(e) => {
+                  //   e.stopPropagation();
+                  //   handleDeleteClick(user);
+                  // }}
+                >
+                  <ArrowClockwiseIcon className="mr-2 h-4 w-4" />
+                  Retry
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          );
+        },
         enableSorting: false,
         enableHiding: false,
-        cell: ({ row }) => (
-          <span className="text-sm text-gray-600">
-            {new Date(row.original.created_at).toLocaleDateString()}
-          </span>
-        ),
       },
     ],
     [t],
