@@ -1,6 +1,6 @@
 import { api } from "../lib/apiClient";
 import { API_ENDPOINTS } from "@/app/config/api";
-import { Transaction, TransactionListResponse } from "@/types/transaction";
+import {PayoutRequestsResponse} from "@/types/payout"
 
 export class PayoutService {
   /**
@@ -25,7 +25,7 @@ export class PayoutService {
     limit?: number;
     sort?: string;
     filter?: string;
-  }): Promise<TransactionListResponse> {
+  }): Promise<PayoutRequestsResponse> {
     const params = new URLSearchParams();
 
     if (filters) {
@@ -37,7 +37,7 @@ export class PayoutService {
 
     const query = params.toString();
 
-    const result = await api.get<TransactionListResponse>(
+    const result = await api.get<PayoutRequestsResponse>(
       `${API_ENDPOINTS.GET_ALL_PAYOUTS}${query ? `?${query}` : ""}`,
       {
         requiresAuth: true,

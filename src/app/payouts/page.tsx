@@ -11,16 +11,12 @@ import {
   Funnel as FunnelIcon,
   CaretLeft as CaretLeftIcon,
   CaretRight as CaretRightIcon,
-  CheckCircle as CheckCircleIcon,
-  XCircle as XCircleIcon,
-  Eye as EyeIcon,
-  Shield as ShieldIcon,
   User as UserIcon,
   DotsThreeVertical as DotsThreeVerticalIcon,
-  NotepadIcon,
   ArrowsLeftRight,
+  PenIcon,
 } from "@phosphor-icons/react";
-import { BanknoteArrowUp, CreditCard, Logs } from "lucide-react";
+import { BanknoteArrowUp, Logs } from "lucide-react";
 import { CaretUp, CaretDown, CaretUpDown } from "@phosphor-icons/react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
@@ -30,6 +26,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from "@/types/transaction";
+import { PayoutRequestsResponse, PayoutRequest } from "@/types/payout";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -79,7 +76,7 @@ export default function TransactionsPage() {
       ? `${sorting[0].id}:${sorting[0].desc ? "desc" : "asc"}`
       : undefined;
 
-  const { data: response, isLoading } = useQuery<TransactionListResponse>({
+  const { data: response, isLoading } = useQuery<PayoutRequestsResponse>({
     queryKey: ["payouts", currentPage, itemsPerPage, filter, sort],
     queryFn: () =>
       PayoutService.getPayouts({
@@ -116,129 +113,144 @@ export default function TransactionsPage() {
   );
 
   // Table columns
-  const columns: ColumnDef<Transaction>[] = React.useMemo(
+  const columns: ColumnDef<PayoutRequest>[] = React.useMemo(
     () => [
       {
-        id: "event",
-        header: t("transactions.table.event"),
-        accessorKey: "event_title",
-        enableSorting: false,
-      },
-      {
-        id: "user",
-        header: t("transactions.table.user"),
-        accessorKey: "user_name",
-        enableSorting: false,
-      },
-      {
-        id: "ticket_count",
-        header: t("transactions.table.ticket"),
-        accessorKey: "ticket_count",
+        id: "event_title",
+        header: "Event Title",
+        accessorKey: "event.title",
         enableSorting: false,
       },
       {
         id: "amount",
-        header: t("transactions.table.amount"),
+        header: "Amount",
         accessorKey: "amount",
         enableSorting: false,
-        cell: ({ row }) => (
-          <span className="px-2 py-1 text-xs font-medium rounded-full">
-            {row.original.currency} {row.original.amount}
-          </span>
-        ),
       },
       {
-        id: "commission",
-        header: t("transactions.table.commission"),
-        accessorKey: "commission_amount",
+        id: "event_status",
+        header: "Event Status",
+        accessorKey: "event.status",
         enableSorting: false,
-        cell: ({ row }) => (
-          <span className="px-2 py-1 text-xs font-medium rounded-full">
-            {row.original.currency} {row.original.commission_amount}
-          </span>
-        ),
-      },
-      {
-        id: "organizer_share",
-        header: t("transactions.table.organizer_share"),
-        accessorKey: "organizer_share",
-        enableSorting: false,
-        cell: ({ row }) => (
-          <span className="px-2 py-1 text-xs font-medium rounded-full">
-            {row.original.currency} {row.original.organizer_share}
-          </span>
-        ),
-      },
-      {
-        id: "gateway",
-        accessorKey: "payment_gateway",
-        header: t("transactions.table.gateway"),
-        enableSorting: false,
-        cell: ({ row }) => {
-          const gateway = row.original.payment_gateway;
-
-          const colors: Record<string, string> = {
-            khalti: "bg-purple-100 text-purple-700",
-            esewa: "bg-green-100 text-green-700",
-            stripe: "bg-indigo-100 text-indigo-700",
-          };
-
-          return (
-            <span
-              className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                colors[gateway?.toLowerCase()] || "bg-gray-100 text-gray-700"
-              }`}
-            >
-              🏦 {t("transactions.gateway." + gateway)}
-            </span>
-          );
-        },
       },
       {
         id: "status",
-        header: t("transactions.table.status"),
+        header: "Status",
         accessorKey: "status",
         enableSorting: false,
-        cell: ({ row }) => {
-          const status = row.original.status;
+        // cell: ({ row }) => {
+        //   const status = row.original.status;
 
-          const statusStyles: Record<string, string> = {
-            completed: "bg-green-100 text-green-700",
-            pending: "bg-yellow-100 text-yellow-700",
-            failed: "bg-red-100 text-red-700",
-            refunded: "bg-gray-200 text-gray-700",
-          };
+        //   const statusStyles: Record<string, string> = {
+        //     completed: "bg-green-100 text-green-700",
+        //     pending: "bg-yellow-100 text-yellow-700",
+        //     failed: "bg-red-100 text-red-700",
+        //     refunded: "bg-gray-200 text-gray-700",
+        //   };
 
-          return (
-            <span
-              className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                statusStyles[status?.toLowerCase()] ||
-                "bg-gray-100 text-gray-700"
-              }`}
-            >
-              {t("transactions.transactionStatus." + status)}
-            </span>
-          );
-        },
+        //   return (
+        //     <span
+        //       className={`px-2 py-1 text-xs font-semibold rounded-full ${
+        //         statusStyles[status?.toLowerCase()] ||
+        //         "bg-gray-100 text-gray-700"
+        //       }`}
+        //     >
+        //       {t("transactions.transactionStatus." + status)}
+        //     </span>
+        //   );
+        // },
       },
       {
-        id: "date",
-        header: t("transactions.table.date"),
-        accessorKey: "created_at",
+        id: "request_type",
+        header: "Request Type",
+        accessorKey: "request_type",
         enableSorting: false,
         enableHiding: false,
-        cell: ({ row }) => (
-          <span className="text-sm text-gray-600">
-            {new Date(row.original.created_at).toLocaleDateString()}
-          </span>
-        ),
+      },
+      {
+        id: "actions",
+        // header: "Actions",
+        cell: ({ row }) => {
+          const user = row.original;
+
+          // if (actionLoading === user.id) {
+          //   return (
+          //     <div className="h-8 w-8 flex items-center p-0">
+          //       <Spinner className="w-4 h-4 text-amber-900 animate-spin" />
+          //     </div>
+          //   );
+          // }
+
+          return (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <span className="sr-only">Open menu</span>
+                  <DotsThreeVerticalIcon weight="duotone" className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem
+                // onClick={() => {
+                //   router.push(`/users/userdetail?id=${user.id}`);
+                // }}
+                >
+                  <div className="flex justify-start items-center bg-gray-50 text-gray-700">
+                    <PenIcon weight="duotone" className="mr-2 h-4 w-4" />
+                    {/* {t(`users.viewDetails`)} */}
+                    Change Status
+                  </div>
+                </DropdownMenuItem>
+
+                {/* {!user.roles.some((r) => r.name.toLowerCase() === "admin") && (
+                        <DropdownMenuItem
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleToggleStatus(user);
+                          }}
+                        >
+                          {user.account_status === "active" ? (
+                            <div className="flex justify-start items-center bg-red-50 text-red-700">
+                              <XCircleIcon
+                                weight="duotone"
+                                className="mr-2 h-4 w-4"
+                              />
+                              {t(`users.deactivate`)}
+                            </div>
+                          ) : (
+                            <div className="flex justify-start items-center bg-green-50 text-green-700">
+                              <CheckCircleIcon
+                                weight="duotone"
+                                className="mr-2 h-4 w-4"
+                              />
+                              {t(`users.activate`)}
+                            </div>
+                          )}
+                        </DropdownMenuItem>
+                      )} */}
+                {/* <DropdownMenuItem
+                          className="text-red-600"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteClick(user);
+                          }}
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Delete
+                        </DropdownMenuItem> */}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          );
+        },
+        enableSorting: false,
+        enableHiding: false,
       },
     ],
     [t],
   );
 
   const table = useReactTable({
-    data: response?.transactions || [],
+    data: response?.requests || [],
     columns,
     state: {
       sorting,
