@@ -1,26 +1,18 @@
 "use client";
 
-import React, { useCallback, useEffect } from "react";
-import type { IconProps } from "@phosphor-icons/react";
-import type { ComponentType } from "react";
+import React from "react";
 import {
   MagnifyingGlass as MagnifyingGlassIcon,
   Funnel as FunnelIcon,
-  CaretLeft as CaretLeftIcon,
-  CaretRight as CaretRightIcon,
-  CheckCircle as CheckCircleIcon,
-  XCircle as XCircleIcon,
   Eye as EyeIcon,
-  Shield as ShieldIcon,
   User as UserIcon,
   DotsThreeVertical as DotsThreeVerticalIcon,
-  CrownIcon,
-  UsersIcon,
   Spinner,
-  UserCircleIcon,
+  TrashIcon,
+  CaretUp,
+   CaretDown, 
+  CaretUpDown
 } from "@phosphor-icons/react";
-import { CaretUp, CaretDown, CaretUpDown } from "@phosphor-icons/react";
-
 import {
   Table,
   TableBody,
@@ -31,14 +23,9 @@ import {
 } from "@/components/ui/table";
 import { flexRender } from "@tanstack/react-table";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { format } from "date-fns";
-import { Badge } from "@/components/ui/badge";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { UserService } from "@/services/userService";
-import { ApiResponse as UserApiResponse } from "@/types/user";
-import { queryKeys } from "@/lib/queryKeys";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -49,17 +36,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { DataTable } from "@/components/ui/data-table";
 import {
   useReactTable,
   getCoreRowModel,
-  getFilteredRowModel,
   ColumnDef,
   SortingState,
 } from "@tanstack/react-table";
-import { User } from "@/types/user";
 import { useDebounce } from "@/hooks/useDebounce";
-import { toast } from "@/lib/toast";
+import { BillingService } from "@/services/billingService";
+import { Bill, PaymentBillData } from "@/types/billings";
 
 export default function UsersPage() {
   const router = useRouter();
@@ -80,315 +65,184 @@ export default function UsersPage() {
 
   const debouncedSearch = useDebounce(searchInput, 500);
 
-  const { data: response, isLoading } = useQuery<UserApiResponse>({
-    queryKey: [
-      "users",
-      currentPage,
-      itemsPerPage,
-      debouncedSearch,
-      statusFilter,
-      roleFilter,
-      accountStatusFilter,
-      sorting,
-    ],
-
+  const { data: response, isLoading } = useQuery<PaymentBillData>({
+    queryKey: ["bills", currentPage, itemsPerPage],
     queryFn: () =>
-      UserService.getUsers({
+      BillingService.getAllBills({
         page: currentPage,
         limit: itemsPerPage,
-        search: debouncedSearch,
-        status: statusFilter,
-        role: roleFilter,
-        account_status: accountStatusFilter,
-        sort: sorting.length ? sorting[0].id : undefined,
       }),
   });
+
+  console.log("response", response);
 
   const SKELETON_ROWS = itemsPerPage;
 
-  const mockUserData = response?.users || [];
+  const mockUserData = response?.bills || [];
 
   // Mutation for toggling status
-  const toggleStatusMutation = useMutation({
-    mutationFn: (employeeId: string) =>
-      UserService.toggleStatus(employeeId, {
-        status:
-          mockUserData.find((c) => c.id === employeeId)?.account_status ===
-          "active"
-            ? "inactive"
-            : "active",
-        admin_remark: "Status toggled by admin",
-      }),
-    onMutate: (employeeId) => {
-      setActionLoading(employeeId);
-    },
-    onSuccess: (_, employeeId) => {
-      const employee = mockUserData.find((c) => c.id === employeeId);
-      toast.success(
-        `User ${
-          employee?.account_status === "active" ? "deactivated" : "activated"
-        } successfully`,
-      );
-      queryClient.invalidateQueries({
-        queryKey: ["users"],
-      });
-    },
-    onError: (err) => {
-      toast.error("Failed to update user status");
-    },
-    onSettled: () => {
-      setActionLoading(null);
-    },
-  });
+  // const toggleStatusMutation = useMutation({
+  //   mutationFn: (employeeId: string) =>
+  //     UserService.toggleStatus(employeeId, {
+  //       status:
+  //         mockUserData.find((c) => c.id === employeeId)?.account_status ===
+  //         "active"
+  //           ? "inactive"
+  //           : "active",
+  //       admin_remark: "Status toggled by admin",
+  //     }),
+  //   onMutate: (employeeId) => {
+  //     setActionLoading(employeeId);
+  //   },
+  //   onSuccess: (_, employeeId) => {
+  //     const employee = mockUserData.find((c) => c.id === employeeId);
+  //     toast.success(
+  //       `User ${
+  //         employee?.account_status === "active" ? "deactivated" : "activated"
+  //       } successfully`,
+  //     );
+  //     queryClient.invalidateQueries({
+  //       queryKey: ["users"],
+  //     });
+  //   },
+  //   onError: (err) => {
+  //     toast.error("Failed to update user status");
+  //   },
+  //   onSettled: () => {
+  //     setActionLoading(null);
+  //   },
+  // });
 
-  const updateParams = useCallback(
-    (updates: Record<string, string | null>) => {
-      const params = new URLSearchParams(window.location.search);
+  // const updateParams = useCallback(
+  //   (updates: Record<string, string | null>) => {
+  //     const params = new URLSearchParams(window.location.search);
 
-      Object.entries(updates).forEach(([key, value]) => {
-        if (!value) {
-          params.delete(key);
-        } else {
-          params.set(key, value);
-        }
-      });
+  //     Object.entries(updates).forEach(([key, value]) => {
+  //       if (!value) {
+  //         params.delete(key);
+  //       } else {
+  //         params.set(key, value);
+  //       }
+  //     });
 
-      router.push(`/billings?${params.toString()}`, { scroll: false });
-    },
-    [router],
-  );
+  //     router.push(`/billings?${params.toString()}`, { scroll: false });
+  //   },
+  //   [router],
+  // );
 
   // Handler functions
-  const handleToggleStatus = (user: User) => {
-    toggleStatusMutation.mutate(user.id);
-  };
+  // const handleToggleStatus = (user: User) => {
+  //   toggleStatusMutation.mutate(user.id);
+  // };
 
-  const handlePageChange = useCallback(
-    (page: number) => {
-      updateParams({ page: page.toString() });
-    },
-    [updateParams],
-  );
-
-  //   useEffect(() => {
-  //     updateParams({ search: debouncedSearch, page: "1" });
-  //     updateParams({ sort: sorting[0]?.id || "", page: "1" });
-  //   }, [debouncedSearch, sorting, updateParams]);
-
-  // const filteredData = useMemo(() => {
-  //   let result = mockUserData;
-
-  //   if (searchQuery.trim() && !response?.users) {
-  //     const query = searchQuery.toLowerCase();
-  //     result = result.filter(
-  //       (user) =>
-  //         user.first_name?.toLowerCase().includes(query) ||
-  //         user.last_name?.toLowerCase().includes(query) ||
-  //         user.email?.toLowerCase().includes(query) ||
-  //         user.phone?.includes(query) ||
-  //         user.organizer_onboarding?.business_name
-  //           ?.toLowerCase()
-  //           .includes(query),
-  //     );
-  //   }
-
-  //   if (statusFilter && !response?.users) {
-  //     result = result.filter(
-  //       (user) =>
-  //         user.organizer_status?.toLowerCase() === statusFilter.toLowerCase(),
-  //     );
-  //   }
-
-  //   if (accountStatusFilter && !response?.users) {
-  //     result = result.filter(
-  //       (user) =>
-  //         user.account_status?.toLowerCase() ===
-  //         accountStatusFilter.toLowerCase(),
-  //     );
-  //   }
-
-  //   return result;
-  // }, [searchQuery, statusFilter, accountStatusFilter, mockUserData, response]);
-
-  // const paginatedData = mockUserData;
-
-  const ROLE_CONFIG: Record<
-    string,
-    {
-      bg: string;
-      text: string;
-      border: string;
-      Icon: ComponentType<IconProps>;
-    }
-  > = {
-    admin: {
-      bg: "bg-red-50",
-      text: "text-red-700",
-      border: "border-red-200",
-      Icon: CrownIcon,
-    },
-    organizer: {
-      bg: "bg-indigo-50",
-      text: "text-indigo-700",
-      border: "border-indigo-200",
-      Icon: ShieldIcon,
-    },
-    staff: {
-      bg: "bg-emerald-50",
-      text: "text-emerald-700",
-      border: "border-emerald-200",
-      Icon: UsersIcon,
-    },
-    user: {
-      bg: "bg-gray-50",
-      text: "text-gray-700",
-      border: "border-gray-200",
-      Icon: UserIcon,
-    },
-    manager: {
-      bg: "bg-amber-50",
-      text: "text-amber-700",
-      border: "border-amber-200",
-      Icon: UserCircleIcon,
-    },
-  };
+  // const handlePageChange = useCallback(
+  //   (page: number) => {
+  //     updateParams({ page: page.toString() });
+  //   },
+  //   [updateParams],
+  // );
 
   // Table columns
-  const columns: ColumnDef<User>[] = React.useMemo(
+  const columns: ColumnDef<Bill>[] = React.useMemo(
     () => [
       {
-        accessorFn: (row) => `${row.first_name} ${row.last_name}`,
         id: "name",
-        header: t("users.userTable.name"),
-        enableSorting: true,
-      },
-      {
-        id: "email",
-        accessorKey: "contact",
-        header: t("users.userTable.contact"),
-        cell: ({ row }) => {
-          const { email, phone, country_code } = row.original;
+        header: "Event Title",
+        accessorKey: "event_title",
+        // cell: ({ row }) => {
+        //   const { email, phone, country_code } = row.original;
 
-          return (
-            <div className="flex flex-col gap-0.5">
-              <span className="text-sm text-foreground">{email || "-"}</span>
+        //   return (
+        //     <div className="flex flex-col gap-0.5">
+        //       <span className="text-sm text-foreground">{email || "-"}</span>
 
-              <span className="text-xs text-muted-foreground">
-                {phone ? `${country_code ?? ""} ${phone}` : "-"}
-              </span>
-            </div>
-          );
-        },
-        enableSorting: true,
-      },
-      {
-        id: "role",
-        header: t("users.userTable.role"),
-        cell: ({ row }) => {
-          const roles = row.original.roles;
-
-          if (!roles || roles.length === 0) {
-            return (
-              <span className="text-sm text-muted-foreground">
-                {t("users.noRole")}
-              </span>
-            );
-          }
-
-          // highest priority role first
-          const ROLE_PRIORITY = [
-            "admin",
-            "organizer",
-            "staff",
-            "user",
-            "manager",
-          ];
-
-          const primaryRole =
-            roles
-              .map((r) => r.name.toLowerCase())
-              .sort(
-                (a, b) => ROLE_PRIORITY.indexOf(a) - ROLE_PRIORITY.indexOf(b),
-              )[0] ?? "user";
-
-          const config = ROLE_CONFIG[primaryRole] ?? ROLE_CONFIG.user;
-          const Icon = config.Icon;
-
-          return (
-            <div className="flex items-center gap-2">
-              <Badge
-                variant="outline"
-                className={`gap-1.5 ${config.bg} ${config.text} ${config.border}`}
-              >
-                <Icon weight="duotone" className="w-3 h-3" />
-                {t(`users.userRoles.${primaryRole}`)}
-              </Badge>
-
-              {roles.length > 1 && (
-                <span className="text-xs text-muted-foreground">
-                  +{roles.length - 1} {t("users.more")}
-                </span>
-              )}
-            </div>
-          );
-        },
+        //       <span className="text-xs text-muted-foreground">
+        //         {phone ? `${country_code ?? ""} ${phone}` : "-"}
+        //       </span>
+        //     </div>
+        //   );
+        // },
         enableSorting: false,
       },
       {
-        accessorKey: "account_status",
-        header: t("users.userTable.accountStatus"),
-        cell: ({ row }) => {
-          const accountStatus = row.original.account_status;
+        id: "organizer_name",
+        accessorKey: "organizer_name",
+        header: "Organizer Name",
+        // cell: ({ row }) => {
+        //   const { email, phone, country_code } = row.original;
 
-          return (
-            <div className="flex items-center gap-2">
-              {accountStatus === "active" ? (
-                <div>
-                  <Badge
-                    variant="outline"
-                    className="gap-1.5 bg-green-50 text-green-700"
-                  >
-                    <CheckCircleIcon weight="duotone" className="w-3 h-3" />
-                    {t(`users.organizerStatus.${accountStatus}`)}
-                  </Badge>
-                </div>
-              ) : (
-                <div>
-                  <Badge
-                    variant="outline"
-                    className="gap-1.5 bg-red-50 text-red-700"
-                  >
-                    <XCircleIcon weight="duotone" className="w-3 h-3" />
-                    {t(`users.organizerStatus.${accountStatus}`)}
-                  </Badge>
-                </div>
-              )}
-            </div>
-          );
-        },
+        //   return (
+        //     <div className="flex flex-col gap-0.5">
+        //       <span className="text-sm text-foreground">{email || "-"}</span>
+
+        //       <span className="text-xs text-muted-foreground">
+        //         {phone ? `${country_code ?? ""} ${phone}` : "-"}
+        //       </span>
+        //     </div>
+        //   );
+        // },
         enableSorting: false,
       },
       {
-        id: "created_at",
-        accessorFn: (row) => new Date(row.created_at).getTime(),
-        header: t("users.userTable.joinedDate"),
-        cell: ({ row }) => {
-          const createdAt = row.original.created_at;
-          return (
-            <span className="text-sm">
-              {createdAt ? format(new Date(createdAt), "MMM dd, yyyy") : "-"}
-            </span>
-          );
-        },
-        enableSorting: true,
+        id: "admin_name",
+        accessorKey: "admin_name",
+        header: "Admin Name",
+        enableSorting: false,
+      },
+      // {
+      //   id: "total_revenue",
+      //   accessorKey: "total_revenue",
+      //   header: "Total Revenue",
+      //   enableSorting: false,
+      // },
+      // {
+      //   id: "total_commission",
+      //   accessorKey: "total_commission",
+      //   header: "Total Commission",rting: true,
+      // },
+      // {
+      //   id: "organizer_earnings",
+      //   accessorKey: "organizer_earnings",
+      //   header: "Organizer Earnings",
+      //   enableSorting: true,
+      // },
+      {
+        id: "billed_amount",
+        accessorKey: "billed_amount",
+        header: "Billed Amount",
+        enableSorting: false,
+      },
+      {
+        id: "paid_amount",
+        accessorKey: "paid_amount",
+        header: "Paid Amount",
+        enableSorting: false,
+      },
+      // {
+      //   id: "remaining_amount",
+      //   accessorKey: "remaining_amount",
+      //   header: "Remaining Amount",
+      //   enableSorting: true,
+      // },
+      {
+        id: "payment_method",
+        accessorKey: "payment_method",
+        header: "Payment Method",
+        enableSorting: false,
+      },
+      {
+        id: "status",
+        accessorKey: "status",
+        header: "Status",
+        enableSorting: false,
       },
       {
         id: "actions",
         // header: "Actions",
         cell: ({ row }) => {
-          const user = row.original;
+          const bills = row.original;
 
-          if (actionLoading === user.id) {
+          if (actionLoading === bills.id) {
             return (
               <div className="h-8 w-8 flex items-center p-0">
                 <Spinner className="w-4 h-4 text-amber-900 animate-spin" />
@@ -407,8 +261,8 @@ export default function UsersPage() {
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuItem
                   onClick={() => {
-                    localStorage.setItem("user_id", user.id);
-                    router.push(`/users/userdetail?id=${user.id}`);
+                    localStorage.setItem("user_id", bills.id);
+                    router.push(`/billings/billdetail?id=${bills.id}`);
                   }}
                 >
                   <div className="flex justify-start items-center bg-gray-50 text-gray-700">
@@ -416,43 +270,16 @@ export default function UsersPage() {
                     {t(`users.viewDetails`)}
                   </div>
                 </DropdownMenuItem>
-
-                {!user.roles.some((r) => r.name.toLowerCase() === "admin") && (
-                  <DropdownMenuItem
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleToggleStatus(user);
-                    }}
-                  >
-                    {user.account_status === "active" ? (
-                      <div className="flex justify-start items-center bg-red-50 text-red-700">
-                        <XCircleIcon
-                          weight="duotone"
-                          className="mr-2 h-4 w-4"
-                        />
-                        {t(`users.deactivate`)}
-                      </div>
-                    ) : (
-                      <div className="flex justify-start items-center bg-green-50 text-green-700">
-                        <CheckCircleIcon
-                          weight="duotone"
-                          className="mr-2 h-4 w-4"
-                        />
-                        {t(`users.activate`)}
-                      </div>
-                    )}
-                  </DropdownMenuItem>
-                )}
-                {/* <DropdownMenuItem
+                <DropdownMenuItem
                     className="text-red-600"
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleDeleteClick(user);
+                      // handleDeleteClick(user);
                     }}
                   >
-                    <Trash2 className="mr-2 h-4 w-4" />
+                    <TrashIcon className="mr-2 h-4 w-4" />
                     Delete
-                  </DropdownMenuItem> */}
+                  </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           );
@@ -477,7 +304,8 @@ export default function UsersPage() {
 
   const totalItems = response?.pagination?.total || mockUserData.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const hasNextPage = response?.has_more ?? currentPage < totalPages;
+  const hasNextPage =
+    response?.pagination?.has_next ?? currentPage < totalPages;
 
   const startItem =
     mockUserData.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0;
@@ -578,7 +406,7 @@ export default function UsersPage() {
                 className={
                   statusFilter === "active" ? "bg-muted font-medium" : ""
                 }
-                onClick={() => updateParams({ status: "active", page: "1" })}
+                // onClick={() => updateParams({ status: "active", page: "1" })}
               >
                 {t("billings.status.pending")}
               </DropdownMenuItem>
@@ -586,7 +414,7 @@ export default function UsersPage() {
                 className={
                   statusFilter === "inactive" ? "bg-muted font-medium" : ""
                 }
-                onClick={() => updateParams({ status: "inactive", page: "1" })}
+                // onClick={() => updateParams({ status: "inactive", page: "1" })}
               >
                 {t("billings.status.paid")}
               </DropdownMenuItem>
@@ -594,7 +422,7 @@ export default function UsersPage() {
                 className={
                   statusFilter === "suspended" ? "bg-muted font-medium" : ""
                 }
-                onClick={() => updateParams({ status: "suspended", page: "1" })}
+                // onClick={() => updateParams({ status: "suspended", page: "1" })}
               >
                 {t("billings.status.overdue")}
                 {/* Overdue */}
@@ -603,7 +431,7 @@ export default function UsersPage() {
                 className={
                   statusFilter === "suspended" ? "bg-muted font-medium" : ""
                 }
-                onClick={() => updateParams({ status: "suspended", page: "1" })}
+                // onClick={() => updateParams({ status: "suspended", page: "1" })}
               >
                 {t("billings.status.cancelled")}
               </DropdownMenuItem>
@@ -612,7 +440,7 @@ export default function UsersPage() {
 
               <DropdownMenuItem
                 className={`text-red-600 font-medium ${!statusFilter ? "hidden" : ""}`}
-                onClick={() => updateParams({ status: null, page: "1" })}
+                // onClick={() => updateParams({ status: null, page: "1" })}
               >
                 {t("billings.status.clearFilter")}
               </DropdownMenuItem>
@@ -738,7 +566,7 @@ export default function UsersPage() {
       </div>
 
       {/* Pagination */}
-      {totalPages > 0 && !isLoading && (
+      {/* {totalPages > 0 && !isLoading && (
         <div className="flex items-center justify-center gap-2">
           <Button
             variant="outline"
@@ -791,7 +619,7 @@ export default function UsersPage() {
             <CaretRightIcon weight="bold" className="w-4 h-4" />
           </Button>
         </div>
-      )}
+      )} */}
 
       {/* Results count */}
       {mockUserData.length > 0 && !isLoading && (

@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,9 +10,9 @@ import {
   Shield,
   User,
   MessageSquare,
-  ArrowLeft,
   Loader2,
 } from "lucide-react";
+import { ArrowLeft } from "@phosphor-icons/react";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 import { UserService } from "@/services/userService";
@@ -26,13 +21,15 @@ import { UserData } from "@/types/user";
 import { queryKeys } from "@/lib/queryKeys";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
+import { useSearchParams } from "next/navigation";
 
 export default function OrganizerProfilePage() {
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
   const router = useRouter();
-  const userId =
-    typeof window !== "undefined" ? localStorage.getItem("user_id") || "" : "";
+  const searchParams = useSearchParams();
+
+  const userId = searchParams.get("id") || "";
 
   const { data: response, isLoading } = useQuery<UserData>({
     queryKey: queryKeys.users.detail(userId),
@@ -103,17 +100,19 @@ export default function OrganizerProfilePage() {
     <div className="container mx-auto py-8 px-4">
       <div className="max-w-3xl mx-auto space-y-6">
         {/* Back Button */}
-        <Button
-          variant="ghost"
-          onClick={() => {
-            localStorage.removeItem("user_id");
-            router.back();
-          }}
-          className="gap-2"
+
+        <button
+          onClick={() => router.push("/users")}
+          className="flex items-center gap-1 text-gray-600 hover:text-gray-900 mb-2 group hover:bg-gray-200 p-2 px-4 rounded-lg"
         >
-          <ArrowLeft className="h-4 w-4" />
-          {t("users.userDetail.backToUsers", "Back to Users")}
-        </Button>
+          <ArrowLeft
+            weight="duotone"
+            className="w-5 h-5 group-hover:-translate-x-1 transition-transform"
+          />
+          <span className="font-medium">
+            {t("users.userDetail.backToUsers", "Back to Users")}
+          </span>
+        </button>
 
         {/* Profile Card */}
         <Card className="w-full max-w-3xl">

@@ -22,8 +22,8 @@ export const API_ENDPOINTS = {
   GET_PENDING_ORGANIZERS: `${API_BASE_URL}/admin/organizers/pending`,
   APPROVE_ORGANIZERS: (id: string) =>
     `${API_BASE_URL}/admin/organizers/${id}/approval`,
-  GET_ORGANIZER_DETAIL: (id: string) => `${API_BASE_URL}/admin/organizers/${id}`,
-
+  GET_ORGANIZER_DETAIL: (id: string) =>
+    `${API_BASE_URL}/admin/organizers/${id}`,
 
   // Events
   GET_EVENTS: `${API_BASE_URL}/admin/events`,
@@ -39,7 +39,8 @@ export const API_ENDPOINTS = {
   UPDATE_COMPANY: `${API_BASE_URL}/admin/company-info`,
 
   // User Management
-  UPDATE_ORGANIZER_ACCOUNT_STATUS: (id: string) => `${API_BASE_URL}/admin/users/${id}/status`,
+  UPDATE_ORGANIZER_ACCOUNT_STATUS: (id: string) =>
+    `${API_BASE_URL}/admin/users/${id}/status`,
 
   //PAYMENT GATEWAYS
   GET_PAYMENT_GATEWAYS: `${API_BASE_URL}/admin/payment-gateways`,
@@ -48,4 +49,9 @@ export const API_ENDPOINTS = {
   // Transactions
   CREATE_TRANSACTION: `${API_BASE_URL}/admin/transactions`,
   GET_TRANSACTIONS: `${API_BASE_URL}/admin/transactions`,
+
+  //Bills
+  CREATE_BILLS: `${API_BASE_URL}/admin/payments/bills`,
+  GET_ALL_BILLS: `${API_BASE_URL}/admin/payments/bills`,
+  GET_BILL_BY_ID: (id: string) => `${API_BASE_URL}/admin/payments/bills/${id}`,
 };

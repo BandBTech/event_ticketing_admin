@@ -408,7 +408,6 @@ export default function UsersPage() {
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuItem
                   onClick={() => {
-                    localStorage.setItem("user_id", user.id);
                     router.push(`/users/userdetail?id=${user.id}`);
                   }}
                 >
