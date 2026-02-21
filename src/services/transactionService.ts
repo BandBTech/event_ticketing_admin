@@ -25,6 +25,7 @@ export class TransactionService {
     limit?: number;
     sort?: string;
     filter?: string;
+    search?: string;
   }): Promise<TransactionListResponse> {
     const params = new URLSearchParams();
 
@@ -32,6 +33,7 @@ export class TransactionService {
       if (filters.page) params.append("page", filters.page.toString());
       if (filters.limit) params.append("limit", filters.limit.toString());
       if (filters.filter) params.append("filter", filters.filter);
+      if (filters.search) params.append("search", filters.search);
       if (filters.sort) params.append("sort", filters.sort);
     }
 

@@ -117,53 +117,78 @@ export default function TransactionsPage() {
     () => [
       {
         id: "event_title",
-        header: "Event Title",
+        header: t("payouts.table.eventTitle"),
         accessorKey: "event.title",
         enableSorting: false,
       },
       {
         id: "amount",
-        header: "Amount",
+        header: t("payouts.table.amount"),
         accessorKey: "amount",
         enableSorting: false,
       },
       {
         id: "event_status",
-        header: "Event Status",
+        header: t("payouts.table.eventStatus"),
         accessorKey: "event.status",
         enableSorting: false,
+        cell: ({ row }) => {
+          const eventStatus = row.original.event.status;
+
+          const EventStatusStyles: Record<string, string> = {
+            completed: "bg-green-100 text-green-700",
+            pending: "bg-yellow-100 text-yellow-700",
+            failed: "bg-red-100 text-red-700",
+            live: "bg-gray-200 text-gray-700",
+          };
+
+          return (
+            <span
+              className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                EventStatusStyles[eventStatus?.toLowerCase()] ||
+                "bg-gray-100 text-gray-700"
+              }`}
+            >
+              {t("payouts.eventStatus." + eventStatus)}
+            </span>
+          );
+        },
       },
       {
         id: "status",
-        header: "Status",
+        header: t("payouts.table.status"),
         accessorKey: "status",
         enableSorting: false,
-        // cell: ({ row }) => {
-        //   const status = row.original.status;
+        cell: ({ row }) => {
+          const status = row.original.status;
 
-        //   const statusStyles: Record<string, string> = {
-        //     completed: "bg-green-100 text-green-700",
-        //     pending: "bg-yellow-100 text-yellow-700",
-        //     failed: "bg-red-100 text-red-700",
-        //     refunded: "bg-gray-200 text-gray-700",
-        //   };
+          const statusStyles: Record<string, string> = {
+            completed: "bg-green-100 text-green-700",
+            pending: "bg-yellow-100 text-yellow-700",
+            failed: "bg-red-100 text-red-700",
+            refunded: "bg-gray-200 text-gray-700",
+          };
 
-        //   return (
-        //     <span
-        //       className={`px-2 py-1 text-xs font-semibold rounded-full ${
-        //         statusStyles[status?.toLowerCase()] ||
-        //         "bg-gray-100 text-gray-700"
-        //       }`}
-        //     >
-        //       {t("transactions.transactionStatus." + status)}
-        //     </span>
-        //   );
-        // },
+          return (
+            <span
+              className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                statusStyles[status?.toLowerCase()] ||
+                "bg-gray-100 text-gray-700"
+              }`}
+            >
+              {t("transactions.transactionStatus." + status)}
+            </span>
+          );
+        },
       },
       {
         id: "request_type",
-        header: "Request Type",
+        header: t("payouts.table.requestType"),
         accessorKey: "request_type",
+        cell: ({ row }) => {
+          const requestType = row.original.request_type;
+          return <span>{t("payouts.requestType." + requestType)}</span>;
+        },
         enableSorting: false,
         enableHiding: false,
       },

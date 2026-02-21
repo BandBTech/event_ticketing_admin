@@ -70,7 +70,6 @@ export default function BillingsPage() {
   const [isAddDialogOpen, setIsAddDialogOpen] = React.useState(false);
 
   const debouncedSearch = useDebounce(searchInput, 500);
-  console.log("debounceSearch", debouncedSearch);
 
   // Helper to update URL params
   const updateParams = useCallback(

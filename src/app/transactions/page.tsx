@@ -29,6 +29,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from "@/types/transaction";
+import { useDebounce } from "@/hooks/useDebounce";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -68,6 +69,8 @@ export default function TransactionsPage() {
   const [sorting, setSorting] = useState<{ id: string; desc: boolean }[]>([]);
   const [searchInput, setSearchInput] = React.useState("");
 
+  const debouncedSearch = useDebounce(searchInput, 500);
+
   const filter =
     filterStatus || filterType
       ? `${filterType || ""},${filterStatus || ""}`
@@ -79,11 +82,12 @@ export default function TransactionsPage() {
       : undefined;
 
   const { data: response, isLoading } = useQuery<TransactionListResponse>({
-    queryKey: ["transactions", currentPage, itemsPerPage, filter, sort],
+    queryKey: ["transactions", currentPage, itemsPerPage, filter, sort, debouncedSearch],
     queryFn: () =>
       TransactionService.getTransactions({
         page: currentPage,
         limit: itemsPerPage,
+        search: debouncedSearch,
         filter,
         sort,
       }),
@@ -188,7 +192,7 @@ export default function TransactionsPage() {
                 colors[gateway?.toLowerCase()] || "bg-gray-100 text-gray-700"
               }`}
             >
-              🏦 {t("transactions.gateway." + gateway)}
+              {t("transactions.gateway." + gateway)}
             </span>
           );
         },

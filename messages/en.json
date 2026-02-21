@@ -759,6 +759,22 @@
       "refunded": "Refunded"
     }
   },
+  "payouts": {
+    "table": {
+      "eventTitle": "Event Title",
+      "amount": "Amount",
+      "eventStatus": "Event Status",
+      "status": "Status",
+      "requestType": "Request Type"
+    },
+    "eventStatus": {
+      "completed": "Completed",
+      "live": "Live"
+    },
+    "requestType": {
+      "event_payout": "Event Payout"
+    }
+  },
   "settings": {
     "security": {
       "title": "Security Settings",
