@@ -25,13 +25,15 @@ export class PayoutService {
     limit?: number;
     sort?: string;
     filter?: string;
+    search?: string;
   }): Promise<PayoutRequestsResponse> {
     const params = new URLSearchParams();
 
     if (filters) {
       if (filters.page) params.append("page", filters.page.toString());
       if (filters.limit) params.append("limit", filters.limit.toString());
-      if (filters.filter) params.append("filter", filters.filter);
+      if (filters.filter) params.append("filter", filters.filter.toString());
+      if (filters.search) params.append("search", filters.search);
       if (filters.sort) params.append("sort", filters.sort);
     }
 

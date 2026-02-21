@@ -912,3 +912,22 @@ export const createBillSchema = (
 };
 
 export type BillsFormValues = z.infer<ReturnType<typeof createBillSchema>>;
+
+/**
+ * Reject Payout Schema
+ */
+
+export const rejectPayoutSchema = (
+  t: (
+    key: string,
+    fallback?: string,
+    params?: Record<string, string | number>,
+  ) => string,
+) => {
+  const v = createValidationHelpers(t);
+  return z.object({
+    reason: z.string().min(1, v.required(t("", "Reason"))),
+  });
+};
+
+export type RejectPayoutFoemValues = z.infer<ReturnType<typeof rejectPayoutSchema>>;

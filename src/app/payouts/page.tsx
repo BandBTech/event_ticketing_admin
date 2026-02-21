@@ -15,17 +15,13 @@ import {
   DotsThreeVertical as DotsThreeVerticalIcon,
   ArrowsLeftRight,
   PenIcon,
+  CheckCircleIcon,
+  XCircleIcon,
 } from "@phosphor-icons/react";
 import { BanknoteArrowUp, Logs } from "lucide-react";
 import { CaretUp, CaretDown, CaretUpDown } from "@phosphor-icons/react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
-import {
-  Transaction,
-  TransactionListResponse,
-  TransactionStatus,
-  TransactionType,
-} from "@/types/transaction";
 import { PayoutRequestsResponse, PayoutRequest } from "@/types/payout";
 import {
   DropdownMenu,
@@ -37,11 +33,10 @@ import {
 import {
   useReactTable,
   getCoreRowModel,
-  getFilteredRowModel,
   ColumnDef,
-  SortingState,
 } from "@tanstack/react-table";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useDebounce } from "@/hooks/useDebounce";
 import {
   Table,
   TableBody,
@@ -51,6 +46,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { flexRender } from "@tanstack/react-table";
+import ApproveModal from "@/app/payouts/components/ApproveModal";
+import RejectModal from "@/app/payouts/components/RejectModal";
+import EditPayoutModal from "./components/EditPayoutModal";
 
 export default function TransactionsPage() {
   const router = useRouter();
@@ -59,17 +57,17 @@ export default function TransactionsPage() {
   const { t } = useTranslation(locale);
 
   const currentPage = Number(searchParams.get("page")) || 1;
+  const statusFilter = searchParams.get("status") || "";
   const itemsPerPage = 10;
   const SKELETON_ROWS = itemsPerPage;
-  const [filterType, setFilterType] = useState<TransactionType | "">("");
-  const [filterStatus, setFilterStatus] = useState<TransactionStatus | "">("");
   const [sorting, setSorting] = useState<{ id: string; desc: boolean }[]>([]);
   const [searchInput, setSearchInput] = React.useState("");
 
-  const filter =
-    filterStatus || filterType
-      ? `${filterType || ""},${filterStatus || ""}`
-      : undefined;
+  const debouncedSearch = useDebounce(searchInput, 500);
+
+  const [isApproveDialogOpen, setIsApproveDialogOpen] = React.useState(false);
+  const [isRejectDialogOpen, setIsRejectDialogOpen] = React.useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = React.useState(false);
 
   const sort =
     sorting.length > 0
@@ -77,12 +75,20 @@ export default function TransactionsPage() {
       : undefined;
 
   const { data: response, isLoading } = useQuery<PayoutRequestsResponse>({
-    queryKey: ["payouts", currentPage, itemsPerPage, filter, sort],
+    queryKey: [
+      "payouts",
+      currentPage,
+      itemsPerPage,
+      statusFilter,
+      sort,
+      debouncedSearch,
+    ],
     queryFn: () =>
       PayoutService.getPayouts({
         page: currentPage,
         limit: itemsPerPage,
-        filter,
+        filter: statusFilter,
+        search: debouncedSearch,
         sort,
       }),
     placeholderData: (previousData) => previousData,
@@ -100,7 +106,7 @@ export default function TransactionsPage() {
         }
       });
 
-      router.push(`/transactions?${params.toString()}`, { scroll: false });
+      router.push(`/payouts?${params.toString()}`, { scroll: false });
     },
     [router],
   );
@@ -126,6 +132,11 @@ export default function TransactionsPage() {
         header: t("payouts.table.amount"),
         accessorKey: "amount",
         enableSorting: false,
+        cell: ({ row }) => (
+          <span className="px-2 py-1 text-xs font-medium rounded-full">
+            USD {row.original.amount}
+          </span>
+        ),
       },
       {
         id: "event_status",
@@ -216,53 +227,38 @@ export default function TransactionsPage() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuItem
-                // onClick={() => {
-                //   router.push(`/users/userdetail?id=${user.id}`);
-                // }}
+                  onClick={() => {
+                    setIsApproveDialogOpen(true);
+                  }}
+                >
+                  <div className="flex justify-start items-center bg-gray-50 text-gray-700">
+                    <CheckCircleIcon
+                      weight="duotone"
+                      className="mr-2 h-4 w-4"
+                    />
+                    Approve
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setIsRejectDialogOpen(true);
+                  }}
+                >
+                  <div className="flex justify-start items-center bg-gray-50 text-gray-700">
+                    <XCircleIcon weight="duotone" className="mr-2 h-4 w-4" />
+                    Reject
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setIsEditDialogOpen(true);
+                  }}
                 >
                   <div className="flex justify-start items-center bg-gray-50 text-gray-700">
                     <PenIcon weight="duotone" className="mr-2 h-4 w-4" />
-                    {/* {t(`users.viewDetails`)} */}
-                    Change Status
+                    Edit Payout
                   </div>
                 </DropdownMenuItem>
-
-                {/* {!user.roles.some((r) => r.name.toLowerCase() === "admin") && (
-                        <DropdownMenuItem
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleToggleStatus(user);
-                          }}
-                        >
-                          {user.account_status === "active" ? (
-                            <div className="flex justify-start items-center bg-red-50 text-red-700">
-                              <XCircleIcon
-                                weight="duotone"
-                                className="mr-2 h-4 w-4"
-                              />
-                              {t(`users.deactivate`)}
-                            </div>
-                          ) : (
-                            <div className="flex justify-start items-center bg-green-50 text-green-700">
-                              <CheckCircleIcon
-                                weight="duotone"
-                                className="mr-2 h-4 w-4"
-                              />
-                              {t(`users.activate`)}
-                            </div>
-                          )}
-                        </DropdownMenuItem>
-                      )} */}
-                {/* <DropdownMenuItem
-                          className="text-red-600"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteClick(user);
-                          }}
-                        >
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          Delete
-                        </DropdownMenuItem> */}
               </DropdownMenuContent>
             </DropdownMenu>
           );
@@ -354,39 +350,48 @@ export default function TransactionsPage() {
                 className="gap-2 bg-background/80 backdrop-blur-sm"
               >
                 <FunnelIcon weight="duotone" className="h-4 w-4" />
-                {t("transactions.filter")}
+                {/* {t("transactions.filter")} */}
+                Filter By Status
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
               <DropdownMenuItem
-                // className={
-                //   statusFilter === "active" ? "bg-muted font-medium" : ""
-                // }
-                onClick={() => updateParams({ status: "active", page: "1" })}
+                className={
+                  statusFilter === "approved" ? "bg-muted font-medium" : ""
+                }
+                onClick={() => updateParams({ status: "approved", page: "1" })}
               >
-                {t("transactions.status")}
+                Approved
               </DropdownMenuItem>
               <DropdownMenuItem
-                // className={
-                //   statusFilter === "inactive" ? "bg-muted font-medium" : ""
-                // }
-                onClick={() => updateParams({ status: "inactive", page: "1" })}
-              >
-                {t("transactions.paymentGateway")}
-              </DropdownMenuItem>
-              {/* <DropdownMenuItem
                 className={
-                  statusFilter === "suspended" ? "bg-muted font-medium" : ""
+                  statusFilter === "pending" ? "bg-muted font-medium" : ""
                 }
-                onClick={() => updateParams({ status: "suspended", page: "1" })}
+                onClick={() => updateParams({ status: "pending", page: "1" })}
               >
-                {t("users.accountStatus.suspended")}
-              </DropdownMenuItem> */}
+                Pending
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className={
+                  statusFilter === "rejected" ? "bg-muted font-medium" : ""
+                }
+                onClick={() => updateParams({ status: "rejected", page: "1" })}
+              >
+                Rejected
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className={
+                  statusFilter === "paid" ? "bg-muted font-medium" : ""
+                }
+                onClick={() => updateParams({ status: "paid", page: "1" })}
+              >
+                Paid
+              </DropdownMenuItem>
 
               <DropdownMenuSeparator />
 
               <DropdownMenuItem
-                // className={`text-red-600 font-medium ${!statusFilter ? "hidden" : ""}`}
+                className={`text-red-600 font-medium ${!statusFilter ? "hidden" : ""}`}
                 onClick={() => updateParams({ status: null, page: "1" })}
               >
                 {t("users.clearFilters")}
@@ -395,6 +400,19 @@ export default function TransactionsPage() {
           </DropdownMenu>
         </div>
       </div>
+
+      <ApproveModal
+        open={isApproveDialogOpen}
+        onOpenChange={setIsApproveDialogOpen}
+      />
+      <RejectModal
+        open={isRejectDialogOpen}
+        onOpenChange={setIsRejectDialogOpen}
+      />
+      <EditPayoutModal
+        open={isEditDialogOpen}
+        onOpenChange={setIsEditDialogOpen}
+      />
 
       <div className="rounded-lg border bg-background max-h-[60vh] overflow-auto">
         <Table>
