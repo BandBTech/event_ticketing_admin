@@ -10,6 +10,9 @@ export const API_ENDPOINTS = {
   GET_PROFILE: `${API_BASE_URL}/auth/profile`,
   RESEND_OTP: `${API_BASE_URL}/auth/send-otp`,
 
+  //Admin Dashboard
+  GET_DASHBOARD_DATA: `${API_BASE_URL}/admin/dashboard`,
+
   // Admin Permissions
 
   // Admin Management
@@ -28,8 +31,6 @@ export const API_ENDPOINTS = {
   // Events
   GET_EVENTS: `${API_BASE_URL}/admin/events`,
   GET_PENDING_EVENTS: `${API_BASE_URL}/admin/events/pending`,
-
-  // Payouts
 
   //users
   GET_USERS: `${API_BASE_URL}/admin/users`,
