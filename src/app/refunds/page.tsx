@@ -3,7 +3,7 @@
 import React, { useState, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
-import { TransactionService } from "@/services/transactionService";
+import { RefundService } from "@/services/refundService";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -82,7 +82,7 @@ export default function TransactionsPage() {
   const { data: response, isLoading } = useQuery<TransactionListResponse>({
     queryKey: ["transactions", currentPage, itemsPerPage, filter, sort],
     queryFn: () =>
-      TransactionService.getTransactions({
+      RefundService.getRefunds({
         page: currentPage,
         limit: itemsPerPage,
         filter,
@@ -434,7 +434,7 @@ export default function TransactionsPage() {
                 >
                   <div className="flex flex-col items-center gap-2 text-muted-foreground">
                     <UserIcon className="w-8 h-8" />
-                    <span>{t("users.noUsersFound")}</span>
+                    <span>No Refunds Found</span>
                   </div>
                 </TableCell>
               </TableRow>
