@@ -1,9 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useCallback } from "react";
 import {
   MagnifyingGlass as MagnifyingGlassIcon,
   Funnel as FunnelIcon,
+  CaretLeft as CaretLeftIcon,
+  CaretRight as CaretRightIcon,
   Eye as EyeIcon,
   User as UserIcon,
   FilePlus as FilePlusIcon,
@@ -13,6 +15,7 @@ import {
   CaretUp,
   CaretDown,
   CaretUpDown,
+  FileTextIcon,
 } from "@phosphor-icons/react";
 import {
   Table,
@@ -67,17 +70,40 @@ export default function BillingsPage() {
   const [isAddDialogOpen, setIsAddDialogOpen] = React.useState(false);
 
   const debouncedSearch = useDebounce(searchInput, 500);
+  console.log("debounceSearch", debouncedSearch);
+
+  // Helper to update URL params
+  const updateParams = useCallback(
+    (updates: Record<string, string | null>) => {
+      const params = new URLSearchParams(searchParams.toString());
+      Object.entries(updates).forEach(([key, value]) => {
+        if (value === null || value === "") {
+          params.delete(key);
+        } else {
+          params.set(key, value);
+        }
+      });
+      router.push(`/billings?${params.toString()}`, { scroll: false });
+    },
+    [router, searchParams],
+  );
 
   const { data: response, isLoading } = useQuery<PaymentBillData>({
-    queryKey: ["bills", currentPage, itemsPerPage],
+    queryKey: [
+      "bills",
+      currentPage,
+      itemsPerPage,
+      statusFilter,
+      debouncedSearch,
+    ],
     queryFn: () =>
       BillingService.getAllBills({
         page: currentPage,
         limit: itemsPerPage,
+        status: statusFilter,
+        search: debouncedSearch,
       }),
   });
-
-  console.log("response", response);
 
   const SKELETON_ROWS = itemsPerPage;
 
@@ -305,6 +331,13 @@ export default function BillingsPage() {
     getCoreRowModel: getCoreRowModel(),
   });
 
+  const handlePageChange = useCallback(
+    (page: number) => {
+      updateParams({ page: page.toString() });
+    },
+    [updateParams],
+  );
+
   const totalItems = response?.pagination?.total || mockUserData.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const hasNextPage =
@@ -318,7 +351,7 @@ export default function BillingsPage() {
     <div className="min-h-screen p-8 space-y-6">
       <div className="flex items-center justify-between gap-4">
         <div className="relative flex-1 max-w-md">
-          <MagnifyingGlassIcon
+          {/* <MagnifyingGlassIcon
             weight="duotone"
             className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground"
           />
@@ -328,72 +361,10 @@ export default function BillingsPage() {
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             className="pl-9"
-          />
+          /> */}
         </div>
         <div className="flex gap-6">
           <div className="flex gap-6">
-            {/* <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className="gap-2 bg-background/80 backdrop-blur-sm"
-              >
-                <FunnelIcon weight="duotone" className="h-4 w-4" />
-                {t("users.filterByRole")}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem
-                className={roleFilter === "admin" ? "bg-muted font-medium" : ""}
-                onClick={() => updateParams({ role: "admin", page: "1" })}
-              >
-                {t("users.userRoles.admin")}
-              </DropdownMenuItem>
-
-              <DropdownMenuItem
-                className={
-                  roleFilter === "organizer" ? "bg-muted font-medium" : ""
-                }
-                onClick={() => updateParams({ role: "organizer", page: "1" })}
-              >
-                {t("users.userRoles.organizer")}
-              </DropdownMenuItem>
-
-              <DropdownMenuItem
-                className={roleFilter === "staff" ? "bg-muted font-medium" : ""}
-                onClick={() => updateParams({ role: "staff", page: "1" })}
-              >
-                {t("users.userRoles.staff")}
-              </DropdownMenuItem>
-
-              <DropdownMenuItem
-                className={
-                  roleFilter === "manager" ? "bg-muted font-medium" : ""
-                }
-                onClick={() => updateParams({ role: "manager", page: "1" })}
-              >
-                {t("users.userRoles.manager")}
-              </DropdownMenuItem>
-
-              <DropdownMenuItem
-                className={roleFilter === "user" ? "bg-muted font-medium" : ""}
-                onClick={() => updateParams({ role: "user", page: "1" })}
-              >
-                {t("users.userRoles.user")}
-              </DropdownMenuItem>
-
-              <DropdownMenuSeparator />
-
-              <DropdownMenuItem
-                className={`text-red-600 font-medium ${
-                  !roleFilter ? "hidden" : ""
-                }`}
-                onClick={() => updateParams({ role: null, page: "1" })}
-              >
-                {t("users.clearFilters")}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu> */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -407,34 +378,36 @@ export default function BillingsPage() {
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuItem
                   className={
-                    statusFilter === "active" ? "bg-muted font-medium" : ""
+                    statusFilter === "pending" ? "bg-muted font-medium" : ""
                   }
-                  // onClick={() => updateParams({ status: "active", page: "1" })}
+                  onClick={() => updateParams({ status: "pending", page: "1" })}
                 >
                   {t("billings.status.pending")}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className={
-                    statusFilter === "inactive" ? "bg-muted font-medium" : ""
+                    statusFilter === "paid" ? "bg-muted font-medium" : ""
                   }
-                  // onClick={() => updateParams({ status: "inactive", page: "1" })}
+                  onClick={() => updateParams({ status: "paid", page: "1" })}
                 >
                   {t("billings.status.paid")}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className={
-                    statusFilter === "suspended" ? "bg-muted font-medium" : ""
+                    statusFilter === "overdue" ? "bg-muted font-medium" : ""
                   }
-                  // onClick={() => updateParams({ status: "suspended", page: "1" })}
+                  onClick={() => updateParams({ status: "overdue", page: "1" })}
                 >
                   {t("billings.status.overdue")}
                   {/* Overdue */}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className={
-                    statusFilter === "suspended" ? "bg-muted font-medium" : ""
+                    statusFilter === "cancelled" ? "bg-muted font-medium" : ""
                   }
-                  // onClick={() => updateParams({ status: "suspended", page: "1" })}
+                  onClick={() =>
+                    updateParams({ status: "cancelled", page: "1" })
+                  }
                 >
                   {t("billings.status.cancelled")}
                 </DropdownMenuItem>
@@ -443,7 +416,7 @@ export default function BillingsPage() {
 
                 <DropdownMenuItem
                   className={`text-red-600 font-medium ${!statusFilter ? "hidden" : ""}`}
-                  // onClick={() => updateParams({ status: null, page: "1" })}
+                  onClick={() => updateParams({ status: null, page: "1" })}
                 >
                   {t("billings.status.clearFilter")}
                 </DropdownMenuItem>
@@ -551,8 +524,8 @@ export default function BillingsPage() {
                   className="text-center py-10 h-[50vh]"
                 >
                   <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                    <UserIcon className="w-8 h-8" />
-                    <span>{t("users.noUsersFound")}</span>
+                    <FileTextIcon className="w-8 h-8" />
+                    <span>{t("", "No Bills Found")}</span>
                   </div>
                 </TableCell>
               </TableRow>
@@ -582,7 +555,7 @@ export default function BillingsPage() {
       </div>
 
       {/* Pagination */}
-      {/* {totalPages > 0 && !isLoading && (
+      {totalPages > 0 && !isLoading && (
         <div className="flex items-center justify-center gap-2">
           <Button
             variant="outline"
@@ -635,7 +608,7 @@ export default function BillingsPage() {
             <CaretRightIcon weight="bold" className="w-4 h-4" />
           </Button>
         </div>
-      )} */}
+      )}
 
       {/* Results count */}
       {mockUserData.length > 0 && !isLoading && (

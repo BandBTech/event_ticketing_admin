@@ -1,7 +1,11 @@
 import { api } from "../lib/apiClient";
 import { API_ENDPOINTS } from "@/app/config/api";
-import { Bill, PaymentBillResponse, PaymentBillData, CreateBillPayload } from "@/types/billings";
-
+import {
+  Bill,
+  PaymentBillResponse,
+  PaymentBillData,
+  CreateBillPayload,
+} from "@/types/billings";
 
 export class BillingService {
   /**
@@ -9,22 +13,26 @@ export class BillingService {
    */
   static async createBills(data: CreateBillPayload): Promise<Bill> {
     const formData = this.createBillFormData(data);
-    return await api.postFormData<Bill>('/admin/payments/bills', formData, {
+    return await api.postFormData<Bill>("/admin/payments/bills", formData, {
       requiresAuth: true,
       showSuccessToast: true,
-      successMessage: 'Event created successfully',
+      successMessage: "Event created successfully",
     });
   }
 
   static async getAllBills(filters?: {
     page?: number;
     limit?: number;
+    status?: string;
+    search?: string;
   }): Promise<PaymentBillData> {
     const params = new URLSearchParams();
 
     if (filters) {
       if (filters.page) params.append("page", filters.page.toString());
       if (filters.limit) params.append("limit", filters.limit.toString());
+      if (filters.status) params.append("status", filters.status.toString());
+      if (filters.search) params.append("search", filters.search);
     }
 
     const query = params.toString();
@@ -46,20 +54,19 @@ export class BillingService {
     return response;
   }
 
-    /**
-     * Helper to create FormData from event data
-     */
-    private static createBillFormData(data: CreateBillPayload): FormData {
-      const formData = new FormData();
-      if (data.screenshot) {
-        formData.append('screenshot', data.screenshot);
-      }
-  
-      formData.append('event_id', data.event_id);
-      formData.append('organizer_id', data.organizer_id);
-      formData.append('payment_method', data.payment_method);
-  
-  
-      return formData;
+  /**
+   * Helper to create FormData from event data
+   */
+  private static createBillFormData(data: CreateBillPayload): FormData {
+    const formData = new FormData();
+    if (data.screenshot) {
+      formData.append("screenshot", data.screenshot);
     }
+
+    formData.append("event_id", data.event_id);
+    formData.append("organizer_id", data.organizer_id);
+    formData.append("payment_method", data.payment_method);
+
+    return formData;
+  }
 }
