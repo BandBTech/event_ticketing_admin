@@ -6,12 +6,13 @@ import {
   Funnel as FunnelIcon,
   Eye as EyeIcon,
   User as UserIcon,
+  FilePlus as FilePlusIcon,
   DotsThreeVertical as DotsThreeVerticalIcon,
   Spinner,
   TrashIcon,
   CaretUp,
-   CaretDown, 
-  CaretUpDown
+  CaretDown,
+  CaretUpDown,
 } from "@phosphor-icons/react";
 import {
   Table,
@@ -45,8 +46,9 @@ import {
 import { useDebounce } from "@/hooks/useDebounce";
 import { BillingService } from "@/services/billingService";
 import { Bill, PaymentBillData } from "@/types/billings";
+import AddBillPopupModal from "@/app/billings/components/AddBillPopupModal";
 
-export default function UsersPage() {
+export default function BillingsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { locale } = useLanguageStore();
@@ -62,6 +64,7 @@ export default function UsersPage() {
   const [actionLoading, setActionLoading] = React.useState<string | null>(null);
   const [searchInput, setSearchInput] = React.useState(searchQuery);
   const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [isAddDialogOpen, setIsAddDialogOpen] = React.useState(false);
 
   const debouncedSearch = useDebounce(searchInput, 500);
 
@@ -271,15 +274,15 @@ export default function UsersPage() {
                   </div>
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                    className="text-red-600"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      // handleDeleteClick(user);
-                    }}
-                  >
-                    <TrashIcon className="mr-2 h-4 w-4" />
-                    Delete
-                  </DropdownMenuItem>
+                  className="text-red-600"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // handleDeleteClick(user);
+                  }}
+                >
+                  <TrashIcon className="mr-2 h-4 w-4" />
+                  Delete
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           );
@@ -327,9 +330,9 @@ export default function UsersPage() {
             className="pl-9"
           />
         </div>
-
         <div className="flex gap-6">
-          {/* <DropdownMenu>
+          <div className="flex gap-6">
+            {/* <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
@@ -391,63 +394,76 @@ export default function UsersPage() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu> */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className="gap-2 bg-background/80 backdrop-blur-sm"
-              >
-                <FunnelIcon weight="duotone" className="h-4 w-4" />
-                {t("billings.filterByStatus")}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem
-                className={
-                  statusFilter === "active" ? "bg-muted font-medium" : ""
-                }
-                // onClick={() => updateParams({ status: "active", page: "1" })}
-              >
-                {t("billings.status.pending")}
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className={
-                  statusFilter === "inactive" ? "bg-muted font-medium" : ""
-                }
-                // onClick={() => updateParams({ status: "inactive", page: "1" })}
-              >
-                {t("billings.status.paid")}
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className={
-                  statusFilter === "suspended" ? "bg-muted font-medium" : ""
-                }
-                // onClick={() => updateParams({ status: "suspended", page: "1" })}
-              >
-                {t("billings.status.overdue")}
-                {/* Overdue */}
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className={
-                  statusFilter === "suspended" ? "bg-muted font-medium" : ""
-                }
-                // onClick={() => updateParams({ status: "suspended", page: "1" })}
-              >
-                {t("billings.status.cancelled")}
-              </DropdownMenuItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="gap-2 bg-background/80 backdrop-blur-sm"
+                >
+                  <FunnelIcon weight="duotone" className="h-4 w-4" />
+                  {t("billings.filterByStatus")}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem
+                  className={
+                    statusFilter === "active" ? "bg-muted font-medium" : ""
+                  }
+                  // onClick={() => updateParams({ status: "active", page: "1" })}
+                >
+                  {t("billings.status.pending")}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className={
+                    statusFilter === "inactive" ? "bg-muted font-medium" : ""
+                  }
+                  // onClick={() => updateParams({ status: "inactive", page: "1" })}
+                >
+                  {t("billings.status.paid")}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className={
+                    statusFilter === "suspended" ? "bg-muted font-medium" : ""
+                  }
+                  // onClick={() => updateParams({ status: "suspended", page: "1" })}
+                >
+                  {t("billings.status.overdue")}
+                  {/* Overdue */}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className={
+                    statusFilter === "suspended" ? "bg-muted font-medium" : ""
+                  }
+                  // onClick={() => updateParams({ status: "suspended", page: "1" })}
+                >
+                  {t("billings.status.cancelled")}
+                </DropdownMenuItem>
 
-              <DropdownMenuSeparator />
+                <DropdownMenuSeparator />
 
-              <DropdownMenuItem
-                className={`text-red-600 font-medium ${!statusFilter ? "hidden" : ""}`}
-                // onClick={() => updateParams({ status: null, page: "1" })}
-              >
-                {t("billings.status.clearFilter")}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                <DropdownMenuItem
+                  className={`text-red-600 font-medium ${!statusFilter ? "hidden" : ""}`}
+                  // onClick={() => updateParams({ status: null, page: "1" })}
+                >
+                  {t("billings.status.clearFilter")}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+          <Button
+            onClick={() => setIsAddDialogOpen(true)}
+            className="w-full sm:w-auto gap-2 bg-primary hover:bg-primary/80 text-primary-foreground shadow-sm transition-all ease-out duration-300 active:scale-95"
+          >
+            <FilePlusIcon weight="bold" className="h-5 w-5" />
+            {t("", "Add Bills")}
+          </Button>
         </div>
       </div>
+
+      <AddBillPopupModal
+        open={isAddDialogOpen}
+        onOpenChange={setIsAddDialogOpen}
+      />
 
       {/* Table Container */}
       {/* <DataTable

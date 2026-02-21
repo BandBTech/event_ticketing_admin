@@ -48,3 +48,10 @@ export interface Pagination {
   total: number;
   total_pages: number;
 }
+
+export type CreateBillPayload = {
+  event_id: string;
+  organizer_id: string;
+  payment_method: string;
+  screenshot?: File;
+}

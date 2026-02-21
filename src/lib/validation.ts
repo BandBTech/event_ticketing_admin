@@ -27,15 +27,19 @@ export interface ValidationHelpers {
  * @returns Object with validation helper methods
  */
 export const createValidationHelpers = (
-  t: (key: string, fallback?: string, params?: Record<string, string | number>) => string
+  t: (
+    key: string,
+    fallback?: string,
+    params?: Record<string, string | number>,
+  ) => string,
 ): ValidationHelpers => ({
   /**
    * Required field validation
    * Uses: common.validation.required
    */
   required: (field: string) => {
-    const message = t('common.validation.required', '{field} is required.');
-    return message.replace('{field}', field);
+    const message = t("common.validation.required", "{field} is required.");
+    return message.replace("{field}", field);
   },
 
   /**
@@ -43,8 +47,8 @@ export const createValidationHelpers = (
    * Uses: common.validation.invalid
    */
   invalid: (field: string) => {
-    const message = t('common.validation.invalid', '{field} is invalid.');
-    return message.replace('{field}', field);
+    const message = t("common.validation.invalid", "{field} is invalid.");
+    return message.replace("{field}", field);
   },
 
   /**
@@ -52,8 +56,13 @@ export const createValidationHelpers = (
    * Uses: common.validation.minLength
    */
   minLength: (field: string, length: number) => {
-    const message = t('common.validation.minLength', '{field} must be at least {length} characters long.');
-    return message.replace('{field}', field).replace('{length}', length.toString());
+    const message = t(
+      "common.validation.minLength",
+      "{field} must be at least {length} characters long.",
+    );
+    return message
+      .replace("{field}", field)
+      .replace("{length}", length.toString());
   },
 
   /**
@@ -61,8 +70,13 @@ export const createValidationHelpers = (
    * Uses: common.validation.maxLength
    */
   maxLength: (field: string, length: number) => {
-    const message = t('common.validation.maxLength', '{field} cannot exceed {length} characters.');
-    return message.replace('{field}', field).replace('{length}', length.toString());
+    const message = t(
+      "common.validation.maxLength",
+      "{field} cannot exceed {length} characters.",
+    );
+    return message
+      .replace("{field}", field)
+      .replace("{length}", length.toString());
   },
 
   /**
@@ -70,8 +84,13 @@ export const createValidationHelpers = (
    * Uses: common.validation.min
    */
   min: (field: string, value: number) => {
-    const message = t('common.validation.min', '{field} must be at least {value}.');
-    return message.replace('{field}', field).replace('{value}', value.toString());
+    const message = t(
+      "common.validation.min",
+      "{field} must be at least {value}.",
+    );
+    return message
+      .replace("{field}", field)
+      .replace("{value}", value.toString());
   },
 
   /**
@@ -79,8 +98,13 @@ export const createValidationHelpers = (
    * Uses: common.validation.max
    */
   max: (field: string, value: number) => {
-    const message = t('common.validation.max', '{field} cannot exceed {value}.');
-    return message.replace('{field}', field).replace('{value}', value.toString());
+    const message = t(
+      "common.validation.max",
+      "{field} cannot exceed {value}.",
+    );
+    return message
+      .replace("{field}", field)
+      .replace("{value}", value.toString());
   },
 
   /**
@@ -88,29 +112,41 @@ export const createValidationHelpers = (
    * Uses: common.validation.pattern
    */
   pattern: (field: string) => {
-    const message = t('common.validation.pattern', '{field} format is invalid.');
-    return message.replace('{field}', field);
+    const message = t(
+      "common.validation.pattern",
+      "{field} format is invalid.",
+    );
+    return message.replace("{field}", field);
   },
 
   /**
    * Email specific validation
    */
   email: () => {
-    return t('auth.signup.validation.emailInvalid', 'Please enter a valid email address');
+    return t(
+      "auth.signup.validation.emailInvalid",
+      "Please enter a valid email address",
+    );
   },
 
   /**
    * Phone specific validation
    */
   phone: () => {
-    return t('auth.signup.validation.phoneInvalid', 'Please enter a valid phone number');
+    return t(
+      "auth.signup.validation.phoneInvalid",
+      "Please enter a valid phone number",
+    );
   },
 
   /**
    * Password match validation
    */
   passwordMatch: () => {
-    return t('auth.signup.validation.passwordMismatch', 'Passwords do not match');
+    return t(
+      "auth.signup.validation.passwordMismatch",
+      "Passwords do not match",
+    );
   },
 
   /**
@@ -118,8 +154,8 @@ export const createValidationHelpers = (
    */
   passwordUppercase: () => {
     return t(
-      'auth.signup.validation.passwordUppercase',
-      'Password must contain at least one uppercase letter'
+      "auth.signup.validation.passwordUppercase",
+      "Password must contain at least one uppercase letter",
     );
   },
 
@@ -128,8 +164,8 @@ export const createValidationHelpers = (
    */
   passwordLowercase: () => {
     return t(
-      'auth.signup.validation.passwordLowercase',
-      'Password must contain at least one lowercase letter'
+      "auth.signup.validation.passwordLowercase",
+      "Password must contain at least one lowercase letter",
     );
   },
 
@@ -138,18 +174,18 @@ export const createValidationHelpers = (
    */
   passwordNumber: () => {
     return t(
-      'auth.signup.validation.passwordNumber',
-      'Password must contain at least one number'
+      "auth.signup.validation.passwordNumber",
+      "Password must contain at least one number",
     );
   },
 });
 
 /**
  * Example usage:
- * 
+ *
  * const { t } = useTranslation(locale);
  * const v = createValidationHelpers(t);
- * 
+ *
  * const schema = z.object({
  *   firstName: z.string()
  *     .min(1, v.required('First name'))
@@ -168,96 +204,178 @@ export const createValidationHelpers = (
 
 import * as z from "zod";
 
-export const createApprovalSchema = (t: (key: string, fallback?: string, params?: Record<string, string | number>) => string, action: "approve" | "reject" | "activate" | "deactivate") => {
+export const createApprovalSchema = (
+  t: (
+    key: string,
+    fallback?: string,
+    params?: Record<string, string | number>,
+  ) => string,
+  action: "approve" | "reject" | "activate" | "deactivate",
+) => {
   return z.object({
-    remark: (action === "reject" || action === "deactivate")
-      ? z.string()
-        .min(10, t("organizer.management.validation.rejectReasonRequired", "Reason for rejection is required (min 10 characters)"))
-        .max(500, t("organizer.management.validation.remarkTooLong", "Remark cannot exceed 500 characters"))
-      : z.string()
-        .max(500, t("organizer.management.validation.remarkTooLong", "Remark cannot exceed 500 characters"))
-        .optional(),
+    remark:
+      action === "reject" || action === "deactivate"
+        ? z
+            .string()
+            .min(
+              10,
+              t(
+                "organizer.management.validation.rejectReasonRequired",
+                "Reason for rejection is required (min 10 characters)",
+              ),
+            )
+            .max(
+              500,
+              t(
+                "organizer.management.validation.remarkTooLong",
+                "Remark cannot exceed 500 characters",
+              ),
+            )
+        : z
+            .string()
+            .max(
+              500,
+              t(
+                "organizer.management.validation.remarkTooLong",
+                "Remark cannot exceed 500 characters",
+              ),
+            )
+            .optional(),
   });
 };
 
-export type ApprovalFormValues = z.infer<ReturnType<typeof createApprovalSchema>>;
+export type ApprovalFormValues = z.infer<
+  ReturnType<typeof createApprovalSchema>
+>;
 
 /**
  * Organizer Creation Schema (Admin)
  */
 export const createOrganizerSchema = (
-  t: (key: string, fallback?: string, params?: Record<string, string | number>) => string
+  t: (
+    key: string,
+    fallback?: string,
+    params?: Record<string, string | number>,
+  ) => string,
 ) => {
   const v = createValidationHelpers(t);
   return z.object({
     first_name: z
       .string()
-      .min(1, v.required(t('auth.signup.firstName', 'First Name')))
-      .min(2, v.minLength(t('auth.signup.firstName', 'First Name'), 2))
-      .max(50, v.maxLength(t('auth.signup.firstName', 'First Name'), 50)),
+      .min(1, v.required(t("auth.signup.firstName", "First Name")))
+      .min(2, v.minLength(t("auth.signup.firstName", "First Name"), 2))
+      .max(50, v.maxLength(t("auth.signup.firstName", "First Name"), 50)),
     last_name: z
       .string()
-      .min(1, v.required(t('auth.signup.lastName', 'Last Name')))
-      .min(2, v.minLength(t('auth.signup.lastName', 'Last Name'), 2))
-      .max(50, v.maxLength(t('auth.signup.lastName', 'Last Name'), 50)),
+      .min(1, v.required(t("auth.signup.lastName", "Last Name")))
+      .min(2, v.minLength(t("auth.signup.lastName", "Last Name"), 2))
+      .max(50, v.maxLength(t("auth.signup.lastName", "Last Name"), 50)),
     email: z
       .string()
-      .min(1, v.required(t('auth.signup.email', 'Email')))
-      .email(v.email(t('auth.signup.email', 'Email'))),
+      .min(1, v.required(t("auth.signup.email", "Email")))
+      .email(v.email(t("auth.signup.email", "Email"))),
     password: z
       .string()
-      .min(8, v.minLength(t('auth.signup.password', 'Password'), 8))
+      .min(8, v.minLength(t("auth.signup.password", "Password"), 8))
       .regex(/[A-Z]/, v.passwordUppercase())
       .regex(/[a-z]/, v.passwordLowercase())
       .regex(/[0-9]/, v.passwordNumber()),
-    phone: z.string().optional().or(z.literal('')),
-    country_code: z.string().optional().or(z.literal('')),
+    phone: z.string().optional().or(z.literal("")),
+    country_code: z.string().optional().or(z.literal("")),
   });
 };
 
-export type CreateOrganizerFormData = z.infer<ReturnType<typeof createOrganizerSchema>>;
+export type CreateOrganizerFormData = z.infer<
+  ReturnType<typeof createOrganizerSchema>
+>;
 
 /**
  * Dashboard Event Approval Schema
  * Used for approving events with commission rate
- * 
+ *
  * Schema Factory Pattern:
  * - Pass `t` function to schema for translated error messages
  * - Use with `useMemo(() => createEventApprovalSchema(t), [t])`
  */
-export const createEventApprovalSchema = (t: (key: string, fallback?: string, params?: Record<string, string | number>) => string) => {
+export const createEventApprovalSchema = (
+  t: (
+    key: string,
+    fallback?: string,
+    params?: Record<string, string | number>,
+  ) => string,
+) => {
   return z.object({
-    commissionRate: z.string()
-      .min(1, t("dashboard.validation.commissionRequired", "Commission rate is required."))
+    commissionRate: z
+      .string()
+      .min(
+        1,
+        t(
+          "dashboard.validation.commissionRequired",
+          "Commission rate is required.",
+        ),
+      )
       .regex(
         /^(100(\.00?)?|[0-9]?\d(\.\d{1,2})?)$/,
-        t("dashboard.validation.commissionInvalid", "Enter a valid percentage (0-100) with up to 2 decimal places.")
+        t(
+          "dashboard.validation.commissionInvalid",
+          "Enter a valid percentage (0-100) with up to 2 decimal places.",
+        ),
       ),
     // Required string with max length (not optional to match form interface)
-    adminRemark: z.string()
-      .max(500, t("dashboard.validation.remarkTooLong", "Remark cannot exceed 500 characters.")),
+    adminRemark: z
+      .string()
+      .max(
+        500,
+        t(
+          "dashboard.validation.remarkTooLong",
+          "Remark cannot exceed 500 characters.",
+        ),
+      ),
   });
 };
 
-export type EventApprovalFormValues = z.infer<ReturnType<typeof createEventApprovalSchema>>;
+export type EventApprovalFormValues = z.infer<
+  ReturnType<typeof createEventApprovalSchema>
+>;
 
 /**
  * Dashboard Rejection Schema
  * Used for rejecting events and organizers with required reason
- * 
+ *
  * Schema Factory Pattern:
  * - Pass `t` function to schema for translated error messages
  * - Use with `useMemo(() => createRejectionSchema(t), [t])`
  */
-export const createRejectionSchema = (t: (key: string, fallback?: string, params?: Record<string, string | number>) => string) => {
+export const createRejectionSchema = (
+  t: (
+    key: string,
+    fallback?: string,
+    params?: Record<string, string | number>,
+  ) => string,
+) => {
   return z.object({
-    adminRemark: z.string()
-      .min(10, t("dashboard.validation.rejectionReasonRequired", "Reason for rejection is required (min 10 characters)."))
-      .max(500, t("dashboard.validation.remarkTooLong", "Remark cannot exceed 500 characters.")),
+    adminRemark: z
+      .string()
+      .min(
+        10,
+        t(
+          "dashboard.validation.rejectionReasonRequired",
+          "Reason for rejection is required (min 10 characters).",
+        ),
+      )
+      .max(
+        500,
+        t(
+          "dashboard.validation.remarkTooLong",
+          "Remark cannot exceed 500 characters.",
+        ),
+      ),
   });
 };
 
-export type RejectionFormValues = z.infer<ReturnType<typeof createRejectionSchema>>;
+export type RejectionFormValues = z.infer<
+  ReturnType<typeof createRejectionSchema>
+>;
 
 // =======================================
 // Event Form Validation (Admin)
@@ -280,55 +398,90 @@ export const PROMO_CODE_QUANTITY_MAX = 100000;
 
 // Helper for required date string validation
 const createRequiredDateSchema = (
-  t: (key: string, fallback?: string, params?: Record<string, string | number>) => string,
-  fieldName: string
+  t: (
+    key: string,
+    fallback?: string,
+    params?: Record<string, string | number>,
+  ) => string,
+  fieldName: string,
 ) =>
-  z.string().min(1, t('event.validation.dateRequired', `${fieldName} is required.`)).superRefine((val, ctx) => {
-    const date = new Date(val);
-    if (isNaN(date.getTime())) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: t('event.validation.invalidDate', 'Enter a valid date and time.'),
-      });
-      return;
-    }
-    if (date.getFullYear() > 9999) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: t('event.validation.yearLimit', 'Year cannot exceed 4 digits.'),
-      });
-      return;
-    }
-    // Check for past date
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    if (date < today) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: t('event.validation.pastDate', 'Date cannot be in the past.'),
-      });
-    }
-  });
+  z
+    .string()
+    .min(1, t("event.validation.dateRequired", `${fieldName} is required.`))
+    .superRefine((val, ctx) => {
+      const date = new Date(val);
+      if (isNaN(date.getTime())) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: t(
+            "event.validation.invalidDate",
+            "Enter a valid date and time.",
+          ),
+        });
+        return;
+      }
+      if (date.getFullYear() > 9999) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: t(
+            "event.validation.yearLimit",
+            "Year cannot exceed 4 digits.",
+          ),
+        });
+        return;
+      }
+      // Check for past date
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      if (date < today) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: t(
+            "event.validation.pastDate",
+            "Date cannot be in the past.",
+          ),
+        });
+      }
+    });
 
 // Helper for required number schema
 const createRequiredNumberSchema = (
-  t: (key: string, fallback?: string, params?: Record<string, string | number>) => string,
+  t: (
+    key: string,
+    fallback?: string,
+    params?: Record<string, string | number>,
+  ) => string,
   fieldName: string,
   minValue: number = 1,
-  maxValue: number = Number.MAX_SAFE_INTEGER
+  maxValue: number = Number.MAX_SAFE_INTEGER,
 ) => {
   return z.preprocess(
     (val) => {
-      if (val === '' || val === null || val === undefined) return undefined;
+      if (val === "" || val === null || val === undefined) return undefined;
       const num = Number(val);
       return isNaN(num) ? undefined : num;
     },
     z
       .number({
-        message: t('event.validation.numberRequired', `${fieldName} is required.`),
+        message: t(
+          "event.validation.numberRequired",
+          `${fieldName} is required.`,
+        ),
       })
-      .min(minValue, t('event.validation.minValue', `${fieldName} must be at least ${minValue}.`))
-      .max(maxValue, t('event.validation.maxValue', `${fieldName} cannot exceed ${maxValue}.`))
+      .min(
+        minValue,
+        t(
+          "event.validation.minValue",
+          `${fieldName} must be at least ${minValue}.`,
+        ),
+      )
+      .max(
+        maxValue,
+        t(
+          "event.validation.maxValue",
+          `${fieldName} cannot exceed ${maxValue}.`,
+        ),
+      ),
   );
 };
 
@@ -336,31 +489,54 @@ const createRequiredNumberSchema = (
  * Ticket/Tier Schema
  * Used for validating individual ticket tiers
  */
-export const createTicketSchema = (t: (key: string, fallback?: string, params?: Record<string, string | number>) => string) =>
+export const createTicketSchema = (
+  t: (
+    key: string,
+    fallback?: string,
+    params?: Record<string, string | number>,
+  ) => string,
+) =>
   z
     .object({
       id: z.string().optional(),
       name: z
         .string()
-        .min(1, t('event.validation.tierNameRequired', 'Tier Name is required.'))
-        .max(TIER_NAME_MAX, t('event.validation.tierNameMax', `Tier Name must be under ${TIER_NAME_MAX} characters.`)),
-      price: createRequiredNumberSchema(t, 'Price', 1, MAX_PRICE),
-      quantity: createRequiredNumberSchema(
-        t,
-        'Quantity',
-        1,
-        MAX_QUANTITY
-      ),
+        .min(
+          1,
+          t("event.validation.tierNameRequired", "Tier Name is required."),
+        )
+        .max(
+          TIER_NAME_MAX,
+          t(
+            "event.validation.tierNameMax",
+            `Tier Name must be under ${TIER_NAME_MAX} characters.`,
+          ),
+        ),
+      price: createRequiredNumberSchema(t, "Price", 1, MAX_PRICE),
+      quantity: createRequiredNumberSchema(t, "Quantity", 1, MAX_QUANTITY),
       gst: z.preprocess(
         (val) => {
-          if (val === '' || val === null || val === undefined) return undefined;
+          if (val === "" || val === null || val === undefined) return undefined;
           const num = Number(val);
           return isNaN(num) ? undefined : num;
         },
-        z.number().min(0, t('event.validation.gstPositive', "GST must be positive.")).max(100, t('event.validation.gstMax', "GST cannot exceed 100%."))
+        z
+          .number()
+          .min(0, t("event.validation.gstPositive", "GST must be positive."))
+          .max(100, t("event.validation.gstMax", "GST cannot exceed 100%.")),
       ),
-      salesStart: createRequiredDateSchema(t, 'event.field.salesStart:Sales Start Date').optional().or(z.literal("")),
-      salesEnd: createRequiredDateSchema(t, 'event.field.salesEnd:Sales End Date').optional().or(z.literal("")),
+      salesStart: createRequiredDateSchema(
+        t,
+        "event.field.salesStart:Sales Start Date",
+      )
+        .optional()
+        .or(z.literal("")),
+      salesEnd: createRequiredDateSchema(
+        t,
+        "event.field.salesEnd:Sales End Date",
+      )
+        .optional()
+        .or(z.literal("")),
     })
     .refine(
       (data) => {
@@ -368,99 +544,156 @@ export const createTicketSchema = (t: (key: string, fallback?: string, params?: 
         return new Date(data.salesEnd) > new Date(data.salesStart);
       },
       {
-        message: t('event.validation.salesEndAfterStart', 'Sales End Date must be after Sales Start Date.'),
-        path: ['salesEnd'],
-      }
+        message: t(
+          "event.validation.salesEndAfterStart",
+          "Sales End Date must be after Sales Start Date.",
+        ),
+        path: ["salesEnd"],
+      },
     );
 
-export const createPromoCodeSchema = (t: (key: string, fallback?: string, params?: Record<string, string | number>) => string) => z.object({
-  code: z
-    .string()
-    .min(1, t('event.validation.promoCodeRequired', "Promo Code is required."))
-    .max(PROMO_CODE_NAME_MAX, t('event.validation.promoCodeMaxLength', `Promo Code must be under ${PROMO_CODE_NAME_MAX} characters.`))
-    .regex(/^[A-Z0-9_-]+$/, t('event.validation.promoCodeFormat', "Promo Code may only contain A-Z , 0-9, _ or -")),
-  discountType: z.string().min(1, t('event.validation.discountTypeRequired', "Discount Type is required.")),
-  amount: z.preprocess(
-    (val) => {
-      if (val === '' || val === null || val === undefined) return undefined;
-      const num = Number(val);
-      return isNaN(num) ? undefined : num;
-    },
-    z.number().optional()
-  ),
-  quantity: createRequiredNumberSchema(
-    t,
-    'event.field.discountQuantity:Quantity',
-    1,
-    PROMO_CODE_QUANTITY_MAX,
-  ),
-}).superRefine((data, ctx) => {
-  const { discountType, amount } = data;
+export const createPromoCodeSchema = (
+  t: (
+    key: string,
+    fallback?: string,
+    params?: Record<string, string | number>,
+  ) => string,
+) =>
+  z
+    .object({
+      code: z
+        .string()
+        .min(
+          1,
+          t("event.validation.promoCodeRequired", "Promo Code is required."),
+        )
+        .max(
+          PROMO_CODE_NAME_MAX,
+          t(
+            "event.validation.promoCodeMaxLength",
+            `Promo Code must be under ${PROMO_CODE_NAME_MAX} characters.`,
+          ),
+        )
+        .regex(
+          /^[A-Z0-9_-]+$/,
+          t(
+            "event.validation.promoCodeFormat",
+            "Promo Code may only contain A-Z , 0-9, _ or -",
+          ),
+        ),
+      discountType: z
+        .string()
+        .min(
+          1,
+          t(
+            "event.validation.discountTypeRequired",
+            "Discount Type is required.",
+          ),
+        ),
+      amount: z.preprocess((val) => {
+        if (val === "" || val === null || val === undefined) return undefined;
+        const num = Number(val);
+        return isNaN(num) ? undefined : num;
+      }, z.number().optional()),
+      quantity: createRequiredNumberSchema(
+        t,
+        "event.field.discountQuantity:Quantity",
+        1,
+        PROMO_CODE_QUANTITY_MAX,
+      ),
+    })
+    .superRefine((data, ctx) => {
+      const { discountType, amount } = data;
 
-  // Handle empty amount based on discount type
-  if (amount === undefined || amount === null) {
-    const message = discountType === 'percentage'
-      ? t('event.validation.discountPercentageRequired', 'Discount Percentage is required.')
-      : t('event.validation.discountAmountRequired', 'Discount Amount is required.');
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message,
-      path: ['amount'],
+      // Handle empty amount based on discount type
+      if (amount === undefined || amount === null) {
+        const message =
+          discountType === "percentage"
+            ? t(
+                "event.validation.discountPercentageRequired",
+                "Discount Percentage is required.",
+              )
+            : t(
+                "event.validation.discountAmountRequired",
+                "Discount Amount is required.",
+              );
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message,
+          path: ["amount"],
+        });
+        return;
+      }
+
+      if (discountType === "percentage") {
+        if (!amount) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: t(
+              "event.validation.discountPercentageRequired",
+              "Discount Percentage is required.",
+            ),
+            path: ["amount"],
+          });
+        }
+        // Percentage validation: 0.01 - 100, max 2 decimal places
+        if (amount < 0.01) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: t(
+              "event.validation.percentageMin",
+              "Percentage must be at least 0.01%.",
+            ),
+            path: ["amount"],
+          });
+        }
+        if (amount > 100) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: t(
+              "event.validation.percentageMax",
+              "Percentage cannot exceed 100%.",
+            ),
+            path: ["amount"],
+          });
+        }
+        // Check for max 2 decimal places
+        const decimalStr = amount.toString();
+        const decimalPart = decimalStr.split(".")[1];
+        if (decimalPart && decimalPart.length > 2) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: t(
+              "event.validation.percentageDecimals",
+              "Percentage can have at most 2 decimal places.",
+            ),
+            path: ["amount"],
+          });
+        }
+      } else {
+        // Amount (fixed) validation: 1 - PROMO_CODE_AMOUNT_MAX
+        if (amount < 1) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: t(
+              "event.validation.amountRequired",
+              "Amount must be at least 1.",
+            ),
+            path: ["amount"],
+          });
+        }
+        if (amount > PROMO_CODE_AMOUNT_MAX) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: t(
+              "event.validation.amountMax",
+              `Amount cannot exceed ${PROMO_CODE_AMOUNT_MAX}.`,
+            ),
+            path: ["amount"],
+          });
+        }
+      }
     });
-    return;
-  }
-
-  if (discountType === 'percentage') {
-    if (!amount) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: t('event.validation.discountPercentageRequired', 'Discount Percentage is required.'),
-        path: ['amount'],
-      });
-    }
-    // Percentage validation: 0.01 - 100, max 2 decimal places
-    if (amount < 0.01) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: t('event.validation.percentageMin', "Percentage must be at least 0.01%."),
-        path: ['amount'],
-      });
-    }
-    if (amount > 100) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: t('event.validation.percentageMax', "Percentage cannot exceed 100%."),
-        path: ['amount'],
-      });
-    }
-    // Check for max 2 decimal places
-    const decimalStr = amount.toString();
-    const decimalPart = decimalStr.split('.')[1];
-    if (decimalPart && decimalPart.length > 2) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: t('event.validation.percentageDecimals', "Percentage can have at most 2 decimal places."),
-        path: ['amount'],
-      });
-    }
-  } else {
-    // Amount (fixed) validation: 1 - PROMO_CODE_AMOUNT_MAX
-    if (amount < 1) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: t('event.validation.amountRequired', "Amount must be at least 1."),
-        path: ['amount'],
-      });
-    }
-    if (amount > PROMO_CODE_AMOUNT_MAX) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: t('event.validation.amountMax', `Amount cannot exceed ${PROMO_CODE_AMOUNT_MAX}.`),
-        path: ['amount'],
-      });
-    }
-  }
-});
 
 export type TicketFormData = z.infer<ReturnType<typeof createTicketSchema>>;
 
@@ -468,43 +701,120 @@ export type TicketFormData = z.infer<ReturnType<typeof createTicketSchema>>;
  * Event Schema
  * Full validation for create/edit event form
  */
-export const createEventSchema = (t: (key: string, fallback?: string, params?: Record<string, string | number>) => string) =>
+export const createEventSchema = (
+  t: (
+    key: string,
+    fallback?: string,
+    params?: Record<string, string | number>,
+  ) => string,
+) =>
   z
     .object({
       name: z
         .string()
-        .min(1, t('event.validation.titleRequired', 'Event Title is required.'))
-        .max(EVENT_TITLE_MAX, t('event.validation.titleMax', `Event Title must be under ${EVENT_TITLE_MAX} characters.`)),
+        .min(1, t("event.validation.titleRequired", "Event Title is required."))
+        .max(
+          EVENT_TITLE_MAX,
+          t(
+            "event.validation.titleMax",
+            `Event Title must be under ${EVENT_TITLE_MAX} characters.`,
+          ),
+        ),
       description: z
         .string()
-        .min(1, t('event.validation.descriptionRequired', 'Event Description is required.'))
-        .max(EVENT_DESC_MAX, t('event.validation.descriptionMax', `Event Description must be under ${EVENT_DESC_MAX} characters.`)),
-      tags: z.array(z.string()).min(1, t('event.validation.tagsRequired', 'At least one Category is required.')),
-      image: z.string().min(1, t('event.validation.imageRequired', 'Banner Image is required.')),
+        .min(
+          1,
+          t(
+            "event.validation.descriptionRequired",
+            "Event Description is required.",
+          ),
+        )
+        .max(
+          EVENT_DESC_MAX,
+          t(
+            "event.validation.descriptionMax",
+            `Event Description must be under ${EVENT_DESC_MAX} characters.`,
+          ),
+        ),
+      tags: z
+        .array(z.string())
+        .min(
+          1,
+          t(
+            "event.validation.tagsRequired",
+            "At least one Category is required.",
+          ),
+        ),
+      image: z
+        .string()
+        .min(
+          1,
+          t("event.validation.imageRequired", "Banner Image is required."),
+        ),
       venue: z
         .string()
-        .min(1, t('event.validation.venueRequired', 'Venue Name is required.'))
-        .max(VENUE_NAME_MAX, t('event.validation.venueMax', `Venue Name must be under ${VENUE_NAME_MAX} characters.`)),
+        .min(1, t("event.validation.venueRequired", "Venue Name is required."))
+        .max(
+          VENUE_NAME_MAX,
+          t(
+            "event.validation.venueMax",
+            `Venue Name must be under ${VENUE_NAME_MAX} characters.`,
+          ),
+        ),
       venueAddress: z
         .string()
-        .min(1, t('event.validation.addressRequired', 'Venue Address is required.'))
-        .max(VENUE_ADDRESS_MAX, t('event.validation.addressMax', `Venue Address must be under ${VENUE_ADDRESS_MAX} characters.`)),
-      capacity: createRequiredNumberSchema(t, 'Capacity', 1, MAX_CAPACITY),
-      timezone: z.string().min(1, t('event.validation.timezoneRequired', 'Timezone is required.')),
-      startDate: createRequiredDateSchema(t, 'Event Start Date'),
-      endDate: createRequiredDateSchema(t, 'Event End Date'),
-      tickets: z.array(createTicketSchema(t)).min(1, t('event.validation.ticketsRequired', 'At least one Ticket Tier is required.')),
+        .min(
+          1,
+          t("event.validation.addressRequired", "Venue Address is required."),
+        )
+        .max(
+          VENUE_ADDRESS_MAX,
+          t(
+            "event.validation.addressMax",
+            `Venue Address must be under ${VENUE_ADDRESS_MAX} characters.`,
+          ),
+        ),
+      capacity: createRequiredNumberSchema(t, "Capacity", 1, MAX_CAPACITY),
+      timezone: z
+        .string()
+        .min(
+          1,
+          t("event.validation.timezoneRequired", "Timezone is required."),
+        ),
+      startDate: createRequiredDateSchema(t, "Event Start Date"),
+      endDate: createRequiredDateSchema(t, "Event End Date"),
+      tickets: z
+        .array(createTicketSchema(t))
+        .min(
+          1,
+          t(
+            "event.validation.ticketsRequired",
+            "At least one Ticket Tier is required.",
+          ),
+        ),
       promoCodes: z.array(createPromoCodeSchema(t)).optional(),
       commissionRate: z.preprocess(
         (val) => {
-          if (val === '' || val === null || val === undefined) return 0;
+          if (val === "" || val === null || val === undefined) return 0;
           const num = Number(val);
           return isNaN(num) ? 0 : num;
         },
         z
           .number()
-          .min(0, t('event.validation.commissionMin', 'Commission rate must be 0 or greater.'))
-          .max(MAX_COMMISSION, t('event.validation.commissionMax', `Commission rate cannot exceed ${MAX_COMMISSION}%.`))
+          .min(
+            0,
+            t(
+              "event.validation.commissionMin",
+              "Commission rate must be 0 or greater.",
+            ),
+          )
+          .max(
+            MAX_COMMISSION,
+            t(
+              "event.validation.commissionMax",
+              `Commission rate cannot exceed ${MAX_COMMISSION}%.`,
+            ),
+          ),
       ),
     })
     .refine(
@@ -513,9 +823,12 @@ export const createEventSchema = (t: (key: string, fallback?: string, params?: R
         return new Date(data.endDate) > new Date(data.startDate);
       },
       {
-        message: t('event.validation.endDateAfterStart', 'Event End Date must be after Event Start Date.'),
-        path: ['endDate'],
-      }
+        message: t(
+          "event.validation.endDateAfterStart",
+          "Event End Date must be after Event Start Date.",
+        ),
+        path: ["endDate"],
+      },
     )
     .superRefine((data, ctx) => {
       // Validate ticket sales dates against event start date
@@ -528,8 +841,11 @@ export const createEventSchema = (t: (key: string, fallback?: string, params?: R
           if (salesStartDate > eventStartDate) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
-              message: t('event.validation.salesStartBeforeEvent', 'Sales Start Date cannot be after Event Start Date.'),
-              path: ['tickets', index, 'salesStart'],
+              message: t(
+                "event.validation.salesStartBeforeEvent",
+                "Sales Start Date cannot be after Event Start Date.",
+              ),
+              path: ["tickets", index, "salesStart"],
             });
           }
         }
@@ -538,8 +854,11 @@ export const createEventSchema = (t: (key: string, fallback?: string, params?: R
           if (salesEndDate > eventStartDate) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
-              message: t('event.validation.salesEndBeforeEvent', 'Sales End Date cannot be after Event Start Date.'),
-              path: ['tickets', index, 'salesEnd'],
+              message: t(
+                "event.validation.salesEndBeforeEvent",
+                "Sales End Date cannot be after Event Start Date.",
+              ),
+              path: ["tickets", index, "salesEnd"],
             });
           }
         }
@@ -554,8 +873,11 @@ export const createEventSchema = (t: (key: string, fallback?: string, params?: R
           if (seenNames.has(normalizedName)) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
-              message: t('event.validation.duplicateTierName', 'Tier Name must be unique.'),
-              path: ['tickets', index, 'name'],
+              message: t(
+                "event.validation.duplicateTierName",
+                "Tier Name must be unique.",
+              ),
+              path: ["tickets", index, "name"],
             });
           }
           seenNames.add(normalizedName);
@@ -564,3 +886,29 @@ export const createEventSchema = (t: (key: string, fallback?: string, params?: R
     });
 
 export type EventFormData = z.infer<ReturnType<typeof createEventSchema>>;
+
+/**
+ * Bills Schema
+ */
+
+export const createBillSchema = (
+  t: (
+    key: string,
+    fallback?: string,
+    params?: Record<string, string | number>,
+  ) => string,
+) => {
+  const v = createValidationHelpers(t);
+  return z.object({
+    event_id: z.string().min(1, v.required(t("", "Event ID"))),
+    organizer_id: z.string().min(1, v.required(t("", "Organizer ID"))),
+    payment_method: z
+      .string()
+      .min(1, v.required(t("", "Payment Method")))
+      .min(2, v.minLength(t("", "Payment Method"), 2))
+      .max(50, v.maxLength(t("", "Payment Method"), 50)),
+    screenshot: z.instanceof(File).optional(),
+  });
+};
+
+export type BillsFormValues = z.infer<ReturnType<typeof createBillSchema>>;
