@@ -60,17 +60,11 @@ export default function TransactionsPage() {
   const currentPage = Number(searchParams.get("page")) || 1;
   const itemsPerPage = 20;
   const SKELETON_ROWS = itemsPerPage;
-  const [filterType, setFilterType] = useState<TransactionType | "">("");
-  const [filterStatus, setFilterStatus] = useState<TransactionStatus | "">("");
+  const statusFilter = searchParams.get("status") || "";
   const [sorting, setSorting] = useState<{ id: string; desc: boolean }[]>([]);
   const [searchInput, setSearchInput] = React.useState("");
 
   const debouncedSearch = useDebounce(searchInput, 500);
-
-  const filter =
-    filterStatus || filterType
-      ? `${filterType || ""},${filterStatus || ""}`
-      : undefined;
 
   const sort =
     sorting.length > 0
@@ -82,7 +76,7 @@ export default function TransactionsPage() {
       "transactions",
       currentPage,
       itemsPerPage,
-      filter,
+      statusFilter,
       sort,
       debouncedSearch,
     ],
@@ -91,7 +85,7 @@ export default function TransactionsPage() {
         page: currentPage,
         limit: itemsPerPage,
         search: debouncedSearch,
-        filter,
+        filter: statusFilter,
         sort,
       }),
     placeholderData: (previousData) => previousData,
@@ -383,6 +377,60 @@ export default function TransactionsPage() {
         </div>
 
         <div className="flex gap-6">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className="gap-2 bg-background/80 backdrop-blur-sm"
+              >
+                <FunnelIcon weight="duotone" className="h-4 w-4" />
+                Filter By Status
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem
+                className={
+                  statusFilter === "completed" ? "bg-muted font-medium" : ""
+                }
+                onClick={() => updateParams({ status: "completed", page: "1" })}
+              >
+                Completed
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className={
+                  statusFilter === "pending" ? "bg-muted font-medium" : ""
+                }
+                onClick={() => updateParams({ status: "pending", page: "1" })}
+              >
+                Pending
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className={
+                  statusFilter === "failed" ? "bg-muted font-medium" : ""
+                }
+                onClick={() => updateParams({ status: "failed", page: "1" })}
+              >
+                Failed
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className={
+                  statusFilter === "refunded" ? "bg-muted font-medium" : ""
+                }
+                onClick={() => updateParams({ status: "refunded", page: "1" })}
+              >
+                Refunded
+              </DropdownMenuItem>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuItem
+                className={`text-red-600 font-medium ${!statusFilter ? "hidden" : ""}`}
+                onClick={() => updateParams({ status: null, page: "1" })}
+              >
+                {t("users.clearFilters")}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button

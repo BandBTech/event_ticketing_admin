@@ -1,6 +1,6 @@
 import { boolean } from "zod";
 
-export type TransactionStatus = "Completed" | "Pending" | "Failed" | "Refunded";
+export type TransactionStatus = "completed" | "pending" | "failed" | "refunded";
 export type TransactionType = "Credit" | "Debit" | "Transfer" | "Withdrawal";
 
 export interface Transaction {
