@@ -35,28 +35,9 @@ export class PaymentGatewayService {
     );
   }
 
-  static async getPaymentGateways(filters?: {
-    page?: number;
-    limit?: number;
-    type?: string;
-  }): Promise<PaymentGatewayListResponse> {
-    const params = new URLSearchParams();
-
-    if (filters) {
-      if (filters.page) params.append("page", filters.page.toString());
-      if (filters.limit) params.append("limit", filters.limit.toString());
-      if (filters.type) params.append("type", filters.type);
-    }
-
-    const query = params.toString();
-
-    const result = await api.get<PaymentGatewayListResponse>(
-      `${API_ENDPOINTS.GET_PAYMENT_GATEWAYS}${query ? `?${query}` : ""}`,
-      {
-        requiresAuth: true,
-      },
-    );
-
-    return result;
+  static async getPaymentGateways(): Promise<PaymentGatewayListResponse> {
+    return await api.get<PaymentGatewayListResponse>(API_ENDPOINTS.GET_PAYMENT_GATEWAYS, {
+      requiresAuth: true,
+    });
   }
 }

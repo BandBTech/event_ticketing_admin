@@ -9,8 +9,6 @@ export interface PaymentGatewayConfig {
 }
 
 export interface PaymentGatewayListResponse {
-  limit: number;
-  page: number;
-  total: number;
-  organizers: PaymentGatewayConfig[];
+  pagination: { limit: number; page: number; total: number };
+  gateways: PaymentGatewayConfig[];
 }

@@ -5,26 +5,13 @@ import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useRouter } from "next/navigation";
 import PaymentModal from "./components/PaymentModal";
-
-interface GatewayConfig {
-  api_key: string;
-  api_secret: string;
-  webhook_secret: string;
-  display_name: string;
-  gateway_name: string;
-  is_enabled: boolean;
-  is_test_mode: boolean;
-}
-
-const config: GatewayConfig = {
-  api_key: "stripe_test_key_placeholder",
-  api_secret: "stripe_test_key_placeholder",
-  webhook_secret: "stripe_test_key_placeholder",
-  display_name: "Stripe Payments",
-  gateway_name: "stripe",
-  is_enabled: true,
-  is_test_mode: false,
-};
+import { useQuery } from "@tanstack/react-query";
+import { queryKeys } from "@/lib/queryKeys";
+import {
+  PaymentGatewayConfig,
+  PaymentGatewayListResponse,
+} from "@/types/payment";
+import { PaymentGatewayService } from "@/services/paymentService";
 
 export default function PaymentsSettingsPage() {
   const { locale } = useLanguageStore();
@@ -32,15 +19,31 @@ export default function PaymentsSettingsPage() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [selectedGateway, setSelectedGateway] = useState<PaymentGatewayConfig | null>(null);  
 
-  const openModal = () => {
+  const {
+    data: response,
+    isLoading,
+    isError,
+  } = useQuery<PaymentGatewayListResponse>({
+    queryKey: queryKeys.organizers.all({}),
+    queryFn: () => PaymentGatewayService.getPaymentGateways(),
+  });
+
+  const gateways = response?.gateways ?? [];
+
+  const openModal = (gateway: PaymentGatewayConfig) => {
+    setSelectedGateway(gateway);
     setOpen(true);
     requestAnimationFrame(() => setVisible(true));
   };
 
   const closeModal = useCallback(() => {
     setVisible(false);
-    setTimeout(() => setOpen(false), 220);
+    setTimeout(() => {
+      setOpen(false);
+      setSelectedGateway(null);
+    }, 220);
   }, []);
 
   useEffect(() => {
@@ -83,48 +86,92 @@ export default function PaymentsSettingsPage() {
           Payment Gateways
         </p>
 
-        {/* Gateway row */}
-        <div className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] border border-blue-200 bg-blue-50">
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#6366f1"
-                strokeWidth="1.8"
-              >
-                <rect x="1" y="4" width="22" height="16" rx="3" ry="3" />
-                <line x1="1" y1="10" x2="23" y2="10" />
-              </svg>
-            </div>
-            <div>
-              <p className="text-[14px] font-semibold text-slate-900">
-                {config.display_name}
-              </p>
-              <p className="mt-0.5 font-mono text-[12px] text-slate-400">
-                {config.gateway_name}
-              </p>
-            </div>
-          </div>
+        {/* States */}
+        {isLoading && (
+          <p className="text-sm text-slate-400 py-4 text-center">Loading gateways...</p>
+        )}
 
-          <div className="flex items-center gap-2.5">
-            <span className="flex items-center gap-1.5 rounded-full border border-green-200 bg-green-50 px-2.5 py-1 text-[12px] font-medium text-green-700">
-              <span className="inline-block h-1.5 w-1.5 rounded-full bg-green-500" />
-              Live
-            </span>
-            <button
-              onClick={openModal}
-              className="rounded-lg bg-blue-600 px-3.5 py-2 text-[13px] font-medium text-white transition-colors hover:bg-blue-700 cursor-pointer"
+        {isError && (
+          <p className="text-sm text-red-500 py-4 text-center">Failed to load payment gateways.</p>
+        )}
+
+        {!isLoading && !isError && gateways.length === 0 && (
+          <p className="text-sm text-slate-400 py-4 text-center">No payment gateways configured.</p>
+        )}
+
+        {/* Gateway rows */}
+        <div className="space-y-3">
+          {gateways.map((gateway) => (
+            <div
+              key={gateway.gateway_name}
+              className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-5 py-4 shadow-sm"
             >
-              View config
-            </button>
-          </div>
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] border border-blue-200 bg-blue-50">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#6366f1"
+                    strokeWidth="1.8"
+                  >
+                    <rect x="1" y="4" width="22" height="16" rx="3" ry="3" />
+                    <line x1="1" y1="10" x2="23" y2="10" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-[14px] font-semibold text-slate-900">
+                    {gateway.display_name || "N/A"}
+                  </p>
+                  <p className="mt-0.5 font-mono text-[12px] text-slate-400">
+                    {gateway.gateway_name || "N/A"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2.5">
+                <span
+                  className={`flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[12px] font-medium ${
+                    gateway.is_enabled
+                      ? "border-green-200 bg-green-50 text-green-700"
+                      : "border-slate-200 bg-slate-50 text-slate-500"
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-1.5 w-1.5 rounded-full ${
+                      gateway.is_enabled ? "bg-green-500" : "bg-slate-400"
+                    }`}
+                  />
+                  {gateway.is_enabled ? "Live" : "Disabled"}
+                </span>
+
+                {gateway.is_test_mode && (
+                  <span className="rounded-full border border-yellow-200 bg-yellow-50 px-2.5 py-1 text-[12px] font-medium text-yellow-700">
+                    Test Mode
+                  </span>
+                )}
+
+                <button
+                  onClick={() => openModal(gateway)}
+                  className="rounded-lg bg-blue-600 px-3.5 py-2 text-[13px] font-medium text-white transition-colors hover:bg-blue-700 cursor-pointer"
+                >
+                  View config
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
-      <PaymentModal open={open} closeModal={closeModal} visible={visible} />
+      {open && selectedGateway && (
+        <PaymentModal
+          open={open}
+          closeModal={closeModal}
+          visible={visible}
+          gateway={selectedGateway}
+        />
+      )}
     </div>
   );
 }
