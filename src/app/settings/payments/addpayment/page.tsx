@@ -13,7 +13,9 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { AuthError } from "@/services/authService";
 import { OrganizerService } from "@/services/organizerService";
 import { useRouter } from "next/navigation";
-import { PaymentGatewayService } from "@/services/paymentService";
+
+import PasswordFieldModal from "@/app/settings/payments/components/PasswordFieldModal";
+import { usePaymentStore } from "@/store/paymentStore";
 
 const createBasicInfoSchema = (
   t: (key: string, fallback?: string) => string,
@@ -51,10 +53,15 @@ export default function AddPaymentPage() {
   const { t } = useTranslation(locale);
   const [isEnabled, setIsEnabled] = useState(false);
   const [isTestMode, setIsTestMode] = useState(false);
+  const [isPasswordFieldModalOpen, setIsPasswordFieldModalOpen] =
+    useState(false);
+  const setPaymentData = usePaymentStore((state) => state.setPaymentData);
+  const paymentData = usePaymentStore((state) => state);
 
   const onBasicInfoSubmit = async (data: BasicInfoData) => {
     try {
-      const payload = {
+      // Save to Zustand store
+      setPaymentData({
         api_key: data.api_key,
         api_secret: data.api_secret,
         display_name: data.display_name,
@@ -62,15 +69,10 @@ export default function AddPaymentPage() {
         webhook_secret: data.webhook_secret,
         is_enabled: isEnabled,
         is_test_mode: isTestMode,
-      };
+      });
 
-      await PaymentGatewayService.createPaymentGateway(payload);
-
-      toast.success(
-        "auth.toast.otpSent",
-        "Verification code sent to your email",
-      );
-      router.push("/organizers");
+      // Open password modal
+      setIsPasswordFieldModalOpen(true);
     } catch (error) {
       if (error instanceof AuthError) {
         toast.error(
@@ -81,13 +83,14 @@ export default function AddPaymentPage() {
       } else {
         toast.error("", "Registration failed. Please try again.");
       }
-    } finally {
     }
   };
 
   const handleBack = () => {
     router.back();
   };
+
+  const handlePasswordFieldOpen = () => {};
 
   const basicInfoSchema = createBasicInfoSchema(t);
   type BasicInfoData = z.infer<typeof basicInfoSchema>;
@@ -311,7 +314,8 @@ export default function AddPaymentPage() {
             <div className="px-6 py-4 bg-gray-50 rounded-b-lg">
               <div className="flex items-center justify-between">
                 <button
-                  onClick={handleBack}
+                  // onClick={handleBack}
+                  onClick={() => setIsPasswordFieldModalOpen(true)}
                   className="px-6 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
                 >
                   {t("settings.payments.cancel")}
@@ -327,6 +331,11 @@ export default function AddPaymentPage() {
               </div>
             </div>
           </form>
+
+          <PasswordFieldModal
+            open={isPasswordFieldModalOpen}
+            onOpenChange={setIsPasswordFieldModalOpen}
+          />
         </div>
       </div>
     </div>

@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CalendarBlankIcon, PhoneCallIcon, TicketIcon, EyeIcon, CheckCircleIcon, ClockIcon, XCircleIcon, UserMinusIcon } from "@phosphor-icons/react";
 import { Organizer } from "@/services/organizerService";
+import Image from "next/image";
 
 function getStatusConfig(status: string) {
   switch (status?.toLowerCase()) {
@@ -103,7 +104,7 @@ function OrganizerCard({ organizer }: { organizer: Organizer }) {
       <CardHeader className="flex flex-row items-start gap-4 space-y-0 pb-4">
         <Avatar className="h-16 w-16 border border-gray-100 group-hover:scale-105 transition-transform duration-300">
           {organizer.logo ? (
-            <img
+            <Image
               src={organizer.logo}
               alt={`${organizer.name}`}
               className="object-cover"

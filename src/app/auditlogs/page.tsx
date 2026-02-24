@@ -11,16 +11,10 @@ import {
   Funnel as FunnelIcon,
   CaretLeft as CaretLeftIcon,
   CaretRight as CaretRightIcon,
-  CheckCircle as CheckCircleIcon,
-  XCircle as XCircleIcon,
-  Eye as EyeIcon,
-  Shield as ShieldIcon,
   User as UserIcon,
-  DotsThreeVertical as DotsThreeVerticalIcon,
-  NotepadIcon,
   ArrowsLeftRight,
 } from "@phosphor-icons/react";
-import { BanknoteArrowUp, CreditCard, Logs } from "lucide-react";
+import { BanknoteArrowUp, CreditCard, } from "lucide-react";
 import { CaretUp, CaretDown, CaretUpDown } from "@phosphor-icons/react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
@@ -40,9 +34,7 @@ import {
 import {
   useReactTable,
   getCoreRowModel,
-  getFilteredRowModel,
   ColumnDef,
-  SortingState,
 } from "@tanstack/react-table";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -64,8 +56,8 @@ export default function TransactionsPage() {
   const currentPage = Number(searchParams.get("page")) || 1;
   const itemsPerPage = 10;
   const SKELETON_ROWS = itemsPerPage;
-  const [filterType, setFilterType] = useState<TransactionType | "">("");
-  const [filterStatus, setFilterStatus] = useState<TransactionStatus | "">("");
+  const [filterType] = useState<TransactionType | "">("");
+  const [filterStatus] = useState<TransactionStatus | "">("");
   const [sorting, setSorting] = useState<{ id: string; desc: boolean }[]>([]);
   const [searchInput, setSearchInput] = React.useState("");
 

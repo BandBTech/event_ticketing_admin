@@ -46,11 +46,14 @@ export const API_ENDPOINTS = {
   //PAYMENT GATEWAYS
   GET_PAYMENT_GATEWAYS: `${API_BASE_URL}/admin/payment-gateways`,
   CREATE_PAYMENT_GATEWAY: `${API_BASE_URL}/admin/payment-gateways`,
+  GET_PAYMENT_BY_ID: (id: string) =>
+    `${API_BASE_URL}/admin/payment-gateways/${id}`,
 
   // Transactions
   CREATE_TRANSACTION: `${API_BASE_URL}/admin/transactions`,
   GET_TRANSACTIONS: `${API_BASE_URL}/admin/transactions`,
-  GET_TRANSACTION_BY_ID: (id: string) => `${API_BASE_URL}/admin/transactions/${id}`,
+  GET_TRANSACTION_BY_ID: (id: string) =>
+    `${API_BASE_URL}/admin/transactions/${id}`,
 
   //Auditlogs
   CREATE_AUDITLOG: `${API_BASE_URL}/admin/payments/audit-logs`,
@@ -61,8 +64,8 @@ export const API_ENDPOINTS = {
   GET_ALL_PAYOUTS: `${API_BASE_URL}/admin/payouts`,
 
   //Refunds
-  CREATE_REFUND: `${API_BASE_URL}/admin/refunds`,
-  GET_ALL_REFUNDS: `${API_BASE_URL}/admin/refunds`,
+  CREATE_REFUND: `${API_BASE_URL}/admin/payments/refunds`,
+  GET_ALL_REFUNDS: `${API_BASE_URL}/admin/payments/refunds`,
 
   //Bills
   CREATE_BILLS: `${API_BASE_URL}/admin/payments/bills`,

@@ -11,6 +11,7 @@ import {
   KeyIcon,
   IdentificationBadgeIcon,
 } from "@phosphor-icons/react";
+import { useRouter } from "next/navigation";
 
 function maskSecret(value: string, visibleChars = 6): string {
   if (value.length <= visibleChars) return value;
@@ -170,6 +171,7 @@ interface GatewayConfigModal {
 
 // ─── Modal Content ────────────────────────────────────────────────────────────
 function GatewayConfigModal({ onClose, gateway }: GatewayConfigModal) {
+  const router = useRouter();
   return (
     <div className="flex max-h-[90vh] w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
       {/* Header */}
@@ -219,7 +221,6 @@ function GatewayConfigModal({ onClose, gateway }: GatewayConfigModal) {
       {/* Scrollable body */}
       <div className="flex-1 overflow-y-auto">
         {/* API Credentials */}
-        {gateway.api_secret && gateway.webhook_secret && gateway.api_key && (
           <Section title="API Credentials" icon={<KeyIcon />}>
             {gateway.api_key && (
               <SecretField label="API Key" value={gateway.api_key} />
@@ -234,7 +235,6 @@ function GatewayConfigModal({ onClose, gateway }: GatewayConfigModal) {
               />
             )}
           </Section>
-        )}
 
         <div className="mx-6 h-px bg-slate-100" />
 
@@ -271,7 +271,10 @@ function GatewayConfigModal({ onClose, gateway }: GatewayConfigModal) {
         >
           Close
         </button>
-        <button className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-[13px] font-medium text-white transition-all hover:bg-blue-700 cursor-pointer">
+        <button
+          onClick={() => router.push("/settings/payments/editpayment")}
+          className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-[13px] font-medium text-white transition-all hover:bg-blue-700 cursor-pointer"
+        >
           Edit
         </button>
       </div>

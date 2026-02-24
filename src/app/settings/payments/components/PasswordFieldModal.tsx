@@ -1,0 +1,162 @@
+"use client";
+import { useForm } from "react-hook-form";
+import { useState, useEffect } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { SpinnerIcon } from "@phosphor-icons/react";
+import {
+  EyeIcon,
+  EnvelopeIcon,
+  KeyIcon,
+  EyeClosedIcon,
+} from "@phosphor-icons/react/dist/ssr";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  TranslatedFormMessage,
+} from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { useTranslation } from "@/hooks/useTranslation";
+import { toast } from "sonner";
+import { queryKeys } from "@/lib/queryKeys";
+import { useLanguageStore } from "@/store/languageStore";
+import { Textarea } from "@/components/ui/textarea";
+import { passwordFieldSchema, PasswordFieldFormValues } from "@/lib/validation";
+import { usePaymentStore } from "@/store/paymentStore";
+import { PaymentGatewayService } from "@/services/paymentService";
+import { CreatePaymentGatewayConfig } from "@/types/payment";
+import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
+
+interface PasswordFieldModalProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+export default function PasswordFieldModal({
+  open,
+  onOpenChange,
+}: PasswordFieldModalProps) {
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
+  const queryClient = useQueryClient();
+  const schema = passwordFieldSchema(t);
+  const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
+
+  const form = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: { password: "" },
+    mode: "onChange",
+  });
+
+  const paymentData = usePaymentStore((state) => state);
+
+  const createMutation = useMutation({
+    mutationFn: (password: string) =>
+      PaymentGatewayService.createPaymentGateway({
+        api_key: paymentData.api_key ?? undefined,
+        api_secret: paymentData.api_secret ?? undefined,
+        webhook_secret: paymentData.webhook_secret ?? undefined,
+        display_name: paymentData.display_name,
+        gateway_name: paymentData.gateway_name,
+        is_enabled: paymentData.is_enabled,
+        is_test_mode: paymentData.is_test_mode,
+        password,
+      }),
+    onSuccess: async () => {
+      toast.success("Payment gateway created successfully");
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.organizers.list,
+      });
+      onOpenChange(false);
+      router.push("/settings/payments");
+    },
+    onError: (err: Error) => {
+      toast.error(err.message);
+    },
+  });
+
+  const handleOpenChange = (open: boolean) => {
+    if (!open && createMutation.isPending) return;
+    onOpenChange(open);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{t("", "Password Modal")}</DialogTitle>
+        </DialogHeader>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit((data) =>
+              createMutation.mutate(data.password),
+            )}
+          >
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="password">
+                    {t("", "Password")}
+                  </FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <Input
+                        type={showPassword ? "text" : "password"}
+                        className="pr-10"
+                        {...field}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                      >
+                        {showPassword ? (
+                          <EyeClosedIcon size={16} />
+                        ) : (
+                          <EyeIcon size={16} />
+                        )}
+                      </button>
+                    </div>
+                  </FormControl>
+                  <TranslatedFormMessage t={t} />
+                </FormItem>
+              )}
+            />
+            <DialogFooter className="gap-3 pt-6">
+              <Button
+                variant="outline"
+                type="button"
+                onClick={() => onOpenChange(false)}
+                disabled={createMutation.isPending}
+                className="h-11 px-6 border-gray-200 hover:bg-gray-50 transition-colors"
+              >
+                {t("common.cancel", "Cancel")}
+              </Button>
+              <Button type="submit" disabled={createMutation.isPending}>
+                {createMutation.isPending && (
+                  <SpinnerIcon className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                {t("", "Submit")}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  );
+}

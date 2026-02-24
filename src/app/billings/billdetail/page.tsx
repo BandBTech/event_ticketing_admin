@@ -17,6 +17,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
 import { Badge } from "@/components/ui/badge";
 import { useSearchParams } from "next/navigation";
+import Image from "next/image";
 
 const fmt = (n: number) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(
@@ -315,7 +316,7 @@ export default function BillDetail() {
           <div>
             <SectionTitle>Payment Screenshot</SectionTitle>
             {billData?.payment_screenshot_url ? (
-              <img
+              <Image
                 src={billData?.payment_screenshot_url}
                 alt="Payment screenshot"
                 className="rounded-xl border border-slate-200 max-w-sm"

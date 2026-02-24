@@ -931,3 +931,22 @@ export const rejectPayoutSchema = (
 };
 
 export type RejectPayoutFoemValues = z.infer<ReturnType<typeof rejectPayoutSchema>>;
+
+/**
+ * Password Field Schema
+ */
+
+export const passwordFieldSchema = (
+  t: (
+    key: string,
+    fallback?: string,
+    params?: Record<string, string | number>,
+  ) => string,
+) => {
+  const v = createValidationHelpers(t);
+  return z.object({
+    password: z.string().min(1, v.required(t("", "Password"))),
+  });
+};
+
+export type PasswordFieldFormValues = z.infer<ReturnType<typeof passwordFieldSchema>>;
