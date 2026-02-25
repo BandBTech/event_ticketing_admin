@@ -1,4 +1,5 @@
 export interface PaymentGatewayConfig {
+  id: string;
   api_key: string;
   api_secret: string;
   webhook_secret: string;

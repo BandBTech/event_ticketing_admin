@@ -1,125 +1,23 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import {
-  EyeIcon,
-  EyeSlashIcon,
-  XIcon,
-  GearIcon,
-  KeyIcon,
-  IdentificationBadgeIcon,
-} from "@phosphor-icons/react";
+import React, { useState, useEffect, useCallback } from "react";
+import { Input } from "@/components/ui/input";
+import { useForm, Controller } from "react-hook-form";
+import { useLanguageStore } from "@/store/languageStore";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import { toast } from "@/lib/toast";
+import { createPaymentSchema, CreatePaymentFormValues } from "@/lib/validation";
+import { PaymentGatewayConfig as GatewayConfig } from "@/types/payment";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslation } from "@/hooks/useTranslation";
+import { AuthError } from "@/services/authService";
 import { useRouter } from "next/navigation";
+import PasswordFieldModal from "@/app/settings/payments/components/PasswordFieldModal";
+import { usePaymentStore } from "@/store/paymentStore";
 
-function maskSecret(value: string, visibleChars = 6): string {
-  if (value.length <= visibleChars) return value;
-  return (
-    value.slice(0, visibleChars) +
-    "•".repeat(Math.min(value.length - visibleChars, 20))
-  );
-}
-
-// ─── CopyButton ───────────────────────────────────────────────────────────────
-function CopyButton({ value }: { value: string }) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = async () => {
-    await navigator.clipboard.writeText(value);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1800);
-  };
-
-  return (
-    <button
-      onClick={handleCopy}
-      className={`shrink-0 rounded-md border px-2 py-0.5 font-mono text-[11px] transition-all duration-150 cursor-pointer
-        ${
-          copied
-            ? "border-green-200 bg-green-50 text-green-600"
-            : "border-slate-200 bg-slate-50 text-slate-400 hover:border-slate-300 hover:text-slate-500"
-        }`}
-    >
-      {copied ? "✓ copied" : "copy"}
-    </button>
-  );
-}
-
-type SecretFieldProps = {
-  label: string;
-  value?: string;
-  onChange?: (value: string) => void;
-};
-
-function SecretField({ label, value = "", onChange }: SecretFieldProps) {
-  const [revealed, setRevealed] = useState(false);
-  const [inputValue, setInputValue] = useState(value);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    setInputValue(newValue);
-    onChange?.(newValue);
-  };
-
-  return (
-    <div className="flex items-center justify-between gap-3 rounded-lg px-3 py-2.5 hover:bg-slate-50 transition-colors">
-      <span className="min-w-[120px] shrink-0 text-[13px] font-medium text-slate-500">
-        {label}
-      </span>
-
-      <div className="flex min-w-0 flex-1 items-center justify-end gap-2">
-        <input
-          type={revealed ? "text" : "password"}
-          value={inputValue}
-          onChange={handleChange}
-          placeholder="Enter value..."
-          className="w-full max-w-xs truncate rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-[12px] text-slate-700 focus:border-slate-300 focus:outline-none focus:ring-1 focus:ring-slate-300"
-        />
-
-        <div className="flex shrink-0 items-center gap-1.5">
-          <button
-            type="button"
-            onClick={() => setRevealed((r) => !r)}
-            title={revealed ? "Hide" : "Reveal"}
-            className="flex h-7 w-7 items-center justify-center rounded-md border border-slate-200 bg-slate-50 text-slate-400 transition-all hover:border-slate-300 hover:text-slate-600 cursor-pointer"
-          >
-            {revealed ? <EyeSlashIcon /> : <EyeIcon />}
-          </button>
-
-          <CopyButton value={inputValue} />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ─── TextField ────────────────────────────────────────────────────────────────
-function TextField({ label, value = "", onChange }: SecretFieldProps) {
-  const [inputValue, setInputValue] = useState(value);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    setInputValue(newValue);
-    onChange?.(newValue);
-  };
-
-  return (
-    <div className="flex items-center justify-between gap-3 rounded-lg px-3 py-2.5 hover:bg-slate-50 transition-colors">
-      <span className="min-w-[120px] shrink-0 text-[13px] font-medium text-slate-500">
-        {label}
-        <span className="text-red-500 ml-2">*</span>
-      </span>
-      <div className="flex min-w-0 flex-1 items-center justify-end gap-2">
-        <input
-          type="text"
-          value={inputValue}
-          onChange={handleChange}
-          placeholder="Enter value..."
-          className="w-full max-w-xs truncate rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-[12px] text-slate-700 focus:border-slate-300 focus:outline-none focus:ring-1 focus:ring-slate-300"
-        />
-        <CopyButton value={value} />
-      </div>
-    </div>
-  );
+interface GatewayConfigModalProps {
+  onClose: () => void;
+  gateway: GatewayConfig | null;
 }
 
 type ToggleProps = {
@@ -136,11 +34,11 @@ function Toggle({ label, value, onChange, description }: ToggleProps) {
   }, [value, onChange]);
 
   return (
-    <div className="flex items-center justify-between gap-3 rounded-lg px-3 py-2.5 hover:bg-slate-50 transition-colors">
+    <div className="flex items-center justify-between gap-3 rounded-lg  py-2.5">
       <div>
-        <p className="text-[13px] font-medium text-slate-800">{label}</p>
+        <FieldLabel>{label}</FieldLabel>
         {description && (
-          <p className="mt-0.5 max-w-xs text-[11.5px] leading-snug text-slate-400">
+          <p className="mt-0.5 max-w-xs text-[11.5px] leading-snug text-slate-400 cursor-default">
             {description}
           </p>
         )}
@@ -164,161 +62,304 @@ function Toggle({ label, value, onChange, description }: ToggleProps) {
   );
 }
 
-// ─── Section ─────────────────────────────────────────────────────────────────
-function Section({
-  icon,
-  title,
-  children,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  children: React.ReactNode;
-}) {
+function EditPaymentForm({ onClose, gateway }: GatewayConfigModalProps) {
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
+
+  const [isEnabled, setIsEnabled] = useState(false);
+  const [isTestMode, setIsTestMode] = useState(false);
+  const [isPasswordFieldModalOpen, setIsPasswordFieldModalOpen] =
+    useState(false);
+
+  const setPaymentData = usePaymentStore((state) => state.setPaymentData);
+  const gatewayId = gateway?.id;
+
+  const paymentSchema = createPaymentSchema(t);
+  const form = useForm<CreatePaymentFormValues>({
+    resolver: zodResolver(paymentSchema),
+    defaultValues: {
+      api_key: "",
+      api_secret: "",
+      display_name: "",
+      gateway_name: "",
+      webhook_secret: "",
+    },
+    mode: "onChange",
+  });
+
+  useEffect(() => {
+    if (gateway) {
+      form.reset({
+        api_key: gateway.api_key || "",
+        api_secret: gateway.api_secret || "",
+        display_name: gateway.display_name || "",
+        gateway_name: gateway.gateway_name || "",
+        webhook_secret: gateway.webhook_secret || "",
+      });
+
+      setIsEnabled(gateway.is_enabled ?? false);
+      setIsTestMode(gateway.is_test_mode ?? false);
+    }
+  }, [gateway, form]);
+
+  const onSubmit = async (data: CreatePaymentFormValues) => {
+    try {
+      setPaymentData({
+        ...data,
+        id: gatewayId,
+        is_enabled: isEnabled,
+        is_test_mode: isTestMode,
+      });
+
+      setIsPasswordFieldModalOpen(true);
+    } catch (error) {
+      if (error instanceof AuthError) {
+        toast.error("", error.message || "Something went wrong");
+      } else {
+        toast.error("", "Something went wrong");
+      }
+    }
+  };
+
   return (
-    <div className="px-6 py-4">
-      <div className="mb-2.5 flex items-center gap-1.5 text-[14px] font-semibold uppercase tracking-widest text-blue-500">
-        {icon}
-        {title}
-      </div>
-      <div className="flex flex-col gap-0.5">{children}</div>
-    </div>
-  );
-}
-
-interface GatewayConfigModal {
-  onClose: () => void;
-}
-
-// ─── Modal Content ────────────────────────────────────────────────────────────
-function GatewayConfigModal({ onClose }: GatewayConfigModal) {
-  const router = useRouter();
-  const [apiKey, setApiKey] = useState("");
-  const [displayName, setDisplayName] = useState("");
-  const [isActive, setIsActive] = useState(false);
-
-  return (
-    <div className="flex max-h-[90vh] w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
+    <div className="flex h-[90vh] w-full max-w-[560px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-[#fefeff] shadow-2xl">
       {/* Header */}
-      <div className="flex items-center gap-3.5 border-b border-slate-100 px-6 py-5">
-        <div className="flex-1">
-          <h2 className="text-[20px] font-semibold tracking-tight text-slate-900">
-            Edit Payment Method
-          </h2>
-        </div>
+      <div className="flex items-center justify-between border-b border-slate-100 px-6 py-5">
+        <h2 className="text-lg font-semibold text-slate-900">
+          Edit Payment Method
+        </h2>
 
-        <div className="flex items-center gap-2.5">
-          {/* Close */}
-          <button
-            onClick={onClose}
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-400 transition-all hover:border-slate-300 hover:bg-slate-100 hover:text-slate-600 cursor-pointer"
-          >
-            <XIcon />
-          </button>
-        </div>
-      </div>
-
-      {/* Scrollable body */}
-      <div className="flex-1 overflow-y-auto">
-        {/* API Credentials */}
-        <Section title="API Credentials" icon={<KeyIcon />}>
-          <SecretField label="API Key" value={apiKey} onChange={setApiKey} />
-          <SecretField label="API Secret" value={apiKey} onChange={setApiKey} />
-          <SecretField
-            label="Webhook Secret"
-            value={apiKey}
-            onChange={setApiKey}
-          />
-        </Section>
-
-        <div className="mx-6 h-px bg-slate-100" />
-
-        {/* Gateway Identity */}
-        <Section title="Gateway Identity" icon={<IdentificationBadgeIcon />}>
-          <TextField
-            label="Display Name"
-            value={displayName}
-            onChange={setDisplayName}
-          />
-          <TextField
-            label="Gateway Name"
-            value={displayName}
-            onChange={setDisplayName}
-          />
-        </Section>
-
-        <div className="mx-6 h-px bg-slate-100" />
-
-        {/* Configuration */}
-        <Section title="Configuration" icon={<GearIcon className="w-3 h-3" />}>
-          <Toggle
-            label="Gateway Enabled"
-            description="Controls whether this payment method is active at checkout."
-            value={isActive}
-            onChange={setIsActive}
-          />
-          <Toggle
-            label="Test Mode"
-            description="No real transactions are processed when test mode is on."
-            value={isActive}
-            onChange={setIsActive}
-          />
-        </Section>
-      </div>
-
-      {/* Footer */}
-      <div className="flex items-center justify-end gap-2.5 border-t border-slate-100 bg-white px-6 py-4">
         <button
           onClick={onClose}
-          className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-[13px] font-medium text-slate-600 transition-all hover:bg-slate-50 cursor-pointer"
+          className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-400 hover:bg-slate-100"
         >
-          Close
-        </button>
-        <button className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-[13px] font-medium text-white transition-all hover:bg-blue-700 cursor-pointer">
-          Save
+          ✕
         </button>
       </div>
+
+      {/* Scrollable Content */}
+      <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          {/* Display Name */}
+          <Controller
+            name="display_name"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor="display_name">
+                  {t("settings.payments.displayName")}
+                  <span className="text-red-500 ml-1">*</span>
+                </FieldLabel>
+                <Input
+                  {...field}
+                  id="display_name"
+                  placeholder="Enter Display Name"
+                  maxLength={100}
+                />
+                <div className="flex justify-between items-center">
+                  <p>
+                    {" "}
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </p>
+                  <p className="text-xs font-normal text-left text-muted-foreground">
+                    {field.value?.length || 0} /100 characters
+                  </p>
+                </div>
+              </Field>
+            )}
+          />
+
+          {/* Gateway Name */}
+          <Controller
+            name="gateway_name"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor="gateway_name">
+                  {t("settings.payments.gatewayName")}
+                  <span className="text-red-500 ml-1">*</span>
+                </FieldLabel>
+                <Input
+                  {...field}
+                  id="gateway_name"
+                  placeholder="Enter Gateway Name"
+                  maxLength={100}
+                />
+                <div className="flex justify-between items-center">
+                  <p>
+                    {" "}
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </p>
+                  <p className="text-xs font-normal text-left text-muted-foreground">
+                    {field.value?.length || 0} /100 characters
+                  </p>
+                </div>
+              </Field>
+            )}
+          />
+
+          <div>
+            <Toggle
+              label="Gateway Enabled"
+              description="Controls whether this payment method is active at checkout."
+              value={isEnabled}
+              onChange={() => setIsEnabled(!isEnabled)}
+            />
+            <Toggle
+              label="Test Mode"
+              description="No real transactions are processed when test mode is on."
+              value={isTestMode}
+              onChange={() => setIsTestMode(!isTestMode)}
+            />
+          </div>
+
+          {/* API Key */}
+          <Controller
+            name="api_key"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel>{t("settings.payments.apiKey")}</FieldLabel>
+                <Input placeholder="Enter API Key" maxLength={100} {...field} />
+                <div className="flex justify-between items-center">
+                  <p>
+                    {" "}
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </p>
+                  <p className="text-xs font-normal text-left text-muted-foreground">
+                    {field.value?.length || 0} /100 characters
+                  </p>
+                </div>
+              </Field>
+            )}
+          />
+
+          {/* API Secret */}
+          <Controller
+            name="api_secret"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel>{t("settings.payments.apiSecret")}</FieldLabel>
+                <Input
+                  {...field}
+                  placeholder="Enter API Secret"
+                  maxLength={100}
+                />
+                <div className="flex justify-between items-center">
+                  <p>
+                    {" "}
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </p>
+                  <p className="text-xs font-normal text-left text-muted-foreground">
+                    {field.value?.length || 0} /100 characters
+                  </p>
+                </div>
+              </Field>
+            )}
+          />
+
+          {/* Webhook Secret */}
+          <Controller
+            name="webhook_secret"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel>{t("settings.payments.webhookSecret")}</FieldLabel>
+                <Input
+                  {...field}
+                  placeholder="Enter Webhook Secret"
+                  maxLength={100}
+                />
+                <div className="flex justify-between items-center">
+                  <p>
+                    {" "}
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </p>
+                  <p className="text-xs font-normal text-left text-muted-foreground">
+                    {field.value?.length || 0} /100 characters
+                  </p>
+                </div>
+              </Field>
+            )}
+          />
+
+          {/* Action Buttons */}
+          <div className="flex justify-end pt-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-6 py-2  text-black rounded-lg text-sm "
+            >
+              {t("settings.payments.cancel")}
+            </button>
+
+            <button
+              type="submit"
+              className="px-6 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700"
+            >
+              {t("", "save")}
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <PasswordFieldModal
+        open={isPasswordFieldModalOpen}
+        onOpenChange={setIsPasswordFieldModalOpen}
+        onClose={onClose}
+        isEditMode={true}
+      />
     </div>
   );
 }
 
-// ─── Main Page ────────────────────────────────────────────────────────────────
+/* Main Modal Wrapper */
 export default function EditPaymentModal({
   open,
   closeModal,
   visible,
+  gateway,
 }: {
   open: boolean;
   closeModal: () => void;
   visible: boolean;
+  gateway: GatewayConfig | null;
 }) {
+  if (!open) return null;
+
   return (
-    <>
-      {/* Modal overlay */}
-      {open && (
-        <div
-          onClick={closeModal}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
-          style={{
-            background: "rgba(15,23,42,0.45)",
-            opacity: visible ? 1 : 0,
-            transition: "opacity 0.2s ease",
-          }}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-[560px]"
-            style={{
-              opacity: visible ? 1 : 0,
-              transform: visible
-                ? "translateY(0) scale(1)"
-                : "translateY(12px) scale(0.97)",
-              transition: "opacity 0.22s ease, transform 0.22s ease",
-            }}
-          >
-            <GatewayConfigModal onClose={closeModal} />
-          </div>
-        </div>
-      )}
-    </>
+    <div
+      onClick={closeModal}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
+      style={{
+        background: "rgba(15,23,42,0.45)",
+        opacity: visible ? 1 : 0,
+        transition: "opacity 0.2s ease",
+      }}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-[560px]"
+        style={{
+          transform: visible
+            ? "translateY(0) scale(1)"
+            : "translateY(12px) scale(0.97)",
+          transition: "transform 0.22s ease",
+        }}
+      >
+        <EditPaymentForm onClose={closeModal} gateway={gateway} />
+      </div>
+    </div>
   );
 }

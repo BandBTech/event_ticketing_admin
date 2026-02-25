@@ -303,6 +303,8 @@ function AddPaymentForm({ onClose }: GatewayConfigModalProps) {
       <PasswordFieldModal
         open={isPasswordFieldModalOpen}
         onOpenChange={setIsPasswordFieldModalOpen}
+        isEditMode={false}
+        onClose={onClose}
       />
     </div>
   );

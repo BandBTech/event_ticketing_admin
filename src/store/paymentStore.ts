@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 interface PaymentStore {
+  id?: string;
   api_key?: string;
   api_secret?: string;
   display_name: string;
@@ -17,7 +18,7 @@ interface PaymentStore {
 export const usePaymentStore = create<PaymentStore>()(
   persist(
     (set) => ({
-      // ✅ Default values
+      id: "",
       api_key: undefined,
       api_secret: undefined,
       display_name: "",
@@ -26,16 +27,15 @@ export const usePaymentStore = create<PaymentStore>()(
       is_enabled: false,
       is_test_mode: false,
 
-      // ✅ Update store
       setPaymentData: (data) =>
         set((state) => ({
           ...state,
           ...data,
         })),
 
-      // ✅ Reset store
       reset: () =>
         set({
+          id: undefined,
           api_key: undefined,
           api_secret: undefined,
           display_name: "",
@@ -46,7 +46,7 @@ export const usePaymentStore = create<PaymentStore>()(
         }),
     }),
     {
-      name: "payment-storage", // localStorage key
+      name: "payment-storage",
     }
   )
 );

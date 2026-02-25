@@ -42,11 +42,15 @@ import { Input } from "@/components/ui/input";
 interface PasswordFieldModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onClose: () => void;
+  isEditMode: boolean;
 }
 
 export default function PasswordFieldModal({
   open,
   onOpenChange,
+  isEditMode,
+  onClose,
 }: PasswordFieldModalProps) {
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
@@ -62,6 +66,7 @@ export default function PasswordFieldModal({
   });
 
   const paymentData = usePaymentStore((state) => state);
+  const id = paymentData?.id;
 
   const createMutation = useMutation({
     mutationFn: (password: string) =>
@@ -81,10 +86,45 @@ export default function PasswordFieldModal({
         queryKey: queryKeys.organizers.list,
       });
       onOpenChange(false);
+      onClose;
       router.push("/settings/payments");
     },
     onError: (err: Error) => {
       toast.error(err.message);
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: async (password: string) => {
+      if (!id) throw new Error("Payment gateway ID is missing");
+      if (!paymentData) throw new Error("Payment data is missing");
+
+      return PaymentGatewayService.updatePaymentGateway(id, {
+        api_key: paymentData.api_key ?? undefined,
+        api_secret: paymentData.api_secret ?? undefined,
+        webhook_secret: paymentData.webhook_secret ?? undefined,
+        display_name: paymentData.display_name,
+        gateway_name: paymentData.gateway_name,
+        is_enabled: paymentData.is_enabled,
+        is_test_mode: paymentData.is_test_mode,
+        password,
+      });
+    },
+
+    onSuccess: async () => {
+      toast.success("Payment gateway updated successfully");
+
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.organizers.list,
+      });
+
+      onOpenChange(false);
+      onClose;
+      router.push("/settings/payments");
+    },
+
+    onError: (err: Error) => {
+      toast.error(err.message || "Something went wrong");
     },
   });
 
@@ -93,6 +133,18 @@ export default function PasswordFieldModal({
     onOpenChange(open);
   };
 
+  const handleSubmit = (data: { password: string }) => {
+    if (isEditMode) {
+      if (!id) {
+        toast.error("Gateway ID is missing");
+        return;
+      }
+
+      updateMutation.mutate(data.password);
+    } else {
+      createMutation.mutate(data.password);
+    }
+  };
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent>
@@ -100,19 +152,13 @@ export default function PasswordFieldModal({
           <DialogTitle>{t("", "Password Modal")}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit((data) =>
-              createMutation.mutate(data.password),
-            )}
-          >
+          <form onSubmit={form.handleSubmit(handleSubmit)}>
             <FormField
               control={form.control}
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="password">
-                    {t("", "Password")}
-                  </FormLabel>
+                  <FormLabel htmlFor="password">{t("", "Password")}</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input

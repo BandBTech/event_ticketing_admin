@@ -48,6 +48,8 @@ export const API_ENDPOINTS = {
   CREATE_PAYMENT_GATEWAY: `${API_BASE_URL}/admin/payment-gateways`,
   GET_PAYMENT_BY_ID: (id: string) =>
     `${API_BASE_URL}/admin/payment-gateways/${id}`,
+  UPDATE_PAYMENT_BY_ID: (id: string) =>
+    `${API_BASE_URL}/admin/payment-gateways/${id}`,
 
   // Transactions
   CREATE_TRANSACTION: `${API_BASE_URL}/admin/transactions`,
