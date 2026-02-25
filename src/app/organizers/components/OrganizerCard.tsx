@@ -3,11 +3,25 @@ import { useRouter } from "next/navigation";
 import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
 import { getInitials, formatPhoneNumber } from "@/lib/utils";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CalendarBlankIcon, PhoneCallIcon, TicketIcon, EyeIcon, CheckCircleIcon, ClockIcon, XCircleIcon, UserMinusIcon } from "@phosphor-icons/react";
+import {
+  CalendarBlankIcon,
+  PhoneCallIcon,
+  TicketIcon,
+  EyeIcon,
+  CheckCircleIcon,
+  ClockIcon,
+  XCircleIcon,
+  UserMinusIcon,
+} from "@phosphor-icons/react";
 import { Organizer } from "@/services/organizerService";
 import Image from "next/image";
 
@@ -105,6 +119,8 @@ function OrganizerCard({ organizer }: { organizer: Organizer }) {
         <Avatar className="h-16 w-16 border border-gray-100 group-hover:scale-105 transition-transform duration-300">
           {organizer.logo ? (
             <Image
+              width={400}
+              height={200}
               src={organizer.logo}
               alt={`${organizer.name}`}
               className="object-cover"

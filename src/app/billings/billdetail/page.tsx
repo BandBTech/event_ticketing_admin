@@ -317,6 +317,8 @@ export default function BillDetail() {
             <SectionTitle>Payment Screenshot</SectionTitle>
             {billData?.payment_screenshot_url ? (
               <Image
+                width={400}
+                height={200}
                 src={billData?.payment_screenshot_url}
                 alt="Payment screenshot"
                 className="rounded-xl border border-slate-200 max-w-sm"
