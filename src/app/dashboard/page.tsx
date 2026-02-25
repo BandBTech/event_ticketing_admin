@@ -5,6 +5,7 @@ import { DashboardStats } from "./components/DashboardStats";
 import UpcomingEventsList from "./components/UpcomingEvents";
 import { DashboardService } from "@/services/dashboardService";
 import { useQuery } from "@tanstack/react-query";
+import { DashboardSkeleton } from "./components/DashboardSkeleton";
 
 const AdminDashboard: React.FC = () => {
   const { data, isLoading, isError } = useQuery({
@@ -13,7 +14,9 @@ const AdminDashboard: React.FC = () => {
   });
 
   if (isLoading) {
-    return <div>Loading dashboard...</div>;
+    return <div>
+      <DashboardSkeleton/>
+    </div>;
   }
 
   if (isError) {
