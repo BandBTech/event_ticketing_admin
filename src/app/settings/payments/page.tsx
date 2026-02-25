@@ -4,7 +4,8 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useRouter } from "next/navigation";
-import PaymentModal from "./components/PaymentModal";
+// import PaymentModal from "./components/PaymentModal";
+import ViewPaymentModal from "./components/ViewPaymentModal";
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/queryKeys";
 import {
@@ -12,6 +13,8 @@ import {
   PaymentGatewayListResponse,
 } from "@/types/payment";
 import { PaymentGatewayService } from "@/services/paymentService";
+import AddPaymentModal from "./components/AddPaymentModal";
+import EditPaymentModal from "./components/EditPaymentModal";
 
 export default function PaymentsSettingsPage() {
   const { locale } = useLanguageStore();
@@ -19,7 +22,10 @@ export default function PaymentsSettingsPage() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [selectedGateway, setSelectedGateway] = useState<PaymentGatewayConfig | null>(null);  
+  const [selectedGateway, setSelectedGateway] =
+    useState<PaymentGatewayConfig | null>(null);
+  const [isAddPaymentGatewayOpen, setIsAddPaymentGatewayOpen] = useState(false);
+  const [isEditPaymentGatewayOpen, setIsEditPaymentGatewayOpen] = useState(false);
 
   const {
     data: response,
@@ -37,12 +43,33 @@ export default function PaymentsSettingsPage() {
     setOpen(true);
     requestAnimationFrame(() => setVisible(true));
   };
+  const openAddPaymentModal = () => {
+    setIsAddPaymentGatewayOpen(true);
+    requestAnimationFrame(() => setVisible(true));
+  };
+  const openEditPaymentModal = () => {
+    setIsEditPaymentGatewayOpen(true);
+    requestAnimationFrame(() => setVisible(true));
+  };
 
   const closeModal = useCallback(() => {
     setVisible(false);
     setTimeout(() => {
       setOpen(false);
       setSelectedGateway(null);
+    }, 220);
+  }, []);
+
+  const closeAddPaymentModal = useCallback(() => {
+    setVisible(false);
+    setTimeout(() => {
+      setIsAddPaymentGatewayOpen(false);
+    }, 220);
+  }, []);
+  const closeEditPaymentModal = useCallback(() => {
+    setVisible(false);
+    setTimeout(() => {
+      setIsAddPaymentGatewayOpen(false);
     }, 220);
   }, []);
 
@@ -73,7 +100,9 @@ export default function PaymentsSettingsPage() {
           </p>
         </div>
         <button
-          onClick={() => router.push("/settings/payments/addpayment")}
+          // onClick={() => router.push("/settings/payments/addpayment")}
+          // onClick={() => setIsAddPaymentGatewayOpen(true)}
+          onClick={() => openAddPaymentModal()}
           className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-150"
         >
           Add
@@ -88,15 +117,21 @@ export default function PaymentsSettingsPage() {
 
         {/* States */}
         {isLoading && (
-          <p className="text-sm text-slate-400 py-4 text-center">Loading gateways...</p>
+          <p className="text-sm text-slate-400 py-4 text-center">
+            Loading gateways...
+          </p>
         )}
 
         {isError && (
-          <p className="text-sm text-red-500 py-4 text-center">Failed to load payment gateways.</p>
+          <p className="text-sm text-red-500 py-4 text-center">
+            Failed to load payment gateways.
+          </p>
         )}
 
         {!isLoading && !isError && gateways.length === 0 && (
-          <p className="text-sm text-slate-400 py-4 text-center">No payment gateways configured.</p>
+          <p className="text-sm text-slate-400 py-4 text-center">
+            No payment gateways configured.
+          </p>
         )}
 
         {/* Gateway rows */}
@@ -158,6 +193,12 @@ export default function PaymentsSettingsPage() {
                 >
                   View config
                 </button>
+                <button
+                  onClick={() => openEditPaymentModal()}
+                  className="rounded-lg bg-blue-600 px-3.5 py-2 text-[13px] font-medium text-white transition-colors hover:bg-blue-700 cursor-pointer"
+                >
+                  Edit config
+                </button>
               </div>
             </div>
           ))}
@@ -165,11 +206,27 @@ export default function PaymentsSettingsPage() {
       </div>
 
       {open && selectedGateway && (
-        <PaymentModal
+        <ViewPaymentModal
           open={open}
           closeModal={closeModal}
           visible={visible}
           gateway={selectedGateway}
+        />
+      )}
+      {isAddPaymentGatewayOpen && (
+        <AddPaymentModal
+          open={isAddPaymentGatewayOpen}
+          closeModal={closeAddPaymentModal}
+          visible={visible}
+          // gateway={selectedGateway}
+        />
+      )}
+      {isEditPaymentGatewayOpen && (
+        <EditPaymentModal
+          open={isEditPaymentGatewayOpen}
+          closeModal={closeEditPaymentModal}
+          visible={visible}
+          // gateway={selectedGateway}
         />
       )}
     </div>

@@ -283,7 +283,7 @@ function GatewayConfigModal({ onClose, gateway }: GatewayConfigModal) {
 }
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
-export default function GatewayConfigPage({
+export default function ViewPaymentModal({
   open,
   closeModal,
   visible,

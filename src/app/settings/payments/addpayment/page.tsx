@@ -314,8 +314,7 @@ export default function AddPaymentPage() {
             <div className="px-6 py-4 bg-gray-50 rounded-b-lg">
               <div className="flex items-center justify-between">
                 <button
-                  // onClick={handleBack}
-                  onClick={() => setIsPasswordFieldModalOpen(true)}
+                  onClick={handleBack}
                   className="px-6 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
                 >
                   {t("settings.payments.cancel")}
