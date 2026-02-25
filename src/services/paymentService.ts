@@ -66,22 +66,22 @@ export class PaymentGatewayService {
     return response;
   }
 
-    /**
+  /**
    * Create new payment gateway from admin
    */
-static async updatePaymentGateway(
-  id: string,
-  data: {
-    api_key?: string;
-    api_secret?: string;
-    display_name: string;
-    gateway_name: string;
-    webhook_secret?: string;
-    is_enabled?: boolean;
-    is_test_mode?: boolean;
-    password: string;
-  }
-): Promise<void> {
+  static async updatePaymentGateway(
+    id: string,
+    data: {
+      api_key?: string;
+      api_secret?: string;
+      display_name: string;
+      gateway_name: string;
+      webhook_secret?: string;
+      is_enabled?: boolean;
+      is_test_mode?: boolean;
+      password: string;
+    },
+  ): Promise<void> {
     try {
       await api.put<void>(
         API_ENDPOINTS.UPDATE_PAYMENT_BY_ID(id),
@@ -108,5 +108,14 @@ static async updatePaymentGateway(
           "Something went wrong",
       );
     }
+  }
+
+  /**
+   * Delete payment gateway
+   */
+  static async deletePaymentGateway(id: string): Promise<void> {
+    await api.delete<string>(API_ENDPOINTS.DELETE_PAYMENT_BY_ID(id), {
+      requiresAuth: true,
+    });
   }
 }

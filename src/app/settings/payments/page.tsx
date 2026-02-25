@@ -16,6 +16,7 @@ import { PaymentGatewayService } from "@/services/paymentService";
 import AddPaymentModal from "./components/AddPaymentModal";
 import EditPaymentModal from "./components/EditPaymentModal";
 import PasswordFieldModal from "@/app/settings/payments/components/PasswordFieldModal";
+import ConfirmDeleteModal from "@/app/settings/payments/components/ConfirmDeleteModal";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,6 +25,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { CreditCardIcon } from "@phosphor-icons/react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function PaymentsSettingsPage() {
   const { locale } = useLanguageStore();
@@ -38,6 +40,8 @@ export default function PaymentsSettingsPage() {
   const [isEditPaymentGatewayOpen, setIsEditPaymentGatewayOpen] =
     useState(false);
   const [isPasswordFieldModalOpen, setIsPasswordFieldModalOpen] =
+    useState(false);
+  const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] =
     useState(false);
 
   const {
@@ -63,6 +67,11 @@ export default function PaymentsSettingsPage() {
   const openEditPaymentModal = (gateway: PaymentGatewayConfig) => {
     setSelectedGateway(gateway);
     setIsEditPaymentGatewayOpen(true);
+    requestAnimationFrame(() => setVisible(true));
+  };
+  const openDeletePaymentModal = (gateway: PaymentGatewayConfig) => {
+    setSelectedGateway(gateway);
+    setIsConfirmDeleteModalOpen(true);
     requestAnimationFrame(() => setVisible(true));
   };
 
@@ -135,8 +144,12 @@ export default function PaymentsSettingsPage() {
 
         {/* States */}
         {isLoading && (
-          <p className="text-sm text-slate-400 py-4 text-center">
-            Loading gateways...
+          <p className="grid gap-3">
+            <Skeleton className="h-20 w-full" />
+            <Skeleton className="h-20 w-full" />
+            <Skeleton className="h-20 w-full" />
+            <Skeleton className="h-20 w-full" />
+            <Skeleton className="h-20 w-full" />
           </p>
         )}
 
@@ -211,7 +224,10 @@ export default function PaymentsSettingsPage() {
                       >
                         Edit Config
                       </DropdownMenuItem>
-                      <DropdownMenuItem className={`text-red-600 font-medium`}>
+                      <DropdownMenuItem
+                        onClick={() => openDeletePaymentModal(gateway)}
+                        className={`text-red-600 font-medium`}
+                      >
                         Delete Config
                       </DropdownMenuItem>
                     </DropdownMenuContent>
@@ -252,6 +268,13 @@ export default function PaymentsSettingsPage() {
         open={isPasswordFieldModalOpen}
         closePasswordModal={() => setIsPasswordFieldModalOpen(false)}
         isEditMode={isEditPaymentGatewayOpen}
+        isDeleteMode={isConfirmDeleteModalOpen}
+        onClose={closeAll}
+      />
+      <ConfirmDeleteModal
+        open={isConfirmDeleteModalOpen}
+        closePasswordModal={() => setIsConfirmDeleteModalOpen(false)}
+        onPasswordFieldOpen={() => setIsPasswordFieldModalOpen(true)}
         onClose={closeAll}
       />
     </div>

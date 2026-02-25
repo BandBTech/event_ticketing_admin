@@ -36,12 +36,14 @@ interface PasswordFieldModalProps {
   closePasswordModal: () => void;
   onClose: () => void;
   isEditMode: boolean;
+  isDeleteMode: boolean;
 }
 
 export default function PasswordFieldModal({
   open,
   closePasswordModal,
   isEditMode,
+  isDeleteMode,
   onClose,
 }: PasswordFieldModalProps) {
   const { locale } = useLanguageStore();
@@ -118,6 +120,26 @@ export default function PasswordFieldModal({
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: (gatewayId: string) =>
+      PaymentGatewayService.deletePaymentGateway(gatewayId),
+
+    onSuccess: async () => {
+      toast.success("Payment gateway deleted successfully");
+
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.organizers.list,
+      });
+
+      onClose();
+      router.push("/settings/payments");
+    },
+
+    onError: (err: Error) => {
+      toast.error(err.message || "Failed to delete payment gateway");
+    },
+  });
+
   const handleSubmit = (data: { password: string }) => {
     if (isEditMode) {
       if (!id) {
@@ -127,6 +149,9 @@ export default function PasswordFieldModal({
 
       updateMutation.mutate(data.password);
       onClose();
+    } else if (isDeleteMode) {
+      if (!id) return;
+      deleteMutation.mutate(id);
     } else {
       createMutation.mutate(data.password);
       onClose();
