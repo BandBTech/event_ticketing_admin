@@ -1,13 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Input } from "@/components/ui/input";
 import { useForm, Controller } from "react-hook-form";
 import { useLanguageStore } from "@/store/languageStore";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { toast } from "@/lib/toast";
-import { createValidationHelpers } from "@/lib/validation";
-import { z } from "zod";
+import { createPaymentSchema, CreatePaymentFormValues } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "@/hooks/useTranslation";
 import { AuthError } from "@/services/authService";
@@ -19,7 +18,49 @@ interface GatewayConfigModalProps {
   onClose: () => void;
 }
 
-function GatewayConfigModal({ onClose }: GatewayConfigModalProps) {
+type ToggleProps = {
+  label: string;
+  value: boolean;
+  onChange?: (value: boolean) => void;
+  variant?: "green" | "amber" | "blue";
+  description?: string;
+};
+
+function Toggle({ label, value, onChange, description }: ToggleProps) {
+  const handleToggle = useCallback(() => {
+    onChange?.(!value);
+  }, [value, onChange]);
+
+  return (
+    <div className="flex items-center justify-between gap-3 rounded-lg  py-2.5">
+      <div>
+        <FieldLabel>{label}</FieldLabel>
+        {description && (
+          <p className="mt-0.5 max-w-xs text-[11.5px] leading-snug text-slate-400 cursor-default">
+            {description}
+          </p>
+        )}
+      </div>
+
+      {/* Toggle Switch */}
+      <button
+        type="button"
+        onClick={handleToggle}
+        className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors duration-300 focus:outline-none ${
+          value ? "bg-green-500" : "bg-slate-300"
+        }`}
+      >
+        <span
+          className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform duration-300 ${
+            value ? "translate-x-5" : "translate-x-1"
+          }`}
+        />
+      </button>
+    </div>
+  );
+}
+
+function AddPaymentForm({ onClose }: GatewayConfigModalProps) {
   const router = useRouter();
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
@@ -31,40 +72,9 @@ function GatewayConfigModal({ onClose }: GatewayConfigModalProps) {
 
   const setPaymentData = usePaymentStore((state) => state.setPaymentData);
 
-const createBasicInfoSchema = (
-  t: (
-    key: string,
-    fallback?: string,
-    params?: Record<string, string | number>,
-  ) => string,
-)=> {
-    const v = createValidationHelpers(t);
-
-    return z.object({
-      api_key: z.string().max(100, v.maxLength("API Key", 100)).optional(),
-      api_secret: z.string().max(100, v.maxLength("API Secret", 100)).optional(),
-      webhook_secret: z
-        .string()
-        .max(100, v.maxLength("Webhook Secret", 100))
-        .optional(),
-      display_name: z
-        .string()
-        .min(1, v.required("Display Name"))
-        .min(3, v.minLength("Display Name", 3))
-        .max(100, v.maxLength("Display Name", 100)),
-      gateway_name: z
-        .string()
-        .min(1, v.required("Gateway Name"))
-        .min(3, v.minLength("Gateway Name", 3))
-        .max(100, v.maxLength("Gateway Name", 100)),
-    });
-  };
-
-  const basicInfoSchema = createBasicInfoSchema(t);
-  type BasicInfoData = z.infer<typeof basicInfoSchema>;
-
-  const form = useForm<BasicInfoData>({
-    resolver: zodResolver(basicInfoSchema),
+  const paymentSchema = createPaymentSchema(t);
+  const form = useForm<CreatePaymentFormValues>({
+    resolver: zodResolver(paymentSchema),
     defaultValues: {
       api_key: "",
       api_secret: "",
@@ -75,7 +85,7 @@ const createBasicInfoSchema = (
     mode: "onChange",
   });
 
-  const onSubmit = async (data: BasicInfoData) => {
+  const onSubmit = async (data: CreatePaymentFormValues) => {
     try {
       setPaymentData({
         ...data,
@@ -98,8 +108,7 @@ const createBasicInfoSchema = (
   };
 
   return (
-    <div className="flex h-[90vh] w-full max-w-[560px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
-      
+    <div className="flex h-[90vh] w-full max-w-[560px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-[#fefeff] shadow-2xl">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-slate-100 px-6 py-5">
         <h2 className="text-lg font-semibold text-slate-900">
@@ -117,7 +126,6 @@ const createBasicInfoSchema = (
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-6">
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-
           {/* Display Name */}
           <Controller
             name="display_name"
@@ -126,11 +134,25 @@ const createBasicInfoSchema = (
               <Field data-invalid={fieldState.invalid}>
                 <FieldLabel htmlFor="display_name">
                   {t("settings.payments.displayName")}
+                  <span className="text-red-500 ml-1">*</span>
                 </FieldLabel>
-                <Input {...field} id="display_name" maxLength={100} />
-                {fieldState.error && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
+                <Input
+                  {...field}
+                  id="display_name"
+                  placeholder="Enter Display Name"
+                  maxLength={100}
+                />
+                <div className="flex justify-between items-center">
+                  <p>
+                    {" "}
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </p>
+                  <p className="text-xs font-normal text-left text-muted-foreground">
+                    {field.value?.length || 0} /100 characters
+                  </p>
+                </div>
               </Field>
             )}
           />
@@ -143,39 +165,90 @@ const createBasicInfoSchema = (
               <Field data-invalid={fieldState.invalid}>
                 <FieldLabel htmlFor="gateway_name">
                   {t("settings.payments.gatewayName")}
+                  <span className="text-red-500 ml-1">*</span>
                 </FieldLabel>
-                <Input {...field} id="gateway_name" maxLength={100} />
-                {fieldState.error && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
+                <Input
+                  {...field}
+                  id="gateway_name"
+                  placeholder="Enter Gateway Name"
+                  maxLength={100}
+                />
+                <div className="flex justify-between items-center">
+                  <p>
+                    {" "}
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </p>
+                  <p className="text-xs font-normal text-left text-muted-foreground">
+                    {field.value?.length || 0} /100 characters
+                  </p>
+                </div>
               </Field>
             )}
           />
 
-          {/* Toggle Section */}
-          <div className="flex flex-col sm:flex-row sm:justify-between gap-4">
+          <div>
             <Toggle
-              label={t("settings.payments.isEnabled")}
+              label="Gateway Enabled"
+              description="Controls whether this payment method is active at checkout."
               value={isEnabled}
               onChange={() => setIsEnabled(!isEnabled)}
             />
             <Toggle
-              label={t("settings.payments.isTestMode")}
+              label="Test Mode"
+              description="No real transactions are processed when test mode is on."
               value={isTestMode}
               onChange={() => setIsTestMode(!isTestMode)}
             />
           </div>
 
+          {/* API Key */}
+          <Controller
+            name="api_key"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel>{t("settings.payments.apiKey")}</FieldLabel>
+                <Input placeholder="Enter API Key" maxLength={100} {...field} />
+                <div className="flex justify-between items-center">
+                  <p>
+                    {" "}
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </p>
+                  <p className="text-xs font-normal text-left text-muted-foreground">
+                    {field.value?.length || 0} /100 characters
+                  </p>
+                </div>
+              </Field>
+            )}
+          />
+
           {/* API Secret */}
           <Controller
             name="api_secret"
             control={form.control}
-            render={({ field }) => (
-              <Field>
-                <FieldLabel>
-                  {t("settings.payments.apiSecret")}
-                </FieldLabel>
-                <Input {...field} maxLength={100} />
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel>{t("settings.payments.apiSecret")}</FieldLabel>
+                <Input
+                  {...field}
+                  placeholder="Enter API Secret"
+                  maxLength={100}
+                />
+                <div className="flex justify-between items-center">
+                  <p>
+                    {" "}
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </p>
+                  <p className="text-xs font-normal text-left text-muted-foreground">
+                    {field.value?.length || 0} /100 characters
+                  </p>
+                </div>
               </Field>
             )}
           />
@@ -184,36 +257,35 @@ const createBasicInfoSchema = (
           <Controller
             name="webhook_secret"
             control={form.control}
-            render={({ field }) => (
-              <Field>
-                <FieldLabel>
-                  {t("settings.payments.webhookSecret")}
-                </FieldLabel>
-                <Input {...field} maxLength={100} />
-              </Field>
-            )}
-          />
-
-          {/* API Key */}
-          <Controller
-            name="api_key"
-            control={form.control}
-            render={({ field }) => (
-              <Field>
-                <FieldLabel>
-                  {t("settings.payments.apiKey")}
-                </FieldLabel>
-                <Input {...field} maxLength={100} />
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel>{t("settings.payments.webhookSecret")}</FieldLabel>
+                <Input
+                  {...field}
+                  placeholder="Enter Webhook Secret"
+                  maxLength={100}
+                />
+                <div className="flex justify-between items-center">
+                  <p>
+                    {" "}
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </p>
+                  <p className="text-xs font-normal text-left text-muted-foreground">
+                    {field.value?.length || 0} /100 characters
+                  </p>
+                </div>
               </Field>
             )}
           />
 
           {/* Action Buttons */}
-          <div className="flex justify-between pt-4">
+          <div className="flex justify-end pt-4">
             <button
               type="button"
               onClick={handleBack}
-              className="px-4 py-2 border rounded-lg text-sm"
+              className="px-6 py-2  text-black rounded-lg text-sm "
             >
               {t("settings.payments.cancel")}
             </button>
@@ -232,36 +304,6 @@ const createBasicInfoSchema = (
         open={isPasswordFieldModalOpen}
         onOpenChange={setIsPasswordFieldModalOpen}
       />
-    </div>
-  );
-}
-
-/* Toggle Component */
-function Toggle({
-  label,
-  value,
-  onChange,
-}: {
-  label: string;
-  value: boolean;
-  onChange: () => void;
-}) {
-  return (
-    <div className="flex items-center justify-between sm:justify-start gap-3">
-      <FieldLabel>{label}</FieldLabel>
-      <button
-        type="button"
-        onClick={onChange}
-        className={`relative inline-flex h-6 w-11 items-center rounded-full transition ${
-          value ? "bg-green-500" : "bg-gray-300"
-        }`}
-      >
-        <span
-          className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
-            value ? "translate-x-6" : "translate-x-1"
-          }`}
-        />
-      </button>
     </div>
   );
 }
@@ -298,7 +340,7 @@ export default function AddPaymentModal({
           transition: "transform 0.22s ease",
         }}
       >
-        <GatewayConfigModal onClose={closeModal} />
+        <AddPaymentForm onClose={closeModal} />
       </div>
     </div>
   );

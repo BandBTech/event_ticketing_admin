@@ -950,3 +950,35 @@ export const passwordFieldSchema = (
 };
 
 export type PasswordFieldFormValues = z.infer<ReturnType<typeof passwordFieldSchema>>;
+
+
+export const createPaymentSchema = (
+  t: (
+    key: string,
+    fallback?: string,
+    params?: Record<string, string | number>,
+  ) => string,
+)=> {
+    const v = createValidationHelpers(t);
+
+    return z.object({
+      api_key: z.string().max(100, v.maxLength("API Key", 100)).optional(),
+      api_secret: z.string().max(100, v.maxLength("API Secret", 100)).optional(),
+      webhook_secret: z
+        .string()
+        .max(100, v.maxLength("Webhook Secret", 100))
+        .optional(),
+      display_name: z
+        .string()
+        .min(1, v.required("Display Name"))
+        .min(3, v.minLength("Display Name", 3))
+        .max(100, v.maxLength("Display Name", 100)),
+      gateway_name: z
+        .string()
+        .min(1, v.required("Gateway Name"))
+        .min(3, v.minLength("Gateway Name", 3))
+        .max(100, v.maxLength("Gateway Name", 100)),
+    });
+  };
+
+  export type CreatePaymentFormValues = z.infer<ReturnType<typeof createPaymentSchema>>;
