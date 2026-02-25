@@ -1,15 +1,10 @@
 "use client";
 import { useForm } from "react-hook-form";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { SpinnerIcon } from "@phosphor-icons/react";
-import {
-  EyeIcon,
-  EnvelopeIcon,
-  KeyIcon,
-  EyeClosedIcon,
-} from "@phosphor-icons/react/dist/ssr";
+import { EyeIcon, EyeClosedIcon } from "@phosphor-icons/react/dist/ssr";
 import {
   Dialog,
   DialogContent,
@@ -26,29 +21,26 @@ import {
   TranslatedFormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { useTranslation } from "@/hooks/useTranslation";
 import { toast } from "sonner";
 import { queryKeys } from "@/lib/queryKeys";
 import { useLanguageStore } from "@/store/languageStore";
-import { Textarea } from "@/components/ui/textarea";
-import { passwordFieldSchema, PasswordFieldFormValues } from "@/lib/validation";
+import { passwordFieldSchema } from "@/lib/validation";
 import { usePaymentStore } from "@/store/paymentStore";
 import { PaymentGatewayService } from "@/services/paymentService";
-import { CreatePaymentGatewayConfig } from "@/types/payment";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 
 interface PasswordFieldModalProps {
   open: boolean;
-  onOpenChange: (open: boolean) => void;
+  closePasswordModal: () => void;
   onClose: () => void;
   isEditMode: boolean;
 }
 
 export default function PasswordFieldModal({
   open,
-  onOpenChange,
+  closePasswordModal,
   isEditMode,
   onClose,
 }: PasswordFieldModalProps) {
@@ -85,7 +77,6 @@ export default function PasswordFieldModal({
       await queryClient.invalidateQueries({
         queryKey: queryKeys.organizers.list,
       });
-      onOpenChange(false);
       onClose;
       router.push("/settings/payments");
     },
@@ -118,7 +109,6 @@ export default function PasswordFieldModal({
         queryKey: queryKeys.organizers.list,
       });
 
-      onOpenChange(false);
       onClose;
       router.push("/settings/payments");
     },
@@ -128,11 +118,6 @@ export default function PasswordFieldModal({
     },
   });
 
-  const handleOpenChange = (open: boolean) => {
-    if (!open && createMutation.isPending) return;
-    onOpenChange(open);
-  };
-
   const handleSubmit = (data: { password: string }) => {
     if (isEditMode) {
       if (!id) {
@@ -141,29 +126,35 @@ export default function PasswordFieldModal({
       }
 
       updateMutation.mutate(data.password);
+      onClose();
     } else {
       createMutation.mutate(data.password);
+      onClose();
     }
   };
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog open={open} onOpenChange={closePasswordModal}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{t("", "Password Modal")}</DialogTitle>
+          <DialogTitle>{t("", "Enter Password")}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)}>
             <FormField
               control={form.control}
               name="password"
-              render={({ field }) => (
+              render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel htmlFor="password">{t("", "Password")}</FormLabel>
+                  <FormLabel htmlFor="password">
+                    {t("", "Password")}
+                    <span className="text-red-500 ml-1">*</span>
+                  </FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
                         type={showPassword ? "text" : "password"}
                         className="pr-10"
+                        maxLength={100}
                         {...field}
                       />
                       <button
@@ -187,7 +178,7 @@ export default function PasswordFieldModal({
               <Button
                 variant="outline"
                 type="button"
-                onClick={() => onOpenChange(false)}
+                onClick={closePasswordModal}
                 disabled={createMutation.isPending}
                 className="h-11 px-6 border-gray-200 hover:bg-gray-50 transition-colors"
               >

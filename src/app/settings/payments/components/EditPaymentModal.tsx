@@ -11,12 +11,11 @@ import { PaymentGatewayConfig as GatewayConfig } from "@/types/payment";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "@/hooks/useTranslation";
 import { AuthError } from "@/services/authService";
-import { useRouter } from "next/navigation";
-import PasswordFieldModal from "@/app/settings/payments/components/PasswordFieldModal";
 import { usePaymentStore } from "@/store/paymentStore";
 
 interface GatewayConfigModalProps {
   onClose: () => void;
+  onPasswordFieldOpen: () => void;
   gateway: GatewayConfig | null;
 }
 
@@ -62,15 +61,16 @@ function Toggle({ label, value, onChange, description }: ToggleProps) {
   );
 }
 
-function EditPaymentForm({ onClose, gateway }: GatewayConfigModalProps) {
+function EditPaymentForm({
+  onClose,
+  gateway,
+  onPasswordFieldOpen,
+}: GatewayConfigModalProps) {
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
 
   const [isEnabled, setIsEnabled] = useState(false);
   const [isTestMode, setIsTestMode] = useState(false);
-  const [isPasswordFieldModalOpen, setIsPasswordFieldModalOpen] =
-    useState(false);
-
   const setPaymentData = usePaymentStore((state) => state.setPaymentData);
   const gatewayId = gateway?.id;
 
@@ -111,7 +111,7 @@ function EditPaymentForm({ onClose, gateway }: GatewayConfigModalProps) {
         is_test_mode: isTestMode,
       });
 
-      setIsPasswordFieldModalOpen(true);
+      onPasswordFieldOpen();
     } catch (error) {
       if (error instanceof AuthError) {
         toast.error("", error.message || "Something went wrong");
@@ -313,13 +313,6 @@ function EditPaymentForm({ onClose, gateway }: GatewayConfigModalProps) {
           </div>
         </form>
       </div>
-
-      <PasswordFieldModal
-        open={isPasswordFieldModalOpen}
-        onOpenChange={setIsPasswordFieldModalOpen}
-        onClose={onClose}
-        isEditMode={true}
-      />
     </div>
   );
 }
@@ -330,9 +323,11 @@ export default function EditPaymentModal({
   closeModal,
   visible,
   gateway,
+  onPasswordFieldOpen,
 }: {
   open: boolean;
   closeModal: () => void;
+  onPasswordFieldOpen: () => void;
   visible: boolean;
   gateway: GatewayConfig | null;
 }) {
@@ -358,7 +353,11 @@ export default function EditPaymentModal({
           transition: "transform 0.22s ease",
         }}
       >
-        <EditPaymentForm onClose={closeModal} gateway={gateway} />
+        <EditPaymentForm
+          onClose={closeModal}
+          gateway={gateway}
+          onPasswordFieldOpen={onPasswordFieldOpen}
+        />
       </div>
     </div>
   );

@@ -10,12 +10,11 @@ import { createPaymentSchema, CreatePaymentFormValues } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "@/hooks/useTranslation";
 import { AuthError } from "@/services/authService";
-import { useRouter } from "next/navigation";
-import PasswordFieldModal from "@/app/settings/payments/components/PasswordFieldModal";
 import { usePaymentStore } from "@/store/paymentStore";
 
 interface GatewayConfigModalProps {
   onClose: () => void;
+  onPasswordFieldOpen: () => void;
 }
 
 type ToggleProps = {
@@ -60,15 +59,15 @@ function Toggle({ label, value, onChange, description }: ToggleProps) {
   );
 }
 
-function AddPaymentForm({ onClose }: GatewayConfigModalProps) {
-  const router = useRouter();
+function AddPaymentForm({
+  onClose,
+  onPasswordFieldOpen,
+}: GatewayConfigModalProps) {
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
 
   const [isEnabled, setIsEnabled] = useState(false);
   const [isTestMode, setIsTestMode] = useState(false);
-  const [isPasswordFieldModalOpen, setIsPasswordFieldModalOpen] =
-    useState(false);
 
   const setPaymentData = usePaymentStore((state) => state.setPaymentData);
 
@@ -93,7 +92,7 @@ function AddPaymentForm({ onClose }: GatewayConfigModalProps) {
         is_test_mode: isTestMode,
       });
 
-      setIsPasswordFieldModalOpen(true);
+      onPasswordFieldOpen();
     } catch (error) {
       if (error instanceof AuthError) {
         toast.error("", error.message || "Something went wrong");
@@ -101,10 +100,6 @@ function AddPaymentForm({ onClose }: GatewayConfigModalProps) {
         toast.error("", "Something went wrong");
       }
     }
-  };
-
-  const handleBack = () => {
-    router.back();
   };
 
   return (
@@ -284,7 +279,7 @@ function AddPaymentForm({ onClose }: GatewayConfigModalProps) {
           <div className="flex justify-end pt-4">
             <button
               type="button"
-              onClick={handleBack}
+              onClick={onClose}
               className="px-6 py-2  text-black rounded-lg text-sm "
             >
               {t("settings.payments.cancel")}
@@ -299,13 +294,6 @@ function AddPaymentForm({ onClose }: GatewayConfigModalProps) {
           </div>
         </form>
       </div>
-
-      <PasswordFieldModal
-        open={isPasswordFieldModalOpen}
-        onOpenChange={setIsPasswordFieldModalOpen}
-        isEditMode={false}
-        onClose={onClose}
-      />
     </div>
   );
 }
@@ -315,10 +303,12 @@ export default function AddPaymentModal({
   open,
   closeModal,
   visible,
+  onPasswordFieldOpen,
 }: {
   open: boolean;
   closeModal: () => void;
   visible: boolean;
+  onPasswordFieldOpen: () => void;
 }) {
   if (!open) return null;
 
@@ -342,7 +332,10 @@ export default function AddPaymentModal({
           transition: "transform 0.22s ease",
         }}
       >
-        <AddPaymentForm onClose={closeModal} />
+        <AddPaymentForm
+          onClose={closeModal}
+          onPasswordFieldOpen={onPasswordFieldOpen}
+        />
       </div>
     </div>
   );

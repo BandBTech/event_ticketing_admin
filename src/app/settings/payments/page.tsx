@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import ViewPaymentModal from "./components/ViewPaymentModal";
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/queryKeys";
+import { Button } from "@/components/ui/button";
 import {
   PaymentGatewayConfig,
   PaymentGatewayListResponse,
@@ -14,6 +15,15 @@ import {
 import { PaymentGatewayService } from "@/services/paymentService";
 import AddPaymentModal from "./components/AddPaymentModal";
 import EditPaymentModal from "./components/EditPaymentModal";
+import PasswordFieldModal from "@/app/settings/payments/components/PasswordFieldModal";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { CreditCardIcon } from "@phosphor-icons/react";
 
 export default function PaymentsSettingsPage() {
   const { locale } = useLanguageStore();
@@ -26,6 +36,8 @@ export default function PaymentsSettingsPage() {
     useState(false);
   const [isAddPaymentGatewayOpen, setIsAddPaymentGatewayOpen] = useState(false);
   const [isEditPaymentGatewayOpen, setIsEditPaymentGatewayOpen] =
+    useState(false);
+  const [isPasswordFieldModalOpen, setIsPasswordFieldModalOpen] =
     useState(false);
 
   const {
@@ -74,6 +86,12 @@ export default function PaymentsSettingsPage() {
       setIsEditPaymentGatewayOpen(false);
     }, 220);
   }, []);
+
+  const closeAll = () => {
+    setIsAddPaymentGatewayOpen(false);
+    setIsEditPaymentGatewayOpen(false);
+    setIsPasswordFieldModalOpen(false);
+  };
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -143,17 +161,7 @@ export default function PaymentsSettingsPage() {
             >
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] border border-blue-200 bg-blue-50">
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#6366f1"
-                    strokeWidth="1.8"
-                  >
-                    <rect x="1" y="4" width="22" height="16" rx="3" ry="3" />
-                    <line x1="1" y1="10" x2="23" y2="10" />
-                  </svg>
+                  <CreditCardIcon className="text-[#6366f1] w-5 h-5" />
                 </div>
                 <div>
                   <p className="text-[14px] font-semibold text-slate-900">
@@ -187,18 +195,28 @@ export default function PaymentsSettingsPage() {
                   </span>
                 )}
 
-                <button
-                  onClick={() => openModal(gateway)}
-                  className="rounded-lg bg-blue-600 px-3.5 py-2 text-[13px] font-medium text-white transition-colors hover:bg-blue-700 cursor-pointer"
-                >
-                  View config
-                </button>
-                <button
-                  onClick={() => openEditPaymentModal(gateway)}
-                  className="rounded-lg bg-blue-600 px-3.5 py-2 text-[13px] font-medium text-white transition-colors hover:bg-blue-700 cursor-pointer"
-                >
-                  Edit config
-                </button>
+                <div className="flex gap-6">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button className="rounded-lg bg-blue-600 px-3.5 py-2 text-[13px] font-medium text-white transition-colors hover:bg-blue-700 cursor-pointer">
+                        Actions
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-48">
+                      <DropdownMenuItem onClick={() => openModal(gateway)}>
+                        View Config
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => openEditPaymentModal(gateway)}
+                      >
+                        Edit Config
+                      </DropdownMenuItem>
+                      <DropdownMenuItem className={`text-red-600 font-medium`}>
+                        Delete Config
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
               </div>
             </div>
           ))}
@@ -218,6 +236,7 @@ export default function PaymentsSettingsPage() {
           open={isAddPaymentGatewayOpen}
           closeModal={closeAddPaymentModal}
           visible={visible}
+          onPasswordFieldOpen={() => setIsPasswordFieldModalOpen(true)}
         />
       )}
       {isEditPaymentGatewayOpen && selectedGateway && (
@@ -226,8 +245,15 @@ export default function PaymentsSettingsPage() {
           closeModal={closeEditPaymentModal}
           visible={visible}
           gateway={selectedGateway}
+          onPasswordFieldOpen={() => setIsPasswordFieldModalOpen(true)}
         />
       )}
+      <PasswordFieldModal
+        open={isPasswordFieldModalOpen}
+        closePasswordModal={() => setIsPasswordFieldModalOpen(false)}
+        isEditMode={isEditPaymentGatewayOpen}
+        onClose={closeAll}
+      />
     </div>
   );
 }
