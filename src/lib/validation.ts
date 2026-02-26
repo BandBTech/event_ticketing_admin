@@ -180,6 +180,7 @@ export const createValidationHelpers = (
   },
 });
 
+import { isValidPhoneNumber } from "react-phone-number-input";
 /**
  * Example usage:
  *
@@ -280,7 +281,10 @@ export const createOrganizerSchema = (
       .regex(/[A-Z]/, v.passwordUppercase())
       .regex(/[a-z]/, v.passwordLowercase())
       .regex(/[0-9]/, v.passwordNumber()),
-    phone: z.string().optional().or(z.literal("")),
+    phone: z.string().optional().or(z.literal("")).refine(
+      (val) => !val || val.length === 0 || (typeof val === 'string' && isValidPhoneNumber(val)),
+      v.phone("Phone")
+    ),
     country_code: z.string().optional().or(z.literal("")),
   });
 };

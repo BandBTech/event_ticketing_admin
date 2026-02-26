@@ -34,10 +34,15 @@ export interface Organizer {
 }
 
 export interface OrganizerListResponse {
-  limit: number;
-  page: number;
-  total: number;
   organizers: Organizer[];
+  pagination: {
+    has_next: boolean;
+    has_prev: boolean;
+    limit: number;
+    page: number;
+    total: number;
+    total_pages: number;
+  };
 }
 
 interface ApproveOrganizerResponse {

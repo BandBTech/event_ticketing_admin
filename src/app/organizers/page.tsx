@@ -162,8 +162,9 @@ export default function OrganizersPage() {
   // Server-side filtering now, so we use response?.organizers directly
   const filteredOrganizers = response?.organizers || [];
 
-  const totalItems = response?.total || 0;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const paginationInfo = response?.pagination;
+  const totalItems = paginationInfo?.total || 0;
+  const totalPages = paginationInfo?.total_pages || Math.ceil(totalItems / itemsPerPage) || 1;
 
   if (isError) {
     return (
