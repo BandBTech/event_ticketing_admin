@@ -417,9 +417,6 @@ export default function OrganizerFormDialog({
                   <FormItem>
                     <FormLabel className="text-sm font-semibold text-gray-700">
                       {t("auth.signup.phone", "Contact Number")}
-                      <span className="text-muted-foreground text-xs font-normal ml-1.5 opacity-70">
-                        {t("common.optional", "(optional)")}
-                      </span>
                     </FormLabel>
                     <FormControl>
                       <PhoneInput

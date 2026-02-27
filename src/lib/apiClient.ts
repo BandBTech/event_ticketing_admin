@@ -6,6 +6,7 @@
 import { tokenManager } from './tokenManager';
 import { AuthError } from '../services/authService';
 import { toast } from './toast';
+import { t } from 'i18next';
 
 // API Configuration
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://sandbox.timroticket.com/api/v1';
@@ -68,7 +69,7 @@ export async function apiRequest<T>(
   // Add auth token if required
   if (requiresAuth) {
     const accessToken = tokenManager.getAccessToken();
-    
+
     if (!accessToken) {
       throw new AuthError('No access token available', 'UNAUTHORIZED', 401);
     }
@@ -103,7 +104,7 @@ export async function apiRequest<T>(
     if (isTokenExpiredError && requiresAuth && !skipTokenRefresh) {
       try {
         const newToken = await refreshAccessToken();
-        
+
         // Retry the original request with new token
         return await apiRequest<T>(endpoint, {
           ...config,
@@ -124,7 +125,7 @@ export async function apiRequest<T>(
       const errorMsg = data?.message || data?.error?.message || 'An error occurred';
       const errorCode = data?.error?.code || 'UNKNOWN_ERROR';
       const errorDetails = data?.error?.details;
-      
+
       // Handle inactive account - clear tokens and force logout
       if (errorCode === 'ACCOUNT_INACTIVE') {
         tokenManager.clearTokens();
@@ -133,9 +134,9 @@ export async function apiRequest<T>(
       // Show error toast if enabled
       if (showErrorToast) {
         const displayMessage = errorMessage || errorMsg;
-        toast.error('api.error', displayMessage, errorDetails);
+        toast.error(displayMessage, displayMessage, errorDetails);
       }
-      
+
       throw new AuthError(
         errorMsg,
         errorCode,
@@ -168,17 +169,17 @@ export async function apiRequest<T>(
       }
       throw error;
     }
-    
+
     if (error instanceof TypeError && error.message.includes('fetch')) {
       const networkError = new AuthError(
         'Network error. Please check your connection.',
         'NETWORK_ERROR'
       );
-      
+
       if (showErrorToast) {
         toast.error('api.networkError', errorMessage || networkError.message);
       }
-      
+
       throw networkError;
     }
 
@@ -186,11 +187,11 @@ export async function apiRequest<T>(
       'An unexpected error occurred',
       'UNEXPECTED_ERROR'
     );
-    
+
     if (showErrorToast) {
       toast.error('api.unexpectedError', errorMessage || unexpectedError.message);
     }
-    
+
     throw unexpectedError;
   }
 }
@@ -201,7 +202,7 @@ export async function apiRequest<T>(
  */
 async function refreshAccessToken(): Promise<string> {
   const refreshToken = tokenManager.getRefreshToken();
-  
+
   if (!refreshToken) {
     // Clear any stale tokens to prevent inconsistent state
     tokenManager.clearTokens();
@@ -234,7 +235,7 @@ async function refreshAccessToken(): Promise<string> {
 
     const data = await response.json();
     const tokens = data.data || data;
-    
+
 
     // Update tokens
     const rememberMe = tokenManager.isRememberMeEnabled();

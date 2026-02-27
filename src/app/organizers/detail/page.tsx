@@ -646,7 +646,7 @@ export default function OrganizerDetailPage() {
                   <AvatarImage
                     src={organizer?.logo}
                     alt={`${organizer?.name}`}
-                    className="object-cover"
+                    className="object-contain"
                   />
                 ) : (
                   <AvatarFallback className="text-xl font-bold bg-linear-to-br from-indigo-50 to-blue-50 text-indigo-600 w-full h-full grid place-items-center">

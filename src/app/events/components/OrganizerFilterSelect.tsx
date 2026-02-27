@@ -50,7 +50,7 @@ export function OrganizerFilterSelect({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[220px] justify-between bg-background truncate font-normal group/trigger"
+          className="w-[220px] justify-between bg-background truncate font-normal group/trigger h-9"
           disabled={isLoading}
         >
           {isLoading ? (

@@ -91,8 +91,10 @@ export default function EventsPage() {
   );
 
   useEffect(() => {
-    updateParams({ search: debouncedSearch, page: "1" });
-  }, [debouncedSearch, updateParams]);
+    if (debouncedSearch !== searchQuery) {
+      updateParams({ search: debouncedSearch, page: "1" });
+    }
+  }, [debouncedSearch, searchQuery, updateParams]);
 
   const handleStatusChange = useCallback(
     (value: string) => {
@@ -138,7 +140,6 @@ export default function EventsPage() {
     error,
   } = useQuery({
     queryKey: queryKeys.events.all({
-      page: currentPage,
       limit: 100, // Fetch more for client-side filtering
       status: statusFilter !== "all" ? statusFilter : undefined,
       organizerId: organizerId || undefined,

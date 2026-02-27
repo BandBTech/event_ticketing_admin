@@ -134,8 +134,10 @@ export default function OrganizersPage() {
   );
 
   useEffect(() => {
-    updateParams({ search: debouncedSearch, page: "1" });
-  }, [debouncedSearch, updateParams]);
+    if (debouncedSearch !== searchQuery) {
+      updateParams({ search: debouncedSearch, page: "1" });
+    }
+  }, [debouncedSearch, searchQuery, updateParams]);
 
   const {
     data: response,
@@ -185,9 +187,9 @@ export default function OrganizersPage() {
   }
 
   return (
-    <div className="min-h-screen p-8 space-y-8 @container">
+    <div className="min-h-screen p-8 @container">
       {/* Search, Filter and Add Organizer Action */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
         <div className="flex items-center gap-4 w-full sm:w-auto flex-1 max-w-2xl">
           <div className="relative flex-1">
             <MagnifyingGlassIcon
@@ -276,7 +278,7 @@ export default function OrganizersPage() {
       </div>
 
       {!isLoading && totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2 mt-10">
+        <div className="flex items-center justify-center gap-2 mt-10 mb-4">
           <Button
             variant="outline"
             size="sm"

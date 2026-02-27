@@ -715,7 +715,7 @@
     },
     "requestType": {
       "event_payout": "pagamento dell'evento"
-}
+    }
   },
   "settings": {
     "security": {
