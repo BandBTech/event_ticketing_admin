@@ -50,6 +50,18 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { BillingService } from "@/services/billingService";
 import { Bill, PaymentBillData } from "@/types/billings";
 import AddBillPopupModal from "@/app/billings/components/AddBillPopupModal";
+import {
+  TimesheetFilters,
+  getDefaultFilters,
+  getDefaultDateRange,
+} from "@/types/timesheet-filters";
+
+// Lazy load heavy sub-components to reduce initial bundle size
+// const TimesheetFilterSheet = React.lazy(() =>
+//   import("./components/BillingFilterSheet").then((module) => ({
+//     default: module.TimesheetFilterSheet,
+//   })),
+// );
 
 export default function BillingsPage() {
   const router = useRouter();
@@ -68,6 +80,9 @@ export default function BillingsPage() {
   const [searchInput, setSearchInput] = React.useState(searchQuery);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [isAddDialogOpen, setIsAddDialogOpen] = React.useState(false);
+  const [filterSheetOpen, setFilterSheetOpen] = React.useState(false);
+  const [appliedFilters, setAppliedFilters] =
+    React.useState<TimesheetFilters>(getDefaultFilters());
 
   const debouncedSearch = useDebounce(searchInput, 500);
 
@@ -363,65 +378,21 @@ export default function BillingsPage() {
           />
         </div>
         <div className="flex gap-6">
-          <div className="flex gap-6">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="gap-2 bg-background/80 backdrop-blur-sm"
-                >
-                  <FunnelIcon weight="duotone" className="h-4 w-4" />
-                  {t("billings.filterByStatus")}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem
-                  className={
-                    statusFilter === "pending" ? "bg-muted font-medium" : ""
-                  }
-                  onClick={() => updateParams({ status: "pending", page: "1" })}
-                >
-                  {t("billings.status.pending")}
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className={
-                    statusFilter === "paid" ? "bg-muted font-medium" : ""
-                  }
-                  onClick={() => updateParams({ status: "paid", page: "1" })}
-                >
-                  {t("billings.status.paid")}
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className={
-                    statusFilter === "overdue" ? "bg-muted font-medium" : ""
-                  }
-                  onClick={() => updateParams({ status: "overdue", page: "1" })}
-                >
-                  {t("billings.status.overdue")}
-                  {/* Overdue */}
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className={
-                    statusFilter === "cancelled" ? "bg-muted font-medium" : ""
-                  }
-                  onClick={() =>
-                    updateParams({ status: "cancelled", page: "1" })
-                  }
-                >
-                  {t("billings.status.cancelled")}
-                </DropdownMenuItem>
-
-                <DropdownMenuSeparator />
-
-                <DropdownMenuItem
-                  className={`text-red-600 font-medium ${!statusFilter ? "hidden" : ""}`}
-                  onClick={() => updateParams({ status: null, page: "1" })}
-                >
-                  {t("billings.status.clearFilter")}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+          {/* Filter Button */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setFilterSheetOpen(true)}
+            className="relative"
+          >
+            {/* <Filter className="mr-2 h-4 w-4" /> */}
+            Filters
+            {/* {activeFilterCount > 0 && (
+                  <span className="ml-2 bg-amber-900 text-white text-xs px-1.5 py-0.5 rounded-full">
+                    {activeFilterCount}
+                  </span>
+                )} */}
+          </Button>
           <Button
             onClick={() => setIsAddDialogOpen(true)}
             className="w-full sm:w-auto gap-2 bg-primary hover:bg-primary/80 text-primary-foreground shadow-sm transition-all ease-out duration-300 active:scale-95"
@@ -616,6 +587,16 @@ export default function BillingsPage() {
           {totalItems} {t("sidebar.users")}
         </div>
       )}
+
+      {/* Filter Sheet */}
+      <React.Suspense fallback={null}>
+        {/* <TimesheetFilterSheet
+          open={filterSheetOpen}
+          onOpenChange={setFilterSheetOpen}
+          filters={appliedFilters}
+          onApplyFilters={setAppliedFilters}
+        /> */}
+      </React.Suspense>
     </div>
   );
 }

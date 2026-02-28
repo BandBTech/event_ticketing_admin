@@ -94,6 +94,15 @@ class AdminService {
       showSuccessToast: true,
     });
   }
+
+    /**
+   * Get all entities
+   */
+  async getAllEntities(type: string): Promise<void> {
+    return await api.get<void>(`/admin/list-all?type=${type}`, {
+      requiresAuth: true,
+    });
+  }
 }
 
 export const adminService = new AdminService();
