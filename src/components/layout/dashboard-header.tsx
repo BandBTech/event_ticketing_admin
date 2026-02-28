@@ -134,12 +134,12 @@ export default function DashboardHeader() {
         <LanguageSelector />
 
         {/* Notification Bell */}
-        <button
+        {/* <button
           title="notification-button"
           className="flex items-center justify-center w-9 h-9 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors"
         >
           <Bell className="h-4 w-4 text-gray-700" />
-        </button>
+        </button> */}
       </div>
 
       {/* Pending Events Modal */}

@@ -273,12 +273,12 @@ export default function DashboardPage({ data }: DashboardPageProps) {
                 bg: "bg-red-50",
                 text: "text-red-600",
               },
-              {
-                label: "Draft",
-                value: data?.events.draft,
-                bg: "bg-slate-50",
-                text: "text-slate-500",
-              },
+              // {
+              //   label: "Draft",
+              //   value: data?.events.draft,
+              //   bg: "bg-slate-50",
+              //   text: "text-slate-500",
+              // },
               {
                 label: "Live",
                 value: data?.events.live,
