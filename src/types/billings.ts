@@ -1,3 +1,5 @@
+import { format, subDays } from "date-fns";
+
 export interface PaymentBillResponse {
   success: boolean;
   message: string;
@@ -54,4 +56,28 @@ export type CreateBillPayload = {
   organizer_id: string;
   payment_method: string;
   screenshot?: File;
+};
+
+export interface BillingFilters {
+  organizerId: string;
+  startDate: Date | undefined;
+  endDate: Date | undefined;
+  status: string;
+  dateRange: {
+    from: Date | undefined;
+    to: Date | undefined;
+  };
 }
+
+export const getDefaultDateRange = () => ({
+  from: subDays(new Date(), 30),
+  to: new Date(),
+});
+
+export const getDefaultFilters = (): BillingFilters => ({
+  organizerId: "",
+  startDate: undefined,
+  endDate: undefined,
+  status: "all",
+  dateRange: getDefaultDateRange(),
+});

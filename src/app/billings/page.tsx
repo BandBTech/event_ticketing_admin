@@ -50,18 +50,14 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { BillingService } from "@/services/billingService";
 import { Bill, PaymentBillData } from "@/types/billings";
 import AddBillPopupModal from "@/app/billings/components/AddBillPopupModal";
-import {
-  TimesheetFilters,
-  getDefaultFilters,
-  getDefaultDateRange,
-} from "@/types/timesheet-filters";
+import { BillingFilters, getDefaultFilters } from "@/types/billings";
 
 // Lazy load heavy sub-components to reduce initial bundle size
-// const TimesheetFilterSheet = React.lazy(() =>
-//   import("./components/BillingFilterSheet").then((module) => ({
-//     default: module.TimesheetFilterSheet,
-//   })),
-// );
+const BillingFilterSheet = React.lazy(() =>
+  import("./components/BillingFilterSheet").then((module) => ({
+    default: module.BillingFilterSheet,
+  })),
+);
 
 export default function BillingsPage() {
   const router = useRouter();
@@ -82,7 +78,7 @@ export default function BillingsPage() {
   const [isAddDialogOpen, setIsAddDialogOpen] = React.useState(false);
   const [filterSheetOpen, setFilterSheetOpen] = React.useState(false);
   const [appliedFilters, setAppliedFilters] =
-    React.useState<TimesheetFilters>(getDefaultFilters());
+    React.useState<BillingFilters>(getDefaultFilters());
 
   const debouncedSearch = useDebounce(searchInput, 500);
 
@@ -381,11 +377,10 @@ export default function BillingsPage() {
           {/* Filter Button */}
           <Button
             variant="outline"
-            size="sm"
             onClick={() => setFilterSheetOpen(true)}
-            className="relative"
+            className="w-full sm:w-auto gap-2 shadow-sm transition-all ease-out duration-300 active:scale-95"
           >
-            {/* <Filter className="mr-2 h-4 w-4" /> */}
+            <FunnelIcon className="mr-2 h-4 w-4" />
             Filters
             {/* {activeFilterCount > 0 && (
                   <span className="ml-2 bg-amber-900 text-white text-xs px-1.5 py-0.5 rounded-full">
@@ -590,12 +585,12 @@ export default function BillingsPage() {
 
       {/* Filter Sheet */}
       <React.Suspense fallback={null}>
-        {/* <TimesheetFilterSheet
+        <BillingFilterSheet
           open={filterSheetOpen}
           onOpenChange={setFilterSheetOpen}
           filters={appliedFilters}
           onApplyFilters={setAppliedFilters}
-        /> */}
+        />
       </React.Suspense>
     </div>
   );
