@@ -187,7 +187,7 @@ export default function BillingsPage() {
       {
         id: "name",
         header: "Event Title",
-        accessorKey: "event_title",
+        accessorKey: "event.title",
         // cell: ({ row }) => {
         //   const { email, phone, country_code } = row.original;
 
@@ -205,7 +205,7 @@ export default function BillingsPage() {
       },
       {
         id: "organizer_name",
-        accessorKey: "organizer_name",
+        accessorKey: "organizer.name",
         header: "Organizer Name",
         // cell: ({ row }) => {
         //   const { email, phone, country_code } = row.original;
@@ -222,12 +222,12 @@ export default function BillingsPage() {
         // },
         enableSorting: false,
       },
-      {
-        id: "admin_name",
-        accessorKey: "admin_name",
-        header: "Admin Name",
-        enableSorting: false,
-      },
+      // {
+      //   id: "admin_name",
+      //   accessorKey: "admin_name",
+      //   header: "Admin Name",
+      //   enableSorting: false,
+      // },
       // {
       //   id: "total_revenue",
       //   accessorKey: "total_revenue",
@@ -251,12 +251,12 @@ export default function BillingsPage() {
         header: "Billed Amount",
         enableSorting: false,
       },
-      {
-        id: "paid_amount",
-        accessorKey: "paid_amount",
-        header: "Paid Amount",
-        enableSorting: false,
-      },
+      // {
+      //   id: "paid_amount",
+      //   accessorKey: "paid_amount",
+      //   header: "Paid Amount",
+      //   enableSorting: false,
+      // },
       // {
       //   id: "remaining_amount",
       //   accessorKey: "remaining_amount",
