@@ -38,31 +38,31 @@ const menuItems = [
     label: "General",
     icon: GlobeIcon,
   },
-  {
-    href: "/settings/tickets",
-    label: "Tickets",
-    icon: TicketIcon,
-  },
-  {
-    href: "/settings/payments",
-    label: "Payments",
-    icon: CreditCardIcon,
-  },
+  // {
+  //   href: "/settings/tickets",
+  //   label: "Tickets",
+  //   icon: TicketIcon,
+  // },
+  // {
+  //   href: "/settings/payments",
+  //   label: "Payments",
+  //   icon: CreditCardIcon,
+  // },
   {
     href: "/settings/notifications",
     label: "Notifications",
     icon: BellIcon,
   },
-  {
-    href: "/settings/system-security",
-    label: "SystemSecurity",
-    icon: ShieldCheckIcon,
-  },
-  {
-    href: "/settings/api",
-    label: "API",
-    icon: UsersIcon,
-  },
+  // {
+  //   href: "/settings/system-security",
+  //   label: "SystemSecurity",
+  //   icon: ShieldCheckIcon,
+  // },
+  // {
+  //   href: "/settings/api",
+  //   label: "API",
+  //   icon: UsersIcon,
+  // },
   {
     href: "/settings/permission",
     label: "Permissions",

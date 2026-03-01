@@ -44,6 +44,11 @@ import { CreateBillPayload } from "@/types/billings";
 import { useImageUpload } from "@/hooks/useImageUpload";
 import { ImageUploader } from "@/components/ui/image-uploader";
 import { createBillSchema, BillsFormValues } from "@/lib/validation";
+import {
+  AsyncCombobox,
+  AsyncComboboxOption,
+} from "@/components/ui/async-combobox";
+import { adminService } from "@/services/adminService";
 
 interface AddBillPopupModalProps {
   open: boolean;
@@ -101,6 +106,27 @@ export default function AddBillPopupModal({
       onOpenChange(false);
     },
   });
+
+    const fetchOrganizers = useCallback(
+      async (search: string): Promise<AsyncComboboxOption[]> => {
+        try {
+          const response = await adminService.getAllEntities("organizers");
+          if (!response || !Array.isArray(response)) return [];
+  
+          const filtered = search
+            ? response.filter((org) =>
+                `${org.name}`.toLowerCase().includes(search.toLowerCase()),
+              )
+            : response;
+  
+          return filtered.map((org) => ({ value: org.id, label: `${org.name}` }));
+        } catch (error) {
+          console.error("Failed to fetch organizers:", error);
+          return [];
+        }
+      },
+      [],
+    );
 
   const PAYMENT_METHODS = [
     { label: "Bank Transfer", value: "bank_transfer" },
@@ -207,7 +233,7 @@ export default function AddBillPopupModal({
                       />
                     </div>
                     <FormControl>
-                      <Input
+                      {/* <Input
                         placeholder={t("", "Enter organizer id")}
                         {...field}
                         className={cn(
@@ -215,6 +241,22 @@ export default function AddBillPopupModal({
                           fieldState.error &&
                             "border-destructive focus:ring-destructive/20",
                         )}
+                      /> */}
+                      <AsyncCombobox
+                        queryKey={["filter", "organizers"]}
+                        value={field.value ?? ""}
+                        // onValueChange={(val) =>
+                        //   setValue((prev) => ({
+                        //     ...prev,
+                        //     organizerId: val,
+                        //   }))
+                        // }
+                        fetchOptions={fetchOrganizers}
+                        placeholder="Select organizer"
+                        searchPlaceholder="Search organizers..."
+                        emptyText="No organizers found"
+                        className="w-full text-sm h-9 justify-between px-3!"
+                        debounceMs={300}
                       />
                     </FormControl>
                   </div>
