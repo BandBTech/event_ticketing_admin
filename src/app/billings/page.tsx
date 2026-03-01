@@ -266,12 +266,35 @@ export default function BillingsPage() {
       {
         id: "payment_method",
         accessorKey: "payment_method",
+        cell: ({ row }) => {
+          const method = row.original.payment_method;
+          return (
+            <span className="text-sm text-foreground capitalize">
+              {method ? method.replace(/_/g, " ") : "-"}
+            </span>
+          );
+        },
         header: "Payment Method",
         enableSorting: false,
       },
       {
         id: "status",
         accessorKey: "status",
+        cell: ({ row }) => {
+          const status = row.original.status;
+          const statusColors: Record<string, string> = {
+            paid: "bg-green-100 text-green-800",
+            pending: "bg-yellow-100 text-yellow-800",
+            failed: "bg-red-100 text-red-800",
+          };
+          return (
+            <span
+              className={`px-2 py-1 rounded-full text-xs font-medium capitalize ${statusColors[status] || "bg-gray-100 text-gray-800"}`}
+            >
+              {status ? status.replace(/_/g, " ") : "-"}
+            </span>
+          );
+        },
         header: "Status",
         enableSorting: false,
       },
