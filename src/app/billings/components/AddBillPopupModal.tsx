@@ -107,26 +107,50 @@ export default function AddBillPopupModal({
     },
   });
 
-    const fetchOrganizers = useCallback(
-      async (search: string): Promise<AsyncComboboxOption[]> => {
-        try {
-          const response = await adminService.getAllEntities("organizers");
-          if (!response || !Array.isArray(response)) return [];
-  
-          const filtered = search
-            ? response.filter((org) =>
-                `${org.name}`.toLowerCase().includes(search.toLowerCase()),
-              )
-            : response;
-  
-          return filtered.map((org) => ({ value: org.id, label: `${org.name}` }));
-        } catch (error) {
-          console.error("Failed to fetch organizers:", error);
-          return [];
-        }
-      },
-      [],
-    );
+  const fetchEvents = useCallback(
+    async (search: string): Promise<AsyncComboboxOption[]> => {
+      try {
+        const response = await adminService.getAllEntities("events");
+        if (!response || !Array.isArray(response)) return [];
+
+        const filtered = search
+          ? response.filter((org) =>
+              `${org.title}`.toLowerCase().includes(search.toLowerCase()),
+            )
+          : response;
+
+        return filtered.map((org) => ({
+          value: org.id,
+          label: `${org.title}`,
+        }));
+      } catch (error) {
+        console.error("Failed to fetch events:", error);
+        return [];
+      }
+    },
+    [],
+  );
+
+  const fetchOrganizers = useCallback(
+    async (search: string): Promise<AsyncComboboxOption[]> => {
+      try {
+        const response = await adminService.getAllEntities("organizers");
+        if (!response || !Array.isArray(response)) return [];
+
+        const filtered = search
+          ? response.filter((org) =>
+              `${org.name}`.toLowerCase().includes(search.toLowerCase()),
+            )
+          : response;
+
+        return filtered.map((org) => ({ value: org.id, label: `${org.name}` }));
+      } catch (error) {
+        console.error("Failed to fetch organizers:", error);
+        return [];
+      }
+    },
+    [],
+  );
 
   const PAYMENT_METHODS = [
     { label: "Bank Transfer", value: "bank_transfer" },
@@ -190,22 +214,24 @@ export default function AddBillPopupModal({
                     {t("", "Event Id")}
                   </FormLabel>
                   <div className="relative group">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none transition-colors group-focus-within:text-blue-600">
+                    {/* <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none transition-colors group-focus-within:text-blue-600">
                       <CalendarBlankIcon
                         weight="duotone"
                         size={22}
                         className="text-gray-400"
                       />
-                    </div>
+                    </div> */}
                     <FormControl>
-                      <Input
-                        placeholder={t("", "Enter event id")}
-                        {...field}
-                        className={cn(
-                          "h-12 pl-12 pr-4 bg-gray-50/50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all duration-200",
-                          fieldState.error &&
-                            "border-destructive focus:ring-destructive/20",
-                        )}
+                      <AsyncCombobox
+                        queryKey={["filter", "events"]}
+                        value={field.value ?? ""}
+                        onValueChange={(val) => field.onChange(val)}
+                        fetchOptions={fetchEvents}
+                        placeholder="Select event"
+                        searchPlaceholder="Search event..."
+                        emptyText="No events found"
+                        className="w-full text-sm h-9 justify-between px-3! important bg-gray-50/50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 rounded-md"
+                        debounceMs={300}
                       />
                     </FormControl>
                   </div>
@@ -225,37 +251,23 @@ export default function AddBillPopupModal({
                     {t("", "Organizer Id")}
                   </FormLabel>
                   <div className="relative group">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none transition-colors group-focus-within:text-blue-600">
+                    {/* <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none transition-colors group-focus-within:text-blue-600">
                       <UserIcon
                         weight="duotone"
                         size={22}
                         className="text-gray-400"
                       />
-                    </div>
+                    </div>   */}
                     <FormControl>
-                      {/* <Input
-                        placeholder={t("", "Enter organizer id")}
-                        {...field}
-                        className={cn(
-                          "h-12 pl-12 pr-4 bg-gray-50/50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all duration-200",
-                          fieldState.error &&
-                            "border-destructive focus:ring-destructive/20",
-                        )}
-                      /> */}
                       <AsyncCombobox
                         queryKey={["filter", "organizers"]}
                         value={field.value ?? ""}
-                        // onValueChange={(val) =>
-                        //   setValue((prev) => ({
-                        //     ...prev,
-                        //     organizerId: val,
-                        //   }))
-                        // }
+                        onValueChange={(val) => field.onChange(val)}
                         fetchOptions={fetchOrganizers}
                         placeholder="Select organizer"
                         searchPlaceholder="Search organizers..."
                         emptyText="No organizers found"
-                        className="w-full text-sm h-9 justify-between px-3!"
+                        className="w-full text-sm h-9 justify-between px-3! important bg-gray-50/50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 rounded-md"
                         debounceMs={300}
                       />
                     </FormControl>
