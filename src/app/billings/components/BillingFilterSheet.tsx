@@ -82,20 +82,20 @@ export function BillingFilterSheet({
   );
 
   const handleDateChange = (
-    field: "startDate" | "endDate",
+    field: "start_date" | "end_date",
     date: Date | undefined,
   ) => {
     const updated = { ...localFilters, [field]: date };
     setDateError(null);
 
-    if (updated.startDate && updated.endDate) {
+    if (updated.start_date && updated.end_date) {
       if (
-        isBefore(startOfDay(updated.endDate), startOfDay(updated.startDate))
+        isBefore(startOfDay(updated.end_date), startOfDay(updated.start_date))
       ) {
         setDateError("End date cannot be before start date");
         return;
       }
-      if (differenceInMonths(updated.endDate, updated.startDate) > 3) {
+      if (differenceInMonths(updated.end_date, updated.start_date) > 3) {
         setDateError("Date range cannot exceed 3 months");
         toast.error("Date range cannot exceed 3 months");
         return;
@@ -118,9 +118,9 @@ export function BillingFilterSheet({
 
   const activeFilterCount = React.useMemo(() => {
     let count = 0;
-    if (localFilters.startDate) count++;
-    if (localFilters.endDate) count++;
-    if (localFilters.organizerId) count++;
+    if (localFilters.start_date) count++;
+    if (localFilters.end_date) count++;
+    if (localFilters.organizer_id) count++;
     if (localFilters.status !== "all") count++;
     return count;
   }, [localFilters]);
@@ -151,12 +151,12 @@ export function BillingFilterSheet({
                       variant="outline"
                       className={cn(
                         "w-full justify-start text-left font-normal",
-                        !localFilters.startDate && "text-muted-foreground",
+                        !localFilters.start_date && "text-muted-foreground",
                       )}
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {localFilters.startDate ? (
-                        format(localFilters.startDate, "LLL dd, y")
+                      {localFilters.start_date ? (
+                        format(localFilters.start_date, "LLL dd, y")
                       ) : (
                         <span>Pick a date</span>
                       )}
@@ -165,8 +165,8 @@ export function BillingFilterSheet({
                   <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
                       mode="single"
-                      selected={localFilters.startDate}
-                      onSelect={(date) => handleDateChange("startDate", date)}
+                      selected={localFilters.start_date}
+                      onSelect={(date) => handleDateChange("start_date", date)}
                       captionLayout="dropdown"
                       fromYear={2010}
                       toYear={new Date().getFullYear()}
@@ -187,13 +187,13 @@ export function BillingFilterSheet({
                       variant="outline"
                       className={cn(
                         "w-full justify-start text-left font-normal",
-                        !localFilters.endDate && "text-muted-foreground",
+                        !localFilters.end_date && "text-muted-foreground",
                         dateError && "text-destructive border-destructive",
                       )}
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {localFilters.endDate ? (
-                        format(localFilters.endDate, "LLL dd, y")
+                      {localFilters.end_date ? (
+                        format(localFilters.end_date, "LLL dd, y")
                       ) : (
                         <span>Pick a date</span>
                       )}
@@ -202,8 +202,8 @@ export function BillingFilterSheet({
                   <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
                       mode="single"
-                      selected={localFilters.endDate}
-                      onSelect={(date) => handleDateChange("endDate", date)}
+                      selected={localFilters.end_date}
+                      onSelect={(date) => handleDateChange("end_date", date)}
                       captionLayout="dropdown"
                       fromYear={2010}
                       toYear={new Date().getFullYear()}
@@ -228,9 +228,9 @@ export function BillingFilterSheet({
             <Label>Organizer</Label>
             <AsyncCombobox
               queryKey={["filter", "organizers"]}
-              value={localFilters.organizerId ?? ""}
+              value={localFilters.organizer_id ?? ""}
               onValueChange={(val) =>
-                setLocalFilters((prev) => ({ ...prev, organizerId: val }))
+                setLocalFilters((prev) => ({ ...prev, organizer_id: val }))
               }
               fetchOptions={fetchOrganizers}
               placeholder="Select organizer"
@@ -255,10 +255,10 @@ export function BillingFilterSheet({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="PENDING">Pending</SelectItem>
-                <SelectItem value="PAID">Paid</SelectItem>
-                <SelectItem value="OVERDUE">Overdue</SelectItem>
-                <SelectItem value="REJECTED">Rejected</SelectItem>
+                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="paid">Paid</SelectItem>
+                <SelectItem value="overdue">Overdue</SelectItem>
+                <SelectItem value="rejected">Rejected</SelectItem>
               </SelectContent>
             </Select>
           </div>

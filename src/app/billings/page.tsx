@@ -103,14 +103,20 @@ export default function BillingsPage() {
       "bills",
       currentPage,
       itemsPerPage,
-      statusFilter,
+      appliedFilters.status,
+      appliedFilters.organizer_id,
+      appliedFilters.start_date,
+      appliedFilters.end_date,
       debouncedSearch,
     ],
     queryFn: () =>
       BillingService.getAllBills({
         page: currentPage,
         limit: itemsPerPage,
-        status: statusFilter,
+        status: appliedFilters.status,
+        organizer_id: appliedFilters.organizer_id,
+        start_date: appliedFilters.start_date,
+        end_date: appliedFilters.end_date,
         search: debouncedSearch,
       }),
   });

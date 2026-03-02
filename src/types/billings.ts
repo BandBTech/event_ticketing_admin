@@ -59,9 +59,9 @@ export type CreateBillPayload = {
 };
 
 export interface BillingFilters {
-  organizerId: string;
-  startDate: Date | undefined;
-  endDate: Date | undefined;
+  organizer_id: string;
+  start_date: Date | undefined;
+  end_date: Date | undefined;
   status: string;
   dateRange: {
     from: Date | undefined;
@@ -75,9 +75,9 @@ export const getDefaultDateRange = () => ({
 });
 
 export const getDefaultFilters = (): BillingFilters => ({
-  organizerId: "",
-  startDate: undefined,
-  endDate: undefined,
-  status: "all",
+  organizer_id: "",
+  start_date: undefined,
+  end_date: undefined,
+  status: "",
   dateRange: getDefaultDateRange(),
 });

@@ -24,6 +24,9 @@ export class BillingService {
     page?: number;
     limit?: number;
     status?: string;
+    organizer_id?: string;
+    start_date?: Date | undefined;
+    end_date?: Date | undefined;
     search?: string;
   }): Promise<PaymentBillData> {
     const params = new URLSearchParams();
@@ -32,6 +35,16 @@ export class BillingService {
       if (filters.page) params.append("page", filters.page.toString());
       if (filters.limit) params.append("limit", filters.limit.toString());
       if (filters.status) params.append("status", filters.status.toString());
+      if (filters.organizer_id)
+        params.append("organizer_id", filters.organizer_id.toString());
+      if (filters.start_date)
+        params.append(
+          "start_date",
+          filters.start_date.toISOString().split("T")[0],
+        );
+
+      if (filters.end_date)
+        params.append("end_date", filters.end_date.toISOString().split("T")[0]);
       if (filters.search) params.append("search", filters.search);
     }
 
