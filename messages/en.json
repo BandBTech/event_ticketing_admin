@@ -769,7 +769,8 @@
     },
     "eventStatus": {
       "completed": "Completed",
-      "live": "Live"
+      "live": "Live",
+      "on_sale": "On Sale"
     },
     "requestType": {
       "event_payout": "Event Payout"

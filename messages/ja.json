@@ -721,7 +721,8 @@
     },
     "eventStatus": {
       "completed": "完了",
-      "live": "開催中"
+      "live": "開催中",
+      "on_sale": "On Sale"
     },
     "requestType": {
       "event_payout": "イベントの支払い"

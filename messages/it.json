@@ -711,7 +711,8 @@
     },
     "eventStatus": {
       "completed": "Completato",
-      "live": "In Diretta"
+      "live": "In Diretta",
+      "on_sale": "In vendita"
     },
     "requestType": {
       "event_payout": "pagamento dell'evento"
