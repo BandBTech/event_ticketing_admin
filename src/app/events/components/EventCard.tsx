@@ -10,6 +10,7 @@ import { CalendarBlankIcon, MapPinIcon, TicketIcon, CrownIcon, EyeIcon } from "@
 import Image from "next/image";
 import { Event } from "@/types/event";
 import { EventStatusBadge } from "@/app/components/EventStatusBadge";
+import FeaturedBadge from "./FeaturedBadge";
 
 // Event Card Component
 export function EventCard({ event }: { event: Event }) {
@@ -67,10 +68,7 @@ export function EventCard({ event }: { event: Event }) {
         {/* Featured Badge */}
         {event.is_featured && (
           <div className="absolute top-3 right-3">
-            <Badge className="bg-linear-to-r from-amber-500 to-orange-500 text-white text-sm text-shadow-md border-white/20 shadow-sm">
-              <CrownIcon weight="fill" className="size-4!" />
-              {t("events.badge.featured", "Featured")}
-            </Badge>
+            <FeaturedBadge />
           </div>
         )}
       </div>

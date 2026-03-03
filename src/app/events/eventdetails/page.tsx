@@ -36,6 +36,7 @@ import StatusHistorySidebar from "./components/StatusHistorySidebar";
 import { SalesStatusBadge } from "@/app/components/SalesStatusBadge";
 import { EventStatusBadge } from "@/app/components/EventStatusBadge";
 import { CalendarBlankIcon, CheckIcon, ClockIcon, CurrencyCircleDollarIcon, FireIcon, MapPinIcon, ShieldCheckIcon, TrashIcon, UsersIcon, XIcon } from "@phosphor-icons/react";
+import FeaturedBadge from "../components/FeaturedBadge";
 // import { formatDateTime } from "@/lib/utils";
 
 export default function EventDetailsPage() {
@@ -356,10 +357,7 @@ export default function EventDetailsPage() {
               />
               {event.is_featured && (
                 <div className="absolute top-4 right-4 z-10">
-                  <Badge className="bg-orange-400 hover:bg-orange-600 text-white gap-1.5 shadow-lg border-orange-400/50 px-3 py-1">
-                    <FireIcon weight="duotone" size={18} />
-                    {t("events.fields.featured", "Featured")}
-                  </Badge>
+                  <FeaturedBadge />
                 </div>
               )}
             </div>
@@ -426,6 +424,39 @@ export default function EventDetailsPage() {
                   </div>
                 </div>
               </div>
+
+              {event.tiers && event.tiers.length > 0 && (
+                <div className="pt-6 border-t border-gray-100">
+                  <h4 className="text-sm font-medium text-gray-500 mb-1">
+                    {t("event.section.ticketSalesDuration", "Ticket Sales Duration")}
+                  </h4>
+                  <div className="gap-6">
+                    {event.tiers.map((tier) => (
+                      <div
+                        key={tier.id}
+                        className="grid sm:grid-cols-3 gap-2 py-2"
+                      >
+                        <span className="font-bold text-gray-800">
+                          {tier.tier_name}
+                        </span>
+                        <div className="flex col-span-2 flex-wrap gap-x-2 gap-y-2 text-gray-500">
+                          <span className="text-gray-900 text-">
+                            {tier.sales_start && isValid(new Date(tier.sales_start))
+                              ? format(new Date(tier.sales_start), "MMM dd, yyyy h:mm a")
+                              : "—"}
+                          </span>
+                          -
+                          <span className="text-gray-900 font-medium">
+                            {tier.sales_end && isValid(new Date(tier.sales_end))
+                              ? format(new Date(tier.sales_end), "MMM dd, yyyy h:mm a")
+                              : "—"}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 

@@ -7,6 +7,7 @@ import {
   ClockIcon,
   CalendarBlankIcon,
 } from "@phosphor-icons/react";
+import FeaturedBadge from "@/app/events/components/FeaturedBadge";
 
 type EventProps = {
   event: UpcomingEvent;
@@ -182,8 +183,8 @@ function EventCard({ event }: EventProps) {
 
         {/* Featured — bottom left */}
         {event.is_featured && (
-          <span className="absolute bottom-3 left-3 bg-amber-400 text-white text-[9px] font-bold uppercase px-2 py-1 rounded-md tracking-wide">
-            ★ Featured
+          <span className="absolute bottom-3 left-3">
+            <FeaturedBadge />
           </span>
         )}
 
