@@ -121,13 +121,13 @@ export default function TransactionsPage() {
       {
         id: "event",
         header: t("transactions.table.event"),
-        accessorKey: "event_title",
+        accessorKey: "event.title",
         enableSorting: false,
       },
       {
         id: "user",
         header: t("transactions.table.user"),
-        accessorKey: "user_name",
+        accessorKey: "user.name",
         enableSorting: false,
       },
       {
@@ -556,7 +556,7 @@ export default function TransactionsPage() {
                 >
                   <div className="flex flex-col items-center gap-2 text-muted-foreground">
                     <UserIcon className="w-8 h-8" />
-                    <span>{t("users.noUsersFound")}</span>
+                    <span>{t("transactions.noTransactionsFound")}</span>
                   </div>
                 </TableCell>
               </TableRow>
@@ -572,7 +572,7 @@ export default function TransactionsPage() {
                   </TableCell>
 
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="max-w-[10vw] overflow-x-hidden">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
