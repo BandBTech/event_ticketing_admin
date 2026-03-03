@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { AuditlogService } from "@/services/auditlogService";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { formatDistanceToNow } from "date-fns";
 import {
   MagnifyingGlass as MagnifyingGlassIcon,
   Funnel as FunnelIcon,
@@ -14,7 +15,7 @@ import {
   User as UserIcon,
   ArrowsLeftRight,
 } from "@phosphor-icons/react";
-import { BanknoteArrowUp, CreditCard, } from "lucide-react";
+import { BanknoteArrowUp, CreditCard } from "lucide-react";
 import { CaretUp, CaretDown, CaretUpDown } from "@phosphor-icons/react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
@@ -46,6 +47,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { flexRender } from "@tanstack/react-table";
+import { AuditLogsListResponse, Logs, AccountStatus, OrganizerStatus } from "@/types/auditlogs";
 
 export default function TransactionsPage() {
   const router = useRouter();
@@ -71,7 +73,7 @@ export default function TransactionsPage() {
       ? `${sorting[0].id}:${sorting[0].desc ? "desc" : "asc"}`
       : undefined;
 
-  const { data: response, isLoading } = useQuery<TransactionListResponse>({
+  const { data: response, isLoading } = useQuery<AuditLogsListResponse>({
     queryKey: ["auditlogs", currentPage, itemsPerPage, filter, sort],
     queryFn: () =>
       AuditlogService.getAuditlogs({
@@ -95,7 +97,7 @@ export default function TransactionsPage() {
         }
       });
 
-      router.push(`/transactions?${params.toString()}`, { scroll: false });
+      router.push(`/auditlogs?${params.toString()}`, { scroll: false });
     },
     [router],
   );
@@ -108,120 +110,53 @@ export default function TransactionsPage() {
   );
 
   // Table columns
-  const columns: ColumnDef<Transaction>[] = React.useMemo(
+  const columns: ColumnDef<Logs>[] = React.useMemo(
     () => [
       {
-        id: "event",
-        header: t("transactions.table.event"),
-        accessorKey: "event_title",
-        enableSorting: false,
-      },
-      {
         id: "user",
-        header: t("transactions.table.user"),
-        accessorKey: "user_name",
-        enableSorting: false,
-      },
-      {
-        id: "ticket_count",
-        header: t("transactions.table.ticket"),
-        accessorKey: "ticket_count",
-        enableSorting: false,
-      },
-      {
-        id: "amount",
-        header: t("transactions.table.amount"),
-        accessorKey: "amount",
-        enableSorting: false,
-        cell: ({ row }) => (
-          <span className="px-2 py-1 text-xs font-medium rounded-full">
-            {row.original.currency} {row.original.amount}
-          </span>
-        ),
-      },
-      {
-        id: "commission",
-        header: t("transactions.table.commission"),
-        accessorKey: "commission_amount",
-        enableSorting: false,
-        cell: ({ row }) => (
-          <span className="px-2 py-1 text-xs font-medium rounded-full">
-            {row.original.currency} {row.original.commission_amount}
-          </span>
-        ),
-      },
-      {
-        id: "organizer_share",
-        header: t("transactions.table.organizer_share"),
-        accessorKey: "organizer_share",
-        enableSorting: false,
-        cell: ({ row }) => (
-          <span className="px-2 py-1 text-xs font-medium rounded-full">
-            {row.original.currency} {row.original.organizer_share}
-          </span>
-        ),
-      },
-      {
-        id: "gateway",
-        accessorKey: "payment_gateway",
-        header: t("transactions.table.gateway"),
-        enableSorting: false,
+        header: "Action",
+        // accessorKey: "action",
         cell: ({ row }) => {
-          const gateway = row.original.payment_gateway;
-
-          const colors: Record<string, string> = {
-            khalti: "bg-purple-100 text-purple-700",
-            esewa: "bg-green-100 text-green-700",
-            stripe: "bg-indigo-100 text-indigo-700",
-          };
-
+          const action = row.original.action;
           return (
-            <span
-              className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                colors[gateway?.toLowerCase()] || "bg-gray-100 text-gray-700"
-              }`}
-            >
-              🏦 {t("transactions.gateway." + gateway)}
-            </span>
+            <span className="capitalize">{action.replace(/_/g, " ")}</span>
           );
         },
+        enableSorting: false,
       },
       {
-        id: "status",
-        header: t("transactions.table.status"),
-        accessorKey: "status",
-        enableSorting: false,
+        id: "entity",
+        header: "Entity",
+        // accessorKey: "entity_type",
         cell: ({ row }) => {
-          const status = row.original.status;
-
-          const statusStyles: Record<string, string> = {
-            completed: "bg-green-100 text-green-700",
-            pending: "bg-yellow-100 text-yellow-700",
-            failed: "bg-red-100 text-red-700",
-            refunded: "bg-gray-200 text-gray-700",
-          };
-
+          const entity = row.original.entity_type;
           return (
-            <span
-              className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                statusStyles[status?.toLowerCase()] ||
-                "bg-gray-100 text-gray-700"
-              }`}
-            >
-              {t("transactions.transactionStatus." + status)}
-            </span>
+            <span className="capitalize">{entity.replace(/_/g, " ")}</span>
           );
         },
+        enableSorting: false,
+      },
+      {
+        id: "actor",
+        header: "Actor",
+        cell: ({ row }) => {
+          const firstName = row.original.actor.first_name;
+          const lastName = row.original.actor.last_name;
+          return `${firstName} ${lastName}`;
+        },
+        enableSorting: false,
       },
       {
         id: "date",
-        header: t("transactions.table.date"),
-        accessorKey: "created_at",
+        header: "Updated Time",
+        accessorKey: "updated_at",
         enableSorting: false,
         enableHiding: false,
         cell: ({ row }) => (
           <span className="text-sm text-gray-600">
-            {new Date(row.original.created_at).toLocaleDateString()}
+            {formatDistanceToNow(new Date(row.original.timestamp), {
+              addSuffix: true,
+            })}
           </span>
         ),
       },
@@ -230,7 +165,7 @@ export default function TransactionsPage() {
   );
 
   const table = useReactTable({
-    data: response?.transactions || [],
+    data: response?.logs || [],
     columns,
     state: {
       sorting,

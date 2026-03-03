@@ -1,6 +1,7 @@
 import { api } from "../lib/apiClient";
 import { API_ENDPOINTS } from "@/app/config/api";
 import { Transaction, TransactionListResponse } from "@/types/transaction";
+import { AuditLogsListResponse } from "@/types/auditlogs";
 
 export class AuditlogService {
   /**
@@ -25,7 +26,7 @@ export class AuditlogService {
     limit?: number;
     sort?: string;
     filter?: string;
-  }): Promise<TransactionListResponse> {
+  }): Promise<AuditLogsListResponse> {
     const params = new URLSearchParams();
 
     if (filters) {
@@ -37,7 +38,7 @@ export class AuditlogService {
 
     const query = params.toString();
 
-    const result = await api.get<TransactionListResponse>(
+    const result = await api.get<AuditLogsListResponse>(
       `${API_ENDPOINTS.GET_ALL_AUDITLOGS}${query ? `?${query}` : ""}`,
       {
         requiresAuth: true,
