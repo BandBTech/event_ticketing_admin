@@ -717,12 +717,29 @@
   "billings": {
     "searchBills": "Search bills",
     "filterByStatus": "Filter By Status",
+    "priority": "Priority",
     "status": {
       "pending": "Pending",
       "paid": "Paid",
       "overdue": "Overdue",
       "cancelled": "Cancelled",
       "clearFilter": "Clear filter"
+    },
+    "method": {
+      "cash": "Cash",
+      "bank_transfer": "Bank Transfer",
+      "cheque": "Cheque",
+      "check": "Cheque",
+      "mobile_payment": "Mobile Payment"
+    },
+    "billType": {
+      "auto_calculated": "Auto Calculated",
+      "manual": "Manual"
+    },
+    "billPriority": {
+      "high": "High",
+      "normal": "Normal",
+      "low": "Low"
     }
   },
   "transactions": {

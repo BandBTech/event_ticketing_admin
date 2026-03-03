@@ -659,12 +659,29 @@
   "billings": {
     "searchBills": "Cerca fatture",
     "filterByStatus": "Filtra per stato",
+    "priority": "Priorità",
     "status": {
       "pending": "In sospeso",
       "paid": "Pagata",
       "overdue": "Scaduta",
       "cancelled": "Annullata",
       "clearFilter": "Pulisci filtro"
+    },
+    "method": {
+      "cash": "Contanti",
+      "bank_transfer": "Bonifico bancario",
+      "cheque": "Assegno",
+      "check": "Assegno",
+      "mobile_payment": "Pagamento mobile"
+    },
+    "billType": {
+      "auto_calculated": "Calcolato automaticamente",
+      "manual": "Manuale"
+    },
+    "billPriority": {
+      "high": "Alta",
+      "normal": "Normale",
+      "low": "Bassa"
     }
   },
   "transactions": {

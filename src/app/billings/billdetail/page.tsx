@@ -24,31 +24,63 @@ const fmt = (n: number) =>
     n,
   );
 
-const fmtDate = (d: string | null) =>
-  d
-    ? new Date(d).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    : "—";
+const fmtDate = (d: string | null) => {
+  if (!d) return "N/A";
+
+  const date = new Date(d);
+
+  if (isNaN(date.getTime())) return "N/A";
+
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
 
 type StatusKey = "Paid" | "Partial" | "Unpaid" | "Overdue" | string;
 type PriorityKey = "High" | "Medium" | "Low" | string;
 
 const statusStyles: Record<StatusKey, string> = {
-  Paid: "bg-emerald-50 text-emerald-700 border border-emerald-200",
-  Partial: "bg-amber-50 text-amber-700 border border-amber-200",
-  Unpaid: "bg-rose-50 text-rose-700 border border-rose-200",
-  Overdue: "bg-red-50 text-red-800 border border-red-200",
+  paid: "bg-green-100 text-green-800",
+  pending: "bg-yellow-100 text-yellow-800",
+  failed: "bg-red-100 text-red-800",
 };
 
 const priorityStyles: Record<PriorityKey, string> = {
-  High: "bg-rose-50 text-rose-700 border border-rose-200",
-  Medium: "bg-sky-50 text-sky-700 border border-sky-200",
-  Low: "bg-slate-100 text-slate-600 border border-slate-200",
+  high: "bg-rose-50 text-rose-700 border border-rose-200",
+  normal: "bg-sky-50 text-sky-700 border border-sky-200",
+  low: "bg-slate-100 text-slate-600 border border-slate-200",
+};
+
+const InfoStringRow = ({
+  label,
+  value,
+}: {
+  label: string;
+  value: React.ReactNode;
+}) => {
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
+  const displayValue =
+    value === null || value === undefined || value === ""
+      ? t("N/A")
+      : typeof value === "string"
+        ? t(`billings.method.${value}`)
+        : value;
+
+  return (
+    <div className="flex items-start justify-between py-3 border-b border-slate-100 last:border-0">
+      <span className="text-sm text-slate-500 font-medium min-w-[160px]">
+        {label}
+      </span>
+      <span className={`text-sm text-slate-800 text-right font-medium`}>
+        {displayValue}
+      </span>
+    </div>
+  );
 };
 
 const InfoRow = ({
@@ -158,7 +190,7 @@ export default function BillDetail() {
                   "bg-slate-100 text-slate-600 border border-slate-200"
                 }
               >
-                {billData?.status ?? "N/A"}
+                {t(`billings.status.${billData?.status}`) ?? "N/A"}
               </Badge>
               <Badge
                 className={
@@ -166,10 +198,10 @@ export default function BillDetail() {
                   "bg-slate-100 text-slate-600 border border-slate-200"
                 }
               >
-                {`${billData?.priority ?? "N/A"} Priority`}
+                {`${t(`billings.billPriority.${billData?.priority}`) ?? "N/A"} ${t("billings.priority")}`}
               </Badge>
               <Badge className="bg-indigo-50 text-indigo-700 border border-indigo-200">
-                {billData?.bill_type ?? "N/A"}
+                {t(`billings.billType.${billData?.bill_type}`) ?? "N/A"}
               </Badge>
             </div>
           </div>
@@ -210,28 +242,6 @@ export default function BillDetail() {
               </div>
             </div>
           </div>
-
-          {/* Payment Progress */}
-          <div className="mt-5">
-            <div className="flex justify-between text-xs text-slate-500 font-medium mb-2">
-              <span>Payment Progress</span>
-              <span>{paidPct.toFixed(0)}% paid</span>
-            </div>
-            <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-indigo-500 rounded-full progress-fill"
-                style={{ width: `${paidPct}%` }}
-              />
-            </div>
-            <div className="flex justify-between text-xs mt-1.5">
-              <span className="text-emerald-600 font-medium">
-                Paid: {fmt(billData?.paid_amount ?? 0)}
-              </span>
-              <span className="text-rose-500 font-medium">
-                Remaining: {fmt(billData?.remaining_amount ?? 0)}
-              </span>
-            </div>
-          </div>
         </div>
 
         {/* Money Cards */}
@@ -268,8 +278,8 @@ export default function BillDetail() {
                 value={fmtDate(billData?.bill_date ?? "N/A")}
               />
               <InfoRow
-                label="Due Date"
-                value={fmtDate(billData?.due_date ?? "N/A")}
+                label="Created Date"
+                value={fmtDate(billData?.created_at ?? "N/A")}
               />
               <InfoRow
                 label="Paid Date"
@@ -278,14 +288,13 @@ export default function BillDetail() {
             </div>
             <div>
               <SectionTitle>Payment Information</SectionTitle>
-              <InfoRow
+              <InfoStringRow
                 label="Payment Method"
                 value={billData?.payment_method}
               />
-              <InfoRow
+              <InfoStringRow
                 label="Payment Reference"
                 value={billData?.payment_ref}
-                mono
               />
               <InfoRow
                 label="Billed Amount"

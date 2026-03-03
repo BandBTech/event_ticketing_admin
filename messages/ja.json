@@ -669,12 +669,29 @@
   "billings": {
     "searchBills": "請求書を検索",
     "filterByStatus": "ステータスでフィルター",
+    "priority": "優先度",
     "status": {
       "pending": "保留中",
       "paid": "支払済み",
       "overdue": "期限超過",
       "cancelled": "キャンセル済み",
       "clearFilter": "フィルターをクリア"
+    },
+    "method": {
+      "cash": "現金",
+      "bank_transfer": "銀行振込",
+      "cheque": "小切手",
+      "check": "小切手",
+      "mobile_payment": "モバイル決済"
+    },
+    "billType": {
+      "auto_calculated": "自動計算",
+      "manual": "手動"
+    },
+    "billPriority": {
+      "high": "高",
+      "normal": "中",
+      "low": "低"
     }
   },
   "transactions": {
