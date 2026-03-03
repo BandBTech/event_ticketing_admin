@@ -123,7 +123,7 @@ export function AsyncCombobox({
         onTouchMove={(e) => {
           e.stopPropagation();
         }}
-        className="w-[415px] p-0"
+        className="w-[var(--radix-popover-trigger-width)] p-0"
         align="start"
       >
         <Command shouldFilter={false}>

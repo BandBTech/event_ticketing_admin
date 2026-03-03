@@ -49,6 +49,13 @@ import {
   AsyncComboboxOption,
 } from "@/components/ui/async-combobox";
 import { adminService } from "@/services/adminService";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface AddBillPopupModalProps {
   open: boolean;
@@ -204,43 +211,6 @@ export default function AddBillPopupModal({
           >
             <FormField
               control={form.control}
-              name="event_id"
-              render={({ field, fieldState }) => (
-                <FormItem>
-                  <FormLabel
-                    required
-                    className="text-sm font-semibold text-gray-700"
-                  >
-                    {t("", "Event Id")}
-                  </FormLabel>
-                  <div className="relative group">
-                    {/* <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none transition-colors group-focus-within:text-blue-600">
-                      <CalendarBlankIcon
-                        weight="duotone"
-                        size={22}
-                        className="text-gray-400"
-                      />
-                    </div> */}
-                    <FormControl>
-                      <AsyncCombobox
-                        queryKey={["filter", "events"]}
-                        value={field.value ?? ""}
-                        onValueChange={(val) => field.onChange(val)}
-                        fetchOptions={fetchEvents}
-                        placeholder="Select event"
-                        searchPlaceholder="Search event..."
-                        emptyText="No events found"
-                        className="w-full text-sm h-9 justify-between px-3! important bg-gray-50/50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 rounded-md"
-                        debounceMs={300}
-                      />
-                    </FormControl>
-                  </div>
-                  <TranslatedFormMessage t={t} />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
               name="organizer_id"
               render={({ field, fieldState }) => (
                 <FormItem>
@@ -248,7 +218,7 @@ export default function AddBillPopupModal({
                     required
                     className="text-sm font-semibold text-gray-700"
                   >
-                    {t("", "Organizer Id")}
+                    {t("", "Organizer")}
                   </FormLabel>
                   <div className="relative group">
                     {/* <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none transition-colors group-focus-within:text-blue-600">
@@ -267,7 +237,7 @@ export default function AddBillPopupModal({
                         placeholder="Select organizer"
                         searchPlaceholder="Search organizers..."
                         emptyText="No organizers found"
-                        className="w-full text-sm h-9 justify-between px-3! important bg-gray-50/50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 rounded-md"
+                        className="w-full text-sm h-9 justify-between px-3! important bg-white border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 rounded-md"
                         debounceMs={300}
                       />
                     </FormControl>
@@ -276,6 +246,45 @@ export default function AddBillPopupModal({
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="event_id"
+              render={({ field, fieldState }) => (
+                <FormItem>
+                  <FormLabel
+                    required
+                    className="text-sm font-semibold text-gray-700"
+                  >
+                    {t("", "Event")}
+                  </FormLabel>
+                  <div className="relative group">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none transition-colors group-focus-within:text-blue-600">
+                      {/* <CalendarBlankIcon
+                        weight="duotone"
+                        size={22}
+                        className="text-gray-400"
+                      /> */}
+                    </div>
+                    <FormControl>
+                      <AsyncCombobox
+                        queryKey={["filter", "events"]}
+                        value={field.value ?? ""}
+                        onValueChange={(val) => field.onChange(val)}
+                        fetchOptions={fetchEvents}
+                        placeholder="Select event"
+                        searchPlaceholder="Search event..."
+                        emptyText="No events found"
+                        className="w-full text-sm h-9 justify-between px-3! important bg-white border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 rounded-md"
+                        debounceMs={300}
+                      />
+                    </FormControl>
+                  </div>
+                  <TranslatedFormMessage t={t} />
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="payment_method"
@@ -291,69 +300,33 @@ export default function AddBillPopupModal({
                   <div className="relative group">
                     {/* Left icon */}
                     <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none transition-colors group-focus-within:text-blue-600">
-                      <CreditCardIcon
+                      {/* <CreditCardIcon
                         weight="duotone"
                         size={22}
                         className="text-gray-400"
-                      />
+                      /> */}
                     </div>
 
                     <FormControl>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="outline"
-                            className={cn(
-                              "h-12 w-full justify-between pl-12 pr-4 bg-gray-50/50 border-gray-200",
-                              "hover:bg-white focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all duration-200",
-                              "font-normal",
-                              !field.value
-                                ? "text-gray-400"
-                                : "text-gray-700 bg-[#e9f0ff]",
-                              fieldState.error &&
-                                "border-destructive focus:ring-destructive/20",
-                            )}
-                          >
-                            {PAYMENT_METHODS.find(
-                              (m) => m.value === field.value,
-                            )?.label || t("", "Select payment method")}
-                          </Button>
-                        </DropdownMenuTrigger>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <SelectTrigger className="w-full text-sm h-9 justify-between px-3! bg-white">
+                          <SelectValue
+                            placeholder="Select payment method"
+                            className="data-[placeholder]:text-foreground"
+                          />
+                        </SelectTrigger>
 
-                        <DropdownMenuContent
-                          align="start"
-                          className="w-[--radix-dropdown-menu-trigger-width] p-1.5"
-                        >
-                          {field.value && (
-                            <>
-                              <DropdownMenuItem
-                                onClick={() => field.onChange("")}
-                                className="flex items-center gap-2 px-3 py-2.5 rounded-md cursor-pointer text-gray-400 hover:bg-gray-50 hover:text-gray-600"
-                              >
-                                Clear selection
-                              </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                            </>
-                          )}
-                          {PAYMENT_METHODS.map((method) => {
-                            const isSelected = field.value === method.value;
-                            return (
-                              <DropdownMenuItem
-                                key={method.value}
-                                onClick={() => field.onChange(method.value)}
-                                className={cn(
-                                  "flex items-center justify-between px-3 py-2.5 rounded-md cursor-pointer transition-colors",
-                                  isSelected
-                                    ? "bg-blue-50 text-blue-600 font-medium"
-                                    : "text-gray-700 hover:bg-gray-50",
-                                )}
-                              >
-                                {method.label}
-                              </DropdownMenuItem>
-                            );
-                          })}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                        <SelectContent>
+                          {PAYMENT_METHODS.map((method) => (
+                            <SelectItem key={method.value} value={method.value}>
+                              {method.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                   </div>
 
