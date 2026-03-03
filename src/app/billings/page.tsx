@@ -338,16 +338,16 @@ export default function BillingsPage() {
                     {t(`users.viewDetails`)}
                   </div>
                 </DropdownMenuItem>
-                <DropdownMenuItem
+                {/* <DropdownMenuItem
                   className="text-red-600"
                   onClick={(e) => {
                     e.stopPropagation();
-                    // handleDeleteClick(user);
+                    handleDeleteClick(user);
                   }}
                 >
                   <TrashIcon className="mr-2 h-4 w-4" />
                   Delete
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
               </DropdownMenuContent>
             </DropdownMenu>
           );

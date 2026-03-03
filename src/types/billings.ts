@@ -63,21 +63,21 @@ export interface BillingFilters {
   start_date: Date | undefined;
   end_date: Date | undefined;
   status: string;
-  dateRange: {
-    from: Date | undefined;
-    to: Date | undefined;
-  };
+  // dateRange: {
+  //   from: Date | undefined;
+  //   to: Date | undefined;
+  // };
 }
 
-export const getDefaultDateRange = () => ({
-  from: subDays(new Date(), 30),
-  to: new Date(),
-});
+// export const getDefaultDateRange = () => ({
+//   from: subDays(new Date(), 30),
+//   to: new Date(),
+// });
 
 export const getDefaultFilters = (): BillingFilters => ({
   organizer_id: "",
   start_date: undefined,
   end_date: undefined,
   status: "",
-  dateRange: getDefaultDateRange(),
+  // dateRange: getDefaultDateRange(),
 });

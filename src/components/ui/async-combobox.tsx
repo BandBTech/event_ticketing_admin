@@ -104,7 +104,7 @@ export function AsyncCombobox({
           role="combobox"
           aria-expanded={open}
           className={cn(
-            "h-8 w-full cursor-pointer text-xs font-medium gap-1.5 pl-2! pr-1! shadow-xs overflow-hidden",
+            "h-8 w-full cursor-pointer text-xs font-normal gap-1.5 pl-2! pr-1! shadow-xs overflow-hidden",
             className,
           )}
         >

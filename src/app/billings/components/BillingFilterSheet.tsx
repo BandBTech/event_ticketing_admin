@@ -1,8 +1,7 @@
 import React, { useCallback } from "react";
 import { differenceInMonths, isBefore, startOfDay } from "date-fns";
-import { Calendar as CalendarIcon, Filter, X } from "lucide-react";
+import { Filter, X } from "lucide-react";
 import { toast } from "sonner";
-import { format } from "date-fns";
 import {
   Sheet,
   SheetContent,
@@ -23,18 +22,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { cn } from "@/lib/utils";
 import { adminService } from "@/services/adminService";
-import {
-  BillingFilters,
-  getDefaultFilters,
-} from "@/types/billings";
+import { BillingFilters, getDefaultFilters } from "@/types/billings";
 
 interface BillingFilterSheetProps {
   open: boolean;
@@ -121,7 +110,7 @@ export function BillingFilterSheet({
     if (localFilters.start_date) count++;
     if (localFilters.end_date) count++;
     if (localFilters.organizer_id) count++;
-    if (localFilters.status !== "all") count++;
+    if (localFilters.status !== "") count++;
     return count;
   }, [localFilters]);
 
@@ -140,9 +129,8 @@ export function BillingFilterSheet({
 
         <div className="flex-1 overflow-y-auto p-4 space-y-6">
           {/* Date Range */}
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             <div className="grid grid-cols-2 gap-4">
-              {/* Start Date */}
               <div className="space-y-2">
                 <Label>Start Date</Label>
                 <Popover>
@@ -178,7 +166,6 @@ export function BillingFilterSheet({
                 </Popover>
               </div>
 
-              {/* End Date */}
               <div className="space-y-2">
                 <Label>End Date</Label>
                 <Popover>
@@ -221,7 +208,7 @@ export function BillingFilterSheet({
             <p className="text-xs text-muted-foreground">
               Maximum range: 3 months
             </p>
-          </div>
+          </div> */}
 
           {/* Organizer */}
           <div className="space-y-2">
@@ -250,11 +237,13 @@ export function BillingFilterSheet({
                 setLocalFilters((prev) => ({ ...prev, status: value }))
               }
             >
-              <SelectTrigger className="w-full text-sm h-9 justify-between px-3!">
-                <SelectValue placeholder="Select status" />
+              <SelectTrigger className="w-full text-sm h-9 justify-between px-3! bg-white">
+                <SelectValue
+                  placeholder="Select status"
+                  className="text-black data-[placeholder]:text-black"
+                />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
                 <SelectItem value="pending">Pending</SelectItem>
                 <SelectItem value="paid">Paid</SelectItem>
                 <SelectItem value="overdue">Overdue</SelectItem>
