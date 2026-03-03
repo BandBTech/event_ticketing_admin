@@ -15,7 +15,7 @@ const eventStatusConfig: Record<string, { color: string; variant: "default" | "s
   'approved': { color: 'bg-green-700 text-green-100 border-green-600', variant: 'secondary' },
   'rejected': { color: 'bg-red-700! text-red-100 border-red-600', variant: 'destructive' },
   'cancelled': { color: 'bg-red-700 text-red-100 border-red-600', variant: 'destructive' },
-  'draft': { color: 'bg-gray-700 text-gray-100 border-gray-600', variant: 'secondary' },
+  // 'draft': { color: 'bg-gray-700 text-gray-100 border-gray-600', variant: 'secondary' },
   'default': { color: 'bg-gray-700 text-gray-100 border-gray-600', variant: 'secondary' },
   'on_sale': { color: 'bg-green-700 text-green-100 border-green-600', variant: 'secondary' },
 };

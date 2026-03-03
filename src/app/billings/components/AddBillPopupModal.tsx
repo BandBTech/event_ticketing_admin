@@ -10,13 +10,8 @@ import {
   CreditCardIcon,
   SpinnerIcon,
 } from "@phosphor-icons/react";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { DialogFooter } from "@/components/ui/dialog";
+import { Modal } from "@/components/ui/modal";
 import {
   Form,
   FormControl,
@@ -197,18 +192,17 @@ export default function AddBillPopupModal({
   }, [handleRemoveImage, form]);
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[520px] overflow-y-scroll max-h-[90vh] shadow-2xl border-none bg-white/90 backdrop-blur-xl data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 duration-300">
-        <DialogHeader className="space-y-3">
-          <DialogTitle className="text-xl font-bold bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-            {t("", "Add New Bill")}
-          </DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-6 pt-4"
-          >
+    <Modal
+      isOpen={open}
+      onClose={() => handleOpenChange(false)}
+      title={t("", "Add New Bill")}
+    >
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex flex-col flex-1 overflow-hidden h-full"
+        >
+          <div className="flex-1 overflow-y-auto p-6 space-y-6">
             <FormField
               control={form.control}
               name="organizer_id"
@@ -352,26 +346,26 @@ export default function AddBillPopupModal({
               browseButtonText={t("", "Browse File")}
             />
 
-            <DialogFooter className="gap-3 pt-6">
-              <Button
-                variant="outline"
-                type="button"
-                onClick={() => onOpenChange(false)}
-                disabled={isPending}
-                className="h-11 px-6 border-gray-200 hover:bg-gray-50 transition-colors"
-              >
-                {t("common.cancel", "Cancel")}
-              </Button>
-              <Button type="submit" disabled={isPending}>
-                {isPending && (
-                  <SpinnerIcon className="mr-2 h-4 w-4 animate-spin" />
-                )}
-                {t("", "Create Bill")}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+          </div>
+
+          <DialogFooter className="px-6 py-4 border-t bg-background shrink-0 gap-2 sm:justify-end">
+            <Button
+              variant="outline"
+              type="button"
+              onClick={() => handleOpenChange(false)}
+              disabled={isPending}
+            >
+              {t("common.cancel", "Cancel")}
+            </Button>
+            <Button type="submit" disabled={isPending} className="bg-blue-600 hover:bg-blue-700 text-white">
+              {isPending && (
+                <SpinnerIcon className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              {t("", "Create Bill")}
+            </Button>
+          </DialogFooter>
+        </form>
+      </Form>
+    </Modal>
   );
 }

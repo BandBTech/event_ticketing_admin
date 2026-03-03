@@ -68,7 +68,7 @@ export default function StatusHistorySidebar({ history, isLoading }: StatusHisto
       case 'rejected': return <XCircle size={16} className="text-destructive" />;
       case 'cancelled': return <XCircle size={16} className="text-destructive" />;
       case 'pending': return <Circle size={16} weight="fill" className="text-amber-500" />;
-      case 'draft': return <Circle size={16} className="text-gray-500" />;
+      // case 'draft': return <Circle size={16} className="text-gray-500" />;
       case 'on_sale': return <Circle size={16} className="text-green-500" />;
       default: return <Circle size={16} className="text-blue-500" />;
     }
