@@ -118,6 +118,15 @@ class AdminService {
       requiresAuth: true,
     });
   }
+
+  /**
+   * Get all entities
+   */
+  async getEventsBYOrganizerID(organizer_id: string, type: string): Promise<BillingFilters> {
+    return await api.get<BillingFilters>(`/admin/list-all?type=${type}&organizer_id=${organizer_id}`, {
+      requiresAuth: true,
+    });
+  }
 }
 
 export const adminService = new AdminService();

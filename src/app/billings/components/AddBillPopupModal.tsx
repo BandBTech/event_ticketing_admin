@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -109,28 +109,36 @@ export default function AddBillPopupModal({
     },
   });
 
+  const organizer_id = form.watch("organizer_id");
+
   const fetchEvents = useCallback(
     async (search: string): Promise<AsyncComboboxOption[]> => {
+      if (!organizer_id) return [];
+
       try {
-        const response = await adminService.getAllEntities("events");
+        const response = await adminService.getEventsBYOrganizerID(
+          organizer_id,
+          "events",
+        );
+
         if (!response || !Array.isArray(response)) return [];
 
         const filtered = search
-          ? response.filter((org) =>
-              `${org.title}`.toLowerCase().includes(search.toLowerCase()),
+          ? response.filter((event) =>
+              event.title.toLowerCase().includes(search.toLowerCase()),
             )
           : response;
 
-        return filtered.map((org) => ({
-          value: org.id,
-          label: `${org.title}`,
+        return filtered.map((event) => ({
+          value: event.id,
+          label: event.title,
         }));
       } catch (error) {
         console.error("Failed to fetch events:", error);
         return [];
       }
     },
-    [],
+    [organizer_id],
   );
 
   const fetchOrganizers = useCallback(
@@ -262,7 +270,8 @@ export default function AddBillPopupModal({
                     </div>
                     <FormControl>
                       <AsyncCombobox
-                        queryKey={["filter", "events"]}
+                        key={organizer_id}
+                        queryKey={["filter", "events", organizer_id]}
                         value={field.value ?? ""}
                         onValueChange={(val) => field.onChange(val)}
                         fetchOptions={fetchEvents}
