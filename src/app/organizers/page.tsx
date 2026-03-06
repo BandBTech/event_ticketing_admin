@@ -232,17 +232,17 @@ export default function OrganizersPage() {
                 <DropdownMenuRadioItem value="">
                   {t("events.allStatus")}
                 </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="pending">
-                  {t("organizer.pending")}
-                </DropdownMenuRadioItem>
                 <DropdownMenuRadioItem value="approved">
                   {t("organizer.approved")}
                 </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="rejected">
-                  {t("organizer.rejected")}
-                </DropdownMenuRadioItem>
                 <DropdownMenuRadioItem value="inactive">
                   {t("organizer.inactive")}
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="pending">
+                  {t("organizer.pending")}
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="rejected">
+                  {t("organizer.rejected")}
                 </DropdownMenuRadioItem>
               </DropdownMenuRadioGroup>
             </DropdownMenuContent>

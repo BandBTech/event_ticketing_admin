@@ -5,8 +5,19 @@ import { OrganizerService, AllOrganizers } from "@/services/organizerService";
 import { queryKeys } from "@/lib/queryKeys";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { UsersIcon, X } from "@phosphor-icons/react";
@@ -35,7 +46,12 @@ export function OrganizerFilterSelect({
 
     // Use type guard to safely check for OrganizerListResponse
     const data = organizersData as unknown;
-    if (data && typeof data === "object" && "organizers" in data && Array.isArray((data as { organizers: unknown }).organizers)) {
+    if (
+      data &&
+      typeof data === "object" &&
+      "organizers" in data &&
+      Array.isArray((data as { organizers: unknown }).organizers)
+    ) {
       return (data as { organizers: AllOrganizers[] }).organizers;
     }
     return [];
@@ -60,7 +76,11 @@ export function OrganizerFilterSelect({
               <Avatar className="h-5 w-5 shrink-0">
                 {selectedOrganizer ? (
                   <>
-                      <AvatarImage src={selectedOrganizer?.logo} alt={selectedOrganizer?.name} />
+                      <AvatarImage
+                        src={selectedOrganizer?.logo}
+                        alt={selectedOrganizer?.name}
+                        className="object-contain"
+                      />
                     <AvatarFallback className="text-[10px]">
                         {selectedOrganizer?.name?.charAt(0)}
                     </AvatarFallback>
@@ -72,7 +92,9 @@ export function OrganizerFilterSelect({
                 )}
               </Avatar>
               <span className="truncate">
-                  {selectedOrganizer ? selectedOrganizer?.name : t("events.filterByOrganizer", "Filter by Organizer")}
+                  {selectedOrganizer
+                    ? selectedOrganizer?.name
+                    : t("events.filterByOrganizer", "Filter by Organizer")}
               </span>
             </div>
           )}
@@ -107,9 +129,16 @@ export function OrganizerFilterSelect({
             return 0;
           }}
         >
-          <CommandInput placeholder={t("organizer.searchOrganizers", "Search organizers...")} />
+          <CommandInput
+            placeholder={t(
+              "organizer.searchOrganizers",
+              "Search organizers...",
+            )}
+          />
           <CommandList>
-            <CommandEmpty>{t("organizer.noOrganizerFound", "No organizer found.")}</CommandEmpty>
+            <CommandEmpty>
+              {t("organizer.noOrganizerFound", "No organizer found.")}
+            </CommandEmpty>
             <CommandGroup>
               <CommandItem
                 value="all"
@@ -130,7 +159,9 @@ export function OrganizerFilterSelect({
                   <Check
                     className={cn(
                       "ml-auto h-4 w-4 shrink-0",
-                      value === "" || value === "all" ? "opacity-100" : "opacity-0"
+                      value === "" || value === "all"
+                        ? "opacity-100"
+                        : "opacity-0",
                     )}
                   />
                 </div>
@@ -155,7 +186,7 @@ export function OrganizerFilterSelect({
                     <Check
                       className={cn(
                         "ml-auto h-4 w-4 shrink-0",
-                        value === organizer?.id ? "opacity-100" : "opacity-0"
+                        value === organizer?.id ? "opacity-100" : "opacity-0",
                       )}
                     />
                   </div>
