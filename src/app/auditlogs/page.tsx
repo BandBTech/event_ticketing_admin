@@ -205,14 +205,14 @@ export default function TransactionsPage() {
           </div>
 
           <div className="flex gap-2">
-            <Button
+            {/* <Button
               onClick={handleOpenrefunds}
               variant="outline"
               className="gap-2 bg-background/80 backdrop-blur-sm"
             >
               <BanknoteArrowUp className="h-4 w-4" />
               {t("transactions.refund")}
-            </Button>
+            </Button> */}
             <Button
               onClick={handleOpenTransactions}
               variant="outline"
