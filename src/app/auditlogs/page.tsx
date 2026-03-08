@@ -138,12 +138,8 @@ export default function TransactionsPage() {
       },
       {
         id: "actor",
-        header: "Actor",
-        cell: ({ row }) => {
-          const firstName = row.original.actor.first_name;
-          const lastName = row.original.actor.last_name;
-          return `${firstName} ${lastName}`;
-        },
+        header: "Event",
+        accessorKey: "event.title",
         enableSorting: false,
       },
       {
