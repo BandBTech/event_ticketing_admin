@@ -87,7 +87,7 @@ export default function TransactionsPage() {
       PayoutService.getPayouts({
         page: currentPage,
         limit: itemsPerPage,
-        filter: statusFilter,
+        status: statusFilter,
         search: debouncedSearch,
         sort,
       }),

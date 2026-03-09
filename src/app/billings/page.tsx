@@ -407,15 +407,10 @@ export default function BillingsPage() {
           <Button
             variant="outline"
             onClick={() => setFilterSheetOpen(true)}
-            className="w-full sm:w-auto gap-2 shadow-sm transition-all ease-out duration-300 active:scale-95"
+            className="gap-2 bg-background/80 backdrop-blur-sm"
           >
-            <FunnelIcon className="mr-2 h-4 w-4" />
+            <FunnelIcon weight="duotone" className="h-4 w-4" />
             Filters
-            {/* {activeFilterCount > 0 && (
-                  <span className="ml-2 bg-amber-900 text-white text-xs px-1.5 py-0.5 rounded-full">
-                    {activeFilterCount}
-                  </span>
-                )} */}
           </Button>
           <Button
             onClick={() => setIsAddDialogOpen(true)}

@@ -50,6 +50,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { flexRender } from "@tanstack/react-table";
+import { TransactionFilterSheet } from "./components/TransactionFilterSheet";
+import { BillingFilters, getDefaultFilters } from "@/types/billings";
 
 export default function TransactionsPage() {
   const router = useRouter();
@@ -63,6 +65,9 @@ export default function TransactionsPage() {
   const statusFilter = searchParams.get("status") || "";
   const [sorting, setSorting] = useState<{ id: string; desc: boolean }[]>([]);
   const [searchInput, setSearchInput] = React.useState("");
+  const [filterSheetOpen, setFilterSheetOpen] = React.useState(false);
+  const [appliedFilters, setAppliedFilters] =
+    React.useState<BillingFilters>(getDefaultFilters());
 
   const debouncedSearch = useDebounce(searchInput, 500);
 
@@ -377,106 +382,14 @@ export default function TransactionsPage() {
         </div>
 
         <div className="flex gap-6">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className="gap-2 bg-background/80 backdrop-blur-sm"
-              >
-                <FunnelIcon weight="duotone" className="h-4 w-4" />
-                Filter By Status
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem
-                className={
-                  statusFilter === "completed" ? "bg-muted font-medium" : ""
-                }
-                onClick={() => updateParams({ status: "completed", page: "1" })}
-              >
-                Completed
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className={
-                  statusFilter === "pending" ? "bg-muted font-medium" : ""
-                }
-                onClick={() => updateParams({ status: "pending", page: "1" })}
-              >
-                Pending
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className={
-                  statusFilter === "failed" ? "bg-muted font-medium" : ""
-                }
-                onClick={() => updateParams({ status: "failed", page: "1" })}
-              >
-                Failed
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className={
-                  statusFilter === "refunded" ? "bg-muted font-medium" : ""
-                }
-                onClick={() => updateParams({ status: "refunded", page: "1" })}
-              >
-                Refunded
-              </DropdownMenuItem>
-
-              <DropdownMenuSeparator />
-
-              <DropdownMenuItem
-                className={`text-red-600 font-medium ${!statusFilter ? "hidden" : ""}`}
-                onClick={() => updateParams({ status: null, page: "1" })}
-              >
-                {t("users.clearFilters")}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className="gap-2 bg-background/80 backdrop-blur-sm"
-              >
-                <FunnelIcon weight="duotone" className="h-4 w-4" />
-                {t("transactions.filter")}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem
-                // className={
-                //   statusFilter === "active" ? "bg-muted font-medium" : ""
-                // }
-                onClick={() => updateParams({ status: "active", page: "1" })}
-              >
-                {t("transactions.status")}
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                // className={
-                //   statusFilter === "inactive" ? "bg-muted font-medium" : ""
-                // }
-                onClick={() => updateParams({ status: "inactive", page: "1" })}
-              >
-                {t("transactions.paymentGateway")}
-              </DropdownMenuItem>
-              {/* <DropdownMenuItem
-                className={
-                  statusFilter === "suspended" ? "bg-muted font-medium" : ""
-                }
-                onClick={() => updateParams({ status: "suspended", page: "1" })}
-              >
-                {t("users.accountStatus.suspended")}
-              </DropdownMenuItem> */}
-
-              <DropdownMenuSeparator />
-
-              <DropdownMenuItem
-                // className={`text-red-600 font-medium ${!statusFilter ? "hidden" : ""}`}
-                onClick={() => updateParams({ status: null, page: "1" })}
-              >
-                {t("users.clearFilters")}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Button
+            variant="outline"
+            onClick={() => setFilterSheetOpen(true)}
+            className="gap-2 bg-background/80 backdrop-blur-sm"
+          >
+            <FunnelIcon weight="duotone" className="h-4 w-4" />
+            Filters
+          </Button>
         </div>
       </div>
 
@@ -572,7 +485,10 @@ export default function TransactionsPage() {
                   </TableCell>
 
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="max-w-[10vw] overflow-x-hidden">
+                    <TableCell
+                      key={cell.id}
+                      className="max-w-[10vw] overflow-x-hidden"
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
@@ -640,6 +556,16 @@ export default function TransactionsPage() {
           </Button>
         </div>
       )}
+
+      {/* Filter Sheet */}
+      <React.Suspense fallback={null}>
+        <TransactionFilterSheet
+          open={filterSheetOpen}
+          onOpenChange={setFilterSheetOpen}
+          filters={appliedFilters}
+          onApplyFilters={setAppliedFilters}
+        />
+      </React.Suspense>
     </div>
   );
 }

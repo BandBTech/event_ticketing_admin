@@ -24,7 +24,7 @@ export class PayoutService {
     page?: number;
     limit?: number;
     sort?: string;
-    filter?: string;
+    status?: string;
     search?: string;
   }): Promise<PayoutRequestsResponse> {
     const params = new URLSearchParams();
@@ -32,7 +32,7 @@ export class PayoutService {
     if (filters) {
       if (filters.page) params.append("page", filters.page.toString());
       if (filters.limit) params.append("limit", filters.limit.toString());
-      if (filters.filter) params.append("filter", filters.filter.toString());
+      if (filters.status) params.append("status", filters.status);
       if (filters.search) params.append("search", filters.search);
       if (filters.sort) params.append("sort", filters.sort);
     }
