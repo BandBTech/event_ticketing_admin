@@ -177,7 +177,7 @@ export function OrganizerFilterSelect({
                 >
                   <div className="flex items-center flex-1 gap-2 overflow-hidden w-full">
                     <Avatar className="h-6 w-6">
-                      <AvatarImage src={organizer.logo} alt={organizer?.name} />
+                      <AvatarImage className="object-contain" src={organizer.logo} alt={organizer?.name} />
                       <AvatarFallback className="text-xs">
                         {organizer?.name?.charAt(0)}
                       </AvatarFallback>
