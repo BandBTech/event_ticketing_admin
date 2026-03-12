@@ -41,20 +41,24 @@ export function OrganizerFilterSelect({
   });
 
   const organizers = React.useMemo(() => {
+    let result: AllOrganizers[] = [];
     if (!organizersData) return [];
-    if (Array.isArray(organizersData)) return organizersData;
-
-    // Use type guard to safely check for OrganizerListResponse
-    const data = organizersData as unknown;
-    if (
-      data &&
-      typeof data === "object" &&
-      "organizers" in data &&
-      Array.isArray((data as { organizers: unknown }).organizers)
-    ) {
-      return (data as { organizers: AllOrganizers[] }).organizers;
+    if (Array.isArray(organizersData)) {
+      result = [...organizersData];
+    } else {
+      // Use type guard to safely check for OrganizerListResponse
+      const data = organizersData as unknown;
+      if (
+        data &&
+        typeof data === "object" &&
+        "organizers" in data &&
+        Array.isArray((data as { organizers: unknown }).organizers)
+      ) {
+        result = [...(data as { organizers: AllOrganizers[] }).organizers];
+      }
     }
-    return [];
+
+    return result.sort((a, b) => (a?.name?.trim() || "").localeCompare(b?.name?.trim() || ""));
   }, [organizersData]);
 
   const selectedOrganizer = organizers?.find((org) => org.id === value);
@@ -174,6 +178,7 @@ export function OrganizerFilterSelect({
                     onChange(organizer?.id);
                     setOpen(false);
                   }}
+                  title={organizer?.name || undefined}
                 >
                   <div className="flex items-center flex-1 gap-2 overflow-hidden w-full">
                     <Avatar className="h-6 w-6">
