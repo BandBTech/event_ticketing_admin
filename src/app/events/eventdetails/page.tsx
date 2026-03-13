@@ -465,28 +465,31 @@ export default function EventDetailsPage() {
 
 
             {/* Financial Details */}
-            <div className="glass-card-lower rounded-2xl p-6 border border-green-300! bg-green-100/40!">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <CurrencyCircleDollarIcon weight="duotone" className="w-5 h-5 text-gray-500" />
-                {t("events.sections.financialDetails", "Financial Details")}
-              </h2>
-              <div className="space-y-0">
-                {event.commission_rate > 0 && (
-                  <div className="flex justify-between items-center py-2">
-                    <span className="text-gray-500 text-sm">{t("events.fields.commission", "Commission Rate")}</span>
-                    <Badge variant="secondary" className="bg-emerald-600 text-white border-emerald-100 px-3 py-1 text-sm">
-                      {event.commission_rate}%
-                    </Badge>
+            {
+              event.status !== "rejected" && event.status !== "pending" && (
+                <div className="glass-card-lower rounded-2xl p-6 border border-green-300! bg-green-100/40!">
+                  <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                    <CurrencyCircleDollarIcon weight="duotone" className="w-5 h-5 text-gray-500" />
+                    {t("events.sections.financialDetails", "Financial Details")}
+                  </h2>
+                  <div className="space-y-0">
+                    {event.commission_rate > 0 && (
+                      <div className="flex justify-between items-center py-2">
+                        <span className="text-gray-500 text-sm">{t("events.fields.commission", "Commission Rate")}</span>
+                        <Badge variant="secondary" className="bg-emerald-600 text-white border-emerald-100 px-3 py-1 text-sm">
+                          {event.commission_rate}%
+                        </Badge>
+                      </div>
+                    )}
+                    <div className="flex justify-between items-center pt-1">
+                      <span className="text-gray-500 text-sm">{t("events.sections.totalEarnings", "Total Earnings")}</span>
+                      <span className="font-semibold text-emerald-700 text-lg">
+                        {`${((totalRevenue || 0) * (event.commission_rate || 0) / 100).toFixed(2)} ${analytics?.tiers?.[0]?.currency || event.tiers?.[0]?.currency || 'NPR'}`}
+                      </span>
+                    </div>
                   </div>
-                )}
-                <div className="flex justify-between items-center pt-1">
-                  <span className="text-gray-500 text-sm">{t("events.sections.totalEarnings", "Total Earnings")}</span>
-                  <span className="font-semibold text-emerald-700 text-lg">
-                    {`${((totalRevenue || 0) * (event.commission_rate || 0) / 100).toFixed(2)} ${analytics?.tiers?.[0]?.currency || event.tiers?.[0]?.currency || 'NPR'}`}
-                  </span>
-                </div>
-              </div>
-            </div>
+                </div>)
+            }
 
             {/* Ticket Analytics (Renamed from Ticket Tiers as in Organizer, but retaining our logic) */}
             <div className="glass-card-lower rounded-2xl p-6 border border-gray-100 @container">
