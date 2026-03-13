@@ -279,7 +279,6 @@
       "cancelled": "Cancelled",
       "draft": "Draft",
       "live": "Live",
-      "ended": "Ended",
       "rejected": "Rejected",
       "active": "Sales Live",
       "paused": "Sales Paused",
@@ -287,7 +286,8 @@
       "sold_out": "Sold Out",
       "sales_ended": "Sales Ended",
       "on_sale": "Sales Live",
-      "featured": "Featured"
+      "featured": "Featured",
+      "completed": "Completed"
     },
     "analytics": {
       "progress": "Sales Progress",

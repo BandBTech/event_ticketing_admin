@@ -11,13 +11,15 @@ interface EventStatusBadgeProps {
 }
 
 const eventStatusConfig: Record<string, { color: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
-  'pending': { color: 'bg-amber-700 text-amber-100 border-amber-600', variant: 'secondary' },
+  'pending': { color: 'bg-yellow-700 text-yellow-100 border-yellow-600', variant: 'secondary' },
   'approved': { color: 'bg-green-700 text-green-100 border-green-600', variant: 'secondary' },
   'rejected': { color: 'bg-red-700! text-red-100 border-red-600', variant: 'destructive' },
-  'cancelled': { color: 'bg-red-700 text-red-100 border-red-600', variant: 'destructive' },
-  // 'draft': { color: 'bg-gray-700 text-gray-100 border-gray-600', variant: 'secondary' },
+  'cancelled': { color: 'bg-red-700 text-white border-red-600', variant: 'destructive' },
+  'draft': { color: 'bg-gray-700 text-gray-100 border-gray-600', variant: 'secondary' },
+  'completed': { color: 'bg-slate-700 text-slate-100 border-slate-600', variant: 'secondary' },
   'default': { color: 'bg-gray-700 text-gray-100 border-gray-600', variant: 'secondary' },
   'on_sale': { color: 'bg-green-700 text-green-100 border-green-600', variant: 'secondary' },
+  'live': { color: 'bg-green-100 text-green-700 border-green-600', variant: 'secondary' },
 };
 
 export function EventStatusBadge({ status, className }: EventStatusBadgeProps) {
@@ -32,12 +34,17 @@ export function EventStatusBadge({ status, className }: EventStatusBadgeProps) {
     <Badge
       variant={config.variant}
       className={cn(
-        "uppercase px-3 py-1 flex items-center gap-1.5",
+        "uppercase px-3 py-1 flex items-center gap-1.5 font-semibold rounded-full",
         config.color,
         className
       )}
     >
-      {/* <span className="w-2 h-2 rounded-full bg-current opacity-75" /> */}
+      {status === 'live' && (
+        <span className="flex h-1.5 w-1.5 relative">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+        </span>
+      )}
       {t(`events.badge.${status}`, status)}
     </Badge>
   );

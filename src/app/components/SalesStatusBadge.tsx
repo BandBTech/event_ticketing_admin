@@ -12,7 +12,7 @@ interface SalesStatusBadgeProps {
 }
 
 const salesStatusColors: Record<string, string> = {
-  'on_sale': 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-50',
+  'active': 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-50',
   'paused': 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-50',
   'stopped': 'bg-red-50 text-red-700 border-red-200 hover:bg-red-50',
   'sold_out': 'bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-50',
@@ -22,20 +22,16 @@ const salesStatusColors: Record<string, string> = {
 export function SalesStatusBadge({ status, className, showAlways = false }: SalesStatusBadgeProps) {
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
+
   if (!status && !showAlways) return null;
 
   const displayStatus = status || "";
-
-  if (displayStatus === 'active') {
-    return
-  }
-
 
   return (
     <Badge
       variant="outline"
       className={cn(
-        "uppercase font-bold tracking-wider px-2 py-0.5 rounded-full shadow-sm border text-[10px] flex items-center gap-1.5",
+        "uppercase font-semibold px-2 py-1 rounded-full shadow-sm border flex items-center gap-1.5",
         salesStatusColors[displayStatus] || "bg-blue-50 text-gray-700 border-gray-200 hover:bg-gray-50",
         className
       )}
@@ -46,12 +42,7 @@ export function SalesStatusBadge({ status, className, showAlways = false }: Sale
           <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
         </span>
       )}
-      {t(`events.badge.${displayStatus}`).toUpperCase()}
-      {/* {t(`event.badge.active`)}
-      {t(`event.badge.paused`)}
-      {t(`event.badge.stopped`)}
-      {t(`event.badge.sold_out`)}
-      {t(`event.badge.sales_ended`)} */}
+      {t(`events.badge.${displayStatus}`, displayStatus).toUpperCase()}
     </Badge>
   );
 }

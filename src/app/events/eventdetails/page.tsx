@@ -234,8 +234,10 @@ export default function EventDetailsPage() {
               {event.title}
             </h1>
             <div className="flex items-center gap-3 text-sm text-gray-600 flex-wrap">
-              <EventStatusBadge status={event.status} />
-              {event.sales_status && (
+              {(event.status !== "on_sale" || event.sales_status === "active") && (
+                <EventStatusBadge status={event.status} />
+              )}
+              {event.status === "on_sale" && event.sales_status !== "active" && (
                 <SalesStatusBadge status={event.sales_status} />
               )}
               <div className="flex gap-4 flex-wrap ml-2">

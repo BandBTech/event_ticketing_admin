@@ -10,6 +10,7 @@ import { CalendarBlankIcon, MapPinIcon, TicketIcon, CrownIcon, EyeIcon } from "@
 import Image from "next/image";
 import { Event } from "@/types/event";
 import { EventStatusBadge } from "@/app/components/EventStatusBadge";
+import { SalesStatusBadge } from "@/app/components/SalesStatusBadge";
 import FeaturedBadge from "./FeaturedBadge";
 
 // Event Card Component
@@ -63,7 +64,12 @@ export function EventCard({ event }: { event: Event }) {
         />
         {/* Status Badge */}
         <div className="absolute top-3 left-3">
-          <EventStatusBadge status={event.status} />
+          {(event.status !== "on_sale" || event.sales_status === "active") && (
+            <EventStatusBadge status={event.status} />
+          )}
+          {event.status === "on_sale" && event.sales_status !== "active" && (
+            <SalesStatusBadge status={event.sales_status} />
+          )}
         </div>
         {/* Featured Badge */}
         {event.is_featured && (
