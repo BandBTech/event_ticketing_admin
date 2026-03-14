@@ -832,7 +832,17 @@
       "saveChanges": "Save Changes",
       "saving": "Saving",
       "saved": "Saved",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "validation": {
+        "firstNameRequired": "First name is required.",
+        "firstNameMinLength": "First name must be at least 3 characters.",
+        "firstNameMaxLength": "First name cannot exceed 50 characters.",
+        "lastNameRequired": "Last name is required.",
+        "lastNameMinLength": "Last name must be at least 3 characters.",
+        "lastNameMaxLength": "Last name cannot exceed 50 characters.",
+        "phoneRequired": "Phone number is required.",
+        "phoneInvalid": "Please enter a valid phone number."
+      }
     },
     "general": {
       "title": "General Settings",

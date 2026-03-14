@@ -773,7 +773,17 @@
       "saveChanges": "Salva Modifiche",
       "saving": "Salvando",
       "saved": "salvato",
-      "cancel": "Annulla"
+      "cancel": "Annulla",
+      "validation": {
+        "firstNameRequired": "Il nome è obbligatorio.",
+        "firstNameMinLength": "Il nome deve essere di almeno 3 caratteri.",
+        "firstNameMaxLength": "Il nome non può superare i 50 caratteri.",
+        "lastNameRequired": "Il cognome è obbligatorio.",
+        "lastNameMinLength": "Il cognome deve essere di almeno 3 caratteri.",
+        "lastNameMaxLength": "Il cognome non può superare i 50 caratteri.",
+        "phoneRequired": "Il numero di telefono è obbligatorio.",
+        "phoneInvalid": "Inserisci un numero di telefono valido."
+      }
     },
     "general": {
       "title": "Impostazioni Generali",
