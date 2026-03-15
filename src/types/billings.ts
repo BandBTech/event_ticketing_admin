@@ -69,6 +69,17 @@ export interface BillingFilters {
   // };
 }
 
+export interface PaymentHistoryData {
+  id: number;
+  amount: number;
+  payment_method: string;
+  payment_ref: string;
+  payment_date: string;
+  processed_by: string;
+  notes: string;
+  created_at: string;
+}
+
 // export const getDefaultDateRange = () => ({
 //   from: subDays(new Date(), 30),
 //   to: new Date(),

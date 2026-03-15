@@ -5,6 +5,7 @@ import {
   PaymentBillResponse,
   PaymentBillData,
   CreateBillPayload,
+  PaymentHistoryData,
 } from "@/types/billings";
 
 export class BillingService {
@@ -64,6 +65,16 @@ export class BillingService {
     const response = await api.get<Bill>(API_ENDPOINTS.GET_BILL_BY_ID(id), {
       requiresAuth: true,
     });
+    return response;
+  }
+
+  static async getBillHistory(id: string): Promise<PaymentHistoryData[]> {
+    const response = await api.get<PaymentHistoryData[]>(
+      API_ENDPOINTS.GET_BILL_HISTORY(id),
+      {
+        requiresAuth: true,
+      },
+    );
     return response;
   }
 

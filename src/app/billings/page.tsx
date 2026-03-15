@@ -25,6 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { queryKeys } from "@/lib/queryKeys";
 import { flexRender } from "@tanstack/react-table";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -50,7 +51,8 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { BillingService } from "@/services/billingService";
 import { Bill, PaymentBillData } from "@/types/billings";
 import AddBillPopupModal from "@/app/billings/components/AddBillPopupModal";
-import { BillingFilters, getDefaultFilters } from "@/types/billings";
+import { BillingFilters, getDefaultFilters, PaymentHistoryData } from "@/types/billings";
+
 
 // Lazy load heavy sub-components to reduce initial bundle size
 const BillingFilterSheet = React.lazy(() =>
@@ -79,6 +81,38 @@ export default function BillingsPage() {
   const [filterSheetOpen, setFilterSheetOpen] = React.useState(false);
   const [appliedFilters, setAppliedFilters] =
     React.useState<BillingFilters>(getDefaultFilters());
+  const [expandedRows, setExpandedRows] = React.useState<Set<string>>(
+    new Set(),
+  );
+  const [expandLoading, setExpandLoading] = React.useState<Set<string>>(
+    new Set(),
+  );
+  const [expandedData, setExpandedData] = React.useState<
+    Record<string, PaymentHistoryData[]>
+  >({});
+
+  const toggleRow = async (id: string) => {
+    const isOpen = expandedRows.has(id);
+
+    // close if already open, otherwise close all and open new
+    setExpandedRows(isOpen ? new Set() : new Set([id]));
+
+    if (!isOpen && !expandedData[id]) {
+      setExpandLoading((l) => new Set(l).add(id));
+      try {
+        const data: PaymentHistoryData[] = await BillingService.getBillHistory(id);
+        setExpandedData((prev) => ({ ...prev, [id]: data }));
+      } catch (err) {
+        console.error("Failed to fetch bill history", err);
+      } finally {
+        setExpandLoading((l) => {
+          const n = new Set(l);
+          n.delete(id);
+          return n;
+        });
+      }
+    }
+  };
 
   const debouncedSearch = useDebounce(searchInput, 500);
 
@@ -125,68 +159,6 @@ export default function BillingsPage() {
 
   const mockUserData = response?.bills || [];
 
-  // Mutation for toggling status
-  // const toggleStatusMutation = useMutation({
-  //   mutationFn: (employeeId: string) =>
-  //     UserService.toggleStatus(employeeId, {
-  //       status:
-  //         mockUserData.find((c) => c.id === employeeId)?.account_status ===
-  //         "active"
-  //           ? "inactive"
-  //           : "active",
-  //       admin_remark: "Status toggled by admin",
-  //     }),
-  //   onMutate: (employeeId) => {
-  //     setActionLoading(employeeId);
-  //   },
-  //   onSuccess: (_, employeeId) => {
-  //     const employee = mockUserData.find((c) => c.id === employeeId);
-  //     toast.success(
-  //       `User ${
-  //         employee?.account_status === "active" ? "deactivated" : "activated"
-  //       } successfully`,
-  //     );
-  //     queryClient.invalidateQueries({
-  //       queryKey: ["users"],
-  //     });
-  //   },
-  //   onError: (err) => {
-  //     toast.error("Failed to update user status");
-  //   },
-  //   onSettled: () => {
-  //     setActionLoading(null);
-  //   },
-  // });
-
-  // const updateParams = useCallback(
-  //   (updates: Record<string, string | null>) => {
-  //     const params = new URLSearchParams(window.location.search);
-
-  //     Object.entries(updates).forEach(([key, value]) => {
-  //       if (!value) {
-  //         params.delete(key);
-  //       } else {
-  //         params.set(key, value);
-  //       }
-  //     });
-
-  //     router.push(`/billings?${params.toString()}`, { scroll: false });
-  //   },
-  //   [router],
-  // );
-
-  // Handler functions
-  // const handleToggleStatus = (user: User) => {
-  //   toggleStatusMutation.mutate(user.id);
-  // };
-
-  // const handlePageChange = useCallback(
-  //   (page: number) => {
-  //     updateParams({ page: page.toString() });
-  //   },
-  //   [updateParams],
-  // );
-
   // Table columns
   const columns: ColumnDef<Bill>[] = React.useMemo(
     () => [
@@ -194,81 +166,20 @@ export default function BillingsPage() {
         id: "name",
         header: "Event Title",
         accessorKey: "event.title",
-        // cell: ({ row }) => {
-        //   const { email, phone, country_code } = row.original;
-
-        //   return (
-        //     <div className="flex flex-col gap-0.5">
-        //       <span className="text-sm text-foreground">{email || "-"}</span>
-
-        //       <span className="text-xs text-muted-foreground">
-        //         {phone ? `${country_code ?? ""} ${phone}` : "-"}
-        //       </span>
-        //     </div>
-        //   );
-        // },
         enableSorting: false,
       },
       {
         id: "organizer_name",
         accessorKey: "organizer.name",
         header: "Organizer Name",
-        // cell: ({ row }) => {
-        //   const { email, phone, country_code } = row.original;
-
-        //   return (
-        //     <div className="flex flex-col gap-0.5">
-        //       <span className="text-sm text-foreground">{email || "-"}</span>
-
-        //       <span className="text-xs text-muted-foreground">
-        //         {phone ? `${country_code ?? ""} ${phone}` : "-"}
-        //       </span>
-        //     </div>
-        //   );
-        // },
         enableSorting: false,
       },
-      // {
-      //   id: "admin_name",
-      //   accessorKey: "admin_name",
-      //   header: "Admin Name",
-      //   enableSorting: false,
-      // },
-      // {
-      //   id: "total_revenue",
-      //   accessorKey: "total_revenue",
-      //   header: "Total Revenue",
-      //   enableSorting: false,
-      // },
-      // {
-      //   id: "total_commission",
-      //   accessorKey: "total_commission",
-      //   header: "Total Commission",rting: true,
-      // },
-      // {
-      //   id: "organizer_earnings",
-      //   accessorKey: "organizer_earnings",
-      //   header: "Organizer Earnings",
-      //   enableSorting: true,
-      // },
       {
         id: "billed_amount",
         accessorKey: "billed_amount",
         header: "Billed Amount",
         enableSorting: false,
       },
-      // {
-      //   id: "paid_amount",
-      //   accessorKey: "paid_amount",
-      //   header: "Paid Amount",
-      //   enableSorting: false,
-      // },
-      // {
-      //   id: "remaining_amount",
-      //   accessorKey: "remaining_amount",
-      //   header: "Remaining Amount",
-      //   enableSorting: true,
-      // },
       {
         id: "payment_method",
         accessorKey: "payment_method",
@@ -443,6 +354,7 @@ export default function BillingsPage() {
           <TableHeader className="sticky top-0 bg-background z-10">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
+                <TableHead className="w-10" />
                 {/* Serial number header */}
                 <TableHead className="w-16 text-center">SN</TableHead>
 
@@ -520,24 +432,149 @@ export default function BillingsPage() {
               </TableRow>
             )}
 
-            {/* Rows */}
             {!isLoading &&
               table.getRowModel().rows.map((row, index) => (
-                <TableRow key={row.id}>
-                  {/* Serial number */}
-                  <TableCell className="text-center text-sm text-muted-foreground">
-                    {(currentPage - 1) * itemsPerPage + index + 1}
-                  </TableCell>
-
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+                <React.Fragment key={row.id}>
+                  {/* Main row */}
+                  <TableRow>
+                    <TableCell className="w-10 text-center">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 rounded-full"
+                        title="View Bill History"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleRow(row.original.id);
+                        }}
+                      >
+                        <CaretRightIcon
+                          className={`h-3 w-3 transition-transform duration-200 ${
+                            expandedRows.has(row.original.id) ? "rotate-90" : ""
+                          }`}
+                        />
+                      </Button>
                     </TableCell>
-                  ))}
-                </TableRow>
+                    <TableCell className="text-center text-sm text-muted-foreground">
+                      {(currentPage - 1) * itemsPerPage + index + 1}
+                    </TableCell>
+
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+
+                  {/* Expanded detail row — sibling, not child */}
+                  {expandedRows.has(row.original.id) && (
+                    <TableRow>
+                      <TableCell
+                        colSpan={columns.length + 2}
+                        className="py-3 px-14 bg-muted/20 border-b"
+                      >
+                        <div className="rounded-xl border border-border/60 overflow-hidden">
+                          {expandLoading.has(row.original.id) ? (
+                            // Skeleton
+                            <div className="grid grid-cols-[28px_1fr_1fr_1fr_1fr_1fr] items-center gap-4 px-6 py-3 bg-background">
+                              <Skeleton className="w-6 h-6 rounded-full" />
+                              {Array.from({ length: 5 }).map((_, i) => (
+                                <div key={i} className="space-y-1.5">
+                                  <Skeleton className="h-2.5 w-16" />
+                                  <Skeleton className="h-4 w-24" />
+                                </div>
+                              ))}
+                            </div>
+                          ) : !expandedData[row.original.id]?.length ? (
+                            // Empty
+                            <div className="flex items-center justify-center gap-2 py-4 text-xs text-muted-foreground">
+                              <svg
+                                className="w-4 h-4"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                              >
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M12 8v4m0 4h.01" />
+                              </svg>
+                              No payment history found
+                            </div>
+                          ) : (
+                            // Data
+                            expandedData[row.original.id].map((item, i) => (
+                              <div
+                                key={item.id}
+                                className={`grid grid-cols-[28px_1fr_1fr_1fr_1fr_1fr] items-center gap-4 px-6 py-3 border-b last:border-0 ${
+                                  i % 2 === 0 ? "bg-background" : "bg-muted/30"
+                                }`}
+                              >
+                                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-violet-500 to-indigo-500 flex items-center justify-center text-[10px] font-bold text-white shrink-0">
+                                  {i + 1}
+                                </div>
+
+                                <div className="min-w-0">
+                                  <p className="text-[10px] text-muted-foreground uppercase tracking-wide mb-0.5">
+                                    Reference
+                                  </p>
+                                  <p className="text-sm text-foreground font-mono truncate">
+                                    {item.payment_ref || "—"}
+                                  </p>
+                                </div>
+
+                                <div>
+                                  <p className="text-[10px] text-muted-foreground uppercase tracking-wide mb-0.5">
+                                    Amount
+                                  </p>
+                                  <p className="text-sm text-foreground font-semibold">
+                                    NPR {item.amount.toLocaleString()}
+                                  </p>
+                                </div>
+
+                                <div>
+                                  <p className="text-[10px] text-muted-foreground uppercase tracking-wide mb-0.5">
+                                    Method
+                                  </p>
+                                  <p className="text-sm text-foreground capitalize">
+                                    {item.payment_method?.replace(/_/g, " ") ||
+                                      "—"}
+                                  </p>
+                                </div>
+
+                                <div>
+                                  <p className="text-[10px] text-muted-foreground uppercase tracking-wide mb-0.5">
+                                    Date
+                                  </p>
+                                  <p className="text-sm text-foreground">
+                                    {new Date(
+                                      item.payment_date,
+                                    ).toLocaleDateString("en-US", {
+                                      year: "numeric",
+                                      month: "short",
+                                      day: "numeric",
+                                    })}
+                                  </p>
+                                </div>
+
+                                <div className="min-w-0">
+                                  <p className="text-[10px] text-muted-foreground uppercase tracking-wide mb-0.5">
+                                    Processed By
+                                  </p>
+                                  <p className="text-sm text-foreground truncate">
+                                    {item.processed_by || "—"}
+                                  </p>
+                                </div>
+                              </div>
+                            ))
+                          )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </React.Fragment>
               ))}
           </TableBody>
         </Table>
