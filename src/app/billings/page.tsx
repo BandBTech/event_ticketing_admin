@@ -9,6 +9,7 @@ import {
   Eye as EyeIcon,
   User as UserIcon,
   FilePlus as FilePlusIcon,
+  BookOpenTextIcon,
   DotsThreeVertical as DotsThreeVerticalIcon,
   Spinner,
   TrashIcon,
@@ -51,8 +52,11 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { BillingService } from "@/services/billingService";
 import { Bill, PaymentBillData } from "@/types/billings";
 import AddBillPopupModal from "@/app/billings/components/AddBillPopupModal";
-import { BillingFilters, getDefaultFilters, PaymentHistoryData } from "@/types/billings";
-
+import {
+  BillingFilters,
+  getDefaultFilters,
+  PaymentHistoryData,
+} from "@/types/billings";
 
 // Lazy load heavy sub-components to reduce initial bundle size
 const BillingFilterSheet = React.lazy(() =>
@@ -90,6 +94,7 @@ export default function BillingsPage() {
   const [expandedData, setExpandedData] = React.useState<
     Record<string, PaymentHistoryData[]>
   >({});
+  const [paymentBillData, setPaymentBillData] = React.useState<Bill | null>(null);  
 
   const toggleRow = async (id: string) => {
     const isOpen = expandedRows.has(id);
@@ -100,7 +105,8 @@ export default function BillingsPage() {
     if (!isOpen && !expandedData[id]) {
       setExpandLoading((l) => new Set(l).add(id));
       try {
-        const data: PaymentHistoryData[] = await BillingService.getBillHistory(id);
+        const data: PaymentHistoryData[] =
+          await BillingService.getBillHistory(id);
         setExpandedData((prev) => ({ ...prev, [id]: data }));
       } catch (err) {
         console.error("Failed to fetch bill history", err);
@@ -249,6 +255,31 @@ export default function BillingsPage() {
                     {t(`users.viewDetails`)}
                   </div>
                 </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setPaymentBillData(bills);
+                    setIsAddDialogOpen(true);
+                  }}
+                >
+                  <div className="flex justify-start items-center bg-gray-50 text-gray-700">
+                    <FilePlusIcon weight="duotone" className="mr-2 h-4 w-4" />
+                    Add Payment
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    localStorage.setItem("user_id", bills.id);
+                    router.push(`/billings/billdetail?id=${bills.id}`);
+                  }}
+                >
+                  <div className="flex justify-start items-center bg-gray-50 text-gray-700">
+                    <BookOpenTextIcon
+                      weight="duotone"
+                      className="mr-2 h-4 w-4"
+                    />
+                    Update Bill
+                  </div>
+                </DropdownMenuItem>
                 {/* <DropdownMenuItem
                   className="text-red-600"
                   onClick={(e) => {
@@ -336,6 +367,7 @@ export default function BillingsPage() {
       <AddBillPopupModal
         open={isAddDialogOpen}
         onOpenChange={setIsAddDialogOpen}
+        billData={paymentBillData}
       />
 
       {/* Table Container */}

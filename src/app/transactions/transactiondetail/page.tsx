@@ -79,8 +79,6 @@ export default function TransactionDetailPage() {
     enabled: !!transactioinId,
   });
 
-  console.log("response", billData);
-
   return (
     <div className="min-h-screen bg-gray-50 p-6 md:p-10">
       {/* Back */}

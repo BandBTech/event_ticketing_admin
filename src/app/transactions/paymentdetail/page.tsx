@@ -232,7 +232,6 @@ const Skeleton = ({ className }: { className?: string }) => (
 
 // --- Main Component ---
 export default function PaymentDetail() {
-  const [expandedTicket, setExpandedTicket] = useState<string | null>(null);
   const router = useRouter();
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
@@ -520,9 +519,6 @@ export default function PaymentDetail() {
                 <div key={ticket.id}>
                   <button
                     className="ticket-row w-full grid grid-cols-12 items-center px-6 py-3.5 text-left transition-colors"
-                    onClick={() =>
-                      setExpandedTicket(expandedTicket === ticket.id ? null : ticket.id)
-                    }
                   >
                     <span className="col-span-1 text-xs text-slate-400 font-medium">
                       {String(i + 1).padStart(2, "0")}
@@ -545,38 +541,9 @@ export default function PaymentDetail() {
                         variant={ticketVariant(ticket.status)}
                       />
                     </span>
-                    <span
-                      className={`col-span-1 flex justify-end text-slate-400 chevron ${expandedTicket === ticket.id ? "open" : ""}`}
-                    >
-                      {Icon.chevronDown}
-                    </span>
+
                   </button>
 
-                  {/* Expanded tier detail */}
-                  {expandedTicket === ticket.id && ticket.tier && (
-                    <div className="px-6 py-4 bg-slate-50 border-t border-slate-100">
-                      <div className="grid sm:grid-cols-2 gap-x-12 gap-y-0">
-                        <div>
-                          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">
-                            Tier Details
-                          </p>
-                          <InfoRow label="Tier Name" value={ticket.tier.tier_name || "General"} />
-                          <InfoRow label="Price" value={fmt(ticket.tier.price, ticket.tier.currency)} />
-                          <InfoRow label="GST" value={`${ticket.tier.gst}%`} />
-                          <InfoRow label="Gateway" value={capitalize(ticket.payment_gateway)} last />
-                        </div>
-                        <div>
-                          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">
-                            Availability
-                          </p>
-                          <InfoRow label="Total Quantity" value={ticket.tier.quantity} />
-                          <InfoRow label="Sold" value={ticket.tier.sold} />
-                          <InfoRow label="Remaining" value={ticket.tier.available} />
-                          <InfoRow label="Sales End" value={fmtDateShort(ticket.tier.sales_end)} last />
-                        </div>
-                      </div>
-                    </div>
-                  )}
                 </div>
               ))}
             </div>

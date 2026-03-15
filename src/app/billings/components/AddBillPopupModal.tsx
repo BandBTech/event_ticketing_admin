@@ -35,7 +35,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { toast } from "sonner";
 import { queryKeys } from "@/lib/queryKeys";
 import { useLanguageStore } from "@/store/languageStore";
-import { CreateBillPayload } from "@/types/billings";
+import { Bill, CreateBillPayload } from "@/types/billings";
 import { useImageUpload } from "@/hooks/useImageUpload";
 import { ImageUploader } from "@/components/ui/image-uploader";
 import { createBillSchema, BillsFormValues } from "@/lib/validation";
@@ -51,15 +51,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { log } from "console";
 
 interface AddBillPopupModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  billData: Bill | null;
 }
 
 export default function AddBillPopupModal({
   open,
   onOpenChange,
+  billData,
 }: AddBillPopupModalProps) {
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
@@ -89,6 +92,15 @@ export default function AddBillPopupModal({
     },
     mode: "onChange",
   });
+
+  // useEffect(() => {
+  //   if (open && billData) {
+  //     form.reset({
+  //       event_id: billData.event.id,
+  //       organizer_id: billData.organizer.id,
+  //     });
+  //   }
+  // }, [open, billData]);
 
   const { errors } = form.formState;
 
@@ -354,7 +366,6 @@ export default function AddBillPopupModal({
               error={imageError}
               browseButtonText={t("", "Browse File")}
             />
-
           </div>
 
           <DialogFooter className="px-6 py-4 border-t bg-background shrink-0 gap-2 sm:justify-end">
@@ -366,7 +377,11 @@ export default function AddBillPopupModal({
             >
               {t("common.cancel", "Cancel")}
             </Button>
-            <Button type="submit" disabled={isPending} className="bg-blue-600 hover:bg-blue-700 text-white">
+            <Button
+              type="submit"
+              disabled={isPending}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
               {isPending && (
                 <SpinnerIcon className="mr-2 h-4 w-4 animate-spin" />
               )}
