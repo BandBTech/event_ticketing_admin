@@ -494,11 +494,19 @@ export default function TransactionsPage() {
                   </TableCell>
 
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+                    <TableCell
+                      key={cell.id}
+                      className="max-w-[10vw] overflow-hidden"
+                    >
+                      <div
+                        className="truncate"
+                        title={String(cell.getValue() ?? "")}
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </div>
                     </TableCell>
                   ))}
                 </TableRow>

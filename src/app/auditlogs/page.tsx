@@ -47,7 +47,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { flexRender } from "@tanstack/react-table";
-import { AuditLogsListResponse, Logs, AccountStatus, OrganizerStatus } from "@/types/auditlogs";
+import {
+  AuditLogsListResponse,
+  Logs,
+  AccountStatus,
+  OrganizerStatus,
+} from "@/types/auditlogs";
 
 export default function TransactionsPage() {
   const router = useRouter();
@@ -374,11 +379,19 @@ export default function TransactionsPage() {
                   </TableCell>
 
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+                    <TableCell
+                      key={cell.id}
+                      className="max-w-[10vw] overflow-hidden"
+                    >
+                      <div
+                        className="truncate"
+                        title={String(cell.getValue() ?? "")}
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </div>
                     </TableCell>
                   ))}
                 </TableRow>
