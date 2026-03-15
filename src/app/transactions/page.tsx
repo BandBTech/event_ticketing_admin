@@ -127,13 +127,13 @@ export default function TransactionsPage() {
         id: "event",
         header: t("transactions.table.event"),
         accessorKey: "event.title",
-        enableSorting: false,
+        enableSorting: true,
       },
       {
         id: "user",
         header: t("transactions.table.user"),
         accessorKey: "user.name",
-        enableSorting: false,
+        enableSorting: true,
       },
       {
         id: "ticket_count",
@@ -183,7 +183,7 @@ export default function TransactionsPage() {
         id: "gateway",
         accessorKey: "payment_gateway",
         header: t("transactions.table.gateway"),
-        enableSorting: false,
+        enableSorting: true,
         cell: ({ row }) => {
           const gateway = row.original.payment_gateway;
 
@@ -208,7 +208,7 @@ export default function TransactionsPage() {
         id: "status",
         header: t("transactions.table.status"),
         accessorKey: "status",
-        enableSorting: false,
+        enableSorting: true,
         cell: ({ row }) => {
           const status = row.original.status;
 
