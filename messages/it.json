@@ -663,6 +663,7 @@
     "status": {
       "pending": "In sospeso",
       "paid": "Pagata",
+      "partially_paid": "Parzialmente Pagata",
       "overdue": "Scaduta",
       "cancelled": "Annullata",
       "clearFilter": "Pulisci filtro"

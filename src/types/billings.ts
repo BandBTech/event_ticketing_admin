@@ -17,6 +17,14 @@ export interface Bill {
   id: string;
   bill_number: string;
   event_id: string;
+  event: {
+    id: string;
+    title: string;
+  };
+  organizer: {
+    id: string;
+    name: string;
+  };
   event_title: string;
   organizer_id: string;
   organizer_name: string;

@@ -720,6 +720,7 @@
     "priority": "Priority",
     "status": {
       "pending": "Pending",
+      "partially_paid": "Partially Paid",
       "paid": "Paid",
       "overdue": "Overdue",
       "cancelled": "Cancelled",

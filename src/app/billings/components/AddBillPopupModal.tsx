@@ -51,7 +51,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { log } from "console";
 
 interface AddBillPopupModalProps {
   open: boolean;
@@ -82,6 +81,15 @@ export default function AddBillPopupModal({
   });
 
   const schema = createBillSchema(t);
+  const defaultOrganizerOption = billData
+    ? { value: billData.organizer.id, label: billData.organizer.name }
+    : undefined;
+
+  const defaultEventOption = billData
+    ? { value: billData.event.id, label: billData.event.title }
+    : undefined;
+
+  console.log("payment bill data", billData);
 
   const form = useForm<BillsFormValues>({
     resolver: zodResolver(schema),
@@ -93,14 +101,15 @@ export default function AddBillPopupModal({
     mode: "onChange",
   });
 
-  // useEffect(() => {
-  //   if (open && billData) {
-  //     form.reset({
-  //       event_id: billData.event.id,
-  //       organizer_id: billData.organizer.id,
-  //     });
-  //   }
-  // }, [open, billData]);
+  useEffect(() => {
+    if (open && billData) {
+      form.reset({
+        event_id: billData.event.id,
+        organizer_id: billData.organizer.id,
+        payment_method: billData.payment_method || "",
+      });
+    }
+  }, [open, billData]);
 
   const { errors } = form.formState;
 
@@ -251,7 +260,8 @@ export default function AddBillPopupModal({
                         placeholder="Select organizer"
                         searchPlaceholder="Search organizers..."
                         emptyText="No organizers found"
-                        className="w-full text-sm h-9 justify-between px-3! important bg-white border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 rounded-md"
+                        defaultOption={defaultOrganizerOption} // ← add this
+                        className="w-full text-sm h-9 ..."
                         debounceMs={300}
                       />
                     </FormControl>
@@ -290,7 +300,8 @@ export default function AddBillPopupModal({
                         placeholder="Select event"
                         searchPlaceholder="Search event..."
                         emptyText="No events found"
-                        className="w-full text-sm h-9 justify-between px-3! important bg-white border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 rounded-md"
+                        defaultOption={defaultEventOption} // ← add this
+                        className="w-full text-sm h-9 ..."
                         debounceMs={300}
                       />
                     </FormControl>

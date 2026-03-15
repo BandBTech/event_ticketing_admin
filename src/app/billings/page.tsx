@@ -355,7 +355,10 @@ export default function BillingsPage() {
             Filters
           </Button>
           <Button
-            onClick={() => setIsAddDialogOpen(true)}
+            onClick={() =>{
+              setPaymentBillData(null);
+              setIsAddDialogOpen(true)}
+            } 
             className="w-full sm:w-auto gap-2 bg-primary hover:bg-primary/80 text-primary-foreground shadow-sm transition-all ease-out duration-300 active:scale-95"
           >
             <FilePlusIcon weight="bold" className="h-5 w-5" />

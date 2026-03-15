@@ -24,7 +24,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 export interface AsyncComboboxOption {
   value: string;
   label: string;
-  disabled?: boolean; // ✅ Already present
+  disabled?: boolean;
 }
 
 interface AsyncComboboxProps {
@@ -45,6 +45,7 @@ interface AsyncComboboxProps {
   /** Currently selected option label (for display when value is set) */
   selectedLabel?: string;
   disabled?: boolean;
+  defaultOption?: AsyncComboboxOption;
 }
 
 export function AsyncCombobox({
@@ -59,6 +60,7 @@ export function AsyncCombobox({
   debounceMs = 300,
   staleTime = 5 * 60 * 1000,
   selectedLabel,
+  defaultOption,
   ...props
 }: AsyncComboboxProps) {
   const [open, setOpen] = React.useState(false);
@@ -85,16 +87,25 @@ export function AsyncCombobox({
     }
   }, [open]);
 
+  // Merge defaultOption into the options list so it's always available
+  const mergedOptions = React.useMemo(() => {
+    if (!defaultOption) return options;
+    const exists = options.some((o) => o.value === defaultOption.value);
+    return exists ? options : [defaultOption, ...options];
+  }, [options, defaultOption]);
+
   const displayLabel = React.useMemo(() => {
     if (!value || value === "all") return placeholder;
-    const option = options.find((opt) => opt.value === value);
+    const option = mergedOptions.find((opt) => opt.value === value);
     if (option) return option.label;
     if (selectedLabel) return selectedLabel;
+    if (defaultOption?.value === value) return defaultOption.label;
     return placeholder;
-  }, [value, options, placeholder, selectedLabel]);
+  }, [value, mergedOptions, placeholder, selectedLabel, defaultOption]);
 
   // Show loading in list when initially loading OR when refetching with no cached data
-  const showListLoading = isLoading || (isFetching && options.length === 0);
+  const showListLoading =
+    isLoading || (isFetching && mergedOptions.length === 0);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -138,28 +149,25 @@ export function AsyncCombobox({
               <div className="py-6 flex items-center justify-center">
                 <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
               </div>
-            ) : options.length === 0 ? (
+            ) : mergedOptions.length === 0 ? (
               <CommandEmpty>{emptyText}</CommandEmpty>
             ) : (
               <CommandGroup>
-                {options.map((option) => (
+                {mergedOptions.map((option) => (
                   <CommandItem
                     key={option.value}
                     value={option.value}
-                    // ✅ ADD: Disable the item if option.disabled is true
                     disabled={option.disabled}
-                    // ✅ ADD: Apply disabled styles
                     className={cn(
                       "cursor-pointer w-full",
                       option.disabled && "opacity-50 cursor-not-allowed",
                     )}
                     onSelect={(currentValue) => {
-                      // ✅ ADD: Prevent selection if disabled
                       if (option.disabled) {
                         return;
                       }
 
-                      const selectedOption = options.find(
+                      const selectedOption = mergedOptions.find(
                         (o) => o.value === currentValue,
                       );
                       onValueChange?.(
@@ -171,14 +179,12 @@ export function AsyncCombobox({
                   >
                     {option.label}
 
-                    {/* ✅ ADD: Show "Already added" text for disabled items */}
                     {option.disabled && (
                       <span className="ml-auto text-xs text-muted-foreground italic">
                         Already added
                       </span>
                     )}
 
-                    {/* ✅ MODIFY: Only show checkmark for non-disabled selected items */}
                     {!option.disabled && (
                       <Check
                         className={cn(
