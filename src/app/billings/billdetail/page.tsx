@@ -18,6 +18,12 @@ import { useLanguageStore } from "@/store/languageStore";
 import { Badge } from "@/components/ui/badge";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
+import {
+  BillingFilters,
+  getDefaultFilters,
+  PaymentHistoryData,
+} from "@/types/billings";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const fmt = (n: number) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(
@@ -142,6 +148,24 @@ export default function BillDetail() {
     queryFn: () => BillingService.getBillsById(billId),
     enabled: !!billId,
   });
+
+  const [billHistory, setBillHistory] = React.useState<PaymentHistoryData[]>(
+    [],
+  );
+
+  const { data: billHistoryData, isLoading: isBillHistoryLoading } = useQuery<
+    PaymentHistoryData[]
+  >({
+    queryKey: [...queryKeys.users.detail(billId), "history"],
+    queryFn: () => BillingService.getBillHistory(billId),
+    enabled: !!billId,
+  });
+
+  React.useEffect(() => {
+    if (billHistoryData) {
+      setBillHistory(billHistoryData);
+    }
+  }, [billHistoryData]);
 
   const billedAmount = billData?.billed_amount ?? 0;
   const paidAmount = billData?.paid_amount ?? 0;
@@ -321,54 +345,73 @@ export default function BillDetail() {
 
           <div className="border-t border-slate-100" />
 
-          {/* Payment Screenshot */}
-          <div>
-            <SectionTitle>Payment Screenshot</SectionTitle>
-            {billData?.payment_screenshot_url ? (
-              <Image
-                width={400}
-                height={200}
-                src={billData?.payment_screenshot_url}
-                alt="Payment screenshot"
-                className="rounded-xl border border-slate-200 max-w-sm"
-              />
-            ) : (
-              <div className="rounded-xl border border-dashed border-slate-200 p-8 text-center max-w-sm">
-                <svg
-                  className="mx-auto mb-2 text-slate-300"
-                  width="32"
-                  height="32"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                >
-                  <rect x="3" y="3" width="18" height="18" rx="2" />
-                  <circle cx="8.5" cy="8.5" r="1.5" />
-                  <polyline points="21 15 16 10 5 21" />
-                </svg>
-                <p className="text-sm text-slate-400">
-                  No payment screenshot uploaded
-                </p>
+          {billHistory.length > 0 && (
+            <div>
+              <SectionTitle>Bill Payment History</SectionTitle>
+              <div className="rounded-md border overflow-hidden">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="bg-muted/50 border-b">
+                      <th className="text-left text-[10px] text-muted-foreground uppercase tracking-wide font-medium px-4 py-3 w-8">
+                        SN
+                      </th>
+                      <th className="text-left text-[10px] text-muted-foreground uppercase tracking-wide font-medium px-4 py-3">
+                        Reference
+                      </th>
+                      <th className="text-left text-[10px] text-muted-foreground uppercase tracking-wide font-medium px-4 py-3">
+                        Amount
+                      </th>
+                      <th className="text-left text-[10px] text-muted-foreground uppercase tracking-wide font-medium px-4 py-3">
+                        Method
+                      </th>
+                      <th className="text-left text-[10px] text-muted-foreground uppercase tracking-wide font-medium px-4 py-3">
+                        Date
+                      </th>
+                      <th className="text-left text-[10px] text-muted-foreground uppercase tracking-wide font-medium px-4 py-3">
+                        Processed By
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {billHistory.map((item, i) => (
+                      <tr
+                        key={item.id}
+                        className={`border-b last:border-0 hover:bg-muted/20 transition-colors ${
+                          i % 2 === 0 ? "bg-background" : "bg-muted/30"
+                        }`}
+                      >
+                        <td className="px-4 py-3">
+                          <div>{i + 1}</div>
+                        </td>
+                        <td className="px-4 py-3 font-mono truncate max-w-[160px]">
+                          {item.payment_ref || "—"}
+                        </td>
+                        <td className="px-4 py-3 font-semibold">
+                          NPR {item.amount.toLocaleString()}
+                        </td>
+                        <td className="px-4 py-3 capitalize">
+                          {item.payment_method?.replace(/_/g, " ") || "—"}
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          {new Date(item.payment_date).toLocaleDateString(
+                            "en-US",
+                            {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            },
+                          )}
+                        </td>
+                        <td className="px-4 py-3 truncate max-w-[140px]">
+                          {item.processed_by || "—"}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
-            )}
-          </div>
-
-          <div className="border-t border-slate-100" />
-
-          {/* Notes */}
-          <div>
-            <SectionTitle>Notes</SectionTitle>
-            {billData?.notes ? (
-              <div className="bg-amber-50 border border-amber-100 rounded-xl p-4">
-                <p className="text-sm text-amber-800 leading-relaxed">
-                  {billData?.notes}
-                </p>
-              </div>
-            ) : (
-              <p className="text-sm text-slate-400 italic">No notes added.</p>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
