@@ -268,7 +268,9 @@ export default function TransactionsPage() {
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => {
-                    router.push(`/transactions/paymentdetail`);
+                    router.push(
+                      `/transactions/paymentdetail?id=${transaction.id}`,
+                    );
                   }}
                 >
                   <div className="flex justify-start items-center bg-gray-50 text-gray-700">

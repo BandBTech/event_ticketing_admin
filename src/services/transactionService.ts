@@ -1,6 +1,10 @@
 import { api } from "../lib/apiClient";
 import { API_ENDPOINTS } from "@/app/config/api";
 import { Transaction, TransactionListResponse } from "@/types/transaction";
+import {
+  ApiResponse as PaymentDetailApiResponse,
+  TransactionPaymentData,
+} from "@/types/paymenttransactiondetail";
 
 export class TransactionService {
   /**
@@ -49,12 +53,25 @@ export class TransactionService {
     return result;
   }
 
+  static async getTransactionById(id: string): Promise<Transaction> {
+    const response = await api.get<Transaction>(
+      API_ENDPOINTS.GET_TRANSACTION_BY_ID(id),
+      {
+        requiresAuth: true,
+      },
+    );
+    return response;
+  }
 
-
-      static async getTransactionById(id: string): Promise<Transaction> {
-        const response = await api.get<Transaction>(API_ENDPOINTS.GET_TRANSACTION_BY_ID(id), {
-          requiresAuth: true,
-        });
-        return response;
-      }
+  static async getTransactionPaymentDetailById(
+    id: string,
+  ): Promise<TransactionPaymentData> {
+    const response = await api.get<TransactionPaymentData>(
+      API_ENDPOINTS.GET_TRANSACTION_PAYMENT_DETAIL_BY_ID(id),
+      {
+        requiresAuth: true,
+      },
+    );
+    return response;
+  }
 }

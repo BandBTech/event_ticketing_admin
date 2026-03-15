@@ -58,6 +58,8 @@ export const API_ENDPOINTS = {
   GET_TRANSACTIONS: `${API_BASE_URL}/admin/transactions`,
   GET_TRANSACTION_BY_ID: (id: string) =>
     `${API_BASE_URL}/admin/transactions/${id}`,
+  GET_TRANSACTION_PAYMENT_DETAIL_BY_ID: (id: string) =>
+    `${API_BASE_URL}/admin/transactions/${id}/payment-details`,
 
   //Auditlogs
   CREATE_AUDITLOG: `${API_BASE_URL}/admin/payments/audit-logs`,
@@ -66,8 +68,7 @@ export const API_ENDPOINTS = {
   //Payout
   CREATE_PAYOUT: `${API_BASE_URL}/admin/payouts`,
   GET_ALL_PAYOUTS: `${API_BASE_URL}/admin/payouts`,
-  APPROVE_PAYOUTS: (id: string) =>
-    `${API_BASE_URL}/admin/payouts/${id}/status`,
+  APPROVE_PAYOUTS: (id: string) => `${API_BASE_URL}/admin/payouts/${id}/status`,
   REJECT_PAYOUTS: (id: string) => `${API_BASE_URL}/admin/payouts/${id}/status`,
 
   //Refunds
