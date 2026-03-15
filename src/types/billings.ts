@@ -63,7 +63,17 @@ export type CreateBillPayload = {
   event_id: string;
   organizer_id: string;
   payment_method: string;
-  screenshot?: File;
+  screenshot?: File | null;
+};
+
+export type AddPaymentToBillPayload = {
+  bill_id: string;
+  amount: number;
+  payment_method: string;
+  payment_ref: string;
+  notes: string;
+  payment_date?: Date | null;
+  screenshot?: File | null;
 };
 
 export interface BillingFilters {

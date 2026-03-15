@@ -6,6 +6,7 @@ import {
   PaymentBillData,
   CreateBillPayload,
   PaymentHistoryData,
+  AddPaymentToBillPayload,
 } from "@/types/billings";
 
 export class BillingService {
@@ -17,8 +18,24 @@ export class BillingService {
     return await api.postFormData<Bill>("/admin/payments/bills", formData, {
       requiresAuth: true,
       showSuccessToast: true,
-      successMessage: "Event created successfully",
+      successMessage: "Bill created successfully",
     });
+  }
+
+  /**
+   * Create new payment gateway from admin
+   */
+  static async addPaymentToBills(data: AddPaymentToBillPayload): Promise<Bill> {
+    const formData = this.addPaymentToBillFormData(data);
+    return await api.postFormData<Bill>(
+      `/admin/payments/bills/${data.bill_id}/payments`,
+      formData,
+      {
+        requiresAuth: true,
+        showSuccessToast: true,
+        successMessage: "Payment added to bill successfully",
+      },
+    );
   }
 
   static async getAllBills(filters?: {
@@ -90,6 +107,29 @@ export class BillingService {
     formData.append("event_id", data.event_id);
     formData.append("organizer_id", data.organizer_id);
     formData.append("payment_method", data.payment_method);
+
+    return formData;
+  }
+
+  /**
+   * Helper to create FormData from event data
+   */
+  private static addPaymentToBillFormData(
+    data: AddPaymentToBillPayload,
+  ): FormData {
+    const formData = new FormData();
+    if (data.screenshot) {
+      formData.append("screenshot", data.screenshot);
+    }
+
+    formData.append("bill_id", data.bill_id);
+    formData.append("amount", data.amount.toString());
+    formData.append("payment_method", data.payment_method);
+    formData.append("payment_ref", data?.payment_ref);
+    formData.append("notes", data?.notes);
+    if (data.payment_date) {
+      formData.append("payment_date", data.payment_date.toISOString());
+    }
 
     return formData;
   }

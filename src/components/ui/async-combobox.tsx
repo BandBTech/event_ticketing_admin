@@ -61,6 +61,7 @@ export function AsyncCombobox({
   staleTime = 5 * 60 * 1000,
   selectedLabel,
   defaultOption,
+  disabled,
   ...props
 }: AsyncComboboxProps) {
   const [open, setOpen] = React.useState(false);
@@ -114,6 +115,7 @@ export function AsyncCombobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
+          disabled={disabled}
           className={cn(
             "h-8 w-full cursor-pointer text-xs font-normal gap-1.5 pl-2! pr-1! shadow-xs overflow-hidden",
             className,

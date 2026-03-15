@@ -52,6 +52,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { BillingService } from "@/services/billingService";
 import { Bill, PaymentBillData } from "@/types/billings";
 import AddBillPopupModal from "@/app/billings/components/AddBillPopupModal";
+import AddPaymentToBillModal from "@/app/billings/components/AddPaymentToBillModal";
 import {
   BillingFilters,
   getDefaultFilters,
@@ -82,6 +83,8 @@ export default function BillingsPage() {
   const [searchInput, setSearchInput] = React.useState(searchQuery);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [isAddDialogOpen, setIsAddDialogOpen] = React.useState(false);
+  const [isAddPaymentToBillDialogOpen, setIsAddPaymentToBillDialogOpen] =
+    React.useState(false);
   const [filterSheetOpen, setFilterSheetOpen] = React.useState(false);
   const [appliedFilters, setAppliedFilters] =
     React.useState<BillingFilters>(getDefaultFilters());
@@ -94,7 +97,9 @@ export default function BillingsPage() {
   const [expandedData, setExpandedData] = React.useState<
     Record<string, PaymentHistoryData[]>
   >({});
-  const [paymentBillData, setPaymentBillData] = React.useState<Bill | null>(null);  
+  const [paymentBillData, setPaymentBillData] = React.useState<Bill | null>(
+    null,
+  );
 
   const toggleRow = async (id: string) => {
     const isOpen = expandedRows.has(id);
@@ -258,7 +263,7 @@ export default function BillingsPage() {
                 <DropdownMenuItem
                   onClick={() => {
                     setPaymentBillData(bills);
-                    setIsAddDialogOpen(true);
+                    setIsAddPaymentToBillDialogOpen(true);
                   }}
                 >
                   <div className="flex justify-start items-center bg-gray-50 text-gray-700">
@@ -355,10 +360,10 @@ export default function BillingsPage() {
             Filters
           </Button>
           <Button
-            onClick={() =>{
+            onClick={() => {
               setPaymentBillData(null);
-              setIsAddDialogOpen(true)}
-            } 
+              setIsAddDialogOpen(true);
+            }}
             className="w-full sm:w-auto gap-2 bg-primary hover:bg-primary/80 text-primary-foreground shadow-sm transition-all ease-out duration-300 active:scale-95"
           >
             <FilePlusIcon weight="bold" className="h-5 w-5" />
@@ -370,6 +375,11 @@ export default function BillingsPage() {
       <AddBillPopupModal
         open={isAddDialogOpen}
         onOpenChange={setIsAddDialogOpen}
+        billData={paymentBillData}
+      />
+      <AddPaymentToBillModal
+        open={isAddPaymentToBillDialogOpen}
+        onOpenChange={setIsAddPaymentToBillDialogOpen}
         billData={paymentBillData}
       />
 

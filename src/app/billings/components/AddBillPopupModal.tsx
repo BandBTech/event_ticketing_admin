@@ -119,7 +119,7 @@ export default function AddBillPopupModal({
         event_id: data.event_id,
         organizer_id: data.organizer_id,
         payment_method: data.payment_method,
-        screenshot: imageFile ?? undefined,
+        screenshot: imageFile ?? null,
       }),
     onSuccess: async () => {
       toast.success(t("", "Bill created successfully"));
@@ -214,7 +214,7 @@ export default function AddBillPopupModal({
 
   const handleImageRemove = useCallback(() => {
     handleRemoveImage();
-    form.setValue("screenshot", undefined, {
+    form.setValue("screenshot", null, {
       shouldDirty: true,
       shouldValidate: true,
     });
@@ -364,6 +364,7 @@ export default function AddBillPopupModal({
             <ImageUploader
               label={t("", "Upload Screenshot")}
               className="w-full h-50"
+              required
               helperText={t("", "Upload screenshot image or drag & drop")}
               helperTextSize={t(
                 "",

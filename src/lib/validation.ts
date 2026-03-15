@@ -918,11 +918,54 @@ export const createBillSchema = (
       .min(1, v.required(t("", "Payment Method")))
       .min(2, v.minLength(t("", "Payment Method"), 2))
       .max(50, v.maxLength(t("", "Payment Method"), 50)),
-    screenshot: z.instanceof(File).optional(),
+    screenshot: z
+      .instanceof(File)
+      .nullable()
+      .refine((file) => file !== null, {
+        message: v.required(t("", "Screenshot")),
+      }),
   });
 };
 
 export type BillsFormValues = z.infer<ReturnType<typeof createBillSchema>>;
+
+/**`
+ * Bills Schema
+ */
+
+export const addPaymentToBillSchema = (
+  t: (
+    key: string,
+    fallback?: string,
+    params?: Record<string, string | number>,
+  ) => string,
+) => {
+  const v = createValidationHelpers(t);
+  return z.object({
+    event_id: z.string().min(1, v.required(t("", "Event ID"))),
+    bill_id: z.string().min(1, v.required(t("", "Bill ID"))),
+    organizer_id: z.string().min(1, v.required(t("", "Organizer ID"))),
+    payment_ref: z.string().min(1, v.required(t("", "Payment Reference"))),
+    notes: z.string().max(200, v.maxLength(t("", "Notes"), 200)),
+    payment_date: z.date().nullable(),
+    amount: z.number().min(0, v.required(t("", "Amount"))),
+    payment_method: z
+      .string()
+      .min(1, v.required(t("", "Payment Method")))
+      .min(2, v.minLength(t("", "Payment Method"), 2))
+      .max(50, v.maxLength(t("", "Payment Method"), 50)),
+    screenshot: z
+      .instanceof(File)
+      .nullable()
+      .refine((file) => file !== null, {
+        message: v.required(t("", "Screenshot")),
+      }),
+  });
+};
+
+export type AddPaymentToBillFormValues = z.infer<
+  ReturnType<typeof addPaymentToBillSchema>
+>;
 
 /**
  * Reject Payout Schema
@@ -951,7 +994,11 @@ export type RejectPayoutFormValues = z.infer<
 
 // Only what the form collects
 export const approvePayoutSchema = (
-  t: (key: string, fallback?: string, params?: Record<string, string | number>) => string,
+  t: (
+    key: string,
+    fallback?: string,
+    params?: Record<string, string | number>,
+  ) => string,
 ) => {
   const v = createValidationHelpers(t);
   return z.object({

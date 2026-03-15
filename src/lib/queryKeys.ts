@@ -61,11 +61,48 @@ export const queryKeys = {
       status?: string,
       role?: string,
       accountStatus?: string,
-    ) => ["users", page, itemsPerPage, search, status, role, accountStatus] as const,
+    ) =>
+      [
+        "users",
+        page,
+        itemsPerPage,
+        search,
+        status,
+        role,
+        accountStatus,
+      ] as const,
     /** Key for all users (used for invalidation) */
     list: ["users"] as const,
     /** Key for fetching a single user by ID */
     detail: (id: string) => ["user", id] as const,
+  },
+
+  /**
+   * Bills query keys
+   */
+  bills: {
+    /** Key for fetching bills list with pagination and filters */
+    all: (
+      page?: number,
+      itemsPerPage?: number,
+      search?: string,
+      status?: string,
+      role?: string,
+      accountStatus?: string,
+    ) =>
+      [
+        "bills",
+        page,
+        itemsPerPage,
+        search,
+        status,
+        role,
+        accountStatus,
+      ] as const,
+    /** Key for all bills (used for invalidation) */
+    list: ["bills"] as const,
+    /** Key for fetching a single bill by ID */
+    detail: (id: string) => ["bill", id] as const,
   },
 
   /**
