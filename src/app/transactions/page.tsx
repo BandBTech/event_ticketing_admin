@@ -159,7 +159,7 @@ export default function TransactionsPage() {
         enableSorting: false,
         cell: ({ row }) => (
           <span className="px-2 py-1 text-xs font-medium rounded-full">
-            {row.original.currency} {row.original.commission_amount}
+            {row.original.currency} {row.original.commission_amount.toFixed(2)}
             {row.original.commission_rate && (
               <span className="ml-1 text-gray-500">
                 ({row.original.commission_rate}%)
@@ -267,9 +267,9 @@ export default function TransactionsPage() {
                   </div>
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                // onClick={() => {
-                //   router.push(`/users/userdetail?id=${user.id}`);
-                // }}
+                  onClick={() => {
+                    router.push(`/transactions/paymentdetail`);
+                  }}
                 >
                   <div className="flex justify-start items-center bg-gray-50 text-gray-700">
                     <CoinsIcon weight="duotone" className="mr-2 h-4 w-4" />
