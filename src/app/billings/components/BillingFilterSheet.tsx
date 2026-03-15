@@ -9,6 +9,15 @@ import {
   SheetTitle,
   SheetFooter,
 } from "@/components/ui/sheet";
+import { format } from "date-fns";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { Calendar } from "@/components/ui/calendar";
+import { CalendarIcon } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
@@ -129,7 +138,7 @@ export function BillingFilterSheet({
 
         <div className="flex-1 overflow-y-auto p-4 space-y-6">
           {/* Date Range */}
-          {/* <div className="space-y-2">
+          <div className="space-y-2">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Start Date</Label>
@@ -205,10 +214,10 @@ export function BillingFilterSheet({
                 )}
               </div>
             </div>
-            <p className="text-xs text-muted-foreground">
+            {/* <p className="text-xs text-muted-foreground">
               Maximum range: 3 months
-            </p>
-          </div> */}
+            </p> */}
+          </div>
 
           {/* Organizer */}
           <div className="space-y-2">

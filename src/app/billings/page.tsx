@@ -166,13 +166,13 @@ export default function BillingsPage() {
         id: "name",
         header: "Event Title",
         accessorKey: "event.title",
-        enableSorting: false,
+        enableSorting: true,
       },
       {
         id: "organizer_name",
         accessorKey: "organizer.name",
         header: "Organizer Name",
-        enableSorting: false,
+        enableSorting: true,
       },
       {
         id: "billed_amount",
@@ -192,7 +192,7 @@ export default function BillingsPage() {
           );
         },
         header: "Payment Method",
-        enableSorting: false,
+        enableSorting: true,
       },
       {
         id: "status",
@@ -213,7 +213,7 @@ export default function BillingsPage() {
           );
         },
         header: "Status",
-        enableSorting: false,
+        enableSorting: true,
       },
       {
         id: "actions",
