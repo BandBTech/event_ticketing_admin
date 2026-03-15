@@ -21,58 +21,70 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { BillingService } from "@/services/billingService";
 import { useTranslation } from "@/hooks/useTranslation";
 import { toast } from "sonner";
 import { queryKeys } from "@/lib/queryKeys";
 import { useLanguageStore } from "@/store/languageStore";
 import { Textarea } from "@/components/ui/textarea";
-import { rejectPayoutSchema, RejectPayoutFoemValues } from "@/lib/validation";
+import { PayoutService } from "@/services/payoutService";
+import {
+  approvePayoutSchema,
+  ApprovePayoutFormValues,
+  ApprovePayoutPayload,
+} from "@/lib/validation";
+import { PayoutRequest } from "@/types/payout";
 
 interface RejectModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  payout: PayoutRequest | null;
 }
 
-interface RejectPayoutPayload {
-  reason: string;
-}
 
-export default function RejectModal({ open, onOpenChange }: RejectModalProps) {
+export default function RejectModal({
+  open,
+  onOpenChange,
+  payout,
+}: RejectModalProps) {
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
   const queryClient = useQueryClient();
 
-  const schema = rejectPayoutSchema(t);
+  const schema = approvePayoutSchema(t);
 
-  const form = useForm<RejectPayoutFoemValues>({
+  const form = useForm<ApprovePayoutFormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
-      reason: "",
+      admin_notes: "",
     },
     mode: "onChange",
   });
 
+  const createMutation = useMutation({
+    mutationFn: (data: ApprovePayoutPayload) =>
+      PayoutService.approvePayout(data),
+    onSuccess: async () => {
+      toast.success(t("", "Payout rejected successfully"));
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.organizers.list,
+      });
+      onOpenChange(false);
+    },
+  });
 
-//   const createMutation = useMutation({
-//     mutationFn: (data: RejectPayoutPayload) =>
-//       BillingService.createBills({
-//         reason: data.reason,
-//       }),
-//     onSuccess: async () => {
-//       toast.success(t("", "Bill created successfully"));
-//       await queryClient.invalidateQueries({
-//         queryKey: queryKeys.organizers.list,
-//       });
-//       onOpenChange(false);
-//     },
-//   });
-
-  const onSubmit = (data: RejectPayoutPayload) => {
-    // createMutation.mutate(data);
+  const onSubmit = (data: ApprovePayoutFormValues) => {
+    createMutation.mutate({
+      payoutId: payout?.id || "",
+      admin_notes: data.admin_notes,
+      status: "rejected",
+    });
+  };
+  const handleClose = () => {
+    form.reset();
+    onOpenChange(false);
   };
 
-//   const isPending = createMutation.isPending;
+    const isPending = createMutation.isPending;
 
   // Prevent dialog dismissal (overlay/Escape) while mutation is in-flight
   const handleOpenChange = (open: boolean) => {
@@ -95,14 +107,14 @@ export default function RejectModal({ open, onOpenChange }: RejectModalProps) {
           >
             <FormField
               control={form.control}
-              name="reason"
+              name="admin_notes"
               render={({ field, fieldState }) => (
                 <FormItem>
                   <FormLabel
                     required
                     className="text-sm font-semibold text-gray-700"
                   >
-                    {t("", "Reason")}
+                    {t("", "Admin Notes")}
                   </FormLabel>
                   <div className="relative group">
                     {/* <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none transition-colors group-focus-within:text-blue-600">
@@ -133,8 +145,8 @@ export default function RejectModal({ open, onOpenChange }: RejectModalProps) {
               <Button
                 variant="outline"
                 type="button"
-                onClick={() => onOpenChange(false)}
-                // disabled={isPending}
+                onClick={handleClose}
+                disabled={isPending}
                 className="h-11 px-6 border-gray-200 hover:bg-gray-50 transition-colors"
               >
                 {t("common.cancel", "Cancel")}
@@ -142,11 +154,11 @@ export default function RejectModal({ open, onOpenChange }: RejectModalProps) {
               <Button
                 variant={"destructive"}
                 type="submit"
-                // disabled={isPending}
+                disabled={isPending}
               >
-                {/* {isPending && (
+                {isPending && (
                   <SpinnerIcon className="mr-2 h-4 w-4 animate-spin" />
-                )} */}
+                )}
                 {t("", "Reject")}
               </Button>
             </DialogFooter>

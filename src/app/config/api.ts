@@ -66,6 +66,9 @@ export const API_ENDPOINTS = {
   //Payout
   CREATE_PAYOUT: `${API_BASE_URL}/admin/payouts`,
   GET_ALL_PAYOUTS: `${API_BASE_URL}/admin/payouts`,
+  APPROVE_PAYOUTS: (id: string) =>
+    `${API_BASE_URL}/admin/payouts/${id}/status`,
+  REJECT_PAYOUTS: (id: string) => `${API_BASE_URL}/admin/payouts/${id}/status`,
 
   //Refunds
   CREATE_REFUND: `${API_BASE_URL}/admin/payments/refunds`,

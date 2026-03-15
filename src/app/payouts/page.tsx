@@ -48,7 +48,6 @@ import {
 import { flexRender } from "@tanstack/react-table";
 import ApproveModal from "@/app/payouts/components/ApproveModal";
 import RejectModal from "@/app/payouts/components/RejectModal";
-import EditPayoutModal from "./components/EditPayoutModal";
 
 export default function TransactionsPage() {
   const router = useRouter();
@@ -64,7 +63,9 @@ export default function TransactionsPage() {
   const [searchInput, setSearchInput] = React.useState("");
 
   const debouncedSearch = useDebounce(searchInput, 500);
-
+  const [selectedPayout, setSelectedPayout] = useState<PayoutRequest | null>(
+    null,
+  );
   const [isApproveDialogOpen, setIsApproveDialogOpen] = React.useState(false);
   const [isRejectDialogOpen, setIsRejectDialogOpen] = React.useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = React.useState(false);
@@ -175,9 +176,11 @@ export default function TransactionsPage() {
 
           const statusStyles: Record<string, string> = {
             completed: "bg-green-100 text-green-700",
+            approved: "bg-green-100 text-green-700",
             pending: "bg-yellow-100 text-yellow-700",
             failed: "bg-red-100 text-red-700",
             refunded: "bg-gray-200 text-gray-700",
+            rejected: "bg-red-100 text-red-700",
           };
 
           return (
@@ -207,7 +210,7 @@ export default function TransactionsPage() {
         id: "actions",
         // header: "Actions",
         cell: ({ row }) => {
-          const user = row.original;
+          const payoutData = row.original;
 
           // if (actionLoading === user.id) {
           //   return (
@@ -228,36 +231,23 @@ export default function TransactionsPage() {
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuItem
                   onClick={() => {
+                    setSelectedPayout(payoutData);
                     setIsApproveDialogOpen(true);
                   }}
                 >
-                  <div className="flex justify-start items-center bg-gray-50 text-gray-700">
-                    <CheckCircleIcon
-                      weight="duotone"
-                      className="mr-2 h-4 w-4"
-                    />
-                    Approve
-                  </div>
+                  <CheckCircleIcon weight="duotone" className="mr-2 h-4 w-4" />
+                  Approve
                 </DropdownMenuItem>
+
                 <DropdownMenuItem
                   onClick={() => {
+                    setSelectedPayout(payoutData);
                     setIsRejectDialogOpen(true);
                   }}
+                  className="text-red-600"
                 >
-                  <div className="flex justify-start items-center bg-gray-50 text-gray-700">
-                    <XCircleIcon weight="duotone" className="mr-2 h-4 w-4" />
-                    Reject
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => {
-                    setIsEditDialogOpen(true);
-                  }}
-                >
-                  <div className="flex justify-start items-center bg-gray-50 text-gray-700">
-                    <PenIcon weight="duotone" className="mr-2 h-4 w-4" />
-                    Edit Payout
-                  </div>
+                  <XCircleIcon weight="duotone" className="mr-2 h-4 w-4" />
+                  Reject
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -404,14 +394,12 @@ export default function TransactionsPage() {
       <ApproveModal
         open={isApproveDialogOpen}
         onOpenChange={setIsApproveDialogOpen}
+        payout={selectedPayout}
       />
       <RejectModal
         open={isRejectDialogOpen}
         onOpenChange={setIsRejectDialogOpen}
-      />
-      <EditPayoutModal
-        open={isEditDialogOpen}
-        onOpenChange={setIsEditDialogOpen}
+        payout={selectedPayout}
       />
 
       <div className="rounded-lg border bg-background max-h-[60vh] overflow-auto">

@@ -772,6 +772,8 @@
     "transactionStatus": {
       "completed": "Completed",
       "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected",
       "failed": "Failed",
       "refunded": "Refunded"
     }

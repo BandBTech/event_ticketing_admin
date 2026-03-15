@@ -714,6 +714,8 @@
     "transactionStatus": {
       "completed": "Completato",
       "pending": "In sospeso",
+      "approved": "Approvato",
+      "rejected": "Rifiutato",
       "failed": "Fallito",
       "refunded": "Rimborsato"
     }

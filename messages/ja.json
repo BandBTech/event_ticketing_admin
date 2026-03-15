@@ -726,6 +726,8 @@
     "transactionStatus": {
       "completed": "完了",
       "pending": "保留中",
+      "approved": "承認済み",
+      "rejected": "却下済み",
       "failed": "失敗",
       "refunded": "返金済み"
     }

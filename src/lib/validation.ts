@@ -281,10 +281,17 @@ export const createOrganizerSchema = (
       .regex(/[A-Z]/, v.passwordUppercase())
       .regex(/[a-z]/, v.passwordLowercase())
       .regex(/[0-9]/, v.passwordNumber()),
-    phone: z.string().optional().or(z.literal("")).refine(
-      (val) => !val || val.length === 0 || (typeof val === 'string' && isValidPhoneNumber(val)),
-      v.phone("Phone")
-    ),
+    phone: z
+      .string()
+      .optional()
+      .or(z.literal(""))
+      .refine(
+        (val) =>
+          !val ||
+          val.length === 0 ||
+          (typeof val === "string" && isValidPhoneNumber(val)),
+        v.phone("Phone"),
+      ),
     country_code: z.string().optional().or(z.literal("")),
   });
 };
@@ -930,11 +937,38 @@ export const rejectPayoutSchema = (
 ) => {
   const v = createValidationHelpers(t);
   return z.object({
-    reason: z.string().min(1, v.required(t("", "Reason"))),
+    admin_notes: z.string().min(1, v.required(t("", "Admin Notes"))),
   });
 };
 
-export type RejectPayoutFoemValues = z.infer<ReturnType<typeof rejectPayoutSchema>>;
+export type RejectPayoutFormValues = z.infer<
+  ReturnType<typeof rejectPayoutSchema>
+>;
+
+/**
+ * Approve Payout Schema
+ */
+
+// Only what the form collects
+export const approvePayoutSchema = (
+  t: (key: string, fallback?: string, params?: Record<string, string | number>) => string,
+) => {
+  const v = createValidationHelpers(t);
+  return z.object({
+    admin_notes: z.string().min(1, v.required(t("", "Admin Notes"))),
+  });
+};
+
+export type ApprovePayoutFormValues = z.infer<
+  ReturnType<typeof approvePayoutSchema>
+>;
+
+// Separate type for the full API payload
+export type ApprovePayoutPayload = {
+  payoutId: string;
+  status: string;
+  admin_notes: string;
+};
 
 /**
  * Password Field Schema
@@ -953,8 +987,9 @@ export const passwordFieldSchema = (
   });
 };
 
-export type PasswordFieldFormValues = z.infer<ReturnType<typeof passwordFieldSchema>>;
-
+export type PasswordFieldFormValues = z.infer<
+  ReturnType<typeof passwordFieldSchema>
+>;
 
 export const createPaymentSchema = (
   t: (
@@ -962,27 +997,29 @@ export const createPaymentSchema = (
     fallback?: string,
     params?: Record<string, string | number>,
   ) => string,
-)=> {
-    const v = createValidationHelpers(t);
+) => {
+  const v = createValidationHelpers(t);
 
-    return z.object({
-      api_key: z.string().max(100, v.maxLength("API Key", 100)).optional(),
-      api_secret: z.string().max(100, v.maxLength("API Secret", 100)).optional(),
-      webhook_secret: z
-        .string()
-        .max(100, v.maxLength("Webhook Secret", 100))
-        .optional(),
-      display_name: z
-        .string()
-        .min(1, v.required("Display Name"))
-        .min(3, v.minLength("Display Name", 3))
-        .max(100, v.maxLength("Display Name", 100)),
-      gateway_name: z
-        .string()
-        .min(1, v.required("Gateway Name"))
-        .min(3, v.minLength("Gateway Name", 3))
-        .max(100, v.maxLength("Gateway Name", 100)),
-    });
-  };
+  return z.object({
+    api_key: z.string().max(100, v.maxLength("API Key", 100)).optional(),
+    api_secret: z.string().max(100, v.maxLength("API Secret", 100)).optional(),
+    webhook_secret: z
+      .string()
+      .max(100, v.maxLength("Webhook Secret", 100))
+      .optional(),
+    display_name: z
+      .string()
+      .min(1, v.required("Display Name"))
+      .min(3, v.minLength("Display Name", 3))
+      .max(100, v.maxLength("Display Name", 100)),
+    gateway_name: z
+      .string()
+      .min(1, v.required("Gateway Name"))
+      .min(3, v.minLength("Gateway Name", 3))
+      .max(100, v.maxLength("Gateway Name", 100)),
+  });
+};
 
-  export type CreatePaymentFormValues = z.infer<ReturnType<typeof createPaymentSchema>>;
+export type CreatePaymentFormValues = z.infer<
+  ReturnType<typeof createPaymentSchema>
+>;

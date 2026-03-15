@@ -2,6 +2,16 @@ import { api } from "../lib/apiClient";
 import { API_ENDPOINTS } from "@/app/config/api";
 import {PayoutRequestsResponse} from "@/types/payout"
 
+interface ApprovePayoutResponse {
+  success: boolean;
+  message: string;
+}
+
+interface RejectPayoutResponse {
+  success: boolean;
+  message: string;
+}
+
 export class PayoutService {
   /**
    * Create new transaction from admin
@@ -48,4 +58,39 @@ export class PayoutService {
 
     return result;
   }
+  
+
+    static async approvePayout(payload: {
+      payoutId: string;
+      admin_notes: string;
+      status: string;
+    }): Promise<ApprovePayoutResponse> {
+      return await api.put<ApprovePayoutResponse>(
+        API_ENDPOINTS.APPROVE_PAYOUTS(payload.payoutId),
+        {
+          admin_notes: payload.admin_notes,
+          status: payload.status,
+        },
+        {
+          requiresAuth: true,
+        }
+      );
+    }
+
+      static async rejectPayout(payload: {
+        payoutId: string;
+        admin_remark: string;
+        status: string;
+      }): Promise<RejectPayoutResponse> {
+        return await api.put<RejectPayoutResponse>(
+          API_ENDPOINTS.REJECT_PAYOUTS(payload.payoutId),
+          {
+            admin_remark: payload.admin_remark,
+            status: payload.status,
+          },
+          {
+            requiresAuth: true,
+          }
+        );
+      }
 }
