@@ -254,6 +254,7 @@ export function BillingFilterSheet({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="partially_paid">Partially Paid</SelectItem>
                 <SelectItem value="paid">Paid</SelectItem>
                 <SelectItem value="overdue">Overdue</SelectItem>
                 <SelectItem value="rejected">Rejected</SelectItem>

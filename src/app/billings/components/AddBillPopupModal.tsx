@@ -4,12 +4,7 @@ import { useState, useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  User as UserIcon,
-  CalendarBlankIcon,
-  CreditCardIcon,
-  SpinnerIcon,
-} from "@phosphor-icons/react";
+import { SpinnerIcon } from "@phosphor-icons/react";
 import { DialogFooter } from "@/components/ui/dialog";
 import { Modal } from "@/components/ui/modal";
 import {
@@ -20,37 +15,19 @@ import {
   FormLabel,
   TranslatedFormMessage,
 } from "@/components/ui/form";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { BillingService } from "@/services/billingService";
 import { useTranslation } from "@/hooks/useTranslation";
 import { toast } from "sonner";
 import { queryKeys } from "@/lib/queryKeys";
 import { useLanguageStore } from "@/store/languageStore";
 import { Bill, CreateBillPayload } from "@/types/billings";
-import { useImageUpload } from "@/hooks/useImageUpload";
-import { ImageUploader } from "@/components/ui/image-uploader";
 import { createBillSchema, BillsFormValues } from "@/lib/validation";
 import {
   AsyncCombobox,
   AsyncComboboxOption,
 } from "@/components/ui/async-combobox";
 import { adminService } from "@/services/adminService";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 interface AddBillPopupModalProps {
   open: boolean;
@@ -67,19 +44,6 @@ export default function AddBillPopupModal({
   const { t } = useTranslation(locale);
   const queryClient = useQueryClient();
 
-  // Image upload hook
-  const {
-    imageFile,
-    imagePreview,
-    imageError,
-    imageRemoved,
-    validateAndProcessImage,
-    handleRemoveImage,
-    setImagePreview,
-  } = useImageUpload({
-    initialPreview: "",
-  });
-
   const schema = createBillSchema(t);
   const defaultOrganizerOption = billData
     ? { value: billData.organizer.id, label: billData.organizer.name }
@@ -89,14 +53,11 @@ export default function AddBillPopupModal({
     ? { value: billData.event.id, label: billData.event.title }
     : undefined;
 
-  console.log("payment bill data", billData);
-
   const form = useForm<BillsFormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
       event_id: "",
       organizer_id: "",
-      payment_method: "",
     },
     mode: "onChange",
   });
@@ -106,20 +67,15 @@ export default function AddBillPopupModal({
       form.reset({
         event_id: billData.event.id,
         organizer_id: billData.organizer.id,
-        payment_method: billData.payment_method || "",
       });
     }
   }, [open, billData]);
-
-  const { errors } = form.formState;
 
   const createMutation = useMutation({
     mutationFn: (data: CreateBillPayload) =>
       BillingService.createBills({
         event_id: data.event_id,
         organizer_id: data.organizer_id,
-        payment_method: data.payment_method,
-        screenshot: imageFile ?? null,
       }),
     onSuccess: async () => {
       toast.success(t("", "Bill created successfully"));
@@ -183,42 +139,16 @@ export default function AddBillPopupModal({
     [],
   );
 
-  const PAYMENT_METHODS = [
-    { label: "Bank Transfer", value: "bank_transfer" },
-    { label: "Cash", value: "cash" },
-    { label: "Cheque", value: "cheque" },
-    { label: "Mobile Payment", value: "mobile_payment" },
-    { label: "Other", value: "other" },
-  ];
-
   const onSubmit = (data: CreateBillPayload) => {
     createMutation.mutate(data);
   };
 
   const isPending = createMutation.isPending;
 
-  // Prevent dialog dismissal (overlay/Escape) while mutation is in-flight
   const handleOpenChange = (open: boolean) => {
     if (!open && isPending) return;
     onOpenChange(open);
   };
-
-  const handleImageChange = useCallback(
-    (file: File) => {
-      validateAndProcessImage(file);
-      form.setValue("screenshot", file, { shouldDirty: true });
-      form.clearErrors("screenshot");
-    },
-    [validateAndProcessImage, form],
-  );
-
-  const handleImageRemove = useCallback(() => {
-    handleRemoveImage();
-    form.setValue("screenshot", null, {
-      shouldDirty: true,
-      shouldValidate: true,
-    });
-  }, [handleRemoveImage, form]);
 
   return (
     <Modal
@@ -244,13 +174,6 @@ export default function AddBillPopupModal({
                     {t("", "Organizer")}
                   </FormLabel>
                   <div className="relative group">
-                    {/* <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none transition-colors group-focus-within:text-blue-600">
-                      <UserIcon
-                        weight="duotone"
-                        size={22}
-                        className="text-gray-400"
-                      />
-                    </div>   */}
                     <FormControl>
                       <AsyncCombobox
                         queryKey={["filter", "organizers"]}
@@ -260,7 +183,7 @@ export default function AddBillPopupModal({
                         placeholder="Select organizer"
                         searchPlaceholder="Search organizers..."
                         emptyText="No organizers found"
-                        defaultOption={defaultOrganizerOption} // ← add this
+                        defaultOption={defaultOrganizerOption}
                         className="w-full text-sm h-9 ..."
                         debounceMs={300}
                       />
@@ -283,13 +206,7 @@ export default function AddBillPopupModal({
                     {t("", "Event")}
                   </FormLabel>
                   <div className="relative group">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none transition-colors group-focus-within:text-blue-600">
-                      {/* <CalendarBlankIcon
-                        weight="duotone"
-                        size={22}
-                        className="text-gray-400"
-                      /> */}
-                    </div>
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none transition-colors group-focus-within:text-blue-600"></div>
                     <FormControl>
                       <AsyncCombobox
                         key={organizer_id}
@@ -300,7 +217,7 @@ export default function AddBillPopupModal({
                         placeholder="Select event"
                         searchPlaceholder="Search event..."
                         emptyText="No events found"
-                        defaultOption={defaultEventOption} // ← add this
+                        defaultOption={defaultEventOption}
                         className="w-full text-sm h-9 ..."
                         debounceMs={300}
                       />
@@ -309,74 +226,6 @@ export default function AddBillPopupModal({
                   <TranslatedFormMessage t={t} />
                 </FormItem>
               )}
-            />
-
-            <FormField
-              control={form.control}
-              name="payment_method"
-              render={({ field, fieldState }) => (
-                <FormItem>
-                  <FormLabel
-                    required
-                    className="text-sm font-semibold text-gray-700"
-                  >
-                    {t("", "Payment Method")}
-                  </FormLabel>
-
-                  <div className="relative group">
-                    {/* Left icon */}
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none transition-colors group-focus-within:text-blue-600">
-                      {/* <CreditCardIcon
-                        weight="duotone"
-                        size={22}
-                        className="text-gray-400"
-                      /> */}
-                    </div>
-
-                    <FormControl>
-                      <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
-                        <SelectTrigger className="w-full text-sm h-9 justify-between px-3! bg-white">
-                          <SelectValue
-                            placeholder="Select payment method"
-                            className="data-[placeholder]:text-foreground"
-                          />
-                        </SelectTrigger>
-
-                        <SelectContent>
-                          {PAYMENT_METHODS.map((method) => (
-                            <SelectItem key={method.value} value={method.value}>
-                              {method.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                  </div>
-
-                  <TranslatedFormMessage t={t} />
-                </FormItem>
-              )}
-            />
-
-            <ImageUploader
-              label={t("", "Upload Screenshot")}
-              className="w-full h-50"
-              required
-              helperText={t("", "Upload screenshot image or drag & drop")}
-              helperTextSize={t(
-                "",
-                "Recommended: PNG/JPG file of 1920x1200px with size up to 5MB",
-              )}
-              value={imageRemoved ? "" : imagePreview || ""}
-              onChange={(file) => {
-                if (file) handleImageChange(file);
-              }}
-              onRemove={handleImageRemove}
-              error={imageError}
-              browseButtonText={t("", "Browse File")}
             />
           </div>
 

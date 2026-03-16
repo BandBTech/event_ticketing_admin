@@ -913,17 +913,6 @@ export const createBillSchema = (
   return z.object({
     event_id: z.string().min(1, v.required(t("", "Event ID"))),
     organizer_id: z.string().min(1, v.required(t("", "Organizer ID"))),
-    payment_method: z
-      .string()
-      .min(1, v.required(t("", "Payment Method")))
-      .min(2, v.minLength(t("", "Payment Method"), 2))
-      .max(50, v.maxLength(t("", "Payment Method"), 50)),
-    screenshot: z
-      .instanceof(File)
-      .nullable()
-      .refine((file) => file !== null, {
-        message: v.required(t("", "Screenshot")),
-      }),
   });
 };
 

@@ -62,8 +62,6 @@ export interface Pagination {
 export type CreateBillPayload = {
   event_id: string;
   organizer_id: string;
-  payment_method: string;
-  screenshot?: File | null;
 };
 
 export type AddPaymentToBillPayload = {

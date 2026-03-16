@@ -100,13 +100,9 @@ export class BillingService {
    */
   private static createBillFormData(data: CreateBillPayload): FormData {
     const formData = new FormData();
-    if (data.screenshot) {
-      formData.append("screenshot", data.screenshot);
-    }
-
     formData.append("event_id", data.event_id);
     formData.append("organizer_id", data.organizer_id);
-    formData.append("payment_method", data.payment_method);
+    formData.append("payment_method", "cash");
 
     return formData;
   }
