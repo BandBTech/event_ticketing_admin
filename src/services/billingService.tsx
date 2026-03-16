@@ -114,15 +114,20 @@ export class BillingService {
     data: AddPaymentToBillPayload,
   ): FormData {
     const formData = new FormData();
+    formData.append("amount", data.amount.toString());
+    formData.append("payment_method", data.payment_method);
+    if (data.bill_id) {
+      formData.append("bill_id", data.bill_id);
+    }
     if (data.screenshot) {
       formData.append("screenshot", data.screenshot);
     }
-
-    formData.append("bill_id", data.bill_id);
-    formData.append("amount", data.amount.toString());
-    formData.append("payment_method", data.payment_method);
-    formData.append("payment_ref", data?.payment_ref);
-    formData.append("notes", data?.notes);
+    if (data.payment_ref) {
+      formData.append("payment_ref", data.payment_ref);
+    }
+    if (data.notes) {
+      formData.append("notes", data.notes);
+    }
     if (data.payment_date) {
       formData.append("payment_date", data.payment_date.toISOString());
     }

@@ -65,13 +65,13 @@ export type CreateBillPayload = {
 };
 
 export type AddPaymentToBillPayload = {
-  bill_id: string;
+  bill_id?: string;
   amount: number;
   payment_method: string;
   payment_ref: string;
   notes: string;
   payment_date?: Date | null;
-  screenshot?: File | null;
+  screenshot?: File;
 };
 
 export interface BillingFilters {

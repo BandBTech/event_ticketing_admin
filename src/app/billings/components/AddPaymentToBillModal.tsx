@@ -99,6 +99,7 @@ export default function AddBillPopupModal({
       payment_ref: "",
       notes: "",
       payment_date: undefined,
+      screenshot: undefined,
     },
     mode: "onChange",
   });
@@ -108,7 +109,7 @@ export default function AddBillPopupModal({
       form.reset({
         event_id: billData.event.id,
         organizer_id: billData.organizer.id,
-        payment_method: billData.payment_method || "",
+        payment_method: "",
         amount: 0,
         payment_ref: "",
         notes: "",
@@ -123,7 +124,7 @@ export default function AddBillPopupModal({
         bill_id: billData?.id || "",
         payment_method: data.payment_method,
         amount: data.amount,
-        screenshot: imageFile ?? null,
+        screenshot: imageFile || undefined,
         payment_ref: data.payment_ref,
         notes: data.notes,
         payment_date: data.payment_date,
@@ -136,8 +137,12 @@ export default function AddBillPopupModal({
       });
       onOpenChange(false);
     },
-    onError: () => {
-      toast.error(t("", "Failed to add payment. Please try again."));
+    onError: (err) => {
+      toast.error(
+        err instanceof Error
+          ? err.message
+          : t("", "Failed to add payment. Please try again."),
+      );
     },
   });
 
@@ -218,10 +223,7 @@ export default function AddBillPopupModal({
 
   const handleImageRemove = useCallback(() => {
     handleRemoveImage();
-    form.setValue("screenshot", null, {
-      shouldDirty: true,
-      shouldValidate: true,
-    });
+    form.resetField("screenshot");
   }, [handleRemoveImage, form]);
 
   return (
@@ -370,16 +372,13 @@ export default function AddBillPopupModal({
               )}
             />
 
-            {/* Payment Date — FIX: wired to form via FormField */}
+            {/* Payment Date */}
             <FormField
               control={form.control}
               name="payment_date"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel
-                    required
-                    className="text-sm font-semibold text-gray-700"
-                  >
+                  <FormLabel className="text-sm font-semibold text-gray-700">
                     {t("", "Payment Date")}
                   </FormLabel>
                   <Popover>
@@ -419,7 +418,7 @@ export default function AddBillPopupModal({
               )}
             />
 
-            {/* Payment Reference — FIX: use string onChange, remove numeric handlers */}
+            {/* Payment Reference  */}
             <FormField
               control={form.control}
               name="payment_ref"
@@ -443,7 +442,7 @@ export default function AddBillPopupModal({
               )}
             />
 
-            {/* Notes — FIX: use string onChange, remove numeric handlers */}
+            {/* Notes  */}
             <FormField
               control={form.control}
               name="notes"
@@ -467,6 +466,8 @@ export default function AddBillPopupModal({
               )}
             />
 
+            {/* Screenshot Upload */}
+
             <ImageUploader
               label={t("", "Upload Screenshot")}
               className="w-full h-50"
@@ -482,6 +483,7 @@ export default function AddBillPopupModal({
               onRemove={handleImageRemove}
               error={imageError}
               browseButtonText={t("", "Browse File")}
+              required
             />
           </div>
 

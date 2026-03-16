@@ -932,23 +932,22 @@ export const addPaymentToBillSchema = (
   const v = createValidationHelpers(t);
   return z.object({
     event_id: z.string().min(1, v.required(t("", "Event ID"))),
-    bill_id: z.string().min(1, v.required(t("", "Bill ID"))),
+    bill_id: z.string().optional(),
     organizer_id: z.string().min(1, v.required(t("", "Organizer ID"))),
-    payment_ref: z.string().min(1, v.required(t("", "Payment Reference"))),
+    payment_ref: z
+      .string()
+      .max(200, v.maxLength(t("", "Payment Reference"), 200)),
     notes: z.string().max(200, v.maxLength(t("", "Notes"), 200)),
-    payment_date: z.date().nullable(),
-    amount: z.number().min(0, v.required(t("", "Amount"))),
+    payment_date: z.date().nullable().optional(),
+    amount: z.number().min(1, v.required(t("", "Amount"))),
     payment_method: z
       .string()
       .min(1, v.required(t("", "Payment Method")))
       .min(2, v.minLength(t("", "Payment Method"), 2))
       .max(50, v.maxLength(t("", "Payment Method"), 50)),
-    screenshot: z
-      .instanceof(File)
-      .nullable()
-      .refine((file) => file !== null, {
-        message: v.required(t("", "Screenshot")),
-      }),
+    screenshot: z.instanceof(File, {
+      message: v.required(t("", "Screenshot")),
+    }),
   });
 };
 
