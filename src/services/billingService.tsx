@@ -102,7 +102,7 @@ export class BillingService {
     const formData = new FormData();
     formData.append("event_id", data.event_id);
     formData.append("organizer_id", data.organizer_id);
-    formData.append("payment_method", "cash");
+    formData.append("payment_method", "cheque");
 
     return formData;
   }
