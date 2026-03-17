@@ -660,6 +660,9 @@
     "searchBills": "Cerca fatture",
     "filterByStatus": "Filtra per stato",
     "priority": "Priorità",
+    "viewDetails": "Visualizza dettagli",
+    "addPayment": "Aggiungi pagamento",
+    "updateBill": "Aggiorna fattura",
     "status": {
       "pending": "In sospeso",
       "paid": "Pagata",
@@ -684,6 +687,13 @@
       "high": "Alta",
       "normal": "Normale",
       "low": "Bassa"
+    },
+    "table": {
+      "eventTitle": "Titolo dell'evento",
+      "organizerName": "Nome dell'organizzatore",
+      "billedAmount": "Importo fatturato",
+      "paymentMethod": "Metodo di pagamento",
+      "status": "Stato"
     }
   },
   "transactions": {

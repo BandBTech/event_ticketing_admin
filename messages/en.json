@@ -718,6 +718,9 @@
     "searchBills": "Search bills",
     "filterByStatus": "Filter By Status",
     "priority": "Priority",
+    "viewDetails": "View Details",
+    "addPayment": "Add Payment",
+    "updateBill": "Update Bill",
     "status": {
       "pending": "Pending",
       "partially_paid": "Partially Paid",
@@ -742,6 +745,13 @@
       "high": "High",
       "normal": "Normal",
       "low": "Low"
+    },
+    "table":{
+      "eventTitle": "Event Title",
+      "organizerName": "Organizer Name",
+      "billedAmount": "Billed Amount",
+      "paymentMethod": "Payment Method",
+      "status": "Status"
     }
   },
   "transactions": {

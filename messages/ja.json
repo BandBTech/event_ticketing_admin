@@ -672,6 +672,9 @@
     "searchBills": "請求書を検索",
     "filterByStatus": "ステータスでフィルター",
     "priority": "優先度",
+    "viewDetails": "詳細を見る",
+    "addPayment": "支払いを追加",
+    "updateBill": "請求書を更新",
     "status": {
       "pending": "保留中",
       "paid": "支払済み",
@@ -696,6 +699,13 @@
       "high": "高",
       "normal": "中",
       "low": "低"
+    },
+    "table": {
+      "eventTitle": "イベントタイトル",
+      "organizerName": "主催者名",
+      "billedAmount": "請求金額",
+      "paymentMethod": "支払い方法",
+      "status": "ステータス"
     }
   },
   "transactions": {

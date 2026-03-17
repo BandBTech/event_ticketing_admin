@@ -178,25 +178,25 @@ export default function BillingsPage() {
     () => [
       {
         id: "name",
-        header: "Event Title",
+        header: t("billings.table.eventTitle"),
         accessorKey: "event.title",
         enableSorting: true,
       },
       {
         id: "organizer_name",
         accessorKey: "organizer.name",
-        header: "Organizer Name",
+        header: t("billings.table.organizerName"),
         enableSorting: true,
       },
       {
         id: "billed_amount",
         accessorKey: "billed_amount",
-        header: "Billed Amount",
+        header: t("billings.table.billedAmount"),
         enableSorting: false,
       },
       {
         id: "payment_method",
-        accessorKey: "payment_method",
+        title: "Payment Method",
         cell: ({ row }) => {
           const method = row.original.payment_method;
           return (
@@ -205,12 +205,11 @@ export default function BillingsPage() {
             </span>
           );
         },
-        header: "Payment Method",
+        header: t("billings.table.paymentMethod"),
         enableSorting: true,
       },
       {
         id: "status",
-        accessorKey: "status",
         cell: ({ row }) => {
           const status = row.original.status;
           const statusColors: Record<string, string> = {
@@ -228,7 +227,8 @@ export default function BillingsPage() {
             </span>
           );
         },
-        header: "Status",
+        header: t("billings.table.status"),
+        title: "Payment Status",
         enableSorting: true,
       },
       {
@@ -262,7 +262,7 @@ export default function BillingsPage() {
                 >
                   <div className="flex justify-start items-center bg-gray-50 text-gray-700">
                     <EyeIcon weight="duotone" className="mr-2 h-4 w-4" />
-                    {t(`users.viewDetails`)}
+                    {t(`billings.viewDetails`)}
                   </div>
                 </DropdownMenuItem>
                 <DropdownMenuItem
@@ -273,7 +273,7 @@ export default function BillingsPage() {
                 >
                   <div className="flex justify-start items-center bg-gray-50 text-gray-700">
                     <FilePlusIcon weight="duotone" className="mr-2 h-4 w-4" />
-                    Add Payment
+                    {t(`billings.addPayment`)}
                   </div>
                 </DropdownMenuItem>
                 <DropdownMenuItem
@@ -287,7 +287,7 @@ export default function BillingsPage() {
                       weight="duotone"
                       className="mr-2 h-4 w-4"
                     />
-                    Update Bill
+                    {t(`billings.updateBill`)}
                   </div>
                 </DropdownMenuItem>
                 {/* <DropdownMenuItem
