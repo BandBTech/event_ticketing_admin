@@ -58,7 +58,6 @@ export default function UpdateBillModal({
     { label: "Partially Paid", value: "partially_paid" },
     { label: "Paid", value: "paid" },
     { label: "Overdue", value: "overdue" },
-    { label: "Rejected", value: "rejected" },
     { label: "Cancelled", value: "cancelled" },
   ];
 
@@ -185,7 +184,7 @@ export default function UpdateBillModal({
     <Modal
       isOpen={open}
       onClose={() => handleOpenChange(false)}
-      title={t("", "Update Bill")}
+      title={t("billings.billUpdate.updateBill", "Update Bill")}
     >
       <Form {...form}>
         <form
@@ -203,7 +202,7 @@ export default function UpdateBillModal({
                     required
                     className="text-sm font-semibold text-gray-700"
                   >
-                    {t("", "Organizer")}
+                    {t("billings.billUpdate.organizer", "Organizer")}
                   </FormLabel>
                   <FormControl>
                     <AsyncCombobox
@@ -211,9 +210,9 @@ export default function UpdateBillModal({
                       value={field.value ?? ""}
                       onValueChange={(val) => field.onChange(val)}
                       fetchOptions={fetchOrganizers}
-                      placeholder="Select organizer"
-                      searchPlaceholder="Search organizers..."
-                      emptyText="No organizers found"
+                      placeholder={t("billings.filter.selectOrganizer")}
+                      searchPlaceholder={t("billings.filter.searchOrganizer")}
+                      emptyText={t("billings.filter.noOrganizerFound")}
                       defaultOption={defaultOrganizerOption}
                       className="w-full text-sm h-9"
                       debounceMs={300}
@@ -235,7 +234,7 @@ export default function UpdateBillModal({
                     required
                     className="text-sm font-semibold text-gray-700"
                   >
-                    {t("", "Event")}
+                    {t("billings.billUpdate.event", "Event")}
                   </FormLabel>
                   <FormControl>
                     <AsyncCombobox
@@ -244,9 +243,9 @@ export default function UpdateBillModal({
                       value={field.value ?? ""}
                       onValueChange={(val) => field.onChange(val)}
                       fetchOptions={fetchEvents}
-                      placeholder="Select event"
-                      searchPlaceholder="Search event..."
-                      emptyText="No events found"
+                      placeholder={t("billings.billUpdate.event", "Event")}
+                      searchPlaceholder={t("billings.addBillModal.searchEvent")}
+                      emptyText={t("billings.addBillModal.noEventFound")}
                       defaultOption={defaultEventOption}
                       className="w-full text-sm h-9"
                       debounceMs={300}
@@ -265,7 +264,7 @@ export default function UpdateBillModal({
               render={({ field, fieldState }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-semibold text-gray-700">
-                    {t("", "Amount")}
+                    {t("billings.billUpdate.amount", "Amount")}
                   </FormLabel>
 
                   <div className="relative group">
@@ -273,7 +272,10 @@ export default function UpdateBillModal({
                       <Input
                         {...field}
                         type="number"
-                        placeholder="Enter amount"
+                        placeholder={t(
+                          "billings.billUpdate.enterAmount",
+                          "Enter amount",
+                        )}
                         value={form.watch("amount") ?? ""}
                         onChange={(e) =>
                           field.onChange(parseFloat(e.target.value))
@@ -300,13 +302,19 @@ export default function UpdateBillModal({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-semibold text-gray-700">
-                    {t("", "Payment Reference")}
+                    {t(
+                      "billings.billUpdate.paymentReference",
+                      "Payment Reference",
+                    )}
                   </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       type="text"
-                      placeholder="Enter payment reference"
+                      placeholder={t(
+                        "billings.billUpdate.enterPaymentReference",
+                        "Enter payment reference",
+                      )}
                       value={field.value ?? ""}
                       onChange={(e) => field.onChange(e.target.value)}
                       className="w-full text-sm h-9"
@@ -324,13 +332,16 @@ export default function UpdateBillModal({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-semibold text-gray-700">
-                    {t("", "Notes")}
+                    {t("billings.billUpdate.notes", "Notes")}
                   </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       type="text"
-                      placeholder="Enter notes"
+                      placeholder={t(
+                        "billings.billUpdate.enterNotes",
+                        "Enter notes",
+                      )}
                       value={field.value ?? ""}
                       onChange={(e) => field.onChange(e.target.value)}
                       className="w-full text-sm h-9"
@@ -351,17 +362,22 @@ export default function UpdateBillModal({
                     required
                     className="text-sm font-semibold text-gray-700"
                   >
-                    {t("", "Status")}
+                    {t("billings.billUpdate.status", "Status")}
                   </FormLabel>
                   <FormControl>
                     <Select value={field.value} onValueChange={field.onChange}>
                       <SelectTrigger className="w-full text-sm h-9 justify-between px-3 bg-white">
-                        <SelectValue placeholder="Select status" />
+                        <SelectValue
+                          placeholder={t(
+                            "billings.billUpdate.selectStatus",
+                            "Select status",
+                          )}
+                        />
                       </SelectTrigger>
                       <SelectContent>
                         {BILL_STATUS.map((method) => (
                           <SelectItem key={method.value} value={method.value}>
-                            {method.label}
+                            {t(`billings.status.${method.value}`, method.label)}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -380,7 +396,7 @@ export default function UpdateBillModal({
               onClick={() => handleOpenChange(false)}
               disabled={isPending}
             >
-              {t("common.cancel", "Cancel")}
+              {t("common.cancelButton", "Cancel")}
             </Button>
             <Button
               type="submit"
@@ -390,7 +406,7 @@ export default function UpdateBillModal({
               {isPending && (
                 <SpinnerIcon className="mr-2 h-4 w-4 animate-spin" />
               )}
-              {t("", "Update Bill")}
+              {t("billings.billUpdate.updateBill", "Update Bill")}
             </Button>
           </DialogFooter>
         </form>

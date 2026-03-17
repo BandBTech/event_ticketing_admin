@@ -728,7 +728,55 @@
       "method": "Metodo",
       "date": "Data",
       "processedBy": "Elaborato da",
-      "screenshot": "Screenshot"
+      "screenshot": "Screenshot",
+      "viewScreenshot": "Visualizza lo screenshot"
+    },
+    "detailPage": {
+      "backToBills": "Torna alle fatture",
+      "billNumber": "Numero fattura",
+      "event": "Evento",
+      "organizer": "Organizzatore",
+      "admin": "Amministratore",
+      "totalRevenue": "Ricavo totale",
+      "commission": "Commissione",
+      "organizerEarnings": "Guadagni organizzatore",
+      "billedAmount": "Importo fatturato",
+      "billDetails": "Dettagli fattura",
+      "billedDate": "Data fatturazione",
+      "createdDate": "Data creazione",
+      "paidDate": "Data pagamento",
+      "paymentInformation": "Informazioni di pagamento",
+      "paymentMethod": "Metodo di pagamento",
+      "paymentReference": "Riferimento pagamento",
+      "paidAmount": "Importo pagato",
+      "remaining": "Residuo",
+      "billPaymentHistory": "Cronologia pagamenti fattura"
+    },
+    "billUpdate": {
+      "updateBill": "Aggiorna fattura",
+      "organizer": "Organizzatore",
+      "event": "Evento",
+      "amount": "Importo",
+      "paymentReference": "Riferimento pagamento",
+      "enterPaymentReference": "Inserisci riferimento pagamento",
+      "notes": "Note",
+      "enterNotes": "Inserisci note",
+      "status": "Stato"
+    },
+    "addPaymentToBill": {
+      "addPaymentToBill": "Aggiungi pagamento alla fattura",
+      "organizer": "Organizzatore",
+      "event": "Evento",
+      "paymentMethod": "Metodo di pagamento",
+      "selectPaymentMethod": "Seleziona metodo di pagamento",
+      "amount": "Importo",
+      "paymentDate": "Data pagamento",
+      "pickDate": "Scegli una data",
+      "screenshot": "Carica screenshot",
+      "paymentReference": "Riferimento pagamento",
+      "enterPaymentReference": "Inserisci riferimento pagamento",
+      "notes": "Note",
+      "enterNotes": "Inserisci note"
     }
   },
   "transactions": {
@@ -1021,5 +1069,10 @@
     "of": "di",
     "organizers": "organizzatori",
     "events": "eventi"
+  },
+  "imageUploader": {
+    "uploadScreenshot": "Carica screenshot o trascina e rilascia",
+    "recommendedSize": "Consigliato: file PNG/JPG di 1920x1200px con dimensioni fino a 5MB",
+    "browseFile": "Sfoglia file"
   }
 }

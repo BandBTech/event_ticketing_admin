@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/queryKeys";
@@ -17,9 +17,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
 import { Badge } from "@/components/ui/badge";
 import { useSearchParams } from "next/navigation";
-import {
-  PaymentHistoryData,
-} from "@/types/billings";
+import { PaymentHistoryData } from "@/types/billings";
 
 const fmt = (n: number) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(
@@ -153,9 +151,7 @@ export default function BillDetail() {
     enabled: !!billId,
   });
 
-  const [billHistory, setBillHistory] = React.useState<PaymentHistoryData[]>(
-    [],
-  );
+  const [billHistory, setBillHistory] = useState<PaymentHistoryData[]>([]);
 
   const { data: billHistoryData, isLoading: isBillHistoryLoading } = useQuery<
     PaymentHistoryData[]
@@ -165,7 +161,7 @@ export default function BillDetail() {
     enabled: !!billId,
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (billHistoryData) {
       setBillHistory(billHistoryData);
     }
@@ -188,7 +184,9 @@ export default function BillDetail() {
             weight="duotone"
             className="w-5 h-5 group-hover:-translate-x-1 transition-transform"
           />
-          <span className="font-medium">{t("", "Back to Bills")}</span>
+          <span className="font-medium">
+            {t("billings.detailPage.backToBills", "Back to Bills")}
+          </span>
         </button>
 
         {/* Header Card */}
@@ -201,7 +199,7 @@ export default function BillDetail() {
               </div>
               <div>
                 <p className="text-xs text-slate-400 font-semibold uppercase tracking-widest mb-0.5">
-                  Bill Number
+                  {t("billings.detailPage.billNumber", "Bill Number")}
                 </p>
                 <h1
                   className="text-xl font-bold text-slate-800"
@@ -240,7 +238,7 @@ export default function BillDetail() {
               <CalendarBlankIcon className="text-[#6366f1] w-4 h-4 flex-shrink-0" />
               <div className="min-w-0">
                 <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider">
-                  Event
+                  {t("billings.detailPage.event", "Event")}
                 </p>
                 <p className="text-sm font-semibold text-slate-700 truncate">
                   {billData?.event_title}
@@ -251,7 +249,7 @@ export default function BillDetail() {
               <UserIcon className="text-[#059669] w-4 h-4 flex-shrink-0" />
               <div className="min-w-0">
                 <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider">
-                  Organizer
+                  {t("billings.detailPage.organizer", "Organizer")}
                 </p>
                 <p className="text-sm font-semibold text-slate-700 truncate">
                   {billData?.organizer_name || "N/A"}
@@ -262,7 +260,7 @@ export default function BillDetail() {
               <ShieldIcon className="text-[#d97706] w-4 h-4 flex-shrink-0" />
               <div className="min-w-0">
                 <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider">
-                  Admin
+                  {t("billings.detailPage.admin", "Admin")}
                 </p>
                 <p className="text-sm font-semibold text-slate-700 truncate">
                   {billData?.admin_name}
@@ -275,21 +273,24 @@ export default function BillDetail() {
         {/* Money Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <MoneyCard
-            label="Total Revenue"
+            label={t("billings.detailPage.totalRevenue", "Total Revenue")}
             value={billData?.total_revenue ?? 0}
           />
           <MoneyCard
-            label="Commission"
+            label={t("billings.detailPage.commission", "Commission")}
             value={billData?.total_commission ?? 0}
             accent="text-indigo-600"
           />
           <MoneyCard
-            label="Organizer Earnings"
+            label={t(
+              "billings.detailPage.organizerEarnings",
+              "Organizer Earnings",
+            )}
             value={billData?.organizer_earnings ?? 0}
             accent="text-emerald-600"
           />
           <MoneyCard
-            label="Billed Amount"
+            label={t("billings.detailPage.billedAmount", "Billed Amount")}
             value={billData?.billed_amount ?? 0}
             accent="text-amber-600"
           />
@@ -300,37 +301,47 @@ export default function BillDetail() {
           {/* Bill Details + Payment Info */}
           <div className="grid md:grid-cols-2 gap-8">
             <div>
-              <SectionTitle>Bill Details</SectionTitle>
+              <SectionTitle>
+                {t("billings.detailPage.billDetails", "Bill Details")}
+              </SectionTitle>
               <InfoRow
-                label="Bill Date"
+                label={t("billings.detailPage.billedDate", "Billed Date")}
                 value={fmtDate(billData?.bill_date ?? "N/A")}
               />
               <InfoRow
-                label="Created Date"
+                label={t("billings.detailPage.createdDate", "Created Date")}
                 value={fmtDate(billData?.created_at ?? "N/A")}
               />
               <InfoRow
-                label="Paid Date"
+                label={t("billings.detailPage.paidDate", "Paid Date")}
                 value={fmtDate(billData?.paid_date ?? "N/A")}
               />
             </div>
             <div>
-              <SectionTitle>Payment Information</SectionTitle>
+              <SectionTitle>
+                {t(
+                  "billings.detailPage.paymentInformation",
+                  "Payment Information",
+                )}
+              </SectionTitle>
               <InfoStringRow
-                label="Payment Method"
+                label={t("billings.detailPage.paymentMethod", "Payment Method")}
                 value={billData?.payment_method}
               />
               <InfoStringRow
-                label="Payment Reference"
+                label={t(
+                  "billings.detailPage.paymentReference",
+                  "Payment Reference",
+                )}
                 value={""}
                 ref_value={billData?.payment_ref}
               />
               <InfoRow
-                label="Billed Amount"
+                label={t("billings.detailPage.billedAmount", "Billed Amount")}
                 value={fmt(billData?.billed_amount ?? 0)}
               />
               <InfoRow
-                label="Paid Amount"
+                label={t("billings.detailPage.paidAmount", "Paid Amount")}
                 value={
                   <span className="text-emerald-600">
                     {fmt(billData?.paid_amount ?? 0)}
@@ -338,7 +349,7 @@ export default function BillDetail() {
                 }
               />
               <InfoRow
-                label="Remaining"
+                label={t("billings.detailPage.remaining", "Remaining")}
                 value={
                   <span className="text-rose-500">
                     {fmt(billData?.remaining_amount ?? 0)}
@@ -352,7 +363,12 @@ export default function BillDetail() {
 
           {billHistory.length > 0 && (
             <div>
-              <SectionTitle>Bill Payment History</SectionTitle>
+              <SectionTitle>
+                {t(
+                  "billings.detailPage.billPaymentHistory",
+                  "Bill Payment History",
+                )}
+              </SectionTitle>
               <div className="rounded-md border overflow-hidden">
                 <table className="w-full text-sm">
                   <thead>
@@ -361,22 +377,22 @@ export default function BillDetail() {
                         SN
                       </th>
                       <th className="text-left text-[10px] text-muted-foreground uppercase tracking-wide font-medium px-4 py-3">
-                        Reference
+                        {t("billings.billHistory.reference", "Reference")}
                       </th>
                       <th className="text-left text-[10px] text-muted-foreground uppercase tracking-wide font-medium px-4 py-3">
-                        Amount
+                        {t("billings.billHistory.amount", "Amount")}
                       </th>
                       <th className="text-left text-[10px] text-muted-foreground uppercase tracking-wide font-medium px-4 py-3">
-                        Method
+                        {t("billings.billHistory.method", "Method")}
                       </th>
                       <th className="text-left text-[10px] text-muted-foreground uppercase tracking-wide font-medium px-4 py-3">
-                        Date
+                        {t("billings.billHistory.date", "Date")}
                       </th>
                       <th className="text-left text-[10px] text-muted-foreground uppercase tracking-wide font-medium px-4 py-3">
-                        Processed By
+                        {t("billings.billHistory.processedBy", "Processed By")}
                       </th>
                       <th className="text-left text-[10px] text-muted-foreground uppercase tracking-wide font-medium px-4 py-3">
-                        Screenshot
+                        {t("billings.billHistory.screenshot", "Screenshot")}
                       </th>
                     </tr>
                   </thead>
@@ -398,7 +414,9 @@ export default function BillDetail() {
                           NPR {item.amount.toLocaleString()}
                         </td>
                         <td className="px-4 py-3 capitalize">
-                          {item.payment_method?.replace(/_/g, " ") || "—"}
+                          {item.payment_method
+                            ? t(`billings.method.${item.payment_method}`)
+                            : "—"}
                         </td>
                         <td className="px-4 py-3 whitespace-nowrap">
                           {new Date(item.payment_date).toLocaleDateString(
@@ -421,7 +439,10 @@ export default function BillDetail() {
                               rel="noopener noreferrer"
                               className="text-blue-500 hover:underline"
                             >
-                              View Screenshot
+                              {t(
+                                "billings.billHistory.viewScreenshot",
+                                "View Screenshot",
+                              )}
                             </a>
                           ) : (
                             "—"

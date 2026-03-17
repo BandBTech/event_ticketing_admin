@@ -230,7 +230,10 @@ export default function AddBillPopupModal({
     <Modal
       isOpen={open}
       onClose={() => handleOpenChange(false)}
-      title={t("", "Add Payment to Bill")}
+      title={t(
+        "billings.addPaymentToBill.addPaymentToBill",
+        "Add Payment to Bill",
+      )}
     >
       <Form {...form}>
         <form
@@ -248,7 +251,7 @@ export default function AddBillPopupModal({
                     required
                     className="text-sm font-semibold text-gray-700"
                   >
-                    {t("", "Organizer")}
+                    {t("billings.addPaymentToBill.organizer", "Organizer")}
                   </FormLabel>
                   <FormControl>
                     <AsyncCombobox
@@ -256,9 +259,9 @@ export default function AddBillPopupModal({
                       value={field.value ?? ""}
                       onValueChange={(val) => field.onChange(val)}
                       fetchOptions={fetchOrganizers}
-                      placeholder="Select organizer"
-                      searchPlaceholder="Search organizers..."
-                      emptyText="No organizers found"
+                      placeholder={t("billings.filter.selectOrganizer")}
+                      searchPlaceholder={t("billings.filter.searchOrganizer")}
+                      emptyText={t("billings.filter.noOrganizerFound")}
                       defaultOption={defaultOrganizerOption}
                       className="w-full text-sm h-9"
                       debounceMs={300}
@@ -280,7 +283,7 @@ export default function AddBillPopupModal({
                     required
                     className="text-sm font-semibold text-gray-700"
                   >
-                    {t("", "Event")}
+                    {t("billings.addPaymentToBill.event", "Event")}
                   </FormLabel>
                   <FormControl>
                     <AsyncCombobox
@@ -289,9 +292,9 @@ export default function AddBillPopupModal({
                       value={field.value ?? ""}
                       onValueChange={(val) => field.onChange(val)}
                       fetchOptions={fetchEvents}
-                      placeholder="Select event"
-                      searchPlaceholder="Search event..."
-                      emptyText="No events found"
+                      placeholder={t("billings.billUpdate.event", "Event")}
+                      searchPlaceholder={t("billings.addBillModal.searchEvent")}
+                      emptyText={t("billings.addBillModal.noEventFound")}
                       defaultOption={defaultEventOption}
                       className="w-full text-sm h-9"
                       debounceMs={300}
@@ -313,12 +316,20 @@ export default function AddBillPopupModal({
                     required
                     className="text-sm font-semibold text-gray-700"
                   >
-                    {t("", "Payment Method")}
+                    {t(
+                      "billings.addPaymentToBill.paymentMethod",
+                      "Payment Method",
+                    )}
                   </FormLabel>
                   <FormControl>
                     <Select value={field.value} onValueChange={field.onChange}>
                       <SelectTrigger className="w-full text-sm h-9 justify-between px-3 bg-white">
-                        <SelectValue placeholder="Select payment method" />
+                        <SelectValue
+                          placeholder={t(
+                            "billings.addPaymentToBill.selectPaymentMethod",
+                            "Select payment method",
+                          )}
+                        />
                       </SelectTrigger>
                       <SelectContent>
                         {PAYMENT_METHODS.map((method) => (
@@ -344,7 +355,7 @@ export default function AddBillPopupModal({
                     required
                     className="text-sm font-semibold text-gray-700"
                   >
-                    {t("", "Amount")}
+                    {t("billings.addPaymentToBill.amount", "Amount")}
                   </FormLabel>
 
                   <div className="relative group">
@@ -352,7 +363,10 @@ export default function AddBillPopupModal({
                       <Input
                         {...field}
                         type="number"
-                        placeholder="Enter amount"
+                        placeholder={t(
+                          "billings.addPaymentToBill.enterAmount",
+                          "Enter amount",
+                        )}
                         value={form.watch("amount") ?? ""}
                         onChange={(e) =>
                           field.onChange(parseFloat(e.target.value))
@@ -379,7 +393,7 @@ export default function AddBillPopupModal({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-semibold text-gray-700">
-                    {t("", "Payment Date")}
+                    {t("billings.addPaymentToBill.paymentDate", "Payment Date")}
                   </FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
@@ -395,7 +409,12 @@ export default function AddBillPopupModal({
                           {field.value ? (
                             format(field.value, "LLL dd, y")
                           ) : (
-                            <span>Pick a date</span>
+                            <span>
+                              {t(
+                                "billings.addPaymentToBill.pickDate",
+                                "Pick a date",
+                              )}
+                            </span>
                           )}
                         </Button>
                       </FormControl>
@@ -425,13 +444,19 @@ export default function AddBillPopupModal({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-semibold text-gray-700">
-                    {t("", "Payment Reference")}
+                    {t(
+                      "billings.addPaymentToBill.paymentReference",
+                      "Payment Reference",
+                    )}
                   </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       type="text"
-                      placeholder="Enter payment reference"
+                      placeholder={t(
+                        "billings.addPaymentToBill.enterPaymentReference",
+                        "Enter payment reference",
+                      )}
                       value={field.value ?? ""}
                       onChange={(e) => field.onChange(e.target.value)}
                       className="w-full text-sm h-9"
@@ -449,13 +474,16 @@ export default function AddBillPopupModal({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-semibold text-gray-700">
-                    {t("", "Notes")}
+                    {t("billings.addPaymentToBill.notes", "Notes")}
                   </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       type="text"
-                      placeholder="Enter notes"
+                      placeholder={t(
+                        "billings.addPaymentToBill.enterNotes",
+                        "Enter notes",
+                      )}
                       value={field.value ?? ""}
                       onChange={(e) => field.onChange(e.target.value)}
                       className="w-full text-sm h-9"
@@ -469,11 +497,17 @@ export default function AddBillPopupModal({
             {/* Screenshot Upload */}
 
             <ImageUploader
-              label={t("", "Upload Screenshot")}
+              label={t(
+                "billings.addPaymentToBill.screenshot",
+                "Upload Screenshot",
+              )}
               className="w-full h-50"
-              helperText={t("", "Upload screenshot image or drag & drop")}
+              helperText={t(
+                "imageUploader.uploadScreenshot",
+                "Upload screenshot image or drag & drop",
+              )}
               helperTextSize={t(
-                "",
+                "imageUploader.recommendedSize",
                 "Recommended: PNG/JPG file of 1920x1200px with size up to 5MB",
               )}
               value={imageRemoved ? "" : imagePreview || ""}
@@ -482,7 +516,7 @@ export default function AddBillPopupModal({
               }}
               onRemove={handleImageRemove}
               error={imageError}
-              browseButtonText={t("", "Browse File")}
+              browseButtonText={t("imageUploader.browseFile", "Browse File")}
               required
             />
           </div>
@@ -494,7 +528,7 @@ export default function AddBillPopupModal({
               onClick={() => handleOpenChange(false)}
               disabled={isPending}
             >
-              {t("common.cancel", "Cancel")}
+              {t("common.cancelButton", "Cancel")}
             </Button>
             <Button
               type="submit"
@@ -504,7 +538,7 @@ export default function AddBillPopupModal({
               {isPending && (
                 <SpinnerIcon className="mr-2 h-4 w-4 animate-spin" />
               )}
-              {t("", "Add Payment")}
+              {t("billings.addPayment", "Add Payment")}
             </Button>
           </DialogFooter>
         </form>

@@ -785,7 +785,55 @@
       "method": "Method",
       "date": "Date",
       "processedBy": "Processed By",
-      "screenshot": "Screenshot"
+      "screenshot": "Screenshot",
+      "viewScreenshot": "View Screenshot"
+    },
+    "detailPage": {
+      "backToBills": "Back to Bills",
+      "billNumber": "Bill Number",
+      "event": "Event",
+      "organizer": "Organizer",
+      "admin": "Admin",
+      "totalRevenue": "Total Revenue",
+      "commission": "Commission",
+      "organizerEarnings": "Organizer Earnings",
+      "billedAmount": "Billed Amount",
+      "billDetails": "Bill Details",
+      "billedDate": "Billed Date",
+      "createdDate": "Created Date",
+      "paidDate": "Paid Date",
+      "paymentInformation": "Payment Information",
+      "paymentMethod": "Payment Method",
+      "paymentReference": "Payment Reference",
+      "paidAmount": "Paid Amount",
+      "remaining": "Remaining",
+      "billPaymentHistory": "Bill Payment History"
+    },
+    "billUpdate": {
+      "updateBill": "Update Bill",
+      "organizer": "Organizer",
+      "event": "Event",
+      "amount": "Amount",
+      "paymentReference": "Payment Reference",
+      "enterPaymentReference": "Enter Payment Reference",
+      "notes": "Notes",
+      "enterNotes": "Enter Notes",
+      "status": "Status"
+    },
+    "addPaymentToBill": {
+      "addPaymentToBill": "Add Payment to Bill",
+      "organizer": "Organizer",
+      "event": "Event",
+      "paymentMethod": "Payment Method",
+      "selectPaymentMethod": "Select Payment Method",
+      "amount": "Amount",
+      "paymentDate": "Payment Date",
+      "pickDate": "Pick a Date",
+      "screenshot": "Upload Screenshot",
+      "paymentReference": "Payment Reference",
+      "enterPaymentReference": "Enter Payment Reference",
+      "notes": "Notes",
+      "enterNotes": "Enter Notes"
     }
   },
   "transactions": {
@@ -1085,5 +1133,10 @@
     "fields": {
       "eventDescription": "Event Description"
     }
+  },
+  "imageUploader": {
+    "uploadScreenshot": "Upload screenshot image or drag & drop",
+    "recommendedSize": "Recommended: PNG/JPG file of 1920x1200px with size up to 5MB",
+    "browseFile": "Browse File"
   }
 }
