@@ -79,5 +79,7 @@ export const API_ENDPOINTS = {
   CREATE_BILLS: `${API_BASE_URL}/admin/payments/bills`,
   GET_ALL_BILLS: `${API_BASE_URL}/admin/payments/bills`,
   GET_BILL_BY_ID: (id: string) => `${API_BASE_URL}/admin/payments/bills/${id}`,
-  GET_BILL_HISTORY: (id: string) => `${API_BASE_URL}/admin/payments/bills/${id}/history`,
+  GET_BILL_HISTORY: (id: string) =>
+    `${API_BASE_URL}/admin/payments/bills/${id}/history`,
+  UPDATE_BILL: (id: string) => `${API_BASE_URL}/admin/payments/bills/${id}`,
 };

@@ -64,9 +64,11 @@ const priorityStyles: Record<PriorityKey, string> = {
 const InfoStringRow = ({
   label,
   value,
+  ref_value,
 }: {
   label: string;
   value: React.ReactNode;
+  ref_value?: string;
 }) => {
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
@@ -83,7 +85,13 @@ const InfoStringRow = ({
         {label}
       </span>
       <span className={`text-sm text-slate-800 text-right font-medium`}>
-        {displayValue}
+        {ref_value ? (
+          <span className="font-mono text-blue-600 hover:underline cursor-pointer">
+            {ref_value}
+          </span>
+        ) : (
+          displayValue
+        )}
       </span>
     </div>
   );
@@ -318,7 +326,8 @@ export default function BillDetail() {
               />
               <InfoStringRow
                 label="Payment Reference"
-                value={billData?.payment_ref}
+                value={""}
+                ref_value={billData?.payment_ref}
               />
               <InfoRow
                 label="Billed Amount"

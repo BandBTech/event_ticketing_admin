@@ -919,7 +919,7 @@ export const createBillSchema = (
 export type BillsFormValues = z.infer<ReturnType<typeof createBillSchema>>;
 
 /**`
- * Bills Schema
+ * Add Payment to Bill Schema
  */
 
 export const addPaymentToBillSchema = (
@@ -954,6 +954,37 @@ export const addPaymentToBillSchema = (
 export type AddPaymentToBillFormValues = z.infer<
   ReturnType<typeof addPaymentToBillSchema>
 >;
+
+/**`
+ * Update Bill Schema
+ */
+
+export const updateBillSchema = (
+  t: (
+    key: string,
+    fallback?: string,
+    params?: Record<string, string | number>,
+  ) => string,
+) => {
+  const v = createValidationHelpers(t);
+  return z.object({
+    event_id: z.string().min(1, v.required(t("", "Event ID"))),
+    bill_id: z.string().optional(),
+    organizer_id: z.string().min(1, v.required(t("", "Organizer ID"))),
+    payment_ref: z
+      .string()
+      .max(200, v.maxLength(t("", "Payment Reference"), 200)),
+    notes: z.string().max(200, v.maxLength(t("", "Notes"), 200)),
+    amount: z.number().optional(),
+    status: z
+      .string()
+      .min(1, v.required(t("", "Status")))
+      .min(2, v.minLength(t("", "Status"), 2))
+      .max(50, v.maxLength(t("", "Status"), 50)),
+  });
+};
+
+export type UpdateBillFormValues = z.infer<ReturnType<typeof updateBillSchema>>;
 
 /**
  * Reject Payout Schema

@@ -689,7 +689,8 @@
     },
     "billType": {
       "auto_calculated": "自動計算",
-      "manual": "手動"
+      "manual": "手動",
+      "payout_request": "支払い請求"
     },
     "billPriority": {
       "high": "高",

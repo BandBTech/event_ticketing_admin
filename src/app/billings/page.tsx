@@ -58,6 +58,7 @@ import {
   getDefaultFilters,
   PaymentHistoryData,
 } from "@/types/billings";
+import UpdateBillModal from "./components/UpdateBillModal";
 
 // Lazy load heavy sub-components to reduce initial bundle size
 const BillingFilterSheet = React.lazy(() =>
@@ -84,6 +85,8 @@ export default function BillingsPage() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [isAddDialogOpen, setIsAddDialogOpen] = React.useState(false);
   const [isAddPaymentToBillDialogOpen, setIsAddPaymentToBillDialogOpen] =
+    React.useState(false);
+  const [isUpdateBillDialogOpen, setIsUpdateBillDialogOpen] =
     React.useState(false);
   const [filterSheetOpen, setFilterSheetOpen] = React.useState(false);
   const [appliedFilters, setAppliedFilters] =
@@ -213,7 +216,9 @@ export default function BillingsPage() {
           const statusColors: Record<string, string> = {
             paid: "bg-green-100 text-green-800",
             pending: "bg-yellow-100 text-yellow-800",
-            failed: "bg-red-100 text-red-800",
+            cancelled: "bg-red-100 text-red-800",
+            rejected: "bg-red-100 text-red-800",
+            overdue: "bg-red-100 text-red-800",
           };
           return (
             <span
@@ -273,8 +278,8 @@ export default function BillingsPage() {
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => {
-                    localStorage.setItem("user_id", bills.id);
-                    router.push(`/billings/billdetail?id=${bills.id}`);
+                    setPaymentBillData(bills);
+                    setIsUpdateBillDialogOpen(true);
                   }}
                 >
                   <div className="flex justify-start items-center bg-gray-50 text-gray-700">
@@ -380,6 +385,11 @@ export default function BillingsPage() {
       <AddPaymentToBillModal
         open={isAddPaymentToBillDialogOpen}
         onOpenChange={setIsAddPaymentToBillDialogOpen}
+        billData={paymentBillData}
+      />
+      <UpdateBillModal
+        open={isUpdateBillDialogOpen}
+        onOpenChange={setIsUpdateBillDialogOpen}
         billData={paymentBillData}
       />
 

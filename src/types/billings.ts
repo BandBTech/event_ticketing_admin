@@ -74,6 +74,14 @@ export type AddPaymentToBillPayload = {
   screenshot?: File;
 };
 
+export type UpdateBillPayload = {
+  bill_id?: string;
+  amount?: number;
+  status: string;
+  payment_ref: string;
+  notes: string;
+};
+
 export interface BillingFilters {
   organizer_id: string;
   start_date: Date | undefined;

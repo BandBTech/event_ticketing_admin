@@ -7,6 +7,7 @@ import {
   CreateBillPayload,
   PaymentHistoryData,
   AddPaymentToBillPayload,
+  UpdateBillPayload,
 } from "@/types/billings";
 
 export class BillingService {
@@ -34,6 +35,16 @@ export class BillingService {
         requiresAuth: true,
         showSuccessToast: true,
         successMessage: "Payment added to bill successfully",
+      },
+    );
+  }
+
+  static async updateBill(payload: UpdateBillPayload): Promise<Bill> {
+    return await api.put<Bill>(
+      API_ENDPOINTS.UPDATE_BILL(payload.bill_id || ""),
+      payload,
+      {
+        requiresAuth: true,
       },
     );
   }

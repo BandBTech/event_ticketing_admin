@@ -735,7 +735,8 @@
     },
     "billType": {
       "auto_calculated": "Auto Calculated",
-      "manual": "Manual"
+      "manual": "Manual",
+      "payout_request": "Payout Request"
     },
     "billPriority": {
       "high": "High",
