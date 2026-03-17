@@ -7,12 +7,10 @@ import {
   CaretLeft as CaretLeftIcon,
   CaretRight as CaretRightIcon,
   Eye as EyeIcon,
-  User as UserIcon,
   FilePlus as FilePlusIcon,
   BookOpenTextIcon,
   DotsThreeVertical as DotsThreeVerticalIcon,
   Spinner,
-  TrashIcon,
   CaretUp,
   CaretDown,
   CaretUpDown,
@@ -26,7 +24,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { queryKeys } from "@/lib/queryKeys";
 import { flexRender } from "@tanstack/react-table";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -39,7 +36,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -75,11 +71,7 @@ export default function BillingsPage() {
 
   const currentPage = Number(searchParams.get("page")) || 1;
   const searchQuery = searchParams.get("search") || "";
-  const statusFilter = searchParams.get("status") || "";
-  const roleFilter = searchParams.get("role") || "";
-  const accountStatusFilter = searchParams.get("account_status") || "";
   const itemsPerPage = 10;
-  const queryClient = useQueryClient();
   const [actionLoading, setActionLoading] = React.useState<string | null>(null);
   const [searchInput, setSearchInput] = React.useState(searchQuery);
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -103,6 +95,23 @@ export default function BillingsPage() {
   const [paymentBillData, setPaymentBillData] = React.useState<Bill | null>(
     null,
   );
+
+  const defaultFilters = getDefaultFilters();
+
+  const isFilterApplied = React.useMemo(() => {
+    return JSON.stringify(appliedFilters) !== JSON.stringify(defaultFilters);
+  }, [appliedFilters]);
+
+  const filterCount = React.useMemo(() => {
+    let count = 0;
+
+    if (appliedFilters.organizer_id) count++;
+    if (appliedFilters.status) count++;
+    if (appliedFilters.start_date) count++;
+    if (appliedFilters.end_date) count++;
+
+    return count;
+  }, [appliedFilters]);
 
   const toggleRow = async (id: string) => {
     const isOpen = expandedRows.has(id);
@@ -359,10 +368,17 @@ export default function BillingsPage() {
           <Button
             variant="outline"
             onClick={() => setFilterSheetOpen(true)}
-            className="gap-2 bg-background/80 backdrop-blur-sm"
+            className={
+              isFilterApplied
+                ? "gap-2 bg-primary/10 text-black hover:bg-primary/10"
+                : `gap-2 bg-background/80 backdrop-blur-sm`
+            }
           >
             <FunnelIcon weight="duotone" className="h-4 w-4" />
-            Filters
+            Filters{" "}
+            {isFilterApplied && (
+              <span className="ml-1 text-xs font-medium text-primary">{`(${filterCount})`}</span>
+            )}
           </Button>
           <Button
             onClick={() => {

@@ -17,13 +17,9 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
 import { Badge } from "@/components/ui/badge";
 import { useSearchParams } from "next/navigation";
-import Image from "next/image";
 import {
-  BillingFilters,
-  getDefaultFilters,
   PaymentHistoryData,
 } from "@/types/billings";
-import { Skeleton } from "@/components/ui/skeleton";
 
 const fmt = (n: number) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(
@@ -379,6 +375,9 @@ export default function BillDetail() {
                       <th className="text-left text-[10px] text-muted-foreground uppercase tracking-wide font-medium px-4 py-3">
                         Processed By
                       </th>
+                      <th className="text-left text-[10px] text-muted-foreground uppercase tracking-wide font-medium px-4 py-3">
+                        Screenshot
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -413,6 +412,20 @@ export default function BillDetail() {
                         </td>
                         <td className="px-4 py-3 truncate max-w-[140px]">
                           {item.processed_by || "—"}
+                        </td>
+                        <td className="px-4 py-3 truncate max-w-[140px]">
+                          {item.screenshot_url ? (
+                            <a
+                              href={item.screenshot_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-500 hover:underline"
+                            >
+                              View Screenshot
+                            </a>
+                          ) : (
+                            "—"
+                          )}
                         </td>
                       </tr>
                     ))}

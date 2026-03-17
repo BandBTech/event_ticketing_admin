@@ -102,6 +102,7 @@ export interface PaymentHistoryData {
   processed_by: string;
   notes: string;
   created_at: string;
+  screenshot_url: string;
 }
 
 // export const getDefaultDateRange = () => ({

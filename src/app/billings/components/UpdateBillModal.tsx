@@ -390,7 +390,7 @@ export default function UpdateBillModal({
               {isPending && (
                 <SpinnerIcon className="mr-2 h-4 w-4 animate-spin" />
               )}
-              {t("", "Add Payment")}
+              {t("", "Update Bill")}
             </Button>
           </DialogFooter>
         </form>
