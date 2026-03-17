@@ -186,6 +186,19 @@ export default function BillingsPage() {
   const columns: ColumnDef<Bill>[] = React.useMemo(
     () => [
       {
+        id: "date",
+        header: "Date",
+        title: "Created Date",
+        cell: ({ row }) => {
+          const date = new Date(row.original.created_at);
+
+          const formattedDate = date.toISOString().split("T")[0];
+
+          return <span>{formattedDate}</span>;
+        },
+        enableSorting: true,
+      },
+      {
         id: "name",
         header: t("billings.table.eventTitle"),
         accessorKey: "event.title",
@@ -201,6 +214,11 @@ export default function BillingsPage() {
         id: "billed_amount",
         accessorKey: "billed_amount",
         header: t("billings.table.billedAmount"),
+        cell: ({ row }) => (
+          <span className="text-sm text-foreground">
+            {row.original.billed_amount.toFixed(2)}
+          </span>
+        ),
         enableSorting: false,
       },
       {
@@ -279,18 +297,21 @@ export default function BillingsPage() {
                     {t(`billings.viewDetails`)}
                   </div>
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => {
-                    setPaymentBillData(bills);
-                    setIsAddPaymentToBillDialogOpen(true);
-                  }}
-                >
-                  <div className="flex justify-start items-center bg-gray-50 text-gray-700">
-                    <FilePlusIcon weight="duotone" className="mr-2 h-4 w-4" />
-                    {t(`billings.addPayment`)}
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuItem
+                {(bills.status === "pending" ||
+                  bills.status === "partially_paid") && (
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setPaymentBillData(bills);
+                      setIsAddPaymentToBillDialogOpen(true);
+                    }}
+                  >
+                    <div className="flex justify-start items-center bg-gray-50 text-gray-700">
+                      <FilePlusIcon weight="duotone" className="mr-2 h-4 w-4" />
+                      {t(`billings.addPayment`)}
+                    </div>
+                  </DropdownMenuItem>
+                )}
+                {/* <DropdownMenuItem
                   onClick={() => {
                     setPaymentBillData(bills);
                     setIsUpdateBillDialogOpen(true);
@@ -303,7 +324,7 @@ export default function BillingsPage() {
                     />
                     {t(`billings.updateBill`)}
                   </div>
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
                 {/* <DropdownMenuItem
                   className="text-red-600"
                   onClick={(e) => {
@@ -580,7 +601,7 @@ export default function BillingsPage() {
                             expandedData[row.original.id].map((item, i) => (
                               <div
                                 key={item.id}
-                                className={`grid grid-cols-[28px_1fr_1fr_1fr_1fr_1fr] items-center gap-4 px-6 py-3 border-b last:border-0 ${
+                                className={`grid grid-cols-[28px_2fr_1fr_1fr_1fr_1fr] items-center gap-4 px-6 py-3 border-b last:border-0 ${
                                   i % 2 === 0 ? "bg-background" : "bg-muted/30"
                                 }`}
                               >
@@ -590,19 +611,28 @@ export default function BillingsPage() {
 
                                 <div className="min-w-0">
                                   <p className="text-[10px] text-muted-foreground uppercase tracking-wide mb-0.5">
+                                    {t("billings.billHistory.processedBy")}
+                                  </p>
+                                  <p className="text-sm text-foreground truncate">
+                                    {item.processed_by || "—"}
+                                  </p>
+                                </div>
+
+                                {/* <div className="min-w-0">
+                                  <p className="text-[10px] text-muted-foreground uppercase tracking-wide mb-0.5">
                                     {t("billings.billHistory.reference")}
                                   </p>
                                   <p className="text-sm text-foreground font-mono truncate">
                                     {item.payment_ref || "—"}
                                   </p>
-                                </div>
+                                </div> */}
 
                                 <div>
                                   <p className="text-[10px] text-muted-foreground uppercase tracking-wide mb-0.5">
                                     {t("billings.billHistory.amount")}
                                   </p>
-                                  <p className="text-sm text-foreground font-semibold">
-                                    NPR {item.amount.toLocaleString()}
+                                  <p className="text-sm text-foreground">
+                                    {item.amount.toFixed(2)}
                                   </p>
                                 </div>
 
@@ -631,15 +661,6 @@ export default function BillingsPage() {
                                       month: "short",
                                       day: "numeric",
                                     })}
-                                  </p>
-                                </div>
-
-                                <div className="min-w-0">
-                                  <p className="text-[10px] text-muted-foreground uppercase tracking-wide mb-0.5">
-                                    {t("billings.billHistory.processedBy")}
-                                  </p>
-                                  <p className="text-sm text-foreground truncate">
-                                    {item.processed_by || "—"}
                                   </p>
                                 </div>
                               </div>

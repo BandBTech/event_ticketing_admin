@@ -144,6 +144,7 @@ export default function AddBillPopupModal({
 
   const handleOpenChange = (open: boolean) => {
     if (!open && isPending) return;
+    form.reset();
     onOpenChange(open);
   };
 

@@ -218,14 +218,14 @@ export default function BillDetail() {
               >
                 {t(`billings.status.${billData?.status}`) ?? "N/A"}
               </Badge>
-              <Badge
+              {/* <Badge
                 className={
                   priorityStyles[billData?.priority ?? "N/A"] ??
                   "bg-slate-100 text-slate-600 border border-slate-200"
                 }
               >
                 {`${t(`billings.billPriority.${billData?.priority}`) ?? "N/A"} ${t("billings.priority")}`}
-              </Badge>
+              </Badge> */}
               <Badge className="bg-indigo-50 text-indigo-700 border border-indigo-200">
                 {t(`billings.billType.${billData?.bill_type}`) ?? "N/A"}
               </Badge>
@@ -328,14 +328,14 @@ export default function BillDetail() {
                 label={t("billings.detailPage.paymentMethod", "Payment Method")}
                 value={billData?.payment_method}
               />
-              <InfoStringRow
+              {/* <InfoStringRow
                 label={t(
                   "billings.detailPage.paymentReference",
                   "Payment Reference",
                 )}
                 value={""}
                 ref_value={billData?.payment_ref}
-              />
+              /> */}
               <InfoRow
                 label={t("billings.detailPage.billedAmount", "Billed Amount")}
                 value={fmt(billData?.billed_amount ?? 0)}

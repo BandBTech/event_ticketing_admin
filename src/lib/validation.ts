@@ -911,8 +911,8 @@ export const createBillSchema = (
 ) => {
   const v = createValidationHelpers(t);
   return z.object({
-    event_id: z.string().min(1, v.required(t("", "Event ID"))),
-    organizer_id: z.string().min(1, v.required(t("", "Organizer ID"))),
+    event_id: z.string().min(1, v.required(t("", "Event"))),
+    organizer_id: z.string().min(1, v.required(t("", "Organizer"))),
   });
 };
 

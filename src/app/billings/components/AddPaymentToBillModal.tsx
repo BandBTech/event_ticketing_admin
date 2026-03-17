@@ -7,7 +7,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { SpinnerIcon } from "@phosphor-icons/react";
 import { DialogFooter } from "@/components/ui/dialog";
 import { Modal } from "@/components/ui/modal";
-import { Label } from "@/components/ui/label";
 import {
   Form,
   FormControl,
@@ -18,6 +17,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  TooltipProvider,
+  TooltipContent,
+  Tooltip,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { BillingService } from "@/services/billingService";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -51,7 +56,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { CalendarIcon } from "@phosphor-icons/react";
+import { CalendarIcon, InfoIcon } from "@phosphor-icons/react";
+import { Textarea } from "@/components/ui/textarea";
 
 interface AddBillPopupModalProps {
   open: boolean;
@@ -110,7 +116,7 @@ export default function AddBillPopupModal({
         event_id: billData.event.id,
         organizer_id: billData.organizer.id,
         payment_method: "",
-        amount: 0,
+        amount: billData.remaining_amount ?? 0,
         payment_ref: "",
         notes: "",
         payment_date: undefined,
@@ -356,6 +362,22 @@ export default function AddBillPopupModal({
                     className="text-sm font-semibold text-gray-700"
                   >
                     {t("billings.addPaymentToBill.amount", "Amount")}
+
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <InfoIcon className="text-yellow-800 cursor-pointer" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>
+                            {t(
+                              "billings.addPaymentToBill.remainingAmountInfo",
+                              "The amount displayed is the remaining balance amount.",
+                            )}
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   </FormLabel>
 
                   <div className="relative group">
@@ -477,16 +499,17 @@ export default function AddBillPopupModal({
                     {t("billings.addPaymentToBill.notes", "Notes")}
                   </FormLabel>
                   <FormControl>
-                    <Input
+                    <Textarea
                       {...field}
-                      type="text"
                       placeholder={t(
                         "billings.addPaymentToBill.enterNotes",
                         "Enter notes",
                       )}
                       value={field.value ?? ""}
                       onChange={(e) => field.onChange(e.target.value)}
-                      className="w-full text-sm h-9"
+                      rows={3}
+                      maxLength={200}
+                      className="w-full min-h-[80px]"
                     />
                   </FormControl>
                   <TranslatedFormMessage t={t} />
