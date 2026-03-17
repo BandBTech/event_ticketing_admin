@@ -19,7 +19,6 @@ import { Button } from "@/components/ui/button";
 import { BillingService } from "@/services/billingService";
 import { useTranslation } from "@/hooks/useTranslation";
 import { toast } from "sonner";
-import { queryKeys } from "@/lib/queryKeys";
 import { useLanguageStore } from "@/store/languageStore";
 import { Bill, CreateBillPayload } from "@/types/billings";
 import { createBillSchema, BillsFormValues } from "@/lib/validation";
@@ -152,7 +151,7 @@ export default function AddBillPopupModal({
     <Modal
       isOpen={open}
       onClose={() => handleOpenChange(false)}
-      title={t("", "Add New Bill")}
+      title={t("billings.addBillModal.addNewBill", "Add New Bill")}
     >
       <Form {...form}>
         <form
@@ -169,7 +168,7 @@ export default function AddBillPopupModal({
                     required
                     className="text-sm font-semibold text-gray-700"
                   >
-                    {t("", "Organizer")}
+                    {t("billings.addBillModal.organizer", "Organizer")}
                   </FormLabel>
                   <div className="relative group">
                     <FormControl>
@@ -178,9 +177,9 @@ export default function AddBillPopupModal({
                         value={field.value ?? ""}
                         onValueChange={(val) => field.onChange(val)}
                         fetchOptions={fetchOrganizers}
-                        placeholder="Select organizer"
-                        searchPlaceholder="Search organizers..."
-                        emptyText="No organizers found"
+                        placeholder={t("billings.filter.selectOrganizer")}
+                        searchPlaceholder={t("billings.filter.searchOrganizer")}
+                        emptyText={t("billings.filter.noOrganizerFound")}
                         defaultOption={defaultOrganizerOption}
                         className="w-full text-sm h-9 ..."
                         debounceMs={300}
@@ -201,7 +200,7 @@ export default function AddBillPopupModal({
                     required
                     className="text-sm font-semibold text-gray-700"
                   >
-                    {t("", "Event")}
+                    {t("billings.addBillModal.event", "Event")}
                   </FormLabel>
                   <div className="relative group">
                     <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none transition-colors group-focus-within:text-blue-600"></div>
@@ -212,9 +211,11 @@ export default function AddBillPopupModal({
                         value={field.value ?? ""}
                         onValueChange={(val) => field.onChange(val)}
                         fetchOptions={fetchEvents}
-                        placeholder="Select event"
-                        searchPlaceholder="Search event..."
-                        emptyText="No events found"
+                        placeholder={t("billings.addBillModal.selectEvent")}
+                        searchPlaceholder={t(
+                          "billings.addBillModal.searchEvent",
+                        )}
+                        emptyText={t("billings.addBillModal.noEventFound")}
                         defaultOption={defaultEventOption}
                         className="w-full text-sm h-9 ..."
                         debounceMs={300}
@@ -234,7 +235,7 @@ export default function AddBillPopupModal({
               onClick={() => handleOpenChange(false)}
               disabled={isPending}
             >
-              {t("common.cancel", "Cancel")}
+              {t("common.cancelButton", "Cancel")}
             </Button>
             <Button
               type="submit"
@@ -244,7 +245,7 @@ export default function AddBillPopupModal({
               {isPending && (
                 <SpinnerIcon className="mr-2 h-4 w-4 animate-spin" />
               )}
-              {t("", "Create Bill")}
+              {t("billings.addBillModal.createBill", "Create Bill")}
             </Button>
           </DialogFooter>
         </form>

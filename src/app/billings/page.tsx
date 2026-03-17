@@ -205,12 +205,17 @@ export default function BillingsPage() {
       },
       {
         id: "payment_method",
-        title: "Payment Method",
+        // title: "Payment Method",
         cell: ({ row }) => {
           const method = row.original.payment_method;
+
+          if (!method) {
+            return <span className="text-sm text-foreground">-</span>;
+          }
+
           return (
             <span className="text-sm text-foreground capitalize">
-              {method ? method.replace(/_/g, " ") : "-"}
+              {t(`billings.method.${method}`) || "-"}
             </span>
           );
         },
@@ -232,7 +237,7 @@ export default function BillingsPage() {
             <span
               className={`px-2 py-1 rounded-full text-xs font-medium capitalize ${statusColors[status] || "bg-gray-100 text-gray-800"}`}
             >
-              {status ? status.replace(/_/g, " ") : "-"}
+              {t(`billings.status.${status}`) || status}
             </span>
           );
         },
@@ -375,7 +380,7 @@ export default function BillingsPage() {
             }
           >
             <FunnelIcon weight="duotone" className="h-4 w-4" />
-            Filters{" "}
+            {t("billings.filters")}{" "}
             {isFilterApplied && (
               <span className="ml-1 text-xs font-medium text-primary">{`(${filterCount})`}</span>
             )}
@@ -388,7 +393,7 @@ export default function BillingsPage() {
             className="w-full sm:w-auto gap-2 bg-primary hover:bg-primary/80 text-primary-foreground shadow-sm transition-all ease-out duration-300 active:scale-95"
           >
             <FilePlusIcon weight="bold" className="h-5 w-5" />
-            {t("", "Add Bills")}
+            {t("billings.addBill", "Add Bills")}
           </Button>
         </div>
       </div>
@@ -408,17 +413,6 @@ export default function BillingsPage() {
         onOpenChange={setIsUpdateBillDialogOpen}
         billData={paymentBillData}
       />
-
-      {/* Table Container */}
-      {/* <DataTable
-        table={table}
-        columns={columns}
-        loadingMessage={t("users.loadingUsers")}
-        emptyIcon={<UserIcon className="w-8 h-8 text-gray-400" />}
-        emptyMessage={t("users.noUsersFound")}
-        showSerialNumber
-        serialNumberStart={(currentPage - 1) * itemsPerPage + 1}
-      /> */}
 
       <div className="rounded-lg border bg-background max-h-[60vh] overflow-auto">
         <Table>
@@ -579,7 +573,7 @@ export default function BillingsPage() {
                                 <circle cx="12" cy="12" r="10" />
                                 <path d="M12 8v4m0 4h.01" />
                               </svg>
-                              No payment history found
+                              {t("billings.billHistory.noPaymentHistoryFound")}
                             </div>
                           ) : (
                             // Data
@@ -596,7 +590,7 @@ export default function BillingsPage() {
 
                                 <div className="min-w-0">
                                   <p className="text-[10px] text-muted-foreground uppercase tracking-wide mb-0.5">
-                                    Reference
+                                    {t("billings.billHistory.reference")}
                                   </p>
                                   <p className="text-sm text-foreground font-mono truncate">
                                     {item.payment_ref || "—"}
@@ -605,7 +599,7 @@ export default function BillingsPage() {
 
                                 <div>
                                   <p className="text-[10px] text-muted-foreground uppercase tracking-wide mb-0.5">
-                                    Amount
+                                    {t("billings.billHistory.amount")}
                                   </p>
                                   <p className="text-sm text-foreground font-semibold">
                                     NPR {item.amount.toLocaleString()}
@@ -614,17 +608,20 @@ export default function BillingsPage() {
 
                                 <div>
                                   <p className="text-[10px] text-muted-foreground uppercase tracking-wide mb-0.5">
-                                    Method
+                                    {t("billings.billHistory.method")}
                                   </p>
                                   <p className="text-sm text-foreground capitalize">
-                                    {item.payment_method?.replace(/_/g, " ") ||
-                                      "—"}
+                                    {item.payment_method
+                                      ? t(
+                                          `billings.method.${item.payment_method}`,
+                                        )
+                                      : "—"}
                                   </p>
                                 </div>
 
                                 <div>
                                   <p className="text-[10px] text-muted-foreground uppercase tracking-wide mb-0.5">
-                                    Date
+                                    {t("billings.billHistory.date")}
                                   </p>
                                   <p className="text-sm text-foreground">
                                     {new Date(
@@ -639,7 +636,7 @@ export default function BillingsPage() {
 
                                 <div className="min-w-0">
                                   <p className="text-[10px] text-muted-foreground uppercase tracking-wide mb-0.5">
-                                    Processed By
+                                    {t("billings.billHistory.processedBy")}
                                   </p>
                                   <p className="text-sm text-foreground truncate">
                                     {item.processed_by || "—"}

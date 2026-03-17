@@ -716,11 +716,36 @@
   },
   "billings": {
     "searchBills": "Search bills",
-    "filterByStatus": "Filter By Status",
     "priority": "Priority",
     "viewDetails": "View Details",
     "addPayment": "Add Payment",
     "updateBill": "Update Bill",
+    "filters": "Filters",
+    "addBill": "Add Bill",
+    "filter": {
+      "clear": "Clear",
+      "applyFilters": "Apply Filters",
+      "filterBills": "Filter Bills",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "pickDate": "Pick a date",
+      "status": "Status",
+      "selectStatus": "Select Status",
+      "organizer": "Organizer",
+      "selectOrganizer": "Select Organizer",
+      "noOrganizerFound": "No organizers found",
+      "searchOrganizer": "Search Organizer..."
+    },
+    "addBillModal": {
+      "addNewBill": "Add New Bill",
+      "organizer": "Organizer",
+      "selectOrganizer": "Select Organizer",
+      "event": "Event",
+      "selectEvent": "Select Event",
+      "noEventFound": "No events found",
+      "searchEvent": "Search Event...",
+      "createBill": "Create Bill"
+    },
     "status": {
       "pending": "Pending",
       "partially_paid": "Partially Paid",
@@ -746,12 +771,21 @@
       "normal": "Normal",
       "low": "Low"
     },
-    "table":{
+    "table": {
       "eventTitle": "Event Title",
       "organizerName": "Organizer Name",
       "billedAmount": "Billed Amount",
       "paymentMethod": "Payment Method",
       "status": "Status"
+    },
+    "billHistory": {
+      "noPaymentHistoryFound": "No payment history found",
+      "reference": "Reference",
+      "amount": "Amount",
+      "method": "Method",
+      "date": "Date",
+      "processedBy": "Processed By",
+      "screenshot": "Screenshot"
     }
   },
   "transactions": {

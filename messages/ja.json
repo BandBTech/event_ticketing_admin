@@ -675,6 +675,32 @@
     "viewDetails": "詳細を見る",
     "addPayment": "支払いを追加",
     "updateBill": "請求書を更新",
+    "filters": "フィルター",
+    "addBill": "請求書を追加",
+    "filter": {
+      "clear": "クリア",
+      "applyFilters": "フィルターを適用",
+      "filterBills": "請求書をフィルター",
+      "startDate": "開始日",
+      "endDate": "終了日",
+      "pickDate": "日付を選択",
+      "status": "ステータス",
+      "selectStatus": "ステータスを選択",
+      "organizer": "主催者",
+      "selectOrganizer": "主催者を選択",
+      "noOrganizerFound": "主催者は見つかりませんでした",
+      "searchOrganizer": "検索オーガナイザー..."
+    },
+    "addBillModal": {
+      "addNewBill": "新規請求書の追加",
+      "organizer": "主催者",
+      "selectOrganizer": "主催者を選択",
+      "event": "イベント",
+      "selectEvent": "イベントを選択",
+      "noEventFound": "イベントが見つかりません",
+      "searchEvent": "イベントを検索...",
+      "createBill": "請求書を作成する"
+    },
     "status": {
       "pending": "保留中",
       "paid": "支払済み",
@@ -706,6 +732,15 @@
       "billedAmount": "請求金額",
       "paymentMethod": "支払い方法",
       "status": "ステータス"
+    },
+    "billHistory": {
+      "noPaymentHistoryFound": "支払い履歴が見つかりません",
+      "reference": "参照番号",
+      "amount": "金額",
+      "method": "支払い方法",
+      "date": "日付",
+      "processedBy": "処理者",
+      "screenshot": "スクリーンショット"
     }
   },
   "transactions": {

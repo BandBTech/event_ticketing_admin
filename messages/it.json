@@ -663,6 +663,32 @@
     "viewDetails": "Visualizza dettagli",
     "addPayment": "Aggiungi pagamento",
     "updateBill": "Aggiorna fattura",
+    "filters": "Filtri",
+    "addBill": "Aggiungi Fattura",
+    "filter": {
+      "clear": "Cancella",
+      "applyFilters": "Applica filtri",
+      "filterBills": "Filtra Fatture",
+      "startDate": "Data Inizio",
+      "endDate": "Data Fine",
+      "pickDate": "Scegli una data",
+      "status": "Stato",
+      "selectStatus": "Seleziona Stato",
+      "organizer": "Organizzatore",
+      "selectOrganizer": "Seleziona Organizzatore",
+      "noOrganizerFound": "Nessun organizzatore trovato",
+      "searchOrganizer": "Organizzatori di ricerca..."
+    },
+    "addBillModal": {
+      "addNewBill": "Aggiungi Nuova Fattura",
+      "organizer": "Organizzatore",
+      "selectOrganizer": "Seleziona Organizzatore",
+      "event": "Evento",
+      "selectEvent": "Seleziona Evento",
+      "noEventFound": "Nessun evento trovato",
+      "searchEvent": "Cerca evento...",
+      "createBill": "Crea Fattura"
+    },
     "status": {
       "pending": "In sospeso",
       "paid": "Pagata",
@@ -694,6 +720,15 @@
       "billedAmount": "Importo fatturato",
       "paymentMethod": "Metodo di pagamento",
       "status": "Stato"
+    },
+    "billHistory": {
+      "noPaymentHistoryFound": "Nessuno storico pagamenti trovato",
+      "reference": "Riferimento",
+      "amount": "Importo",
+      "method": "Metodo",
+      "date": "Data",
+      "processedBy": "Elaborato da",
+      "screenshot": "Screenshot"
     }
   },
   "transactions": {

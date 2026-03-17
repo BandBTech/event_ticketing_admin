@@ -31,6 +31,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTranslation } from "@/hooks/useTranslation";
+import { useLanguageStore } from "@/store/languageStore";
 import { adminService } from "@/services/adminService";
 import { BillingFilters, getDefaultFilters } from "@/types/billings";
 
@@ -50,6 +52,8 @@ export function BillingFilterSheet({
   const [localFilters, setLocalFilters] =
     React.useState<BillingFilters>(filters);
   const [dateError, setDateError] = React.useState<string | null>(null);
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
 
   React.useEffect(() => {
     if (open) {
@@ -132,7 +136,7 @@ export function BillingFilterSheet({
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
             <Filter className="h-5 w-5" />
-            Filter Bills
+            {t("billings.filter.filterBills")}
           </SheetTitle>
         </SheetHeader>
 
@@ -141,7 +145,7 @@ export function BillingFilterSheet({
           <div className="space-y-2">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Start Date</Label>
+                <Label>{t("billings.filter.startDate")}</Label>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button
@@ -155,7 +159,7 @@ export function BillingFilterSheet({
                       {localFilters.start_date ? (
                         format(localFilters.start_date, "LLL dd, y")
                       ) : (
-                        <span>Pick a date</span>
+                        <span>{t("billings.filter.pickDate")}</span>
                       )}
                     </Button>
                   </PopoverTrigger>
@@ -176,7 +180,7 @@ export function BillingFilterSheet({
               </div>
 
               <div className="space-y-2">
-                <Label>End Date</Label>
+                <Label>{t("billings.filter.endDate")}</Label>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button
@@ -191,7 +195,7 @@ export function BillingFilterSheet({
                       {localFilters.end_date ? (
                         format(localFilters.end_date, "LLL dd, y")
                       ) : (
-                        <span>Pick a date</span>
+                        <span>{t("billings.filter.pickDate")}</span>
                       )}
                     </Button>
                   </PopoverTrigger>
@@ -221,7 +225,7 @@ export function BillingFilterSheet({
 
           {/* Organizer */}
           <div className="space-y-2">
-            <Label>Organizer</Label>
+            <Label>{t("billings.filter.organizer")}</Label>
             <AsyncCombobox
               queryKey={["filter", "organizers"]}
               value={localFilters.organizer_id ?? ""}
@@ -229,9 +233,9 @@ export function BillingFilterSheet({
                 setLocalFilters((prev) => ({ ...prev, organizer_id: val }))
               }
               fetchOptions={fetchOrganizers}
-              placeholder="Select organizer"
-              searchPlaceholder="Search organizers..."
-              emptyText="No organizers found"
+              placeholder={t("billings.filter.selectOrganizer")}
+              searchPlaceholder={t("billings.filter.searchOrganizer")}
+              emptyText={t("billings.filter.noOrganizerFound")}
               className="w-full text-sm h-9 justify-between px-3!"
               debounceMs={300}
             />
@@ -239,7 +243,7 @@ export function BillingFilterSheet({
 
           {/* Status */}
           <div className="space-y-2">
-            <Label>Status</Label>
+            <Label>{t("billings.filter.status")}</Label>
             <Select
               value={localFilters.status}
               onValueChange={(value) =>
@@ -248,16 +252,26 @@ export function BillingFilterSheet({
             >
               <SelectTrigger className="w-full text-sm h-9 justify-between px-3! bg-white">
                 <SelectValue
-                  placeholder="Select status"
+                  placeholder={t("billings.filter.selectStatus")}
                   className="text-black data-[placeholder]:text-black"
                 />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="partially_paid">Partially Paid</SelectItem>
-                <SelectItem value="paid">Paid</SelectItem>
-                <SelectItem value="overdue">Overdue</SelectItem>
-                <SelectItem value="rejected">Rejected</SelectItem>
+                <SelectItem value="pending">
+                  {t("billings.status.pending")}
+                </SelectItem>
+                <SelectItem value="partially_paid">
+                  {t("billings.status.partially_paid")}
+                </SelectItem>
+                <SelectItem value="paid">
+                  {t("billings.status.paid")}
+                </SelectItem>
+                <SelectItem value="overdue">
+                  {t("billings.status.overdue")}
+                </SelectItem>
+                <SelectItem value="cancelled">
+                  {t("billings.status.cancelled")}
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -266,7 +280,7 @@ export function BillingFilterSheet({
         <SheetFooter className="flex-row gap-2">
           <Button variant="outline" onClick={handleClear} className="flex-1">
             <X className="mr-2 h-4 w-4" />
-            Clear
+            {t("billings.filter.clear")}
           </Button>
           <Button
             onClick={handleApply}
@@ -274,7 +288,7 @@ export function BillingFilterSheet({
             className="flex-1 w-full sm:w-auto gap-2 bg-primary hover:bg-primary/80 text-primary-foreground shadow-sm transition-all ease-out duration-300 active:scale-95"
           >
             <Filter className="mr-2 h-4 w-4" />
-            Apply Filters
+            {t("billings.filter.applyFilters")}
             {activeFilterCount > 0 && (
               <span className="ml-2 bg-amber-700 text-white text-xs px-1.5 py-0.5 rounded-full">
                 {activeFilterCount}
