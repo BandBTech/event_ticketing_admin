@@ -286,6 +286,7 @@
       "sold_out": "Sold Out",
       "sales_ended": "Sales Ended",
       "on_sale": "Sales Live",
+      "hold": "Sales On Hold",
       "featured": "Featured",
       "completed": "Completed"
     },

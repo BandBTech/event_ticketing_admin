@@ -64,10 +64,9 @@ export function EventCard({ event }: { event: Event }) {
         />
         {/* Status Badge */}
         <div className="absolute top-3 left-3">
-          {(event.status !== "on_sale" || event.sales_status === "active") && (
+          {(event.status !== "on_sale" && event.status !== "hold") || event.sales_status === "active" ? (
             <EventStatusBadge status={event.status} />
-          )}
-          {event.status === "on_sale" && event.sales_status !== "active" && (
+          ) : (
             <SalesStatusBadge status={event.sales_status} />
           )}
         </div>
