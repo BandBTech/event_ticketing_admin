@@ -9,7 +9,15 @@ export interface ApiResponse {
 export interface TransactionPaymentData {
   transaction: Transaction;
   tickets: Ticket[];
-  refunds: Refund[];
+  payment_intent: PaymentIntent;
+}
+
+export interface PaymentIntent {
+  id: string
+  status: PaymentIntentStatus
+  payment_gateway: string
+  payment_method: PaymentGateway
+  created_at: string
 }
 
 export interface Transaction {
@@ -35,50 +43,18 @@ export interface Transaction {
 }
 
 export interface Event {
-  id: string;
-  title: string;
-  description: string;
-  banner_image: string;
-  category: string;
-  venue_name: string;
-  address: string;
-  location: string;
-  start_date: string;
-  end_date: string;
-  timezone: string;
-  capacity: number;
-  available: number;
-  price: number;
-  commission_rate: number;
-  status: EventStatus;
-  sales_status: SalesStatus;
-  is_featured: boolean;
-  is_cancelled: boolean;
-  organizer_id: string;
-  admin_remark: string;
-  created_at: string;
-  updated_at: string;
+  id: string
+  name: string
+  banner: string
 }
 
 export interface User {
-  id: string;
-  email: string;
-  first_name: string;
-  last_name: string;
-  phone: string;
-  country_code: string;
-  is_email_verified: boolean;
-  organizer_status: OrganizerStatus;
-  account_status: AccountStatus;
-  admin_remark: string;
-  approved_at: null | string;
-  rejected_at: null | string;
-  organizer_id: null | string;
-  created_by: null | string;
-  roles: null | Role[];
-  created_at: string;
-  updated_at: string;
+  id: string
+  name: string
+  email: string
+  phone: string
 }
+
 
 export interface Ticket {
   id: string;
@@ -117,17 +93,7 @@ export interface Tier {
   updated_at: string;
 }
 
-export interface Refund {
-  // Define based on actual refund structure
-  id: string;
-  amount: number;
-  reason: string;
-  status: RefundStatus;
-  created_at: string;
-}
-
 export interface GatewayData {
-  // Define based on your payment gateway response structure
   payment_intent?: string;
   payment_method?: string;
   charge_id?: string;
@@ -169,7 +135,7 @@ export type TicketStatus =
   | "refunded"
   | "cancelled"
   | string;
-export type RefundStatus =
+export type PaymentIntentStatus =
   | "pending"
   | "approved"
   | "rejected"

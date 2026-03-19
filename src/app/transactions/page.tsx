@@ -7,6 +7,12 @@ import { TransactionService } from "@/services/transactionService";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
+  TooltipProvider,
+  TooltipContent,
+  Tooltip,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   MagnifyingGlass as MagnifyingGlassIcon,
   Funnel as FunnelIcon,
   CaretLeft as CaretLeftIcon,
@@ -16,6 +22,7 @@ import {
   DotsThreeVertical as DotsThreeVerticalIcon,
   ArrowClockwiseIcon,
   CoinsIcon,
+  InfoIcon,
 } from "@phosphor-icons/react";
 import { BanknoteArrowUp, CreditCard, Logs } from "lucide-react";
 import { CaretUp, CaretDown, CaretUpDown } from "@phosphor-icons/react";
@@ -124,6 +131,17 @@ export default function TransactionsPage() {
   const columns: ColumnDef<Transaction>[] = React.useMemo(
     () => [
       {
+        id: "date",
+        header: t("transactions.table.date"),
+        cell: ({ row }) => {
+          const date = new Date(row.original.created_at);
+          const formattedDate = date.toISOString().split("T")[0];
+          return <span>{formattedDate}</span>;
+        },
+        title: "Created At",
+        enableSorting: true,
+      },
+      {
         id: "event",
         header: t("transactions.table.event"),
         accessorKey: "event.title",
@@ -145,40 +163,59 @@ export default function TransactionsPage() {
         id: "amount",
         header: t("transactions.table.amount"),
         accessorKey: "amount",
+        title: "Amount",
         enableSorting: false,
         cell: ({ row }) => (
-          <span className="px-2 py-1 text-xs font-medium rounded-full">
+          <span className="px-2 py-1 text-xs font-medium rounded-full flex items-center gap-2">
             {row.original.currency} {row.original.amount}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <InfoIcon className="text-yellow-800 cursor-pointer" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>
+                    Total Amount: {row.original.amount}
+                    <br />
+                    Commission Rate: {row.original.commission_rate}%
+                    <br />
+                    Commission Amount: {row.original.commission_amount}
+                    <br />
+                    Organizer Share: {row.original.organizer_share}
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </span>
         ),
       },
-      {
-        id: "commission",
-        header: t("transactions.table.commission"),
-        accessorKey: "commission_amount",
-        enableSorting: false,
-        cell: ({ row }) => (
-          <span className="px-2 py-1 text-xs font-medium rounded-full">
-            {row.original.currency} {row.original.commission_amount.toFixed(2)}
-            {row.original.commission_rate && (
-              <span className="ml-1 text-gray-500">
-                ({row.original.commission_rate}%)
-              </span>
-            )}
-          </span>
-        ),
-      },
-      {
-        id: "organizer_share",
-        header: t("transactions.table.organizer_share"),
-        accessorKey: "organizer_share",
-        enableSorting: false,
-        cell: ({ row }) => (
-          <span className="px-2 py-1 text-xs font-medium rounded-full">
-            {row.original.currency} {row.original.organizer_share}
-          </span>
-        ),
-      },
+      // {
+      //   id: "commission",
+      //   header: t("transactions.table.commission"),
+      //   accessorKey: "commission_amount",
+      //   enableSorting: false,
+      //   cell: ({ row }) => (
+      //     <span className="px-2 py-1 text-xs font-medium rounded-full">
+      //       {row.original.currency} {row.original.commission_amount.toFixed(2)}
+      //       {row.original.commission_rate && (
+      //         <span className="ml-1 text-gray-500">
+      //           ({row.original.commission_rate}%)
+      //         </span>
+      //       )}
+      //     </span>
+      //   ),
+      // },
+      // {
+      //   id: "organizer_share",
+      //   header: t("transactions.table.organizer_share"),
+      //   accessorKey: "organizer_share",
+      //   enableSorting: false,
+      //   cell: ({ row }) => (
+      //     <span className="px-2 py-1 text-xs font-medium rounded-full">
+      //       {row.original.currency} {row.original.organizer_share}
+      //     </span>
+      //   ),
+      // },
       {
         id: "gateway",
         accessorKey: "payment_gateway",
