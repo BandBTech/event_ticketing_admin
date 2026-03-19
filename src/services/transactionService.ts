@@ -30,6 +30,13 @@ export class TransactionService {
     sort?: string;
     filter?: string;
     search?: string;
+    status?: string;
+    event_id?: string;
+    user_id?: string;
+    guest_user_id?: string;
+    start_date?: Date | undefined;
+    end_date?: Date | undefined;
+    payment_gateway?: string;
   }): Promise<TransactionListResponse> {
     const params = new URLSearchParams();
 
@@ -38,6 +45,21 @@ export class TransactionService {
       if (filters.limit) params.append("limit", filters.limit.toString());
       if (filters.filter) params.append("filter", filters.filter);
       if (filters.search) params.append("search", filters.search);
+      if (filters.status) params.append("status", filters.status);
+      if (filters.payment_gateway) params.append("payment_gateway", filters.payment_gateway);
+      if (filters.event_id)
+        params.append("event_id", filters.event_id.toString());
+      if (filters.user_id)
+        params.append("user_id", filters.user_id.toString());
+      if (filters.guest_user_id)
+        params.append("guest_user_id", filters.guest_user_id.toString());
+      if (filters.start_date)
+        params.append(
+          "start_date",
+          filters.start_date.toISOString().split("T")[0],
+        );
+      if (filters.end_date)
+        params.append("end_date", filters.end_date.toISOString().split("T")[0]);
       if (filters.sort) params.append("sort", filters.sort);
     }
 

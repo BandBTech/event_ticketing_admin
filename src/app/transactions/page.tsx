@@ -58,7 +58,7 @@ import {
 } from "@/components/ui/table";
 import { flexRender } from "@tanstack/react-table";
 import { TransactionFilterSheet } from "./components/TransactionFilterSheet";
-import { BillingFilters, getDefaultFilters } from "@/types/billings";
+import { TransactionFilters, getDefaultFilters } from "@/types/transaction";
 
 export default function TransactionsPage() {
   const router = useRouter();
@@ -74,9 +74,28 @@ export default function TransactionsPage() {
   const [searchInput, setSearchInput] = React.useState("");
   const [filterSheetOpen, setFilterSheetOpen] = React.useState(false);
   const [appliedFilters, setAppliedFilters] =
-    React.useState<BillingFilters>(getDefaultFilters());
+    React.useState<TransactionFilters>(getDefaultFilters());
 
   const debouncedSearch = useDebounce(searchInput, 500);
+
+  const defaultFilters = getDefaultFilters();
+
+  const isFilterApplied = React.useMemo(() => {
+    return JSON.stringify(appliedFilters) !== JSON.stringify(defaultFilters);
+  }, [appliedFilters]);
+
+  const filterCount = React.useMemo(() => {
+    let count = 0;
+    if (appliedFilters.start_date) count++;
+    if (appliedFilters.end_date) count++;
+    if (appliedFilters.organizer_id) count++;
+    if (appliedFilters.status !== "") count++;
+    if (appliedFilters.payment_gateway !== "") count++;
+    if (appliedFilters.event_id) count++;
+    if (appliedFilters.user_id) count++;
+    if (appliedFilters.guest_user_id) count++;
+    return count;
+  }, [appliedFilters]);
 
   const sort =
     sorting.length > 0
@@ -89,6 +108,13 @@ export default function TransactionsPage() {
       currentPage,
       itemsPerPage,
       statusFilter,
+      appliedFilters.status,
+      appliedFilters.event_id,
+      appliedFilters.user_id,
+      appliedFilters.guest_user_id,
+      appliedFilters.start_date,
+      appliedFilters.end_date,
+      appliedFilters.payment_gateway,
       sort,
       debouncedSearch,
     ],
@@ -98,6 +124,13 @@ export default function TransactionsPage() {
         limit: itemsPerPage,
         search: debouncedSearch,
         filter: statusFilter,
+        status: appliedFilters.status,
+        event_id: appliedFilters.event_id,
+        user_id: appliedFilters.user_id,
+        guest_user_id: appliedFilters.guest_user_id,
+        start_date: appliedFilters.start_date,
+        end_date: appliedFilters.end_date,
+        payment_gateway: appliedFilters.payment_gateway,
         sort,
       }),
     placeholderData: (previousData) => previousData,
@@ -189,33 +222,6 @@ export default function TransactionsPage() {
           </span>
         ),
       },
-      // {
-      //   id: "commission",
-      //   header: t("transactions.table.commission"),
-      //   accessorKey: "commission_amount",
-      //   enableSorting: false,
-      //   cell: ({ row }) => (
-      //     <span className="px-2 py-1 text-xs font-medium rounded-full">
-      //       {row.original.currency} {row.original.commission_amount.toFixed(2)}
-      //       {row.original.commission_rate && (
-      //         <span className="ml-1 text-gray-500">
-      //           ({row.original.commission_rate}%)
-      //         </span>
-      //       )}
-      //     </span>
-      //   ),
-      // },
-      // {
-      //   id: "organizer_share",
-      //   header: t("transactions.table.organizer_share"),
-      //   accessorKey: "organizer_share",
-      //   enableSorting: false,
-      //   cell: ({ row }) => (
-      //     <span className="px-2 py-1 text-xs font-medium rounded-full">
-      //       {row.original.currency} {row.original.organizer_share}
-      //     </span>
-      //   ),
-      // },
       {
         id: "gateway",
         accessorKey: "payment_gateway",
@@ -316,27 +322,26 @@ export default function TransactionsPage() {
                     View Payment
                   </div>
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                // onClick={() => {
-                //   router.push(`/users/userdetail?id=${user.id}`);
-                // }}
+                {/* <DropdownMenuItem
+                onClick={() => {
+                  router.push(`/users/userdetail?id=${user.id}`);
+                }}
                 >
                   <div className="flex justify-start items-center bg-gray-50 text-gray-700">
                     <BanknoteArrowUp className="mr-2 h-4 w-4" />
-                    {/* {t(`users.viewDetails`)} */}
                     Refund
                   </div>
-                </DropdownMenuItem>
-                <DropdownMenuItem
+                </DropdownMenuItem> */}
+                {/* <DropdownMenuItem
                   className="text-red-600"
-                  // onClick={(e) => {
-                  //   e.stopPropagation();
-                  //   handleDeleteClick(user);
-                  // }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteClick(user);
+                  }}
                 >
                   <ArrowClockwiseIcon className="mr-2 h-4 w-4" />
                   Retry
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
               </DropdownMenuContent>
             </DropdownMenu>
           );
@@ -385,7 +390,8 @@ export default function TransactionsPage() {
             />
             <Input
               type="text"
-              placeholder={t("transactions.searchTransactions")}
+              // placeholder={t("transactions.searchTransactions")}
+              placeholder="Search Transactions..."
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               className="pl-9"
@@ -424,10 +430,17 @@ export default function TransactionsPage() {
           <Button
             variant="outline"
             onClick={() => setFilterSheetOpen(true)}
-            className="gap-2 bg-background/80 backdrop-blur-sm"
+            className={
+              isFilterApplied
+                ? "gap-2 bg-primary/10 text-black hover:bg-primary/10"
+                : `gap-2 bg-background/80 backdrop-blur-sm`
+            }
           >
             <FunnelIcon weight="duotone" className="h-4 w-4" />
-            Filters
+            {t("billings.filters")}{" "}
+            {isFilterApplied && (
+              <span className="ml-1 text-xs font-medium text-primary">{`(${filterCount})`}</span>
+            )}
           </Button>
         </div>
       </div>
@@ -508,7 +521,8 @@ export default function TransactionsPage() {
                 >
                   <div className="flex flex-col items-center gap-2 text-muted-foreground">
                     <UserIcon className="w-8 h-8" />
-                    <span>{t("transactions.noTransactionsFound")}</span>
+                    {/* <span>{t("transactions.noTransactionsFound")}</span> */}
+                    <span>No transactions found</span>
                   </div>
                 </TableCell>
               </TableRow>

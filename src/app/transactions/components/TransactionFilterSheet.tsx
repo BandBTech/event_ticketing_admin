@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { adminService } from "@/services/adminService";
-import { BillingFilters, getDefaultFilters } from "@/types/billings";
+import { TransactionFilters, getDefaultFilters } from "@/types/transaction";
 import {
   Popover,
   PopoverContent,
@@ -34,11 +34,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-interface BillingFilterSheetProps {
+interface TransactionFilterSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  filters: BillingFilters;
-  onApplyFilters: (filters: BillingFilters) => void;
+  filters: TransactionFilters;
+  onApplyFilters: (filters: TransactionFilters) => void;
 }
 
 export function TransactionFilterSheet({
@@ -46,10 +46,13 @@ export function TransactionFilterSheet({
   onOpenChange,
   filters,
   onApplyFilters,
-}: BillingFilterSheetProps) {
+}: TransactionFilterSheetProps) {
   const [localFilters, setLocalFilters] =
-    React.useState<BillingFilters>(filters);
+    React.useState<TransactionFilters>(filters);
   const [dateError, setDateError] = React.useState<string | null>(null);
+
+  console.log("local filters", localFilters);
+  
 
   React.useEffect(() => {
     if (open) {
@@ -58,21 +61,71 @@ export function TransactionFilterSheet({
     }
   }, [open, filters]);
 
-  const fetchOrganizers = useCallback(
+  const fetchEvents = useCallback(
     async (search: string): Promise<AsyncComboboxOption[]> => {
       try {
-        const response = await adminService.getAllEntities("organizers");
+        const response = await adminService.getAllEntities("events");
         if (!response || !Array.isArray(response)) return [];
 
         const filtered = search
-          ? response.filter((org) =>
-              `${org.name}`.toLowerCase().includes(search.toLowerCase()),
+          ? response.filter((event) =>
+              event.title.toLowerCase().includes(search.toLowerCase()),
             )
           : response;
 
-        return filtered.map((org) => ({ value: org.id, label: `${org.name}` }));
+        return filtered.map((event) => ({
+          value: event.id,
+          label: event.title,
+        }));
       } catch (error) {
-        console.error("Failed to fetch organizers:", error);
+        console.error("Failed to fetch events:", error);
+        return [];
+      }
+    },
+    [],
+  );
+  const fetchUser = useCallback(
+    async (search: string): Promise<AsyncComboboxOption[]> => {
+      try {
+        const response = await adminService.getAllEntities("users");
+        if (!response || !Array.isArray(response)) return [];
+
+        const filtered = search
+          ? response.filter((user) =>
+              user.name.toLowerCase().includes(search.toLowerCase()),
+            )
+          : response;
+
+        return filtered.map((user) => ({
+          value: user.id,
+          label: user.name,
+        }));
+      } catch (error) {
+        console.error("Failed to fetch users:", error);
+        return [];
+      }
+    },
+    [],
+  );
+
+  const fetchGuestUser = useCallback(
+    async (search: string): Promise<AsyncComboboxOption[]> => {
+      try {
+        const response = await adminService.getAllEntities("guest_users");
+        if (!response || !Array.isArray(response)) return [];
+
+        const filtered = search
+          ? response.filter((user) =>
+              user.name.toLowerCase().includes(search.toLowerCase()),
+            )
+          : response;
+
+        return filtered.map((user) => ({
+          value: user.id,
+          label: user.name,
+        }));
+      } catch (error) {
+        console.error("Failed to fetch guest users:", error);
         return [];
       }
     },
@@ -120,6 +173,10 @@ export function TransactionFilterSheet({
     if (localFilters.end_date) count++;
     if (localFilters.organizer_id) count++;
     if (localFilters.status !== "") count++;
+    if (localFilters.payment_gateway !== "") count++;
+    if (localFilters.event_id) count++;
+    if (localFilters.user_id) count++;
+    if (localFilters.guest_user_id) count++;
     return count;
   }, [localFilters]);
 
@@ -214,23 +271,20 @@ export function TransactionFilterSheet({
                 )}
               </div>
             </div>
-            <p className="text-xs text-muted-foreground">
-              Maximum range: 3 months
-            </p>
           </div>
 
           {/* Gateway */}
           <div className="space-y-2">
-            <Label>Gateway</Label>
+            <Label>Payment Gateway</Label>
             <Select
-              value={localFilters.status}
+              value={localFilters.payment_gateway}
               onValueChange={(value) =>
-                setLocalFilters((prev) => ({ ...prev, status: value }))
+                setLocalFilters((prev) => ({ ...prev, payment_gateway: value }))
               }
             >
               <SelectTrigger className="w-full text-sm h-9 justify-between px-3! bg-white">
                 <SelectValue
-                  placeholder="Select gateway"
+                  placeholder="Select Payment Gateway"
                   className="text-black data-[placeholder]:text-black"
                 />
               </SelectTrigger>
@@ -239,6 +293,7 @@ export function TransactionFilterSheet({
                 <SelectItem value="cash">Cash</SelectItem>
                 <SelectItem value="cheque">Cheque</SelectItem>
                 <SelectItem value="mobile_payment">Mobile Payment</SelectItem>
+                <SelectItem value="stripe">Stripe</SelectItem>
                 <SelectItem value="other">Other</SelectItem>
               </SelectContent>
             </Select>
@@ -248,12 +303,12 @@ export function TransactionFilterSheet({
           <div className="space-y-2">
             <Label>Event</Label>
             <AsyncCombobox
-              queryKey={["filter", "organizers"]}
-              value={localFilters.organizer_id ?? ""}
+              queryKey={["filter", "events"]}
+              value={localFilters.event_id ?? ""}
               onValueChange={(val) =>
-                setLocalFilters((prev) => ({ ...prev, organizer_id: val }))
+                setLocalFilters((prev) => ({ ...prev, event_id: val }))
               }
-              fetchOptions={fetchOrganizers}
+              fetchOptions={fetchEvents}
               placeholder="Select event"
               searchPlaceholder="Search events..."
               emptyText="No events found"
@@ -266,12 +321,12 @@ export function TransactionFilterSheet({
           <div className="space-y-2">
             <Label>User</Label>
             <AsyncCombobox
-              queryKey={["filter", "organizers"]}
-              value={localFilters.organizer_id ?? ""}
+              queryKey={["filter", "users"]}
+              value={localFilters.user_id ?? ""}
               onValueChange={(val) =>
-                setLocalFilters((prev) => ({ ...prev, organizer_id: val }))
+                setLocalFilters((prev) => ({ ...prev, user_id: val }))
               }
-              fetchOptions={fetchOrganizers}
+              fetchOptions={fetchUser}
               placeholder="Select user"
               searchPlaceholder="Search users..."
               emptyText="No users found"
@@ -284,12 +339,12 @@ export function TransactionFilterSheet({
           <div className="space-y-2">
             <Label>Guest User</Label>
             <AsyncCombobox
-              queryKey={["filter", "organizers"]}
-              value={localFilters.organizer_id ?? ""}
+              queryKey={["filter", "guest_users"]}
+              value={localFilters.guest_user_id ?? ""}
               onValueChange={(val) =>
-                setLocalFilters((prev) => ({ ...prev, organizer_id: val }))
+                setLocalFilters((prev) => ({ ...prev, guest_user_id: val }))
               }
-              fetchOptions={fetchOrganizers}
+              fetchOptions={fetchGuestUser}
               placeholder="Select guest user"
               searchPlaceholder="Search guest users..."
               emptyText="No guest users found"
@@ -317,7 +372,7 @@ export function TransactionFilterSheet({
                 <SelectItem value="pending">Pending</SelectItem>
                 <SelectItem value="paid">Paid</SelectItem>
                 <SelectItem value="overdue">Overdue</SelectItem>
-                <SelectItem value="rejected">Rejected</SelectItem>
+                <SelectItem value="completed">Completed</SelectItem>
               </SelectContent>
             </Select>
           </div>

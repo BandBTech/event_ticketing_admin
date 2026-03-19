@@ -23,6 +23,34 @@ export interface Transaction {
   user_name: string;
 }
 
+export interface TransactionFilters {
+  organizer_id: string;
+  start_date: Date | undefined;
+  end_date: Date | undefined;
+  status: string;
+  payment_gateway: string;
+  user_id: string;
+  guest_user_id: string;
+  event_id: string;
+  // dateRange: {
+  //   from: Date | undefined;
+  //   to: Date | undefined;
+  // };
+}
+
+export const getDefaultFilters = (): TransactionFilters => ({
+  organizer_id: "",
+  start_date: undefined,
+  end_date: undefined,
+  status: "",
+  payment_gateway: "",
+  user_id: "",
+  guest_user_id: "",
+event_id: "",
+  // dateRange: getDefaultDateRange(),
+});
+
+
 export interface TransactionListResponse {
   pagination: {
     has_next: boolean;
