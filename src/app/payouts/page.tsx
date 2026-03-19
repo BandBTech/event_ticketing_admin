@@ -18,8 +18,9 @@ import {
   CheckCircleIcon,
   CreditCard,
   XCircleIcon,
-  UserCircleDashedIcon 
+  UserCircleDashedIcon,
 } from "@phosphor-icons/react";
+import { usePathname } from "next/navigation";
 import { BanknoteArrowUp, Logs } from "lucide-react";
 import { CaretUp, CaretDown, CaretUpDown } from "@phosphor-icons/react";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -56,6 +57,8 @@ export default function TransactionsPage() {
   const searchParams = useSearchParams();
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
+    const pathname = usePathname();
+    const isPayoutsPage = pathname === "/payouts/";  
 
   const currentPage = Number(searchParams.get("page")) || 1;
   const statusFilter = searchParams.get("status") || "";
@@ -286,7 +289,7 @@ export default function TransactionsPage() {
   const handleOpenTransactions = () => {
     router.push(`/transactions`);
   };
-    const handleOpenCheckoutSessions = () => {
+  const handleOpenCheckoutSessions = () => {
     router.push(`/checkoutsessions`);
   };
 
@@ -297,114 +300,126 @@ export default function TransactionsPage() {
   return (
     <div className="min-h-screen p-8 space-y-6">
       {/* Filters */}
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex gap-3">
-          <div className="relative flex-1 w-md">
-            <MagnifyingGlassIcon
-              weight="duotone"
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground"
-            />
-            <Input
-              type="text"
-              placeholder={t("transactions.searchPayouts")}
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              className="pl-9"
-            />
+      <div className="grid gap-2">
+        <div className="flex justify-between">
+          <div>
+            <div className="relative flex-1 w-md">
+              <MagnifyingGlassIcon
+                weight="duotone"
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground"
+              />
+              <Input
+                type="text"
+                placeholder={t("transactions.searchPayouts")}
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                className="pl-9"
+              />
+            </div>
           </div>
+          <div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="gap-2 bg-background/80 backdrop-blur-sm"
+                >
+                  <FunnelIcon weight="duotone" className="h-4 w-4" />
+                  {/* {t("transactions.filter")} */}
+                  Filter By Status
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem
+                  className={
+                    statusFilter === "approved" ? "bg-muted font-medium" : ""
+                  }
+                  onClick={() =>
+                    updateParams({ status: "approved", page: "1" })
+                  }
+                >
+                  Approved
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className={
+                    statusFilter === "pending" ? "bg-muted font-medium" : ""
+                  }
+                  onClick={() => updateParams({ status: "pending", page: "1" })}
+                >
+                  Pending
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className={
+                    statusFilter === "rejected" ? "bg-muted font-medium" : ""
+                  }
+                  onClick={() =>
+                    updateParams({ status: "rejected", page: "1" })
+                  }
+                >
+                  Rejected
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className={
+                    statusFilter === "paid" ? "bg-muted font-medium" : ""
+                  }
+                  onClick={() => updateParams({ status: "paid", page: "1" })}
+                >
+                  Paid
+                </DropdownMenuItem>
 
-          <div className="flex gap-2">
-            <Button
-              onClick={handleOpenrefunds}
-              variant="outline"
-              className="gap-2 bg-background/80 backdrop-blur-sm"
-            >
-              <BanknoteArrowUp className="h-4 w-4" />
-              {t("transactions.refund")}
-            </Button>
-            <Button
-              onClick={handleOpenLogs}
-              variant="outline"
-              className="gap-2 bg-background/80 backdrop-blur-sm"
-            >
-              <Logs className="h-4 w-4" />
-              {t("transactions.auditLogs")}
-            </Button>
-            <Button
-              onClick={handleOpenTransactions}
-              variant="outline"
-              className="gap-2 bg-background/80 backdrop-blur-sm"
-            >
-              <ArrowsLeftRight className="h-4 w-4" />
-              {t("sidebar.transactions")}
-            </Button>
-            <Button
-              onClick={handleOpenCheckoutSessions}
-              variant="outline"
-              className="gap-2 bg-background/80 backdrop-blur-sm"
-            >
-              <UserCircleDashedIcon className="h-4 w-4" />
-              {t("transactions.checkoutsessions")}
-            </Button>
+                <DropdownMenuSeparator />
+
+                <DropdownMenuItem
+                  className={`text-red-600 font-medium ${!statusFilter ? "hidden" : ""}`}
+                  onClick={() => updateParams({ status: null, page: "1" })}
+                >
+                  {t("users.clearFilters")}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
-
-        <div className="flex gap-6">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className="gap-2 bg-background/80 backdrop-blur-sm"
-              >
-                <FunnelIcon weight="duotone" className="h-4 w-4" />
-                {/* {t("transactions.filter")} */}
-                Filter By Status
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem
-                className={
-                  statusFilter === "approved" ? "bg-muted font-medium" : ""
-                }
-                onClick={() => updateParams({ status: "approved", page: "1" })}
-              >
-                Approved
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className={
-                  statusFilter === "pending" ? "bg-muted font-medium" : ""
-                }
-                onClick={() => updateParams({ status: "pending", page: "1" })}
-              >
-                Pending
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className={
-                  statusFilter === "rejected" ? "bg-muted font-medium" : ""
-                }
-                onClick={() => updateParams({ status: "rejected", page: "1" })}
-              >
-                Rejected
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className={
-                  statusFilter === "paid" ? "bg-muted font-medium" : ""
-                }
-                onClick={() => updateParams({ status: "paid", page: "1" })}
-              >
-                Paid
-              </DropdownMenuItem>
-
-              <DropdownMenuSeparator />
-
-              <DropdownMenuItem
-                className={`text-red-600 font-medium ${!statusFilter ? "hidden" : ""}`}
-                onClick={() => updateParams({ status: null, page: "1" })}
-              >
-                {t("users.clearFilters")}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+        <div className="flex justify-start gap-2">
+          <Button
+            onClick={handleOpenTransactions}
+            variant="outline"
+            className="gap-2 bg-background/80 backdrop-blur-sm"
+          >
+            <ArrowsLeftRight className="h-4 w-4" />
+            {t("sidebar.transactions")}
+          </Button>
+          <Button
+            onClick={handleOpenrefunds}
+            variant="outline"
+            className="gap-2 bg-background/80 backdrop-blur-sm"
+          >
+            <BanknoteArrowUp className="h-4 w-4" />
+            {t("transactions.refund")}
+          </Button>
+          <Button
+            onClick={handleOpenLogs}
+            variant="outline"
+            className="gap-2 bg-background/80 backdrop-blur-sm"
+          >
+            <Logs className="h-4 w-4" />
+            {t("transactions.auditLogs")}
+          </Button>
+          <Button
+            // onClick={handleOpenPayouts}
+            variant="outline"
+            className={isPayoutsPage ? "gap-2 bg-primary/10 text-black hover:bg-primary/10" : `gap-2 bg-background/80 backdrop-blur-sm`}
+          >
+            <CreditCard className="h-4 w-4" />
+            {t("transactions.payouts")}
+          </Button>
+          <Button
+            onClick={handleOpenCheckoutSessions}
+            variant="outline"
+            className="gap-2 bg-background/80 backdrop-blur-sm"
+          >
+            <UserCircleDashedIcon className="h-4 w-4" />
+            {t("transactions.checkoutsessions")}
+          </Button>
         </div>
       </div>
 

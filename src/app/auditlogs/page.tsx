@@ -14,9 +14,9 @@ import {
   CaretRight as CaretRightIcon,
   User as UserIcon,
   ArrowsLeftRight,
-  UserCircleDashedIcon 
+  UserCircleDashedIcon,
 } from "@phosphor-icons/react";
-import { BanknoteArrowUp, CreditCard } from "lucide-react";
+import { BanknoteArrowUp, CreditCard, Logs as LogsIcon } from "lucide-react";
 import { CaretUp, CaretDown, CaretUpDown } from "@phosphor-icons/react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
@@ -47,6 +47,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { usePathname } from "next/navigation";
 import { flexRender } from "@tanstack/react-table";
 import {
   AuditLogsListResponse,
@@ -72,6 +73,8 @@ export default function TransactionsPage() {
   const searchParams = useSearchParams();
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
+  const pathname = usePathname();
+  const isAuditLogsPage = pathname === "/auditlogs/";
 
   const currentPage = Number(searchParams.get("page")) || 1;
   const itemsPerPage = 10;
@@ -212,66 +215,78 @@ export default function TransactionsPage() {
   return (
     <div className="min-h-screen p-8 space-y-6">
       {/* Filters */}
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex gap-3">
-          <div className="relative flex-1 w-md">
-            <MagnifyingGlassIcon
-              weight="duotone"
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground"
-            />
-            <Input
-              type="text"
-              placeholder={t("transactions.searchAuditLogs")}
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              className="pl-9"
-            />
+      <div className="grid gap-2">
+        <div className="flex justify-between">
+          <div>
+            <div className="relative flex-1 w-md">
+              <MagnifyingGlassIcon
+                weight="duotone"
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground"
+              />
+              <Input
+                type="text"
+                placeholder={t("transactions.searchAuditLogs")}
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                className="pl-9"
+              />
+            </div>
           </div>
-
-          <div className="flex gap-2">
+          <div>
             <Button
-              onClick={handleOpenrefunds}
               variant="outline"
+              onClick={() => setFilterSheetOpen(true)}
               className="gap-2 bg-background/80 backdrop-blur-sm"
             >
-              <BanknoteArrowUp className="h-4 w-4" />
-              {t("transactions.refund")}
-            </Button>
-            <Button
-              onClick={handleOpenTransactions}
-              variant="outline"
-              className="gap-2 bg-background/80 backdrop-blur-sm"
-            >
-              <ArrowsLeftRight className="h-4 w-4" />
-              {t("sidebar.transactions")}
-            </Button>
-            <Button
-              onClick={handleOpenPayouts}
-              variant="outline"
-              className="gap-2 bg-background/80 backdrop-blur-sm"
-            >
-              <CreditCard className="h-4 w-4" />
-              {t("transactions.payouts")}
-            </Button>
-            <Button
-              onClick={handleOpenCheckoutSessions}
-              variant="outline"
-              className="gap-2 bg-background/80 backdrop-blur-sm"
-            >
-              <UserCircleDashedIcon className="h-4 w-4" />
-              {t("transactions.checkoutsessions")}
+              <FunnelIcon weight="duotone" className="h-4 w-4" />
+              Filters
             </Button>
           </div>
         </div>
-
-        <div className="flex gap-6">
+        <div className="flex justify-start gap-2">
           <Button
+            onClick={handleOpenTransactions}
             variant="outline"
-            onClick={() => setFilterSheetOpen(true)}
             className="gap-2 bg-background/80 backdrop-blur-sm"
           >
-            <FunnelIcon weight="duotone" className="h-4 w-4" />
-            Filters
+            <ArrowsLeftRight className="h-4 w-4" />
+            {t("sidebar.transactions")}
+          </Button>
+          <Button
+            onClick={handleOpenrefunds}
+            variant="outline"
+            className="gap-2 bg-background/80 backdrop-blur-sm"
+          >
+            <BanknoteArrowUp className="h-4 w-4" />
+            {t("transactions.refund")}
+          </Button>
+          <Button
+            variant="outline"
+            // onClick={handleOpenLogs}
+            className={
+              isAuditLogsPage
+                ? "gap-2 bg-primary/10 text-black hover:bg-primary/10"
+                : `gap-2 bg-background/80 backdrop-blur-sm`
+            }
+          >
+            <LogsIcon className="h-4 w-4" />
+            {t("transactions.auditLogs")}
+          </Button>
+          <Button
+            onClick={handleOpenPayouts}
+            variant="outline"
+            className="gap-2 bg-background/80 backdrop-blur-sm"
+          >
+            <CreditCard className="h-4 w-4" />
+            {t("transactions.payouts")}
+          </Button>
+          <Button
+            onClick={handleOpenCheckoutSessions}
+            variant="outline"
+            className="gap-2 bg-background/80 backdrop-blur-sm"
+          >
+            <UserCircleDashedIcon className="h-4 w-4" />
+            {t("transactions.checkoutsessions")}
           </Button>
         </div>
       </div>
