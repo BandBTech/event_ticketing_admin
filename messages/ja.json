@@ -699,7 +699,7 @@
       "event": "イベント",
       "selectEvent": "イベントを選択",
       "noEventFound": "イベントが見つかりません",
-      "searchEvent": "イベントを検索...",
+      "searchEvent": "イベントを検索",
       "createBill": "請求書を作成する"
     },
     "status": {

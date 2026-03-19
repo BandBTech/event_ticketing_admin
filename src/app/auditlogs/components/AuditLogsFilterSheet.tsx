@@ -242,19 +242,19 @@ export function AuditLogsFilterSheet({
             </Select>
           </div>
 
-          {/* Organizer */}
+          {/* Entity */}
           <div className="space-y-2">
             <Label>Entity ID</Label>
             <AsyncCombobox
-              queryKey={["filter", "organizers"]}
+              queryKey={["filter", "entity"]}
               value={localFilters.organizer_id ?? ""}
               onValueChange={(val) =>
                 setLocalFilters((prev) => ({ ...prev, organizer_id: val }))
               }
               fetchOptions={fetchOrganizers}
               placeholder="Select entity"
-              searchPlaceholder="Search Organizers..."
-              emptyText="No organizers found"
+              searchPlaceholder="Search Entity"
+              emptyText="No entity found"
               className="w-full text-sm h-9 justify-between px-3!"
               debounceMs={300}
             />
@@ -270,13 +270,13 @@ export function AuditLogsFilterSheet({
               }
               fetchOptions={fetchOrganizers}
               placeholder="Select Actor"
-              searchPlaceholder="Search organizers..."
-              emptyText="No organizers found"
+              searchPlaceholder="Search Organizers"
+              emptyText="No organizers found."
               className="w-full text-sm h-9 justify-between px-3!"
               debounceMs={300}
             />
           </div>
-          {/* Organizer */}
+          {/* Events */}
           <div className="space-y-2">
             <Label>Event ID</Label>
             <AsyncCombobox
@@ -287,8 +287,8 @@ export function AuditLogsFilterSheet({
               }
               fetchOptions={fetchOrganizers}
               placeholder="Select Event"
-              searchPlaceholder="Search organizers..."
-              emptyText="No organizers found"
+              searchPlaceholder="Search Events"
+              emptyText="No events found."
               className="w-full text-sm h-9 justify-between px-3!"
               debounceMs={300}
             />

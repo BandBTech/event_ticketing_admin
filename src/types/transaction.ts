@@ -30,7 +30,6 @@ export interface TransactionFilters {
   status: string;
   payment_gateway: string;
   user_id: string;
-  guest_user_id: string;
   event_id: string;
   // dateRange: {
   //   from: Date | undefined;
@@ -45,11 +44,9 @@ export const getDefaultFilters = (): TransactionFilters => ({
   status: "",
   payment_gateway: "",
   user_id: "",
-  guest_user_id: "",
-event_id: "",
+  event_id: "",
   // dateRange: getDefaultDateRange(),
 });
-
 
 export interface TransactionListResponse {
   pagination: {

@@ -745,7 +745,7 @@
       "event": "Event",
       "selectEvent": "Select Event",
       "noEventFound": "No events found",
-      "searchEvent": "Search Event...",
+      "searchEvent": "Search Event",
       "createBill": "Create Bill"
     },
     "status": {

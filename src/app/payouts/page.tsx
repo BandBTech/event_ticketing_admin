@@ -16,6 +16,7 @@ import {
   ArrowsLeftRight,
   PenIcon,
   CheckCircleIcon,
+  CreditCard,
   XCircleIcon,
   UserCircleDashedIcon 
 } from "@phosphor-icons/react";
@@ -493,7 +494,7 @@ export default function TransactionsPage() {
                   className="text-center py-10 h-[50vh]"
                 >
                   <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                    <UserIcon className="w-8 h-8" />
+                    <CreditCard className="w-8 h-8" />
                     <span>No Payouts Found</span>
                   </div>
                 </TableCell>

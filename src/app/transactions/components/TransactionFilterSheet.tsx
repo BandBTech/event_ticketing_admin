@@ -108,30 +108,6 @@ export function TransactionFilterSheet({
     [],
   );
 
-  const fetchGuestUser = useCallback(
-    async (search: string): Promise<AsyncComboboxOption[]> => {
-      try {
-        const response = await adminService.getAllEntities("guest_users");
-        if (!response || !Array.isArray(response)) return [];
-
-        const filtered = search
-          ? response.filter((user) =>
-              user.name.toLowerCase().includes(search.toLowerCase()),
-            )
-          : response;
-
-        return filtered.map((user) => ({
-          value: user.id,
-          label: user.name,
-        }));
-      } catch (error) {
-        console.error("Failed to fetch guest users:", error);
-        return [];
-      }
-    },
-    [],
-  );
-
   const handleDateChange = (
     field: "start_date" | "end_date",
     date: Date | undefined,
@@ -176,7 +152,6 @@ export function TransactionFilterSheet({
     if (localFilters.payment_gateway !== "") count++;
     if (localFilters.event_id) count++;
     if (localFilters.user_id) count++;
-    if (localFilters.guest_user_id) count++;
     return count;
   }, [localFilters]);
 
@@ -309,9 +284,9 @@ export function TransactionFilterSheet({
                 setLocalFilters((prev) => ({ ...prev, event_id: val }))
               }
               fetchOptions={fetchEvents}
-              placeholder="Select event"
-              searchPlaceholder="Search events..."
-              emptyText="No events found"
+              placeholder="Select Event"
+              searchPlaceholder="Search Events"
+              emptyText="No events found."
               className="w-full text-sm h-9 justify-between px-3!"
               debounceMs={300}
             />
@@ -327,27 +302,9 @@ export function TransactionFilterSheet({
                 setLocalFilters((prev) => ({ ...prev, user_id: val }))
               }
               fetchOptions={fetchUser}
-              placeholder="Select user"
-              searchPlaceholder="Search users..."
-              emptyText="No users found"
-              className="w-full text-sm h-9 justify-between px-3!"
-              debounceMs={300}
-            />
-          </div>
-
-          {/* Guest User */}
-          <div className="space-y-2">
-            <Label>Guest User</Label>
-            <AsyncCombobox
-              queryKey={["filter", "guest_users"]}
-              value={localFilters.guest_user_id ?? ""}
-              onValueChange={(val) =>
-                setLocalFilters((prev) => ({ ...prev, guest_user_id: val }))
-              }
-              fetchOptions={fetchGuestUser}
-              placeholder="Select guest user"
-              searchPlaceholder="Search guest users..."
-              emptyText="No guest users found"
+              placeholder="Select User"
+              searchPlaceholder="Search Users"
+              emptyText="No users found."
               className="w-full text-sm h-9 justify-between px-3!"
               debounceMs={300}
             />

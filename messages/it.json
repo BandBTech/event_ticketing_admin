@@ -678,7 +678,7 @@
       "organizer": "Organizzatore",
       "selectOrganizer": "Seleziona Organizzatore",
       "noOrganizerFound": "Nessun organizzatore trovato",
-      "searchOrganizer": "Organizzatori di ricerca..."
+      "searchOrganizers": "Cerca Organizzatori"
     },
     "addBillModal": {
       "addNewBill": "Aggiungi Nuova Fattura",

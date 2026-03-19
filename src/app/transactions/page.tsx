@@ -21,6 +21,7 @@ import {
   User as UserIcon,
   DotsThreeVertical as DotsThreeVerticalIcon,
   ArrowClockwiseIcon,
+  ArrowsLeftRight,
   CoinsIcon,
   InfoIcon,
   UserCircleDashedIcon 
@@ -94,7 +95,6 @@ export default function TransactionsPage() {
     if (appliedFilters.payment_gateway !== "") count++;
     if (appliedFilters.event_id) count++;
     if (appliedFilters.user_id) count++;
-    if (appliedFilters.guest_user_id) count++;
     return count;
   }, [appliedFilters]);
 
@@ -112,7 +112,6 @@ export default function TransactionsPage() {
       appliedFilters.status,
       appliedFilters.event_id,
       appliedFilters.user_id,
-      appliedFilters.guest_user_id,
       appliedFilters.start_date,
       appliedFilters.end_date,
       appliedFilters.payment_gateway,
@@ -128,7 +127,6 @@ export default function TransactionsPage() {
         status: appliedFilters.status,
         event_id: appliedFilters.event_id,
         user_id: appliedFilters.user_id,
-        guest_user_id: appliedFilters.guest_user_id,
         start_date: appliedFilters.start_date,
         end_date: appliedFilters.end_date,
         payment_gateway: appliedFilters.payment_gateway,
@@ -531,9 +529,9 @@ export default function TransactionsPage() {
                   className="text-center py-10 h-[50vh]"
                 >
                   <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                    <UserIcon className="w-8 h-8" />
+                    <ArrowsLeftRight className="w-8 h-8" />
                     {/* <span>{t("transactions.noTransactionsFound")}</span> */}
-                    <span>No transactions found</span>
+                    <span>No transactions found.</span>
                   </div>
                 </TableCell>
               </TableRow>
