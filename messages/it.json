@@ -131,7 +131,7 @@
     "soldOut": "Esaurito",
     "priceTBA": "Prezzo da definire",
     "title": "Eventi",
-    "searchEvents": "Cerca eventi...",
+    "searchEvents": "Cerca Eventi",
     "allStatus": "Tutti gli stati",
     "moreFilters": "Più filtri",
     "details": "Dettagli",
@@ -449,6 +449,7 @@
     "users": "Utenti",
     "billings": "Fatturazioni",
     "transactions": "Transazioni",
+    "checkoutsessions": "Sessioni di pagamento",
     "auditlogs": "Registri di controllo",
     "refunds": "Rimborsi",
     "payouts": "Pagamenti"
@@ -575,7 +576,7 @@
       }
     },
     "title": "Organizzatori",
-    "searchOrganizers": "Cerca organizzatori...",
+    "searchOrganizers": "Cerca Organizzatori",
     "status": "Stato",
     "profile": "Profilo",
     "events": "Eventi",
@@ -600,7 +601,7 @@
     }
   },
   "users": {
-    "searchUsers": "Cerca utenti...",
+    "searchUsers": "Cerca Utenti",
     "filter": "Filtra",
     "filterByAccountStatus": "Filtra per Stato Account",
     "filterByRole": "Filtra per Ruolo",
@@ -657,7 +658,7 @@
     }
   },
   "billings": {
-    "searchBills": "Cerca fatture",
+    "searchBillings": "Cerca Fatturazione",
     "filterByStatus": "Filtra per stato",
     "priority": "Priorità",
     "viewDetails": "Visualizza dettagli",
@@ -780,10 +781,10 @@
     }
   },
   "transactions": {
-    "searchTransactions": "Cerca transazioni...",
-    "searchRefunds": "Cerca rimborsi...",
-    "searchAuditLogs": "Cerca registri di controllo...",
-    "searchPayouts": "Cerca pagamenti...",
+    "searchTransactions": "Cerca Transazioni",
+    "searchRefunds": "Cerca Rimborsi",
+    "searchAuditLogs": "Ricerca nei registri di controllo",
+    "searchPayouts": "Cerca Pagamenti",
     "refund": "Rimborsa",
     "auditLogs": "Registri di controllo",
     "payouts": "Pagamenti",

@@ -23,6 +23,7 @@ import {
   ArrowClockwiseIcon,
   CoinsIcon,
   InfoIcon,
+  UserCircleDashedIcon 
 } from "@phosphor-icons/react";
 import { BanknoteArrowUp, CreditCard, Logs } from "lucide-react";
 import { CaretUp, CaretDown, CaretUpDown } from "@phosphor-icons/react";
@@ -373,6 +374,9 @@ export default function TransactionsPage() {
   const handleOpenPayouts = () => {
     router.push(`/payouts`);
   };
+  const handleOpenCheckoutSessions = () => {
+    router.push(`/checkoutsessions`);
+  };
 
   const totalItems = response?.pagination.total ?? 0;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -390,8 +394,7 @@ export default function TransactionsPage() {
             />
             <Input
               type="text"
-              // placeholder={t("transactions.searchTransactions")}
-              placeholder="Search Transactions..."
+              placeholder={t("transactions.searchTransactions")}
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               className="pl-9"
@@ -399,14 +402,14 @@ export default function TransactionsPage() {
           </div>
 
           <div className="flex gap-2">
-            {/* <Button
+            <Button
               variant="outline"
               onClick={handleOpenrefunds}
               className="gap-2 bg-background/80 backdrop-blur-sm"
             >
               <BanknoteArrowUp className="h-4 w-4" />
               {t("transactions.refund")}
-            </Button> */}
+            </Button>
             <Button
               variant="outline"
               onClick={handleOpenLogs}
@@ -422,6 +425,14 @@ export default function TransactionsPage() {
             >
               <CreditCard className="h-4 w-4" />
               {t("transactions.payouts")}
+            </Button>
+            <Button
+              onClick={handleOpenCheckoutSessions}
+              variant="outline"
+              className="gap-2 bg-background/80 backdrop-blur-sm"
+            >
+              <UserCircleDashedIcon className="h-4 w-4" />
+              {t("transactions.checkoutsessions")}
             </Button>
           </div>
         </div>

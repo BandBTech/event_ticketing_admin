@@ -3,23 +3,27 @@
 import React, { useState, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
-import { RefundService } from "@/services/refundService";
+import { TransactionService } from "@/services/transactionService";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  TooltipProvider,
+  TooltipContent,
+  Tooltip,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   MagnifyingGlass as MagnifyingGlassIcon,
   Funnel as FunnelIcon,
   CaretLeft as CaretLeftIcon,
   CaretRight as CaretRightIcon,
-  CheckCircle as CheckCircleIcon,
-  XCircle as XCircleIcon,
   Eye as EyeIcon,
-  Shield as ShieldIcon,
   User as UserIcon,
   DotsThreeVertical as DotsThreeVerticalIcon,
-  NotepadIcon,
-  ArrowsLeftRight,
-  UserCircleDashedIcon 
+  ArrowClockwiseIcon,
+  CoinsIcon,
+  InfoIcon,
+  ArrowsLeftRight
 } from "@phosphor-icons/react";
 import { BanknoteArrowUp, CreditCard, Logs } from "lucide-react";
 import { CaretUp, CaretDown, CaretUpDown } from "@phosphor-icons/react";
@@ -31,6 +35,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from "@/types/transaction";
+import { useDebounce } from "@/hooks/useDebounce";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -41,9 +46,7 @@ import {
 import {
   useReactTable,
   getCoreRowModel,
-  getFilteredRowModel,
   ColumnDef,
-  SortingState,
 } from "@tanstack/react-table";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -55,6 +58,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { flexRender } from "@tanstack/react-table";
+// import { TransactionFilterSheet } from "./components/TransactionFilterSheet";
+import { TransactionFilters, getDefaultFilters } from "@/types/transaction";
 
 export default function TransactionsPage() {
   const router = useRouter();
@@ -63,17 +68,35 @@ export default function TransactionsPage() {
   const { t } = useTranslation(locale);
 
   const currentPage = Number(searchParams.get("page")) || 1;
-  const itemsPerPage = 10;
+  const itemsPerPage = 20;
   const SKELETON_ROWS = itemsPerPage;
-  const [filterType, setFilterType] = useState<TransactionType | "">("");
-  const [filterStatus, setFilterStatus] = useState<TransactionStatus | "">("");
+  const statusFilter = searchParams.get("status") || "";
   const [sorting, setSorting] = useState<{ id: string; desc: boolean }[]>([]);
   const [searchInput, setSearchInput] = React.useState("");
+  const [filterSheetOpen, setFilterSheetOpen] = React.useState(false);
+  const [appliedFilters, setAppliedFilters] =
+    React.useState<TransactionFilters>(getDefaultFilters());
 
-  const filter =
-    filterStatus || filterType
-      ? `${filterType || ""},${filterStatus || ""}`
-      : undefined;
+  const debouncedSearch = useDebounce(searchInput, 500);
+
+  const defaultFilters = getDefaultFilters();
+
+  const isFilterApplied = React.useMemo(() => {
+    return JSON.stringify(appliedFilters) !== JSON.stringify(defaultFilters);
+  }, [appliedFilters]);
+
+  const filterCount = React.useMemo(() => {
+    let count = 0;
+    if (appliedFilters.start_date) count++;
+    if (appliedFilters.end_date) count++;
+    if (appliedFilters.organizer_id) count++;
+    if (appliedFilters.status !== "") count++;
+    if (appliedFilters.payment_gateway !== "") count++;
+    if (appliedFilters.event_id) count++;
+    if (appliedFilters.user_id) count++;
+    if (appliedFilters.guest_user_id) count++;
+    return count;
+  }, [appliedFilters]);
 
   const sort =
     sorting.length > 0
@@ -81,12 +104,34 @@ export default function TransactionsPage() {
       : undefined;
 
   const { data: response, isLoading } = useQuery<TransactionListResponse>({
-    queryKey: ["transactions", currentPage, itemsPerPage, filter, sort],
+    queryKey: [
+      "transactions",
+      currentPage,
+      itemsPerPage,
+      statusFilter,
+      appliedFilters.status,
+      appliedFilters.event_id,
+      appliedFilters.user_id,
+      appliedFilters.guest_user_id,
+      appliedFilters.start_date,
+      appliedFilters.end_date,
+      appliedFilters.payment_gateway,
+      sort,
+      debouncedSearch,
+    ],
     queryFn: () =>
-      RefundService.getRefunds({
+      TransactionService.getTransactions({
         page: currentPage,
         limit: itemsPerPage,
-        filter,
+        search: debouncedSearch,
+        filter: statusFilter,
+        status: appliedFilters.status,
+        event_id: appliedFilters.event_id,
+        user_id: appliedFilters.user_id,
+        guest_user_id: appliedFilters.guest_user_id,
+        start_date: appliedFilters.start_date,
+        end_date: appliedFilters.end_date,
+        payment_gateway: appliedFilters.payment_gateway,
         sort,
       }),
     placeholderData: (previousData) => previousData,
@@ -120,16 +165,27 @@ export default function TransactionsPage() {
   const columns: ColumnDef<Transaction>[] = React.useMemo(
     () => [
       {
+        id: "date",
+        header: t("transactions.table.date"),
+        cell: ({ row }) => {
+          const date = new Date(row.original.created_at);
+          const formattedDate = date.toISOString().split("T")[0];
+          return <span>{formattedDate}</span>;
+        },
+        title: "Created At",
+        enableSorting: true,
+      },
+      {
         id: "event",
         header: t("transactions.table.event"),
-        accessorKey: "event_title",
-        enableSorting: false,
+        accessorKey: "event.title",
+        enableSorting: true,
       },
       {
         id: "user",
         header: t("transactions.table.user"),
-        accessorKey: "user_name",
-        enableSorting: false,
+        accessorKey: "user.name",
+        enableSorting: true,
       },
       {
         id: "ticket_count",
@@ -141,10 +197,29 @@ export default function TransactionsPage() {
         id: "amount",
         header: t("transactions.table.amount"),
         accessorKey: "amount",
+        title: "Amount",
         enableSorting: false,
         cell: ({ row }) => (
-          <span className="px-2 py-1 text-xs font-medium rounded-full">
+          <span className="px-2 py-1 text-xs font-medium rounded-full flex items-center gap-2">
             {row.original.currency} {row.original.amount}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <InfoIcon className="text-yellow-800 cursor-pointer" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>
+                    Total Amount: {row.original.amount}
+                    <br />
+                    Commission Rate: {row.original.commission_rate}%
+                    <br />
+                    Commission Amount: {row.original.commission_amount}
+                    <br />
+                    Organizer Share: {row.original.organizer_share}
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </span>
         ),
       },
@@ -152,7 +227,7 @@ export default function TransactionsPage() {
         id: "gateway",
         accessorKey: "payment_gateway",
         header: t("transactions.table.gateway"),
-        enableSorting: false,
+        enableSorting: true,
         cell: ({ row }) => {
           const gateway = row.original.payment_gateway;
 
@@ -168,7 +243,7 @@ export default function TransactionsPage() {
                 colors[gateway?.toLowerCase()] || "bg-gray-100 text-gray-700"
               }`}
             >
-              🏦 {t("transactions.gateway." + gateway)}
+              {t("transactions.gateway." + gateway)}
             </span>
           );
         },
@@ -177,7 +252,7 @@ export default function TransactionsPage() {
         id: "status",
         header: t("transactions.table.status"),
         accessorKey: "status",
-        enableSorting: false,
+        enableSorting: true,
         cell: ({ row }) => {
           const status = row.original.status;
 
@@ -201,20 +276,84 @@ export default function TransactionsPage() {
         },
       },
       {
-        id: "date",
-        header: t("transactions.table.date"),
-        accessorKey: "created_at",
+        id: "actions",
+        // header: "Actions",
+        cell: ({ row }) => {
+          const transaction = row.original;
+
+          // if (actionLoading === user.id) {
+          //   return (
+          //     <div className="h-8 w-8 flex items-center p-0">
+          //       <Spinner className="w-4 h-4 text-amber-900 animate-spin" />
+          //     </div>
+          //   );
+          // }
+
+          return (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <span className="sr-only">Open menu</span>
+                  <DotsThreeVerticalIcon weight="duotone" className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem
+                  onClick={() => {
+                    router.push(
+                      `/transactions/transactiondetail?id=${transaction.id}`,
+                    );
+                  }}
+                >
+                  <div className="flex justify-start items-center bg-gray-50 text-gray-700">
+                    <EyeIcon weight="duotone" className="mr-2 h-4 w-4" />
+                    {t(`users.viewDetails`)}
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    router.push(
+                      `/transactions/paymentdetail?id=${transaction.id}`,
+                    );
+                  }}
+                >
+                  <div className="flex justify-start items-center bg-gray-50 text-gray-700">
+                    <CoinsIcon weight="duotone" className="mr-2 h-4 w-4" />
+                    {/* {t(`users.viewDetails`)} */}
+                    View Payment
+                  </div>
+                </DropdownMenuItem>
+                {/* <DropdownMenuItem
+                onClick={() => {
+                  router.push(`/users/userdetail?id=${user.id}`);
+                }}
+                >
+                  <div className="flex justify-start items-center bg-gray-50 text-gray-700">
+                    <BanknoteArrowUp className="mr-2 h-4 w-4" />
+                    Refund
+                  </div>
+                </DropdownMenuItem> */}
+                {/* <DropdownMenuItem
+                  className="text-red-600"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteClick(user);
+                  }}
+                >
+                  <ArrowClockwiseIcon className="mr-2 h-4 w-4" />
+                  Retry
+                </DropdownMenuItem> */}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          );
+        },
         enableSorting: false,
         enableHiding: false,
-        cell: ({ row }) => (
-          <span className="text-sm text-gray-600">
-            {new Date(row.original.created_at).toLocaleDateString()}
-          </span>
-        ),
       },
     ],
     [t],
   );
+
   const table = useReactTable({
     data: response?.transactions || [],
     columns,
@@ -229,14 +368,14 @@ export default function TransactionsPage() {
   const handleOpenLogs = () => {
     router.push(`/auditlogs`);
   };
-  const handleOpenTransactions = () => {
-    router.push(`/transactions`);
+  const handleOpenrefunds = () => {
+    router.push(`/refunds`);
   };
   const handleOpenPayouts = () => {
     router.push(`/payouts`);
   };
-  const handleOpenCheckoutSessions = () => {
-    router.push(`/checkoutsessions`);
+  const handleOpenTransactions = () => {
+    router.push(`/transactions`);
   };
 
   const totalItems = response?.pagination.total ?? 0;
@@ -255,7 +394,7 @@ export default function TransactionsPage() {
             />
             <Input
               type="text"
-              placeholder={t("transactions.searchRefunds")}
+              placeholder={t("transactions.searchTransactions")}
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               className="pl-9"
@@ -264,16 +403,16 @@ export default function TransactionsPage() {
 
           <div className="flex gap-2">
             <Button
-              onClick={handleOpenTransactions}
               variant="outline"
+              onClick={handleOpenrefunds}
               className="gap-2 bg-background/80 backdrop-blur-sm"
             >
-              <ArrowsLeftRight className="h-4 w-4" />
-              {t("sidebar.transactions")}
+              <BanknoteArrowUp className="h-4 w-4" />
+              {t("transactions.refund")}
             </Button>
             <Button
-              onClick={handleOpenLogs}
               variant="outline"
+              onClick={handleOpenLogs}
               className="gap-2 bg-background/80 backdrop-blur-sm"
             >
               <Logs className="h-4 w-4" />
@@ -288,63 +427,32 @@ export default function TransactionsPage() {
               {t("transactions.payouts")}
             </Button>
             <Button
-              onClick={handleOpenCheckoutSessions}
+              onClick={handleOpenTransactions}
               variant="outline"
               className="gap-2 bg-background/80 backdrop-blur-sm"
             >
-              <UserCircleDashedIcon className="h-4 w-4" />
-              {t("transactions.checkoutsessions")}
+              <ArrowsLeftRight className="h-4 w-4" />
+              {t("sidebar.transactions")}
             </Button>
           </div>
         </div>
 
         <div className="flex gap-6">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className="gap-2 bg-background/80 backdrop-blur-sm"
-              >
-                <FunnelIcon weight="duotone" className="h-4 w-4" />
-                {t("transactions.filter")}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem
-                // className={
-                //   statusFilter === "active" ? "bg-muted font-medium" : ""
-                // }
-                onClick={() => updateParams({ status: "active", page: "1" })}
-              >
-                {t("transactions.status")}
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                // className={
-                //   statusFilter === "inactive" ? "bg-muted font-medium" : ""
-                // }
-                onClick={() => updateParams({ status: "inactive", page: "1" })}
-              >
-                {t("transactions.paymentGateway")}
-              </DropdownMenuItem>
-              {/* <DropdownMenuItem
-                className={
-                  statusFilter === "suspended" ? "bg-muted font-medium" : ""
-                }
-                onClick={() => updateParams({ status: "suspended", page: "1" })}
-              >
-                {t("users.accountStatus.suspended")}
-              </DropdownMenuItem> */}
-
-              <DropdownMenuSeparator />
-
-              <DropdownMenuItem
-                // className={`text-red-600 font-medium ${!statusFilter ? "hidden" : ""}`}
-                onClick={() => updateParams({ status: null, page: "1" })}
-              >
-                {t("users.clearFilters")}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Button
+            variant="outline"
+            onClick={() => setFilterSheetOpen(true)}
+            className={
+              isFilterApplied
+                ? "gap-2 bg-primary/10 text-black hover:bg-primary/10"
+                : `gap-2 bg-background/80 backdrop-blur-sm`
+            }
+          >
+            <FunnelIcon weight="duotone" className="h-4 w-4" />
+            {t("billings.filters")}{" "}
+            {isFilterApplied && (
+              <span className="ml-1 text-xs font-medium text-primary">{`(${filterCount})`}</span>
+            )}
+          </Button>
         </div>
       </div>
 
@@ -424,7 +532,8 @@ export default function TransactionsPage() {
                 >
                   <div className="flex flex-col items-center gap-2 text-muted-foreground">
                     <UserIcon className="w-8 h-8" />
-                    <span>No Refunds Found</span>
+                    {/* <span>{t("transactions.noTransactionsFound")}</span> */}
+                    <span>No transactions found</span>
                   </div>
                 </TableCell>
               </TableRow>
@@ -440,11 +549,19 @@ export default function TransactionsPage() {
                   </TableCell>
 
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+                    <TableCell
+                      key={cell.id}
+                      className="max-w-[10vw] overflow-hidden"
+                    >
+                      <div
+                        className="truncate"
+                        title={String(cell.getValue() ?? "")}
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </div>
                     </TableCell>
                   ))}
                 </TableRow>
@@ -508,6 +625,16 @@ export default function TransactionsPage() {
           </Button>
         </div>
       )}
+
+      {/* Filter Sheet */}
+      {/* <React.Suspense fallback={null}>
+        <TransactionFilterSheet
+          open={filterSheetOpen}
+          onOpenChange={setFilterSheetOpen}
+          filters={appliedFilters}
+          onApplyFilters={setAppliedFilters}
+        />
+      </React.Suspense> */}
     </div>
   );
 }

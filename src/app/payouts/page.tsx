@@ -17,6 +17,7 @@ import {
   PenIcon,
   CheckCircleIcon,
   XCircleIcon,
+  UserCircleDashedIcon 
 } from "@phosphor-icons/react";
 import { BanknoteArrowUp, Logs } from "lucide-react";
 import { CaretUp, CaretDown, CaretUpDown } from "@phosphor-icons/react";
@@ -223,9 +224,11 @@ export default function TransactionsPage() {
           return (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button 
-                disabled={payoutData.status !== "pending"}
-                variant="ghost" className="h-8 w-8 p-0">
+                <Button
+                  disabled={payoutData.status !== "pending"}
+                  variant="ghost"
+                  className="h-8 w-8 p-0"
+                >
                   <span className="sr-only">Open menu</span>
                   <DotsThreeVerticalIcon weight="duotone" className="h-4 w-4" />
                 </Button>
@@ -282,6 +285,9 @@ export default function TransactionsPage() {
   const handleOpenTransactions = () => {
     router.push(`/transactions`);
   };
+    const handleOpenCheckoutSessions = () => {
+    router.push(`/checkoutsessions`);
+  };
 
   const totalItems = response?.pagination.total ?? 0;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -307,14 +313,14 @@ export default function TransactionsPage() {
           </div>
 
           <div className="flex gap-2">
-            {/* <Button
+            <Button
               onClick={handleOpenrefunds}
               variant="outline"
               className="gap-2 bg-background/80 backdrop-blur-sm"
             >
               <BanknoteArrowUp className="h-4 w-4" />
               {t("transactions.refund")}
-            </Button> */}
+            </Button>
             <Button
               onClick={handleOpenLogs}
               variant="outline"
@@ -330,6 +336,14 @@ export default function TransactionsPage() {
             >
               <ArrowsLeftRight className="h-4 w-4" />
               {t("sidebar.transactions")}
+            </Button>
+            <Button
+              onClick={handleOpenCheckoutSessions}
+              variant="outline"
+              className="gap-2 bg-background/80 backdrop-blur-sm"
+            >
+              <UserCircleDashedIcon className="h-4 w-4" />
+              {t("transactions.checkoutsessions")}
             </Button>
           </div>
         </div>

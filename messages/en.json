@@ -154,7 +154,7 @@
     "soldOut": "Sold out",
     "priceTBA": "Price TBA",
     "title": "Events",
-    "searchEvents": "Search Events...",
+    "searchEvents": "Search Events",
     "allStatus": "All Status",
     "moreFilters": "More Filters",
     "details": "Details",
@@ -498,6 +498,7 @@
     "users": "Users",
     "billings": "Billings",
     "transactions": "Transactions",
+    "checkoutsessions": "Checkout Sessions",
     "auditlogs": "Audit Logs",
     "refunds": "Refunds",
     "payouts": "Payouts"
@@ -632,7 +633,7 @@
       "error": "Failed to create organizer"
     },
     "title": "Organizers",
-    "searchOrganizers": "Search organizers...",
+    "searchOrganizers": "Search Organizers",
     "status": "Status",
     "profile": "Profile",
     "events": "Events",
@@ -652,7 +653,7 @@
     "pleaseTryAgainLater": "Please try again later"
   },
   "users": {
-    "searchUsers": "Search users...",
+    "searchUsers": "Search Users",
     "generatePassword": {
       "success": "Password generated successfully",
       "successCopy": "Password generated and copied to clipboard!"
@@ -716,7 +717,7 @@
     }
   },
   "billings": {
-    "searchBills": "Search bills",
+    "searchBillings": "Search Billings",
     "priority": "Priority",
     "viewDetails": "View Details",
     "addPayment": "Add Payment",
@@ -735,7 +736,7 @@
       "organizer": "Organizer",
       "selectOrganizer": "Select Organizer",
       "noOrganizerFound": "No organizers found",
-      "searchOrganizer": "Search Organizer..."
+      "searchOrganizer": "Search Organizer"
     },
     "addBillModal": {
       "addNewBill": "Add New Bill",
@@ -838,13 +839,14 @@
     }
   },
   "transactions": {
-    "searchTransactions": "Search transactions...",
-    "searchRefunds": "Search refunds...",
-    "searchAuditLogs": "Search audit logs...",
-    "searchPayouts": "Search payouts...",
+    "searchTransactions": "Search Transactions",
+    "searchRefunds": "Search Refunds",
+    "searchAuditLogs": "Search Audit Logs",
+    "searchPayouts": "Search Payouts",
     "refund": "Refund",
     "auditLogs": "Audit Logs",
     "payouts": "Payouts",
+    "checkoutsessions": "Checkout Sessions",
     "filter": "Filter",
     "table": {
       "event": "Event",

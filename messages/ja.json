@@ -131,7 +131,7 @@
     "soldOut": "完売",
     "priceTBA": "価格未定",
     "title": "イベント",
-    "searchEvents": "イベントを検索...",
+    "searchEvents": "イベントを検索",
     "allStatus": "すべてのステータス",
     "moreFilters": "その他のフィルター",
     "details": "詳細",
@@ -461,6 +461,7 @@
     "users": "ユーザー",
     "billings": "請求書",
     "transactions": "取引",
+    "checkoutsessions": "チェックアウトセッション",
     "auditlogs": "監査ログ",
     "refunds": "返金",
     "payouts": "支払い"
@@ -587,7 +588,7 @@
       }
     },
     "title": "主催者管理",
-    "searchOrganizers": "主催者を検索...",
+    "searchOrganizers": "主催者を検索",
     "status": "ステータス",
     "profile": "プロフィール",
     "events": "イベント",
@@ -612,7 +613,7 @@
     }
   },
   "users": {
-    "searchUsers": "ユーザーを検索...",
+    "searchUsers": "ユーザーを検索",
     "filter": "フィルター",
     "filterByAccountStatus": "アカウントステータスでフィルター",
     "filterByRole": "役割でフィルター",
@@ -669,7 +670,7 @@
     }
   },
   "billings": {
-    "searchBills": "請求書を検索",
+    "searchBillings": "請求情報の検索",
     "filterByStatus": "ステータスでフィルター",
     "priority": "優先度",
     "viewDetails": "詳細を見る",
@@ -792,10 +793,10 @@
     }
   },
   "transactions": {
-    "searchTransactions": "取引を検索...",
-    "searchRefunds": "返金を検索...",
-    "searchAuditLogs": "監査ログを検索...",
-    "searchPayouts": "支払いを検索...",
+    "searchTransactions": "取引を検索",
+    "searchRefunds": "返金を検索",
+    "searchAuditLogs": "監査ログを検索",
+    "searchPayouts": "支払いを検索",
     "refund": "返金",
     "auditLogs": "監査ログ",
     "payouts": "支払い",

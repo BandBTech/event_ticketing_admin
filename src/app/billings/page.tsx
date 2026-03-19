@@ -405,8 +405,7 @@ export default function BillingsPage() {
           />
           <Input
             type="text"
-            // placeholder={t("billings.searchBills")}
-            placeholder="Search Billings..."
+            placeholder={t("billings.searchBillings")}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             className="pl-9"
