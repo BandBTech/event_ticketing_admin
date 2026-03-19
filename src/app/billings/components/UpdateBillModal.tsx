@@ -107,7 +107,6 @@ export default function UpdateBillModal({
         status: data.status,
       }),
     onSuccess: async () => {
-      toast.success(t("", "Bill updated successfully"));
       await queryClient.invalidateQueries({
         queryKey: queryKeys.bills?.list ?? ["bills"],
       });

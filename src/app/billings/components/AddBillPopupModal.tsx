@@ -77,7 +77,6 @@ export default function AddBillPopupModal({
         organizer_id: data.organizer_id,
       }),
     onSuccess: async () => {
-      toast.success(t("", "Bill created successfully"));
       await queryClient.invalidateQueries({ queryKey: ["bills"] });
       onOpenChange(false);
     },

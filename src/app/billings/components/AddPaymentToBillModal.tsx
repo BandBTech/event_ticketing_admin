@@ -136,8 +136,6 @@ export default function AddBillPopupModal({
         payment_date: data.payment_date,
       }),
     onSuccess: async () => {
-      toast.success(t("", "Payment added to bill successfully"));
-      // FIX: invalidate bills queries, not organizers
       await queryClient.invalidateQueries({
         queryKey: queryKeys.bills?.list ?? ["bills"],
       });
@@ -215,6 +213,7 @@ export default function AddBillPopupModal({
 
   const handleOpenChange = (open: boolean) => {
     if (!open && isPending) return;
+    form.reset();
     onOpenChange(open);
   };
 
@@ -509,7 +508,49 @@ export default function AddBillPopupModal({
                       onChange={(e) => field.onChange(e.target.value)}
                       rows={3}
                       maxLength={200}
-                      className="w-full min-h-[80px]"
+                      className="w-full min-h-[80px] !bg-white"
+                    />
+                  </FormControl>
+                  <TranslatedFormMessage t={t} />
+                </FormItem>
+              )}
+            />
+
+            {/* Image Uploader  */}
+            <FormField
+              control={form.control}
+              name="screenshot"
+              render={({ field }) => (
+                <FormItem>
+                  {/* <FormLabel className="text-sm font-semibold text-gray-700">
+                    {t("billings.addPaymentToBill.screenshot", "Screenshot")}
+                  </FormLabel> */}
+                  <FormControl>
+                    <ImageUploader
+                      label={t(
+                        "billings.addPaymentToBill.screenshot",
+                        "Upload Screenshot",
+                      )}
+                      className="w-full h-50"
+                      helperText={t(
+                        "imageUploader.uploadScreenshot",
+                        "Upload screenshot image or drag & drop",
+                      )}
+                      helperTextSize={t(
+                        "imageUploader.recommendedSize",
+                        "Recommended: PNG/JPG file of 1920x1200px with size up to 5MB",
+                      )}
+                      value={imageRemoved ? "" : imagePreview || ""}
+                      onChange={(file) => {
+                        if (file) handleImageChange(file);
+                      }}
+                      onRemove={handleImageRemove}
+                      error={imageError}
+                      browseButtonText={t(
+                        "imageUploader.browseFile",
+                        "Browse File",
+                      )}
+                      required
                     />
                   </FormControl>
                   <TranslatedFormMessage t={t} />
@@ -519,7 +560,7 @@ export default function AddBillPopupModal({
 
             {/* Screenshot Upload */}
 
-            <ImageUploader
+            {/* <ImageUploader
               label={t(
                 "billings.addPaymentToBill.screenshot",
                 "Upload Screenshot",
@@ -541,7 +582,7 @@ export default function AddBillPopupModal({
               error={imageError}
               browseButtonText={t("imageUploader.browseFile", "Browse File")}
               required
-            />
+            /> */}
           </div>
 
           <DialogFooter className="px-6 py-4 border-t bg-background shrink-0 gap-2 sm:justify-end">

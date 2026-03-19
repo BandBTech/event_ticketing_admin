@@ -15,6 +15,7 @@ import {
   CaretDown,
   CaretUpDown,
   FileTextIcon,
+  InfoIcon,
 } from "@phosphor-icons/react";
 import {
   Table,
@@ -24,6 +25,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  TooltipProvider,
+  TooltipContent,
+  Tooltip,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { flexRender } from "@tanstack/react-table";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -215,31 +222,46 @@ export default function BillingsPage() {
         accessorKey: "billed_amount",
         header: t("billings.table.billedAmount"),
         cell: ({ row }) => (
-          <span className="text-sm text-foreground">
+          <span className="px-2 py-1 text-xs font-medium rounded-full flex items-center gap-2">
             {row.original.billed_amount.toFixed(2)}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <InfoIcon className="text-yellow-800 cursor-pointer" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>
+                    Total Amount: {row.original.billed_amount.toFixed(2)}
+                    <br />
+                    Paid Amount: {row.original.paid_amount.toFixed(2)}
+                    <br />
+                    Remaining Amount: {row.original.remaining_amount.toFixed(2)}
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </span>
         ),
         enableSorting: false,
       },
-      {
-        id: "payment_method",
-        // title: "Payment Method",
-        cell: ({ row }) => {
-          const method = row.original.payment_method;
+      // {
+      //   id: "payment_method",
+      //   cell: ({ row }) => {
+      //     const method = row.original.payment_method;
 
-          if (!method) {
-            return <span className="text-sm text-foreground">-</span>;
-          }
+      //     if (!method) {
+      //       return <span className="text-sm text-foreground">-</span>;
+      //     }
 
-          return (
-            <span className="text-sm text-foreground capitalize">
-              {t(`billings.method.${method}`) || "-"}
-            </span>
-          );
-        },
-        header: t("billings.table.paymentMethod"),
-        enableSorting: true,
-      },
+      //     return (
+      //       <span className="text-sm text-foreground capitalize">
+      //         {t(`billings.method.${method}`) || "-"}
+      //       </span>
+      //     );
+      //   },
+      //   header: t("billings.table.paymentMethod"),
+      //   enableSorting: true,
+      // },
       {
         id: "status",
         cell: ({ row }) => {
