@@ -285,19 +285,6 @@ export default function TransactionDetailPage() {
                 )}
               </span>
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-500">Payment Details</span>
-              <span
-                className="text-xs font-semibold px-3 py-1 rounded-full"
-                style={
-                  transaction.has_payment_details
-                    ? { background: "#dcfce7", color: "#16a34a" }
-                    : { background: "#f3f4f6", color: "#6b7280" }
-                }
-              >
-                {transaction.has_payment_details ? "Yes" : "No"}
-              </span>
-            </div>
           </div>
         </div>
       </div>
