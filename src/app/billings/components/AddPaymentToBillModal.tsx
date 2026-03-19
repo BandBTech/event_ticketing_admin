@@ -58,6 +58,7 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon, InfoIcon } from "@phosphor-icons/react";
 import { Textarea } from "@/components/ui/textarea";
+import { FieldError } from "@/components/ui/field";
 
 interface AddBillPopupModalProps {
   open: boolean;
@@ -398,8 +399,20 @@ export default function AddBillPopupModal({
                         }}
                         onWheel={(e) => e.currentTarget.blur()}
                         className="w-full text-sm h-9"
+                        maxLength={10}
                       />
                     </FormControl>
+                    <div className="flex justify-between items-center">
+                      <p>
+                        {" "}
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </p>
+                      <p className="text-xs font-normal text-left text-muted-foreground">
+                        {field.value?.toString().length || 0} /10 characters
+                      </p>
+                    </div>
                   </div>
 
                   <TranslatedFormMessage t={t} />
@@ -462,7 +475,7 @@ export default function AddBillPopupModal({
             <FormField
               control={form.control}
               name="payment_ref"
-              render={({ field }) => (
+              render={({ field, fieldState }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-semibold text-gray-700">
                     {t(
@@ -481,8 +494,20 @@ export default function AddBillPopupModal({
                       value={field.value ?? ""}
                       onChange={(e) => field.onChange(e.target.value)}
                       className="w-full text-sm h-9"
+                      maxLength={100}
                     />
                   </FormControl>
+                  <div className="flex justify-between items-center">
+                    <p>
+                      {" "}
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </p>
+                    <p className="text-xs font-normal text-left text-muted-foreground">
+                      {field.value?.length || 0} /100 characters
+                    </p>
+                  </div>
                   <TranslatedFormMessage t={t} />
                 </FormItem>
               )}
@@ -492,7 +517,7 @@ export default function AddBillPopupModal({
             <FormField
               control={form.control}
               name="notes"
-              render={({ field }) => (
+              render={({ field, fieldState }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-semibold text-gray-700">
                     {t("billings.addPaymentToBill.notes", "Notes")}
@@ -511,6 +536,17 @@ export default function AddBillPopupModal({
                       className="w-full min-h-[80px] !bg-white"
                     />
                   </FormControl>
+                  <div className="flex justify-between items-center">
+                    <p>
+                      {" "}
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </p>
+                    <p className="text-xs font-normal text-left text-muted-foreground">
+                      {field.value?.length || 0} /200 characters
+                    </p>
+                  </div>
                   <TranslatedFormMessage t={t} />
                 </FormItem>
               )}
