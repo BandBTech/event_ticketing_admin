@@ -25,6 +25,7 @@ import {
   InfoIcon,
   ArrowsLeftRight,
   UserCircleDashedIcon,
+  PlayCircleIcon,
 } from "@phosphor-icons/react";
 import { usePathname } from "next/navigation";
 import { BanknoteArrowUp, CreditCard, Logs } from "lucide-react";
@@ -62,6 +63,8 @@ import {
 import { flexRender } from "@tanstack/react-table";
 // import { TransactionFilterSheet } from "./components/TransactionFilterSheet";
 import { TransactionFilters, getDefaultFilters } from "@/types/transaction";
+import { CheckoutSessionService } from "@/services/checkoutSessionService";
+import { CheckoutSessionsData, CheckoutSession } from "@/types/checkoutsession";
 
 export default function TransactionsPage() {
   const router = useRouter();
@@ -106,33 +109,22 @@ export default function TransactionsPage() {
       ? `${sorting[0].id}:${sorting[0].desc ? "desc" : "asc"}`
       : undefined;
 
-  const { data: response, isLoading } = useQuery<TransactionListResponse>({
+  const { data: response, isLoading } = useQuery<CheckoutSessionsData>({
     queryKey: [
-      "transactions",
+      "checkoutsessions",
       currentPage,
       itemsPerPage,
       statusFilter,
       appliedFilters.status,
-      appliedFilters.event_id,
-      appliedFilters.user_id,
-      appliedFilters.start_date,
-      appliedFilters.end_date,
-      appliedFilters.payment_gateway,
       sort,
       debouncedSearch,
     ],
     queryFn: () =>
-      TransactionService.getTransactions({
+      CheckoutSessionService.getCheckoutSessions({
         page: currentPage,
         limit: itemsPerPage,
         search: debouncedSearch,
-        filter: statusFilter,
         status: appliedFilters.status,
-        event_id: appliedFilters.event_id,
-        user_id: appliedFilters.user_id,
-        start_date: appliedFilters.start_date,
-        end_date: appliedFilters.end_date,
-        payment_gateway: appliedFilters.payment_gateway,
         sort,
       }),
     placeholderData: (previousData) => previousData,
@@ -150,7 +142,7 @@ export default function TransactionsPage() {
         }
       });
 
-      router.push(`/transactions?${params.toString()}`, { scroll: false });
+      router.push(`/checkoutsessions?${params.toString()}`, { scroll: false });
     },
     [router],
   );
@@ -163,7 +155,7 @@ export default function TransactionsPage() {
   );
 
   // Table columns
-  const columns: ColumnDef<Transaction>[] = React.useMemo(
+  const columns: ColumnDef<CheckoutSession>[] = React.useMemo(
     () => [
       {
         id: "date",
@@ -177,24 +169,6 @@ export default function TransactionsPage() {
         enableSorting: true,
       },
       {
-        id: "event",
-        header: t("transactions.table.event"),
-        accessorKey: "event.title",
-        enableSorting: true,
-      },
-      {
-        id: "user",
-        header: t("transactions.table.user"),
-        accessorKey: "user.name",
-        enableSorting: true,
-      },
-      {
-        id: "ticket_count",
-        header: t("transactions.table.ticket"),
-        accessorKey: "ticket_count",
-        enableSorting: false,
-      },
-      {
         id: "amount",
         header: t("transactions.table.amount"),
         accessorKey: "amount",
@@ -203,24 +177,6 @@ export default function TransactionsPage() {
         cell: ({ row }) => (
           <span className="px-2 py-1 text-xs font-medium rounded-full flex items-center gap-2">
             {row.original.currency} {row.original.amount}
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <InfoIcon className="text-yellow-800 cursor-pointer" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>
-                    Total Amount: {row.original.amount}
-                    <br />
-                    Commission Rate: {row.original.commission_rate}%
-                    <br />
-                    Commission Amount: {row.original.commission_amount}
-                    <br />
-                    Organizer Share: {row.original.organizer_share}
-                  </p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
           </span>
         ),
       },
@@ -299,51 +255,12 @@ export default function TransactionsPage() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem
-                  onClick={() => {
-                    router.push(
-                      `/transactions/transactiondetail?id=${transaction.id}`,
-                    );
-                  }}
-                >
+                <DropdownMenuItem>
                   <div className="flex justify-start items-center bg-gray-50 text-gray-700">
-                    <EyeIcon weight="duotone" className="mr-2 h-4 w-4" />
-                    {t(`users.viewDetails`)}
+                    <PlayCircleIcon weight="duotone" className="mr-2 h-4 w-4" />
+                    Process Checkout
                   </div>
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => {
-                    router.push(
-                      `/transactions/paymentdetail?id=${transaction.id}`,
-                    );
-                  }}
-                >
-                  <div className="flex justify-start items-center bg-gray-50 text-gray-700">
-                    <CoinsIcon weight="duotone" className="mr-2 h-4 w-4" />
-                    {/* {t(`users.viewDetails`)} */}
-                    View Payment
-                  </div>
-                </DropdownMenuItem>
-                {/* <DropdownMenuItem
-                onClick={() => {
-                  router.push(`/users/userdetail?id=${user.id}`);
-                }}
-                >
-                  <div className="flex justify-start items-center bg-gray-50 text-gray-700">
-                    <BanknoteArrowUp className="mr-2 h-4 w-4" />
-                    Refund
-                  </div>
-                </DropdownMenuItem> */}
-                {/* <DropdownMenuItem
-                  className="text-red-600"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDeleteClick(user);
-                  }}
-                >
-                  <ArrowClockwiseIcon className="mr-2 h-4 w-4" />
-                  Retry
-                </DropdownMenuItem> */}
               </DropdownMenuContent>
             </DropdownMenu>
           );
@@ -356,7 +273,7 @@ export default function TransactionsPage() {
   );
 
   const table = useReactTable({
-    data: response?.transactions || [],
+    data: response?.sessions || [],
     columns,
     state: {
       sorting,
@@ -396,7 +313,7 @@ export default function TransactionsPage() {
               />
               <Input
                 type="text"
-                placeholder={t("transactions.searchAuditLogs")}
+                placeholder={t("transactions.searchCheckoutSessions")}
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 className="pl-9"
@@ -448,7 +365,6 @@ export default function TransactionsPage() {
             {t("transactions.payouts")}
           </Button>
           <Button
-            // onClick={handleOpenCheckoutSessions}
             variant="outline"
             className={
               isCheckoutSessionsPage

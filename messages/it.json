@@ -784,9 +784,11 @@
     "searchTransactions": "Cerca Transazioni",
     "searchRefunds": "Cerca Rimborsi",
     "searchAuditLogs": "Ricerca nei registri di controllo",
+    "searchCheckoutSessions": "Ricerca nei sessioni di checkout",
     "searchPayouts": "Cerca Pagamenti",
     "refund": "Rimborsa",
     "auditLogs": "Registri di controllo",
+    "checkoutsessions": "Sessioni di checkout",
     "payouts": "Pagamenti",
     "filter": "Filtra",
     "table": {

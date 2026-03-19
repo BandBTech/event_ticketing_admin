@@ -82,4 +82,7 @@ export const API_ENDPOINTS = {
   GET_BILL_HISTORY: (id: string) =>
     `${API_BASE_URL}/admin/payments/bills/${id}/history`,
   UPDATE_BILL: (id: string) => `${API_BASE_URL}/admin/payments/bills/${id}`,
+
+  //Checkout Sessions
+  GET_CHECKOUT_SESSIONS: `${API_BASE_URL}/admin/tickets/checkout-sessions`,
 };

@@ -796,9 +796,11 @@
     "searchTransactions": "取引を検索",
     "searchRefunds": "返金を検索",
     "searchAuditLogs": "監査ログを検索",
+    "searchCheckoutSessions": "検索チェックアウトセッション",
     "searchPayouts": "支払いを検索",
     "refund": "返金",
     "auditLogs": "監査ログ",
+    "checkoutsessions": "チェックアウトセッション",
     "payouts": "支払い",
     "filter": "フィルター",
     "table": {

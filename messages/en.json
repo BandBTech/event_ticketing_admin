@@ -842,6 +842,7 @@
     "searchTransactions": "Search Transactions",
     "searchRefunds": "Search Refunds",
     "searchAuditLogs": "Search Audit Logs",
+    "searchCheckoutSessions": "Search Checkout Sessions",
     "searchPayouts": "Search Payouts",
     "refund": "Refund",
     "auditLogs": "Audit Logs",
