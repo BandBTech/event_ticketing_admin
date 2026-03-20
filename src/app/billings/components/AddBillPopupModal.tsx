@@ -211,12 +211,14 @@ export default function AddBillPopupModal({
                         value={field.value ?? ""}
                         onValueChange={(val) => field.onChange(val)}
                         fetchOptions={fetchEvents}
-                        placeholder={t("billings.addBillModal.selectEvent")}
+                        // placeholder={t("billings.addBillModal.selectEvent")}
+                        placeholder={`${organizer_id ? t("billings.addBillModal.selectEvent") : "Select Organizer First"}`}
                         searchPlaceholder={t(
                           "billings.addBillModal.searchEvent",
                         )}
                         emptyText={t("billings.addBillModal.noEventFound")}
                         defaultOption={defaultEventOption}
+                        disabled={!organizer_id}
                         className="w-full text-sm h-9 ..."
                         debounceMs={300}
                       />
