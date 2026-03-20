@@ -411,7 +411,7 @@ export default function BillDetail() {
                           {item.payment_ref || "—"}
                         </td>
                         <td className="px-4 py-3 font-semibold">
-                          NPR {item.amount.toLocaleString()}
+                          {item.amount.toLocaleString()}
                         </td>
                         <td className="px-4 py-3 capitalize">
                           {item.payment_method

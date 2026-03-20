@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -87,6 +87,39 @@ export default function AddBillPopupModal({
   });
 
   const schema = addPaymentToBillSchema(t);
+
+  // Inside your component:
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const scrollToFirstError = useCallback((errors: Record<string, unknown>) => {
+    // Respect the order fields appear in the form
+    const fieldOrder = [
+      "organizer_id",
+      "event_id",
+      "payment_method",
+      "amount",
+      "payment_date",
+      "notes",
+      "screenshot",
+    ];
+
+    const firstErrorKey = fieldOrder.find((key) => key in errors);
+    if (!firstErrorKey || !scrollContainerRef.current) return;
+
+    const target = scrollContainerRef.current.querySelector<HTMLElement>(
+      `[data-field="${firstErrorKey}"]`,
+    );
+
+    if (!target) return;
+
+    target.scrollIntoView({ behavior: "smooth", block: "center" });
+
+    // Try to focus the first focusable element inside it
+    const focusable = target.querySelector<HTMLElement>(
+      "input, button, textarea, select, [tabindex]",
+    );
+    focusable?.focus({ preventScroll: true });
+  }, []);
 
   const defaultOrganizerOption = billData
     ? { value: billData.organizer.id, label: billData.organizer.name }
@@ -243,16 +276,22 @@ export default function AddBillPopupModal({
     >
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit(onSubmit, (errors) => {
+            // This callback fires when validation fails
+            scrollToFirstError(errors);
+          })}
           className="flex flex-col flex-1 overflow-hidden h-full"
         >
-          <div className="flex-1 overflow-y-auto p-6 space-y-6">
+          <div
+            ref={scrollContainerRef}
+            className="flex-1 overflow-y-auto p-6 space-y-6"
+          >
             {/* Organizer */}
             <FormField
               control={form.control}
               name="organizer_id"
               render={({ field }) => (
-                <FormItem>
+                <FormItem data-field="organizer_id">
                   <FormLabel
                     required
                     className="text-sm font-semibold text-gray-700"
@@ -284,7 +323,7 @@ export default function AddBillPopupModal({
               control={form.control}
               name="event_id"
               render={({ field }) => (
-                <FormItem>
+                <FormItem data-field="event_id">
                   <FormLabel
                     required
                     className="text-sm font-semibold text-gray-700"
@@ -317,7 +356,7 @@ export default function AddBillPopupModal({
               control={form.control}
               name="payment_method"
               render={({ field }) => (
-                <FormItem>
+                <FormItem data-field="payment_method">
                   <FormLabel
                     required
                     className="text-sm font-semibold text-gray-700"
@@ -356,7 +395,7 @@ export default function AddBillPopupModal({
               control={form.control}
               name="amount"
               render={({ field, fieldState }) => (
-                <FormItem>
+                <FormItem data-field="amount">
                   <FormLabel
                     required
                     className="text-sm font-semibold text-gray-700"
@@ -402,13 +441,8 @@ export default function AddBillPopupModal({
                         maxLength={10}
                       />
                     </FormControl>
-                    <div className="flex justify-between items-center">
-                      <p>
-                        {" "}
-                        {fieldState.invalid && (
-                          <FieldError errors={[fieldState.error]} />
-                        )}
-                      </p>
+                    <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
+                      <p>{" "}</p>
                       <p className="text-xs font-normal text-left text-muted-foreground">
                         {field.value?.toString().length || 0} /10 characters
                       </p>
@@ -425,7 +459,7 @@ export default function AddBillPopupModal({
               control={form.control}
               name="payment_date"
               render={({ field }) => (
-                <FormItem>
+                <FormItem data-field="payment_date">
                   <FormLabel className="text-sm font-semibold text-gray-700">
                     {t("billings.addPaymentToBill.paymentDate", "Payment Date")}
                   </FormLabel>
@@ -472,7 +506,7 @@ export default function AddBillPopupModal({
             />
 
             {/* Payment Reference  */}
-            <FormField
+            {/* <FormField
               control={form.control}
               name="payment_ref"
               render={({ field, fieldState }) => (
@@ -511,14 +545,14 @@ export default function AddBillPopupModal({
                   <TranslatedFormMessage t={t} />
                 </FormItem>
               )}
-            />
+            /> */}
 
             {/* Notes  */}
             <FormField
               control={form.control}
               name="notes"
               render={({ field, fieldState }) => (
-                <FormItem>
+                <FormItem data-field="notes">
                   <FormLabel className="text-sm font-semibold text-gray-700">
                     {t("billings.addPaymentToBill.notes", "Notes")}
                   </FormLabel>
@@ -557,7 +591,7 @@ export default function AddBillPopupModal({
               control={form.control}
               name="screenshot"
               render={({ field }) => (
-                <FormItem>
+                <FormItem data-field="screenshot">
                   {/* <FormLabel className="text-sm font-semibold text-gray-700">
                     {t("billings.addPaymentToBill.screenshot", "Screenshot")}
                   </FormLabel> */}
