@@ -40,7 +40,6 @@ interface RejectModalProps {
   payout: PayoutRequest | null;
 }
 
-
 export default function RejectModal({
   open,
   onOpenChange,
@@ -84,7 +83,7 @@ export default function RejectModal({
     onOpenChange(false);
   };
 
-    const isPending = createMutation.isPending;
+  const isPending = createMutation.isPending;
 
   // Prevent dialog dismissal (overlay/Escape) while mutation is in-flight
   const handleOpenChange = (open: boolean) => {
@@ -128,6 +127,7 @@ export default function RejectModal({
                       <Textarea
                         placeholder={t("", "Enter reason for rejection")}
                         {...field}
+                        maxLength={100}
                         className={cn(
                           "h-12 pr-4 max-w-[470px] bg-gray-50/50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all duration-200",
                           fieldState.error &&
@@ -135,8 +135,15 @@ export default function RejectModal({
                         )}
                       />
                     </FormControl>
+                    <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
+                      <p>
+                        <TranslatedFormMessage t={t} />
+                      </p>
+                      <p className="text-xs font-normal text-left text-muted-foreground">
+                        {field.value?.toString().length || 0} /100 characters
+                      </p>
+                    </div>
                   </div>
-                  <TranslatedFormMessage t={t} />
                 </FormItem>
               )}
             />

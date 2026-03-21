@@ -5,7 +5,11 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { SpinnerIcon, CheckCircleIcon, ReceiptIcon } from "@phosphor-icons/react";
+import {
+  SpinnerIcon,
+  CheckCircleIcon,
+  ReceiptIcon,
+} from "@phosphor-icons/react";
 import {
   Dialog,
   DialogContent,
@@ -52,27 +56,36 @@ interface ViewBillsDialogProps {
   t: (key: string, fallback: string) => string;
 }
 
-function ViewBillsDialog({ open, onViewBills, onSkip, t }: ViewBillsDialogProps) {
+function ViewBillsDialog({
+  open,
+  onViewBills,
+  onSkip,
+  t,
+}: ViewBillsDialogProps) {
   return (
     <Dialog open={open} onOpenChange={() => onSkip()}>
       <DialogContent className="sm:max-w-[400px] shadow-2xl border-none bg-white/90 backdrop-blur-xl">
         <DialogHeader className="space-y-3 text-center items-center">
           <div className="flex h-14 w-14 items-center justify-center rounded-full bg-green-100">
-            <CheckCircleIcon weight="fill" size={32} className="text-green-600" />
+            <CheckCircleIcon
+              weight="fill"
+              size={32}
+              className="text-green-600"
+            />
           </div>
           <DialogTitle className="text-xl font-bold">
             {t("", "Payout Approved!")}
           </DialogTitle>
           <DialogDescription className="text-sm text-gray-500">
-            {t("", "Would you like to view the bills associated with this payout?")}
+            {t(
+              "",
+              "Would you like to view the bills associated with this payout?",
+            )}
           </DialogDescription>
         </DialogHeader>
 
         <DialogFooter className="flex-col gap-2 pt-4 sm:flex-col">
-          <Button
-            onClick={onViewBills}
-            className="w-full gap-2"
-          >
+          <Button onClick={onViewBills} className="w-full gap-2">
             <ReceiptIcon size={18} />
             {t("", "View Bills")}
           </Button>
@@ -120,7 +133,7 @@ export default function ApproveModal({
         queryKey: queryKeys.organizers.list,
       });
       onOpenChange(false);
-      setShowViewBills(true); 
+      setShowViewBills(true);
     },
   });
 
@@ -144,10 +157,10 @@ export default function ApproveModal({
   };
 
   // ── ViewBills dialog handlers ──
-const handleViewBills = () => {
-  setShowViewBills(false);
-  router.push(`/billings`);
-};
+  const handleViewBills = () => {
+    setShowViewBills(false);
+    router.push(`/billings`);
+  };
 
   const handleSkipBills = () => {
     setShowViewBills(false);
@@ -174,7 +187,10 @@ const handleViewBills = () => {
                 name="admin_notes"
                 render={({ field, fieldState }) => (
                   <FormItem>
-                    <FormLabel required className="text-sm font-semibold text-gray-700">
+                    <FormLabel
+                      required
+                      className="text-sm font-semibold text-gray-700"
+                    >
                       {t("", "Admin Notes")}
                     </FormLabel>
                     <div className="relative group">
@@ -182,6 +198,7 @@ const handleViewBills = () => {
                         <Textarea
                           placeholder={t("", "Enter reason for approval")}
                           {...field}
+                          maxLength={100}
                           className={cn(
                             "h-12 pr-4 max-w-[470px] bg-gray-50/50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all duration-200",
                             fieldState.error &&
@@ -189,8 +206,13 @@ const handleViewBills = () => {
                           )}
                         />
                       </FormControl>
+                      <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
+                        <p><TranslatedFormMessage t={t} /></p>
+                        <p className="text-xs font-normal text-left text-muted-foreground">
+                          {field.value?.toString().length || 0} /100 characters
+                        </p>
+                      </div>
                     </div>
-                    <TranslatedFormMessage t={t} />
                   </FormItem>
                 )}
               />

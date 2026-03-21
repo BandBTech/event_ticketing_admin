@@ -49,10 +49,7 @@ export function TransactionFilterSheet({
 }: TransactionFilterSheetProps) {
   const [localFilters, setLocalFilters] =
     React.useState<TransactionFilters>(filters);
-  const [dateError, setDateError] = React.useState<string | null>(null);
-
-  console.log("local filters", localFilters);
-  
+  const [dateError, setDateError] = React.useState<string | null>(null);  
 
   React.useEffect(() => {
     if (open) {

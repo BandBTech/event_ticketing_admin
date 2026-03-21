@@ -207,7 +207,7 @@ export default function OrganizerFormDialog({
       title={t("organizer.create.title", "Add New Organizer")}
       description={t(
         "organizer.create.description",
-        "Create a new organizer account with pre-approved status."
+        "Create a new organizer account with pre-approved status.",
       )}
     >
       <Form {...form}>
@@ -243,6 +243,7 @@ export default function OrganizerFormDialog({
                             "Enter first name",
                           )}
                           {...field}
+                          maxLength={50}
                           className={cn(
                             "h-12 pl-12 pr-4 bg-gray-50/50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all duration-200",
                             fieldState.error &&
@@ -251,7 +252,14 @@ export default function OrganizerFormDialog({
                         />
                       </FormControl>
                     </div>
-                    <TranslatedFormMessage t={t} />
+                    <div className="flex justify-between items-start min-h-[1.25rem] px-1">
+                      <div className="flex-1">
+                        <TranslatedFormMessage t={t} />
+                      </div>
+                      <p className="text-xs font-normal text-muted-foreground shrink-0 ml-2">
+                        {field.value?.toString().length ?? 0}/50 characters
+                      </p>
+                    </div>
                   </FormItem>
                 )}
               />
@@ -264,7 +272,7 @@ export default function OrganizerFormDialog({
                       required
                       className="text-sm font-semibold text-gray-700"
                     >
-                      {t("auth.signup.lastName", "Last Name")}
+                      {t("auth.signup.lastName", "Last  Name")}
                     </FormLabel>
                     <div className="relative group">
                       <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none transition-colors group-focus-within:text-blue-600">
@@ -281,6 +289,7 @@ export default function OrganizerFormDialog({
                             "Enter last name",
                           )}
                           {...field}
+                          maxLength={50}
                           className={cn(
                             "h-12 pl-12 pr-4 bg-gray-50/50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all duration-200",
                             fieldState.error &&
@@ -289,7 +298,14 @@ export default function OrganizerFormDialog({
                         />
                       </FormControl>
                     </div>
-                    <TranslatedFormMessage t={t} />
+                    <div className="flex justify-between items-start min-h-[1.25rem] px-1">
+                      <div className="flex-1">
+                        <TranslatedFormMessage t={t} />
+                      </div>
+                      <p className="text-xs font-normal text-muted-foreground shrink-0 ml-2">
+                        {field.value?.toString().length ?? 0}/50 characters
+                      </p>
+                    </div>
                   </FormItem>
                 )}
               />
@@ -323,6 +339,7 @@ export default function OrganizerFormDialog({
                           )}
                           type="email"
                           {...field}
+                          maxLength={50}
                           className={cn(
                             "h-12 pl-12 pr-4 bg-gray-50/50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all duration-200",
                             fieldState.error &&
@@ -330,6 +347,12 @@ export default function OrganizerFormDialog({
                           )}
                         />
                       </FormControl>
+                      <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
+                        <p> </p>
+                        <p className="text-xs font-normal text-left text-muted-foreground">
+                          {field.value?.toString().length || 0} /50 characters
+                        </p>
+                      </div>
                     </div>
                     <TranslatedFormMessage t={t} />
                   </FormItem>
@@ -362,6 +385,7 @@ export default function OrganizerFormDialog({
                           type="text"
                           placeholder="••••••••"
                           {...field}
+                          maxLength={50}
                           className={cn(
                             "h-12 pl-12 pr-14 bg-gray-50/50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all duration-200",
                             fieldState.error &&
@@ -369,6 +393,12 @@ export default function OrganizerFormDialog({
                           )}
                         />
                       </FormControl>
+                      <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
+                        <p> </p>
+                        <p className="text-xs font-normal text-left text-muted-foreground">
+                          {field.value?.toString().length || 0} /50 characters
+                        </p>
+                      </div>
                       <button
                         type="button"
                         onClick={handleGeneratePassword}
@@ -380,7 +410,6 @@ export default function OrganizerFormDialog({
                     </div>
                     {errors.password &&
                       errors.password.message !== "Invalid input" &&
-                      // Filter out messages that are already covered by PasswordRequirements
                       !errors.password.message?.includes(
                         "must be at least 8 characters",
                       ) &&
@@ -428,7 +457,6 @@ export default function OrganizerFormDialog({
                 )}
               />
             </div>
-
           </div>
 
           <DialogFooter className="px-6 py-4 border-t bg-background shrink-0 gap-2 sm:justify-end">

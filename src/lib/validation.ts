@@ -1021,7 +1021,11 @@ export const approvePayoutSchema = (
 ) => {
   const v = createValidationHelpers(t);
   return z.object({
-    admin_notes: z.string().min(1, v.required(t("", "Admin Notes"))),
+    admin_notes: z
+      .string()
+      .min(1, v.required(t("", "Admin Notes")))
+      .min(2, v.minLength(t("", "Admin Notes"), 2))
+      .max(100, v.maxLength(t("", "Admin Notes"), 100)),
   });
 };
 

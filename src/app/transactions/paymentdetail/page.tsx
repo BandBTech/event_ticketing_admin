@@ -182,8 +182,6 @@ export default function PaymentDetail() {
       enabled: !!transactionId,
     });
 
-  console.log("payment detail data", paymentDetailData);
-
   const transaction = paymentDetailData?.transaction;
   const paymentIntent = paymentDetailData?.payment_intent;
   const tickets = paymentDetailData?.tickets ?? [];
