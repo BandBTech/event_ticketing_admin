@@ -1,6 +1,12 @@
 import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { X, CaretDown } from "@phosphor-icons/react";
 
 // Filter Dropdown
@@ -16,7 +22,10 @@ export function StatusFilterSelect({
   return (
     <div className="flex items-center gap-2">
       <Select value={value} onValueChange={onChange}>
-        <SelectTrigger className="w-[180px] bg-background justify-between group/trigger" hideIcon={true}>
+        <SelectTrigger
+          className="w-[180px] bg-background justify-between group/trigger"
+          hideIcon={true}
+        >
           <SelectValue placeholder={t("events.allStatus")} />
           <div className="flex items-center gap-1 ml-2 -mr-1 shrink-0">
             {value && value !== "all" ? (
@@ -44,6 +53,7 @@ export function StatusFilterSelect({
           <SelectItem value="all">{t("events.allStatus")}</SelectItem>
           <SelectItem value="approved">{t("status.approved")}</SelectItem>
           <SelectItem value="cancelled">{t("status.cancelled")}</SelectItem>
+          <SelectItem value="completed">{t("status.completed")}</SelectItem>
           <SelectItem value="live">{t("status.live")}</SelectItem>
           <SelectItem value="pending">{t("status.pending")}</SelectItem>
           <SelectItem value="rejected">{t("status.rejected")}</SelectItem>
@@ -52,4 +62,4 @@ export function StatusFilterSelect({
       </Select>
     </div>
   );
-}      
+}

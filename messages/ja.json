@@ -1076,7 +1076,8 @@
     "live": "公開中",
     "draft": "下書き",
     "published": "公開済み",
-    "cancelled": "キャンセル済み"
+    "cancelled": "キャンセル済み",
+    "completed": "完了"
   },
   "pagination": {
     "previous": "前へ",

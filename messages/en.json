@@ -1123,7 +1123,8 @@
     "live": "Live",
     "draft": "Draft",
     "published": "Published",
-    "cancelled": "Cancelled"
+    "cancelled": "Cancelled",
+    "completed": "Completed"
   },
   "pagination": {
     "previous": "Previous",

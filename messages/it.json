@@ -1063,7 +1063,8 @@
     "live": "In diretta",
     "draft": "Bozza",
     "published": "Pubblicato",
-    "cancelled": "Annullato"
+    "cancelled": "Annullato",
+    "completed": "Completato"
   },
   "pagination": {
     "previous": "Precedente",
