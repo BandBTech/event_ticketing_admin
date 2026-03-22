@@ -91,9 +91,6 @@ function RevenueRow({
       <span className="text-sm font-semibold text-gray-700 w-24 text-right flex-shrink-0">
         {fmtCurrency(value)}
       </span>
-      <span className="text-xs text-gray-400 w-8 text-right flex-shrink-0">
-        {pct}%
-      </span>
     </div>
   );
 }
@@ -284,6 +281,12 @@ export default function DashboardPage({ data }: DashboardPageProps) {
                 value: data?.events.live,
                 bg: "bg-emerald-50",
                 text: "text-emerald-700",
+              },
+              {
+                label: "Rejected",
+                value: data?.events.rejected,
+                bg: "bg-red-50",
+                text: "text-red-700",
               },
             ].map((s) => (
               <div

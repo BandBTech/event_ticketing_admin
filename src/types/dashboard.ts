@@ -27,6 +27,7 @@ export interface EventsStats {
   pending: number;
   total: number;
   upcoming: number;
+  rejected: number;
 }
 
 export interface OrganizersStats {

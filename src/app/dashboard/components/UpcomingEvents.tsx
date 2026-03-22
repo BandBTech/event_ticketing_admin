@@ -1,6 +1,4 @@
-import {
-  UpcomingEvent,
-} from "@/types/dashboard";
+import { UpcomingEvent } from "@/types/dashboard";
 import Image from "next/image";
 import {
   MapPinIcon,
@@ -8,6 +6,8 @@ import {
   CalendarBlankIcon,
 } from "@phosphor-icons/react";
 import FeaturedBadge from "@/app/events/components/FeaturedBadge";
+import { Route } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 type EventProps = {
   event: UpcomingEvent;
@@ -141,6 +141,7 @@ const CAT_COLORS = [
 function EventCard({ event }: EventProps) {
   const categories = parseCategories(event.category);
   const dateRange = formatDateRange(event.start_date, event.end_date);
+  const router = useRouter();
 
   if (!dateRange) {
     console.error("Invalid date range for event:", event.id);
@@ -151,8 +152,15 @@ function EventCard({ event }: EventProps) {
   const daysUntil = getDaysUntil(event.start_date);
   const status = STATUS_MAP[event.status as StatusKey] ?? STATUS_MAP.upcoming;
 
+  const handleOpenEventDetails = () => {
+    router.push(`/events/eventdetails/?id=${event.id}`);
+  };
+
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col group hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+    <div
+      onClick={handleOpenEventDetails}
+      className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col group hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
+    >
       {/* Banner */}
       <div className="relative h-44 overflow-hidden bg-gray-100 flex-shrink-0">
         <Image
