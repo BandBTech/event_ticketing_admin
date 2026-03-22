@@ -49,6 +49,16 @@ export class BillingService {
     );
   }
 
+  static async cancelBill(bill_id: string, status: string): Promise<Bill> {
+    return await api.put<Bill>(
+      API_ENDPOINTS.UPDATE_BILL(bill_id),
+      { status },
+      {
+        requiresAuth: true,
+      },
+    );
+  }
+
   static async getAllBills(filters?: {
     page?: number;
     limit?: number;

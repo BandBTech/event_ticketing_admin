@@ -257,21 +257,21 @@ export function BillingFilterSheet({
                 />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="pending">
-                  {t("billings.status.pending")}
-                </SelectItem>
-                <SelectItem value="partially_paid">
-                  {t("billings.status.partially_paid")}
+                <SelectItem value="cancelled">
+                  {t("billings.status.cancelled")}
                 </SelectItem>
                 <SelectItem value="paid">
                   {t("billings.status.paid")}
                 </SelectItem>
-                <SelectItem value="overdue">
+                <SelectItem value="partially_paid">
+                  {t("billings.status.partially_paid")}
+                </SelectItem>
+                <SelectItem value="pending">
+                  {t("billings.status.pending")}
+                </SelectItem>
+                {/* <SelectItem value="overdue">
                   {t("billings.status.overdue")}
-                </SelectItem>
-                <SelectItem value="cancelled">
-                  {t("billings.status.cancelled")}
-                </SelectItem>
+                </SelectItem> */}
               </SelectContent>
             </Select>
           </div>

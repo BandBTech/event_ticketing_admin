@@ -16,7 +16,9 @@ import {
   CaretUpDown,
   FileTextIcon,
   InfoIcon,
+  XCircleIcon,
 } from "@phosphor-icons/react";
+import { toast } from "sonner";
 import {
   Table,
   TableBody,
@@ -33,7 +35,8 @@ import {
 } from "@/components/ui/tooltip";
 import { flexRender } from "@tanstack/react-table";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import { queryKeys } from "@/lib/queryKeys";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -62,6 +65,7 @@ import {
   PaymentHistoryData,
 } from "@/types/billings";
 import UpdateBillModal from "./components/UpdateBillModal";
+import { create } from "domain";
 
 // Lazy load heavy sub-components to reduce initial bundle size
 const BillingFilterSheet = React.lazy(() =>
@@ -145,6 +149,7 @@ export default function BillingsPage() {
   };
 
   const debouncedSearch = useDebounce(searchInput, 500);
+  const queryClient = useQueryClient();
 
   // Helper to update URL params
   const updateParams = useCallback(
@@ -161,6 +166,24 @@ export default function BillingsPage() {
     },
     [router, searchParams],
   );
+
+  const createMutation = useMutation({
+    mutationFn: ({ bill_id, status }: { bill_id: string; status: string }) =>
+      BillingService.cancelBill(bill_id, status),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.bills?.list ?? ["bills"],
+      });
+      toast.success(t("", "Bill cancelled successfully."));
+    },
+    onError: (err) => {
+      toast.error(
+        err instanceof Error
+          ? err.message
+          : t("", "Failed to update bill. Please try again."),
+      );
+    },
+  });
 
   const { data: response, isLoading } = useQuery<PaymentBillData>({
     queryKey: [
@@ -333,6 +356,22 @@ export default function BillingsPage() {
                     </div>
                   </DropdownMenuItem>
                 )}
+                {bills.status === "pending" && (
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setPaymentBillData(bills);
+                      createMutation.mutate({
+                        bill_id: bills.id,
+                        status: "cancelled",
+                      });
+                    }}
+                  >
+                    <div className="flex justify-start items-center bg-gray-50 text-red-700">
+                      <XCircleIcon weight="duotone" className="mr-2 h-4 w-4" />
+                      Cancel Bill
+                    </div>
+                  </DropdownMenuItem>
+                )}
                 {/* <DropdownMenuItem
                   onClick={() => {
                     setPaymentBillData(bills);
@@ -428,7 +467,7 @@ export default function BillingsPage() {
               <span className="ml-1 text-xs font-medium text-primary">{`(${filterCount})`}</span>
             )}
           </Button>
-          <Button
+          {/* <Button
             onClick={() => {
               setPaymentBillData(null);
               setIsAddDialogOpen(true);
@@ -437,7 +476,7 @@ export default function BillingsPage() {
           >
             <FilePlusIcon weight="bold" className="h-5 w-5" />
             {t("billings.addBill", "Add Bills")}
-          </Button>
+          </Button> */}
         </div>
       </div>
 
