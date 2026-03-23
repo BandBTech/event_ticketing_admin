@@ -740,13 +740,15 @@ export const createEventSchema = (
             "Event Description is required.",
           ),
         )
-        .max(
-          EVENT_DESC_MAX,
-          t(
-            "event.validation.descriptionMax",
-            `Event Description must be under ${EVENT_DESC_MAX} characters.`,
-          ),
-        ),
+        .superRefine((val, ctx) => {
+          const textLength = val.replace(/<[^>]*>/g, "").length;
+          if (textLength > EVENT_DESC_MAX) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `event.validation.descriptionMaxLength|max:${EVENT_DESC_MAX}`,
+            });
+          }
+        }),
       tags: z
         .array(z.string())
         .min(

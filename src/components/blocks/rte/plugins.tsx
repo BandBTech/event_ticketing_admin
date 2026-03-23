@@ -1,13 +1,51 @@
 // import { useState } from "react"
+import { useEffect } from "react"
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary"
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin"
 import { ListPlugin } from "@lexical/react/LexicalListPlugin"
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin"
 import { LinkPlugin } from "@lexical/react/LexicalLinkPlugin"
 import { AutoLinkPlugin } from "@lexical/react/LexicalAutoLinkPlugin"
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
+import {
+  CONTROLLED_TEXT_INSERTION_COMMAND,
+  PASTE_COMMAND,
+  COMMAND_PRIORITY_CRITICAL,
+  $getRoot,
+} from "lexical"
 
 import { ContentEditable } from "@/components/editor/editor-ui/content-editable"
 import { ToolbarPlugin } from "./toolbar-plugin"
+
+function MaxLengthPlugin({ maxLength }: { maxLength: number }) {
+  const [editor] = useLexicalComposerContext()
+
+  useEffect(() => {
+    const isAtLimit = () => {
+      const textLength = $getRoot().getTextContent().replace(/\n/g, "").length
+      return textLength >= maxLength
+    }
+
+    const unregisterText = editor.registerCommand(
+      CONTROLLED_TEXT_INSERTION_COMMAND,
+      () => isAtLimit(),
+      COMMAND_PRIORITY_CRITICAL,
+    )
+
+    const unregisterPaste = editor.registerCommand(
+      PASTE_COMMAND,
+      () => isAtLimit(),
+      COMMAND_PRIORITY_CRITICAL,
+    )
+
+    return () => {
+      unregisterText()
+      unregisterPaste()
+    }
+  }, [editor, maxLength])
+
+  return null
+}
 
 const URL_MATCHER =
   /((https?:\/\/(www\.)?)|(www\.))[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/
@@ -44,7 +82,7 @@ const MATCHERS = [
   },
 ]
 
-export function Plugins({ placeholder = "Start typing ..." }: { placeholder?: string }) {
+export function Plugins({ placeholder = "Start typing ...", maxLength }: { placeholder?: string; maxLength?: number }) {
 
 
   const onRef = (_floatingAnchorElem: HTMLDivElement) => {
@@ -71,6 +109,7 @@ export function Plugins({ placeholder = "Start typing ..." }: { placeholder?: st
         <HistoryPlugin />
         <LinkPlugin />
         <AutoLinkPlugin matchers={MATCHERS} />
+        {maxLength !== undefined && <MaxLengthPlugin maxLength={maxLength} />}
       </div>
     </div>
   )
