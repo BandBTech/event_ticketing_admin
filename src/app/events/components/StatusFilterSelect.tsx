@@ -54,8 +54,8 @@ export function StatusFilterSelect({
           <SelectItem value="approved">{t("status.approved")}</SelectItem>
           <SelectItem value="cancelled">{t("status.cancelled")}</SelectItem>
           <SelectItem value="completed">{t("status.completed")}</SelectItem>
-          <SelectItem value="hold">{t("status.hold", "On Hold")}</SelectItem>
           <SelectItem value="live">{t("status.live")}</SelectItem>
+          <SelectItem value="hold">{t("status.hold", "On Hold")}</SelectItem>
           <SelectItem value="on_sale">{t("status.on_sale", "On Sale")}</SelectItem>
           <SelectItem value="pending">{t("status.pending")}</SelectItem>
           <SelectItem value="rejected">{t("status.rejected")}</SelectItem>
