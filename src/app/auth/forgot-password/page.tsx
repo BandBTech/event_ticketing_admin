@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createValidationHelpers } from "@/lib/validation";
+import { useAuthStore } from "@/store/authStore";
 
 // Create validation schema
 const createForgotPasswordSchema = (
@@ -31,6 +32,7 @@ export default function ForgotPasswordPage() {
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
 
+  const { isAuthenticated, isLoading: isAuthLoading, _authChecked } = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
 
   const schema = createForgotPasswordSchema(t);
@@ -51,6 +53,12 @@ export default function ForgotPasswordPage() {
     setValue,
   } = form;
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/dashboard");
+    }
+  }, [isAuthenticated, router]);
+
   // Populate email from sessionStorage if user navigated back
   useEffect(() => {
     const savedEmail = sessionStorage.getItem('password_reset_email');
@@ -60,6 +68,10 @@ export default function ForgotPasswordPage() {
       sessionStorage.removeItem('password_reset_email');
     }
   }, [setValue]);
+
+  if (!_authChecked || isAuthLoading) {
+    return null;
+  }
 
   const onSubmit = async (data: ForgotPasswordFormData) => {
     setIsLoading(true);

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Eye,
   EyeOff,
@@ -19,6 +19,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "next-i18next";
 import { createRegisterSchema } from "@/app/lib/validations/authValidation";
+import { useAuthStore } from "@/store/authStore";
 
 const RegisterPage: React.FC = () => {
   const [countryCode, setCountryCode] = useState("JP(+81)");
@@ -29,6 +30,13 @@ const RegisterPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { t } = useTranslation();
+  const { isAuthenticated } = useAuthStore();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/dashboard");
+    }
+  }, [isAuthenticated, router]);
 
   const translate = (key: string, fallback?: string) =>
     t(key, { defaultValue: fallback });
