@@ -12,12 +12,14 @@ import {
   UserIcon,
   ShieldIcon,
   FileTextIcon,
+  CaretDownIcon 
 } from "@phosphor-icons/react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
 import { Badge } from "@/components/ui/badge";
 import { useSearchParams } from "next/navigation";
 import { PaymentHistoryData } from "@/types/billings";
+import { cn } from "@/lib/utils";
 
 const fmt = (n: number) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(
@@ -152,6 +154,9 @@ export default function BillDetail() {
   });
 
   const [billHistory, setBillHistory] = useState<PaymentHistoryData[]>([]);
+  const [expanded, setExpanded] = React.useState<
+    "event" | "organizer" | "admin" | null
+  >(null);
 
   const { data: billHistoryData, isLoading: isBillHistoryLoading } = useQuery<
     PaymentHistoryData[]
@@ -233,6 +238,7 @@ export default function BillDetail() {
           </div>
 
           {/* Event / Organizer / Admin */}
+
           <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="bg-indigo-50 rounded-xl px-4 py-3 flex items-center gap-3">
               <CalendarBlankIcon className="text-[#6366f1] w-4 h-4 flex-shrink-0" />
@@ -240,8 +246,31 @@ export default function BillDetail() {
                 <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider">
                   {t("billings.detailPage.event", "Event")}
                 </p>
-                <p className="text-sm font-semibold text-slate-700 truncate">
-                  {billData?.event_title}
+                <p
+                  className={cn(
+                    "text-sm font-semibold text-slate-700 cursor-pointer flex items-center gap-1",
+                    expanded === "event"
+                      ? "whitespace-normal break-words"
+                      : "truncate",
+                  )}
+                  onClick={() =>
+                    setExpanded(expanded === "event" ? null : "event")
+                  }
+                >
+                  <span
+                    className={cn(
+                      "truncate",
+                      expanded === "event" && "whitespace-normal break-words",
+                    )}
+                  >
+                    {billData?.event_title}
+                  </span>
+                  <CaretDownIcon
+                    className={cn(
+                      "h-3 w-3 flex-shrink-0 text-slate-400 transition-transform duration-200",
+                      expanded === "event" && "rotate-180",
+                    )}
+                  />
                 </p>
               </div>
             </div>
@@ -251,7 +280,22 @@ export default function BillDetail() {
                 <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider">
                   {t("billings.detailPage.organizer", "Organizer")}
                 </p>
-                <p className="text-sm font-semibold text-slate-700 truncate">
+                <p
+                  className={cn(
+                    "text-sm font-semibold text-slate-700 cursor-pointer",
+                    expanded === "organizer"
+                      ? "whitespace-normal break-words"
+                      : "truncate",
+                  )}
+                  onClick={() =>
+                    setExpanded(expanded === "organizer" ? null : "organizer")
+                  }
+                  title={
+                    expanded === "organizer"
+                      ? undefined
+                      : billData?.organizer_name
+                  }
+                >
                   {billData?.organizer_name || "N/A"}
                 </p>
               </div>
@@ -262,7 +306,20 @@ export default function BillDetail() {
                 <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider">
                   {t("billings.detailPage.admin", "Admin")}
                 </p>
-                <p className="text-sm font-semibold text-slate-700 truncate">
+                <p
+                  className={cn(
+                    "text-sm font-semibold text-slate-700 cursor-pointer",
+                    expanded === "admin"
+                      ? "whitespace-normal break-words"
+                      : "truncate",
+                  )}
+                  onClick={() =>
+                    setExpanded(expanded === "admin" ? null : "admin")
+                  }
+                  title={
+                    expanded === "admin" ? undefined : billData?.admin_name
+                  }
+                >
                   {billData?.admin_name}
                 </p>
               </div>
