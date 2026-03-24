@@ -127,7 +127,7 @@ export function EventCard({ event }: { event: Event }) {
               className="w-4 h-4 text-muted-foreground/70 shrink-0"
             />
             <span className="truncate">
-              {event.address || event.venue_name || "Location TBA"}
+              {((/^-?\d+(\.\d+)?,-?\d+(\.\d+)?$/.test(event.address?.trim() || "") && !event.location) ? event.venue_name : event.address) || event.venue_name || "Location TBA"}
             </span>
           </div>
         </div>
