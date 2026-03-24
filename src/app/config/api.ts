@@ -85,4 +85,5 @@ export const API_ENDPOINTS = {
 
   //Checkout Sessions
   GET_CHECKOUT_SESSIONS: `${API_BASE_URL}/admin/tickets/checkout-sessions`,
+  PROCESS_CHECKOUT: `${API_BASE_URL}/admin/tickets/process-checkout`,
 };

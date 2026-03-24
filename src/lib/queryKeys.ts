@@ -116,6 +116,16 @@ export const queryKeys = {
   },
 
   /**
+   * Permissions query keys
+   */
+  checkoutsession: {
+    /** Key for fetching all permissions */
+    all: ["checkoutsession"] as const,
+    /** Key for permission list (used for invalidation) */
+    list: ["checkoutsession"] as const,
+  },
+
+  /**
    * Roles query keys
    */
   roles: {

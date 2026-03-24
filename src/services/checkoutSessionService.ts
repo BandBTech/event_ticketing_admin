@@ -1,9 +1,11 @@
 import { api } from "../lib/apiClient";
 import { API_ENDPOINTS } from "@/app/config/api";
-import { CheckoutSessionsResponse, CheckoutSessionsData } from "@/types/checkoutsession";
+import {
+  CheckoutSessionsResponse,
+  CheckoutSessionsData,
+} from "@/types/checkoutsession";
 
 export class CheckoutSessionService {
-
   static async getCheckoutSessions(filters?: {
     page?: number;
     limit?: number;
@@ -31,5 +33,24 @@ export class CheckoutSessionService {
     );
 
     return result;
+  }
+
+  /**
+   * Processes a checkout session by sending the checkout token to the API.
+   * @param data An object containing the checkout token.
+   * @returns A promise that resolves when the checkout is processed.
+   */
+  static async processCheckout(data: {
+    checkout_token: string;
+  }): Promise<void> {
+    await api.post<void>(
+      API_ENDPOINTS.PROCESS_CHECKOUT,
+      {
+        checkout_token: data.checkout_token,
+      },
+      {
+        requiresAuth: true,
+      },
+    );
   }
 }

@@ -3,47 +3,41 @@
 import React, { useState, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
-import { TransactionService } from "@/services/transactionService";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  TooltipProvider,
-  TooltipContent,
-  Tooltip,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import {
   MagnifyingGlass as MagnifyingGlassIcon,
   Funnel as FunnelIcon,
   CaretLeft as CaretLeftIcon,
   CaretRight as CaretRightIcon,
-  Eye as EyeIcon,
   User as UserIcon,
   DotsThreeVertical as DotsThreeVerticalIcon,
-  ArrowClockwiseIcon,
-  CoinsIcon,
-  InfoIcon,
   ArrowsLeftRight,
   UserCircleDashedIcon,
   PlayCircleIcon,
 } from "@phosphor-icons/react";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { queryKeys } from "@/lib/queryKeys";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { usePathname } from "next/navigation";
 import { BanknoteArrowUp, CreditCard, Logs } from "lucide-react";
 import { CaretUp, CaretDown, CaretUpDown } from "@phosphor-icons/react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
-import {
-  Transaction,
-  TransactionListResponse,
-  TransactionStatus,
-  TransactionType,
-} from "@/types/transaction";
 import { useDebounce } from "@/hooks/useDebounce";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -61,10 +55,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { flexRender } from "@tanstack/react-table";
-// import { TransactionFilterSheet } from "./components/TransactionFilterSheet";
 import { TransactionFilters, getDefaultFilters } from "@/types/transaction";
 import { CheckoutSessionService } from "@/services/checkoutSessionService";
 import { CheckoutSessionsData, CheckoutSession } from "@/types/checkoutsession";
+import { toast } from "@/lib/toast";
 
 export default function TransactionsPage() {
   const router = useRouter();
@@ -83,6 +77,8 @@ export default function TransactionsPage() {
   const [filterSheetOpen, setFilterSheetOpen] = React.useState(false);
   const [appliedFilters, setAppliedFilters] =
     React.useState<TransactionFilters>(getDefaultFilters());
+  const [showConfirm, setShowConfirm] = React.useState(false);
+  const queryClient = useQueryClient();
 
   const debouncedSearch = useDebounce(searchInput, 500);
 
@@ -111,7 +107,7 @@ export default function TransactionsPage() {
 
   const { data: response, isLoading } = useQuery<CheckoutSessionsData>({
     queryKey: [
-      "checkoutsessions",
+      "checkoutsession",
       currentPage,
       itemsPerPage,
       statusFilter,
@@ -153,6 +149,24 @@ export default function TransactionsPage() {
     },
     [updateParams],
   );
+
+  const createMutation = useMutation({
+    mutationFn: (data: { checkout_token: string }) =>
+      CheckoutSessionService.processCheckout(data),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.checkoutsession?.list ?? ["checkoutsessions"],
+      });
+      toast.success(t("", "Checkout processed successfully."));
+    },
+    onError: (err) => {
+      toast.error(
+        err instanceof Error
+          ? err.message
+          : t("", "Failed to update bill. Please try again."),
+      );
+    },
+  });
 
   // Table columns
   const columns: ColumnDef<CheckoutSession>[] = React.useMemo(
@@ -249,19 +263,33 @@ export default function TransactionsPage() {
           return (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0">
+                <Button 
+                disabled={transaction.status !== "pending"}
+                variant="ghost" className="h-8 w-8 p-0">
                   <span className="sr-only">Open menu</span>
                   <DotsThreeVerticalIcon weight="duotone" className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem>
-                  <div className="flex justify-start items-center bg-gray-50 text-gray-700">
-                    <PlayCircleIcon weight="duotone" className="mr-2 h-4 w-4" />
-                    Process Checkout
-                  </div>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
+              {transaction.status === "pending" && (
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem>
+                    <div
+                      onClick={() =>
+                        createMutation.mutate({
+                          checkout_token: transaction.checkout_token,
+                        })
+                      }
+                      className="flex justify-start items-center bg-gray-50 text-gray-700"
+                    >
+                      <PlayCircleIcon
+                        weight="duotone"
+                        className="mr-2 h-4 w-4"
+                      />
+                      Process Checkout
+                    </div>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              )}
             </DropdownMenu>
           );
         },
@@ -547,6 +575,36 @@ export default function TransactionsPage() {
           </Button>
         </div>
       )}
+
+      <AlertDialog open={showConfirm} onOpenChange={setShowConfirm}>
+        <AlertDialogContent className="rounded-3xl shadow-2xl border-none bg-white/95 backdrop-blur-xl data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 duration-300">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-xl font-bold text-gray-900">
+              {t("", "Confirm Process Checkout")}
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-500 text-base">
+              {t(
+                "dashboard.modal.confirmCheckoutDesc",
+                "Are you sure you want to process this checkout? This action cannot be undone immediately.",
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="pt-6">
+            <AlertDialogCancel
+              onClick={() => setShowConfirm(false)}
+              className="h-11 px-6 border-gray-200 hover:bg-gray-50 transition-colors"
+            >
+              {t("common.cancel", "Cancel")}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              // onClick={createMutation.mutate.bind(null, { checkout_token: "example_checkout_token" })}
+              className="h-11 px-8 active:scale-95"
+            >
+              {t("common.confirm", "Confirm")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Filter Sheet */}
       {/* <React.Suspense fallback={null}>
