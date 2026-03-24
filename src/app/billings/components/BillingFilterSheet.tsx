@@ -167,7 +167,16 @@ export function BillingFilterSheet({
                     <Calendar
                       mode="single"
                       selected={localFilters.start_date}
-                      onSelect={(date) => handleDateChange("start_date", date)}
+                      onSelect={(date) => {
+                        if (date) {
+                          const normalized = new Date(
+                            format(date, "yyyy-MM-dd"),
+                          );
+                          handleDateChange("start_date", normalized);
+                        } else {
+                          handleDateChange("start_date", undefined);
+                        }
+                      }}
                       captionLayout="dropdown"
                       fromYear={2010}
                       toYear={new Date().getFullYear()}
@@ -203,7 +212,16 @@ export function BillingFilterSheet({
                     <Calendar
                       mode="single"
                       selected={localFilters.end_date}
-                      onSelect={(date) => handleDateChange("end_date", date)}
+                      onSelect={(date) => {
+                        if (date) {
+                          const normalized = new Date(
+                            format(date, "yyyy-MM-dd"),
+                          );
+                          handleDateChange("end_date", normalized);
+                        } else {
+                          handleDateChange("end_date", undefined);
+                        }
+                      }}
                       captionLayout="dropdown"
                       fromYear={2010}
                       toYear={new Date().getFullYear()}

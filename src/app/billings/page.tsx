@@ -221,9 +221,7 @@ export default function BillingsPage() {
         title: "Created Date",
         cell: ({ row }) => {
           const date = new Date(row.original.created_at);
-
-          const formattedDate = date.toISOString().split("T")[0];
-
+          const formattedDate = date.toLocaleDateString("en-CA"); // YYYY-MM-DD format
           return <span>{formattedDate}</span>;
         },
         enableSorting: true,
