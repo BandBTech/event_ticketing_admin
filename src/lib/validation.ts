@@ -938,7 +938,7 @@ export const addPaymentToBillSchema = (
       .string()
       .max(200, v.maxLength(t("", "Payment Reference"), 200)),
     notes: z.string().max(200, v.maxLength(t("", "Notes"), 200)),
-    payment_date: z.date().nullable().optional(),
+    payment_date: z.date({ message: v.required(t("", "Payment Date")) }),
     amount: z.number().min(1, v.required(t("", "Amount"))),
     payment_method: z
       .string()
