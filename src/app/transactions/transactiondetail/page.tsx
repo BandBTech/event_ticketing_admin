@@ -21,30 +21,10 @@ import { queryKeys } from "@/lib/queryKeys";
 import { useSearchParams } from "next/navigation";
 import { Transaction } from "@/types/transaction";
 
-const transaction = {
-  id: "7ed84e53-141c-4582-af34-b92fcca28705",
-  event_id: "0794441f-3df1-4173-8953-61ff9a2b7842",
-  event_title: "Cultural Event",
-  user_id: "0d67ac66-878e-4220-9f0c-d5c3fa31e853",
-  user_name: "Koshal Shakya",
-  ticket_count: 10,
-  payment_gateway: "cash",
-  amount: 5300,
-  currency: "USD",
-  status: "completed",
-  gateway_txn_id: "",
-  commission_rate: 10,
-  commission_amount: 530,
-  organizer_share: 4770,
-  processed_at: "2026-02-18T14:06:46.685248Z",
-  created_at: "2026-02-18T14:06:46.685259Z",
-  has_payment_details: false,
-};
-
-function fmt(amount: number, currency: string) {
-  return new Intl.NumberFormat("en-US", { style: "currency", currency }).format(
-    amount,
-  );
+function fmt(amount?: number, currency?: string): string {
+  if (amount == null || !currency) return "—";
+  
+  return new Intl.NumberFormat("en-US", { style: "currency", currency }).format(amount);
 }
 
 function fmtDate(iso: string) {
@@ -73,7 +53,7 @@ export default function TransactionDetailPage() {
 
   const transactioinId = searchParams.get("id") || "";
 
-  const { data: billData, isLoading } = useQuery<Transaction>({
+  const { data: transactionDetail, isLoading } = useQuery<Transaction>({
     queryKey: queryKeys.users.detail(transactioinId),
     queryFn: () => TransactionService.getTransactionById(transactioinId),
     enabled: !!transactioinId,
@@ -99,41 +79,31 @@ export default function TransactionDetailPage() {
         <div className="flex items-center gap-5">
           <div
             className="w-20 h-20 rounded-full flex items-center justify-center text-xl font-bold flex-shrink-0"
-            style={{ background: "#eef0fb", color: "#6366f1" }}
+            style={{ background: "#eef0fb", color: "#6366f1" }} 
           >
-            {getInitials(transaction.user_name)}
+            {getInitials(transactionDetail?.user.name || "—")}
           </div>
           <div>
             <div className="flex items-center gap-3 mb-1">
               <h1 className="text-xl font-bold text-gray-900">
-                {transaction.user_name}
+                {transactionDetail?.user.name}
               </h1>
               <span
                 className="text-xs font-semibold px-3 py-1 rounded-full capitalize"
                 style={{
                   background:
-                    transaction.status === "completed" ? "#dcfce7" : "#fef9c3",
+                    transactionDetail?.status === "completed" ? "#dcfce7" : "#fef9c3",
                   color:
-                    transaction.status === "completed" ? "#16a34a" : "#a16207",
+                    transactionDetail?.status === "completed" ? "#16a34a" : "#a16207",
                 }}
               >
-                {transaction.status}
+                {transactionDetail?.status}
               </span>
             </div>
             <p className="text-sm text-gray-500 mb-3">
-              {transaction.event_title}
+              {transactionDetail?.event.title || "—"}
             </p>
             <div className="flex flex-wrap gap-2">
-              <span
-                className="text-xs font-medium px-3 py-1 rounded-full flex items-center gap-1"
-                style={{
-                  background: "#f0fdf4",
-                  color: "#16a34a",
-                  border: "1px solid #bbf7d0",
-                }}
-              >
-                ✓ Payment Confirmed
-              </span>
               <span
                 className="text-xs font-medium px-3 py-1 rounded-full capitalize"
                 style={{
@@ -142,7 +112,7 @@ export default function TransactionDetailPage() {
                   border: "1px solid #fde68a",
                 }}
               >
-                Gateway: {transaction.payment_gateway}
+                Gateway: {transactionDetail?.payment_gateway || "—"}
               </span>
             </div>
           </div>
@@ -170,7 +140,7 @@ export default function TransactionDetailPage() {
               <div>
                 <p className="text-xs text-gray-400 mb-0.5">Transaction ID</p>
                 <p className="text-sm font-semibold text-gray-800 break-all">
-                  {transaction.id}
+                  {transactionDetail?.id}
                 </p>
               </div>
             </div>
@@ -187,7 +157,7 @@ export default function TransactionDetailPage() {
                   Tickets Purchased
                 </p>
                 <p className="text-sm font-semibold text-gray-800">
-                  {transaction.ticket_count} tickets
+                  {transactionDetail?.ticket_count} tickets
                 </p>
               </div>
             </div>
@@ -200,9 +170,9 @@ export default function TransactionDetailPage() {
                 <CreditCard size={16} color="#f97316" />
               </div>
               <div>
-                <p className="text-xs text-gray-400 mb-0.5">Gateway TXN ID</p>
+                <p className="text-xs text-gray-400 mb-0.5">Payment Gateway</p>
                 <p className="text-sm font-semibold text-gray-800">
-                  {transaction.gateway_txn_id || "—"}
+                  {transactionDetail?.payment_gateway || "—"}
                 </p>
               </div>
             </div>
@@ -215,9 +185,9 @@ export default function TransactionDetailPage() {
                 <Calendar size={16} color="#6366f1" />
               </div>
               <div>
-                <p className="text-xs text-gray-400 mb-0.5">Processed At</p>
+                <p className="text-xs text-gray-400 mb-0.5">Updated At</p>
                 <p className="text-sm font-semibold text-gray-800">
-                  {fmtDate(transaction.processed_at)}
+                  {fmtDate(transactionDetail?.updated_at || "")}
                 </p>
               </div>
             </div>
@@ -232,7 +202,7 @@ export default function TransactionDetailPage() {
               <div>
                 <p className="text-xs text-gray-400 mb-0.5">Created At</p>
                 <p className="text-sm font-semibold text-gray-800">
-                  {fmtDate(transaction.created_at)}
+                  {fmtDate(transactionDetail?.created_at || "")}
                 </p>
               </div>
             </div>
@@ -248,7 +218,7 @@ export default function TransactionDetailPage() {
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-500">Total Amount</span>
               <span className="text-sm font-semibold text-gray-800">
-                {fmt(transaction.amount, transaction.currency)}
+                {fmt(transactionDetail?.amount, transactionDetail?.currency)}
               </span>
             </div>
             <hr className="border-gray-100" />
@@ -258,31 +228,21 @@ export default function TransactionDetailPage() {
                 className="text-xs font-semibold px-3 py-1 rounded-full"
                 style={{ background: "#dcfce7", color: "#16a34a" }}
               >
-                {fmt(transaction.organizer_share, transaction.currency)}
+                {fmt(transactionDetail?.organizer_share, transactionDetail?.currency)}
               </span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-500">
                 Commission{" "}
                 <span className="text-xs text-gray-400">
-                  ({transaction.commission_rate}%)
+                  ({transactionDetail?.commission_rate}%)
                 </span>
               </span>
               <span
                 className="text-xs font-semibold px-3 py-1 rounded-full"
                 style={{ background: "#fff7ed", color: "#ea580c" }}
               >
-                {fmt(transaction.commission_amount, transaction.currency)}
-              </span>
-            </div>
-            <hr className="border-gray-100" />
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-500">Per Ticket</span>
-              <span className="text-sm font-semibold text-gray-800">
-                {fmt(
-                  transaction.amount / transaction.ticket_count,
-                  transaction.currency,
-                )}
+                {fmt(transactionDetail?.commission_amount, transactionDetail?.currency)}
               </span>
             </div>
           </div>

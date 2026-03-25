@@ -11,12 +11,20 @@ export interface Transaction {
   currency: string;
   event_id: string;
   event_title: string;
+  user: {
+    id: string;
+    name: string;
+  };
+  event : {
+  id: string;
+  title: string;
+  }
   gateway_txn_id: string;
   has_payment_details: boolean;
   id: string; // UUID format
   organizer_share: number;
   payment_gateway: string;
-  processed_at: string; // ISO 8601 date string
+  updated_at: string; // ISO 8601 date string
   status: string;
   ticket_count: number;
   user_id: string; // UUID format
