@@ -78,6 +78,8 @@ export default function TransactionsPage() {
   const [appliedFilters, setAppliedFilters] =
     React.useState<TransactionFilters>(getDefaultFilters());
   const [showConfirm, setShowConfirm] = React.useState(false);
+  const [processCheckoutData, setProcessCheckoutData] =
+    React.useState<CheckoutSession | null>(null);
   const queryClient = useQueryClient();
 
   const debouncedSearch = useDebounce(searchInput, 500);
@@ -263,9 +265,11 @@ export default function TransactionsPage() {
           return (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button 
-                disabled={transaction.status !== "pending"}
-                variant="ghost" className="h-8 w-8 p-0">
+                <Button
+                  disabled={transaction.status !== "pending"}
+                  variant="ghost"
+                  className="h-8 w-8 p-0"
+                >
                   <span className="sr-only">Open menu</span>
                   <DotsThreeVerticalIcon weight="duotone" className="h-4 w-4" />
                 </Button>
@@ -274,11 +278,10 @@ export default function TransactionsPage() {
                 <DropdownMenuContent align="end" className="w-48">
                   <DropdownMenuItem>
                     <div
-                      onClick={() =>
-                        createMutation.mutate({
-                          checkout_token: transaction.checkout_token,
-                        })
-                      }
+                      onClick={() => {
+                        setProcessCheckoutData(transaction);
+                        setShowConfirm(true);
+                      }}
                       className="flex justify-start items-center bg-gray-50 text-gray-700"
                     >
                       <PlayCircleIcon
@@ -597,7 +600,11 @@ export default function TransactionsPage() {
               {t("common.cancel", "Cancel")}
             </AlertDialogCancel>
             <AlertDialogAction
-              // onClick={createMutation.mutate.bind(null, { checkout_token: "example_checkout_token" })}
+              onClick={() =>
+                createMutation.mutate({
+                  checkout_token: processCheckoutData?.checkout_token || "",
+                })
+              }
               className="h-11 px-8 active:scale-95"
             >
               {t("common.confirm", "Confirm")}
