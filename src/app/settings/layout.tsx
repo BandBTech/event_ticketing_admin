@@ -48,11 +48,11 @@ const menuItems = [
   //   label: "Payments",
   //   icon: CreditCardIcon,
   // },
-  {
-    href: "/settings/notifications",
-    label: "Notifications",
-    icon: BellIcon,
-  },
+  // {
+  //   href: "/settings/notifications",
+  //   label: "Notifications",
+  //   icon: BellIcon,
+  // },
   // {
   //   href: "/settings/system-security",
   //   label: "SystemSecurity",

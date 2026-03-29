@@ -248,6 +248,7 @@ export default function ProfileSettingsPage() {
                             "h-11 pl-11 pr-4",
                             !isEditing && "bg-gray-50 cursor-not-allowed",
                           )}
+                          maxLength={50}
                         />
                       </FormControl>
                       {isEditing && (
@@ -256,7 +257,7 @@ export default function ProfileSettingsPage() {
                             <TranslatedFormMessage t={t} />
                           </p>
                           <p className="text-xs font-normal text-left text-muted-foreground">
-                            {field.value?.toString().length || 0} /10 characters
+                            {field.value?.toString().length || 0} /50 characters
                           </p>
                         </div>
                       )}
@@ -293,6 +294,7 @@ export default function ProfileSettingsPage() {
                             "h-11 pl-11 pr-4",
                             !isEditing && "bg-gray-50 cursor-not-allowed",
                           )}
+                          maxLength={50}
                         />
                       </FormControl>
                       {isEditing && (
@@ -301,7 +303,7 @@ export default function ProfileSettingsPage() {
                             <TranslatedFormMessage t={t} />
                           </p>
                           <p className="text-xs font-normal text-left text-muted-foreground">
-                            {field.value?.toString().length || 0} /10 characters
+                            {field.value?.toString().length || 0} /50 characters
                           </p>
                         </div>
                       )}
