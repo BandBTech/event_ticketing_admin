@@ -248,6 +248,7 @@ export default function AddBillPopupModal({
   const handleOpenChange = (open: boolean) => {
     if (!open && isPending) return;
     form.reset();
+    handleRemoveImage();
     onOpenChange(open);
   };
 

@@ -433,9 +433,9 @@ export default function BillDetail() {
                       <th className="text-left text-[10px] text-muted-foreground uppercase tracking-wide font-medium px-4 py-3 w-8">
                         SN
                       </th>
-                      <th className="text-left text-[10px] text-muted-foreground uppercase tracking-wide font-medium px-4 py-3">
+                      {/* <th className="text-left text-[10px] text-muted-foreground uppercase tracking-wide font-medium px-4 py-3">
                         {t("billings.billHistory.reference", "Reference")}
-                      </th>
+                      </th> */}
                       <th className="text-left text-[10px] text-muted-foreground uppercase tracking-wide font-medium px-4 py-3">
                         {t("billings.billHistory.amount", "Amount")}
                       </th>
@@ -464,9 +464,9 @@ export default function BillDetail() {
                         <td className="px-4 py-3">
                           <div>{i + 1}</div>
                         </td>
-                        <td className="px-4 py-3 font-mono truncate max-w-[160px]">
+                        {/* <td className="px-4 py-3 font-mono truncate max-w-[160px]">
                           {item.payment_ref || "—"}
-                        </td>
+                        </td> */}
                         <td className="px-4 py-3 font-semibold">
                           {item.amount.toLocaleString()}
                         </td>
