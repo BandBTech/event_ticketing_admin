@@ -14,6 +14,7 @@ export interface Transaction {
   user: {
     id: string;
     name: string;
+    email: string;
   };
   event : {
   id: string;

@@ -69,7 +69,7 @@ export default function TransactionsPage() {
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
   const pathname = usePathname();
-  const isTransactionsPage = pathname === "/transactions/";  
+  const isTransactionsPage = pathname === "/transactions/";
 
   const currentPage = Number(searchParams.get("page")) || 1;
   const itemsPerPage = 20;
@@ -186,6 +186,16 @@ export default function TransactionsPage() {
         id: "user",
         header: t("transactions.table.user"),
         accessorKey: "user.name",
+        cell: ({ row }) => {
+          const user = row.original.user.name;
+          const email = row.original.user.email;
+          return (
+            <div className="grid items-center gap-2">
+              <span>{user}</span>
+              <span>{email}</span>
+            </div>
+          );
+        },
         enableSorting: true,
       },
       {
@@ -388,76 +398,86 @@ export default function TransactionsPage() {
       {/* Filters */}
       <div className="grid gap-2">
         <div className="flex justify-between">
-          <div>          <div className="relative flex-1 w-md">
-            <MagnifyingGlassIcon
-              weight="duotone"
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground"
-            />
-            <Input
-              type="text"
-              placeholder={t("transactions.searchTransactions")}
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              className="pl-9"
-            />
-          </div></div>
-          <div>          <Button
-            variant="outline"
-            onClick={() => setFilterSheetOpen(true)}
-            className={
-              isFilterApplied
-                ? "gap-2 bg-primary/10 text-black hover:bg-primary/10"
-                : `gap-2 bg-background/80 backdrop-blur-sm`
-            }
-          >
-            <FunnelIcon weight="duotone" className="h-4 w-4" />
-            {t("billings.filters")}{" "}
-            {isFilterApplied && (
-              <span className="ml-1 text-xs font-medium text-primary">{`(${filterCount})`}</span>
-            )}
-          </Button></div>
+          <div>
+            {" "}
+            <div className="relative flex-1 w-md">
+              <MagnifyingGlassIcon
+                weight="duotone"
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground"
+              />
+              <Input
+                type="text"
+                placeholder={t("transactions.searchTransactions")}
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+          </div>
+          <div>
+            {" "}
+            <Button
+              variant="outline"
+              onClick={() => setFilterSheetOpen(true)}
+              className={
+                isFilterApplied
+                  ? "gap-2 bg-primary/10 text-black hover:bg-primary/10"
+                  : `gap-2 bg-background/80 backdrop-blur-sm`
+              }
+            >
+              <FunnelIcon weight="duotone" className="h-4 w-4" />
+              {t("billings.filters")}{" "}
+              {isFilterApplied && (
+                <span className="ml-1 text-xs font-medium text-primary">{`(${filterCount})`}</span>
+              )}
+            </Button>
+          </div>
         </div>
         <div className="flex justify-start gap-2">
           <Button
             // onClick={handleOpenTransactions}
             variant="outline"
-            className={isTransactionsPage ? "gap-2 bg-primary/10 text-black hover:bg-primary/10" : `gap-2 bg-background/80 backdrop-blur-sm`}
+            className={
+              isTransactionsPage
+                ? "gap-2 bg-primary/10 text-black hover:bg-primary/10"
+                : `gap-2 bg-background/80 backdrop-blur-sm`
+            }
           >
             <ArrowsLeftRight className="h-4 w-4" />
             {t("sidebar.transactions")}
           </Button>
-            <Button
-              variant="outline"
-              onClick={handleOpenrefunds}
-              className="gap-2 bg-background/80 backdrop-blur-sm"
-            >
-              <BanknoteArrowUp className="h-4 w-4" />
-              {t("transactions.refund")}
-            </Button>
-            <Button
-              variant="outline"
-              onClick={handleOpenLogs}
-              className="gap-2 bg-background/80 backdrop-blur-sm"
-            >
-              <Logs className="h-4 w-4" />
-              {t("transactions.auditLogs")}
-            </Button>
-            <Button
-              onClick={handleOpenPayouts}
-              variant="outline"
-              className="gap-2 bg-background/80 backdrop-blur-sm"
-            >
-              <CreditCard className="h-4 w-4" />
-              {t("transactions.payouts")}
-            </Button>
-            <Button
-              onClick={handleOpenCheckoutSessions}
-              variant="outline"
-              className="gap-2 bg-background/80 backdrop-blur-sm"
-            >
-              <UserCircleDashedIcon className="h-4 w-4" />
-              {t("transactions.checkoutsessions")}
-            </Button>
+          <Button
+            variant="outline"
+            onClick={handleOpenrefunds}
+            className="gap-2 bg-background/80 backdrop-blur-sm"
+          >
+            <BanknoteArrowUp className="h-4 w-4" />
+            {t("transactions.refund")}
+          </Button>
+          <Button
+            variant="outline"
+            onClick={handleOpenLogs}
+            className="gap-2 bg-background/80 backdrop-blur-sm"
+          >
+            <Logs className="h-4 w-4" />
+            {t("transactions.auditLogs")}
+          </Button>
+          <Button
+            onClick={handleOpenPayouts}
+            variant="outline"
+            className="gap-2 bg-background/80 backdrop-blur-sm"
+          >
+            <CreditCard className="h-4 w-4" />
+            {t("transactions.payouts")}
+          </Button>
+          <Button
+            onClick={handleOpenCheckoutSessions}
+            variant="outline"
+            className="gap-2 bg-background/80 backdrop-blur-sm"
+          >
+            <UserCircleDashedIcon className="h-4 w-4" />
+            {t("transactions.checkoutsessions")}
+          </Button>
         </div>
       </div>
 
