@@ -59,7 +59,7 @@ export default function EventsPage() {
   const searchQuery = searchParams.get("search") || "";
   const statusFilter = searchParams.get("status") || "all";
   const organizerId = searchParams.get("organizer_id") || "";
-  const itemsPerPage = 9;
+  const itemsPerPage = 12;
   const [searchInput, setSearchInput] = React.useState(searchQuery);
 
   const debouncedSearch = useDebounce(searchInput, 500);
@@ -140,7 +140,7 @@ export default function EventsPage() {
     error,
   } = useQuery({
     queryKey: queryKeys.events.all({
-      limit: 100, // Fetch more for client-side filtering
+      limit: itemsPerPage,
       status: statusFilter !== "all" ? statusFilter : undefined,
       organizerId: organizerId || undefined,
     }),
@@ -149,7 +149,7 @@ export default function EventsPage() {
         status:
           statusFilter && statusFilter !== "all" ? statusFilter : undefined,
         organizer_id: organizerId || undefined,
-        limit: 100,
+        limit: itemsPerPage,
         sort: "-created_at",
       }),
   });
