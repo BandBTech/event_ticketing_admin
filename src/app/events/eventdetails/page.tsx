@@ -399,7 +399,7 @@ export default function EventDetailsPage() {
                 <div className="space-y-4">
                   <div>
                     <h4 className="text-sm font-medium text-gray-500 mb-1">{t("events.fields.venueName", "Venue Name")}</h4>
-                    <p className="font-medium text-gray-900">{event.venue_name}</p>
+                    <p className="font-medium text-gray-900 truncate">{event.venue_name}</p>
                   </div>
                   <div>
                     <h4 className="text-sm font-medium text-gray-500 mb-1">{t("events.fields.location", "Location")}</h4>

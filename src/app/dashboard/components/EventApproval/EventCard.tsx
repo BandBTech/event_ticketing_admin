@@ -42,7 +42,13 @@ export function EventCard({
         {event?.description && (
           <p
             className="text-xs text-gray-500 mt-0.5 truncate"
-            dangerouslySetInnerHTML={{ __html: event.description }}
+            dangerouslySetInnerHTML={{
+              __html:
+                event.description.replace(/<[^>]*>/g, "").slice(0, 100) +
+                (event.description.replace(/<[^>]*>/g, "").length > 100
+                  ? "..."
+                  : ""),
+            }}
           />
         )}
       </div>

@@ -257,7 +257,7 @@ export default function OrganizerFormDialog({
                         <TranslatedFormMessage t={t} />
                       </div>
                       <p className="text-xs font-normal text-muted-foreground shrink-0 ml-2">
-                        {field.value?.toString().length ?? 0}/50 characters
+                        {field.value?.toString().length ?? 0}/50
                       </p>
                     </div>
                   </FormItem>
@@ -303,7 +303,7 @@ export default function OrganizerFormDialog({
                         <TranslatedFormMessage t={t} />
                       </div>
                       <p className="text-xs font-normal text-muted-foreground shrink-0 ml-2">
-                        {field.value?.toString().length ?? 0}/50 characters
+                        {field.value?.toString().length ?? 0}/50
                       </p>
                     </div>
                   </FormItem>

@@ -122,7 +122,7 @@ const EventApprovalList = ({
   return (
     <>
       <div
-        className={`fixed top-0 right-0 h-full z-50 w-[400px] bg-white rounded-l-2xl border shadow-xl transform transition-transform duration-700 ease-in-out ${
+        className={`fixed top-0 right-0 h-full z-50 w-[400px] bg-white rounded-l-2xl overflow-scroll border shadow-xl transform transition-transform duration-700 ease-in-out ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >

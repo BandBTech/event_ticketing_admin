@@ -8,6 +8,7 @@ import {
 import FeaturedBadge from "@/app/events/components/FeaturedBadge";
 import { Route } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
 
 type EventProps = {
   event: UpcomingEvent;
@@ -229,22 +230,28 @@ function EventCard({ event }: EventProps) {
           </div>
         </div>
 
-        {/* Category tags */}
-        <div className="flex flex-wrap gap-1.5 mt-auto pt-1">
-          {categories.slice(0, 3).map((cat, i) => (
-            <span
-              key={cat}
-              className={`text-[10px] font-semibold px-2.5 py-1 rounded-full ${CAT_COLORS[i % CAT_COLORS.length]}`}
-            >
-              {cat}
-            </span>
-          ))}
-          {categories.length > 3 && (
-            <span className="text-[10px] text-gray-400 py-1">
-              +{categories.length - 3} more
-            </span>
-          )}
-        </div>
+        {/* Categories */}
+        {categories.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mb-3">
+            {categories.slice(0, 3).map((tag) => (
+              <Badge
+                key={tag}
+                variant="outline"
+                className="text-xs font-normal text-muted-foreground bg-muted/50 border-border whitespace-pre-wrap break-all max-w-full rounded-xl"
+              >
+                {tag}
+              </Badge>
+            ))}
+            {categories.length > 3 && (
+              <Badge
+                variant="outline"
+                className="text-xs font-normal text-muted-foreground bg-muted/50 border-border whitespace-pre-wrap break-all max-w-full  rounded-xl"
+              >
+                +{categories.length - 3}
+              </Badge>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
