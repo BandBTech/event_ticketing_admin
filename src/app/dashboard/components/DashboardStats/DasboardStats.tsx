@@ -2,16 +2,14 @@
 
 import { useState } from "react";
 import { ElementType } from "react";
+import { formatCurrency } from "@/lib/utils";
 import { AdminDashboardData, AdminDashboardResponse } from "@/types/dashboard";
 import { ClockIcon, CalendarCheckIcon, UsersIcon } from "@phosphor-icons/react";
+import { useLanguageStore } from "@/store/languageStore";
 
 type DashboardPageProps = {
   data: AdminDashboardData;
 };
-
-function fmtCurrency(n: number) {
-  return "$" + n.toLocaleString("en-US");
-}
 
 // ── Top Stat Card (matches screenshot style) ──────────────────────────────────
 function TopStatCard({
@@ -79,6 +77,8 @@ function RevenueRow({
   pct: number;
   color: string;
 }) {
+  const { locale } = useLanguageStore();
+
   return (
     <div className="flex items-center gap-4 py-2">
       <span className="text-sm text-gray-500 w-44 flex-shrink-0">{label}</span>
@@ -89,7 +89,7 @@ function RevenueRow({
         />
       </div>
       <span className="text-sm font-semibold text-gray-700 w-24 text-right flex-shrink-0">
-        {fmtCurrency(value)}
+        {formatCurrency(value, undefined, locale)}
       </span>
     </div>
   );
@@ -150,8 +150,8 @@ export default function DashboardPage({ data }: DashboardPageProps) {
           },
           {
             label: "Total Revenue",
-            value: `$${(data?.revenue.total_revenue ?? 0 / 1000).toFixed(1)}`,
-            sub: `$${(data?.revenue.total_commission ?? 0 / 1000).toFixed(1)} commission`,
+            value: formatCurrency(data?.revenue.total_revenue ?? 0, undefined, useLanguageStore().locale),
+            sub: `${formatCurrency(data?.revenue.organizer_earnings ?? 0, undefined, useLanguageStore().locale)} to organizers`,
             color: "text-orange-600",
             border: "border-orange-100",
           },
@@ -201,13 +201,8 @@ export default function DashboardPage({ data }: DashboardPageProps) {
             />
           </div>
 
-          <div className="mx-6 mb-4 grid grid-cols-3 gap-3 bg-gray-50 rounded-xl p-4">
+          <div className="mx-6 mb-4 flex justify-between gap-3 bg-gray-50 rounded-xl p-4">
             {[
-              {
-                label: "Bills Paid",
-                value: data?.payment_bills.paid,
-                color: "text-emerald-600",
-              },
               {
                 label: "Amount Due",
                 value: data?.payment_bills.total_due,
@@ -221,7 +216,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
             ].map((b) => (
               <div key={b.label} className="text-center">
                 <div className={`text-lg font-bold ${b.color}`}>
-                  ${b?.value?.toLocaleString() ?? "N/A"}
+                  {formatCurrency(b.value ?? 0, undefined, useLanguageStore().locale)}
                 </div>
                 <div className="text-[11px] text-gray-400 mt-0.5">
                   {b.label}

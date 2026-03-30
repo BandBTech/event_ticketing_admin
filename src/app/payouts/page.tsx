@@ -48,6 +48,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { formatCurrency } from "@/lib/utils";
 import { flexRender } from "@tanstack/react-table";
 import ApproveModal from "@/app/payouts/components/ApproveModal";
 import RejectModal from "@/app/payouts/components/RejectModal";
@@ -140,7 +141,7 @@ export default function TransactionsPage() {
         enableSorting: false,
         cell: ({ row }) => (
           <span className="px-2 py-1 text-xs font-medium rounded-full">
-            USD {row.original.amount}
+            {formatCurrency(row.original.amount, undefined, locale)}
           </span>
         ),
       },

@@ -55,6 +55,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { flexRender } from "@tanstack/react-table";
+import { formatCurrency } from "@/lib/utils";
 import { TransactionFilters, getDefaultFilters } from "@/types/transaction";
 import { CheckoutSessionService } from "@/services/checkoutSessionService";
 import { CheckoutSessionsData, CheckoutSession } from "@/types/checkoutsession";
@@ -192,7 +193,7 @@ export default function TransactionsPage() {
         enableSorting: false,
         cell: ({ row }) => (
           <span className="px-2 py-1 text-xs font-medium rounded-full flex items-center gap-2">
-            {row.original.currency} {row.original.amount}
+            {formatCurrency(row.original.amount, row.original.currency, locale)}
           </span>
         ),
       },

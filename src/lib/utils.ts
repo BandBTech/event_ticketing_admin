@@ -198,3 +198,25 @@ export function getInitials(name: string | { first_name: string, last_name?: str
   }
   return "";
 }
+
+/**
+ * Format a currency amount using the user's locale
+ * @param amount - The amount to format
+ * @param currency - The currency code (e.g. "USD", "EUR")
+ * @returns Formatted currency string
+ */
+export const formatCurrency = (amount: number, currency?: string, locale: string = "ja") => {
+  const currencyMap: Record<string, string> = {
+    ja: "JPY",
+    en: "USD",
+    it: "EUR",
+  };
+  const resolvedCurrency = currency || currencyMap[locale];
+
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: resolvedCurrency,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(amount);
+};

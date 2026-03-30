@@ -62,6 +62,7 @@ import {
 import { flexRender } from "@tanstack/react-table";
 import { TransactionFilterSheet } from "./components/TransactionFilterSheet";
 import { TransactionFilters, getDefaultFilters } from "@/types/transaction";
+import { formatCurrency } from "@/lib/utils";
 
 export default function TransactionsPage() {
   const router = useRouter();
@@ -180,6 +181,14 @@ export default function TransactionsPage() {
         id: "event",
         header: t("transactions.table.event"),
         accessorKey: "event.title",
+        cell: ({ row }) => {
+          const eventTitle = row.original.event.title;
+          return (
+            <span className="text-sm font-medium text-gray-900 leading-tight">
+              {eventTitle}
+            </span>
+          );
+        },
         enableSorting: true,
       },
       {
@@ -189,10 +198,15 @@ export default function TransactionsPage() {
         cell: ({ row }) => {
           const user = row.original.user.name;
           const email = row.original.user.email;
+
           return (
-            <div className="grid items-center gap-2">
-              <span>{user}</span>
-              <span>{email}</span>
+            <div className="flex flex-col gap-0.5 py-1">
+              <span className="text-sm font-medium text-gray-900 leading-tight">
+                {user}
+              </span>
+              <span className="text-xs text-gray-400 leading-tight">
+                {email}
+              </span>
             </div>
           );
         },
@@ -212,7 +226,8 @@ export default function TransactionsPage() {
         enableSorting: false,
         cell: ({ row }) => (
           <span className="px-2 py-1 text-xs font-medium rounded-full flex items-center gap-2">
-            {row.original.currency} {row.original.amount}
+            {formatCurrency(row.original.amount, row.original.currency, locale)}
+
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -220,13 +235,13 @@ export default function TransactionsPage() {
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>
-                    Total Amount: {row.original.amount}
+                    Total Amount: {formatCurrency(row.original.amount, row.original.currency, locale)}
                     <br />
                     Commission Rate: {row.original.commission_rate}%
                     <br />
-                    Commission Amount: {row.original.commission_amount}
+                    Commission Amount: {formatCurrency(row.original.commission_amount, row.original.currency, locale)}
                     <br />
-                    Organizer Share: {row.original.organizer_share}
+                    Organizer Share: {formatCurrency(row.original.organizer_share, row.original.currency, locale)}
                   </p>
                 </TooltipContent>
               </Tooltip>
