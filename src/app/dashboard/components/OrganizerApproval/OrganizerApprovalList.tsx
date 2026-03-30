@@ -12,6 +12,16 @@ import { toast } from "sonner";
 import { EmptyState } from "../EmptyState";
 import { useEffect, useState } from "react";
 import PopupModal from "../EventApproval/PopupModal";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface ModalState {
   open: boolean;
@@ -61,6 +71,11 @@ const OrganizerApprovalList = ({
   const [rejectOrganizerModal, setRejectOrganizerModal] = useState<ModalState>({
     open: false,
   });
+
+  const [approveOrganizerModal, setApproveOrganizerModal] =
+    useState<ModalState>({
+      open: false,
+    });
 
   const handleApproveOrganizer = (organizerId: string) => {
     approveOrganizerMutation.mutate(organizerId, {
@@ -117,7 +132,9 @@ const OrganizerApprovalList = ({
                 <OrganizerCard
                   key={organizer.id}
                   organizer={organizer}
-                  onApprove={handleApproveOrganizer}
+                  onApprove={(id) =>
+                    setApproveOrganizerModal({ open: true, id })
+                  }
                   onReject={(id) => setRejectOrganizerModal({ open: true, id })}
                   isApproving={approveOrganizerMutation.isPending}
                 />
@@ -147,6 +164,52 @@ const OrganizerApprovalList = ({
             onCancel={() => setRejectOrganizerModal({ open: false })}
             onConfirm={handleRejectOrganizer}
           />
+        </>
+      )}
+
+      {/* Approve Organizer Modal */}
+      {approveOrganizerModal.open && (
+        <>
+          <div
+            className="fixed inset-0 bg-black/30 z-40"
+            onClick={() => setApproveOrganizerModal({ open: false })}
+          />
+          <AlertDialog
+            open={approveOrganizerModal.open}
+            onOpenChange={(open) =>
+              setApproveOrganizerModal((prev) => ({ ...prev, open }))
+            }
+          >
+            <AlertDialogContent className="rounded-3xl shadow-2xl border-none bg-white/95 backdrop-blur-xl data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 duration-300">
+              <AlertDialogHeader>
+                <AlertDialogTitle className="text-xl font-bold text-gray-900">
+                  {t("", "Approve Organizer")}
+                </AlertDialogTitle>
+                <AlertDialogDescription className="text-gray-500 text-base">
+                  {t(
+                    "",
+                    "Are you sure you want to approve this organizer? This action cannot be undone immediately.",
+                  )}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter className="pt-6">
+                <AlertDialogCancel
+                  onClick={() => setApproveOrganizerModal({ open: false })}
+                  className="h-11 px-6 border-gray-200 hover:bg-gray-50 transition-colors"
+                >
+                  {t("common.cancel", "Cancel")}
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() =>
+                    handleApproveOrganizer(approveOrganizerModal.id!)
+                  }
+                  className="h-11 px-8 active:scale-95"
+                >
+                  {t("common.confirm", "Confirm")}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </>
       )}
     </>
