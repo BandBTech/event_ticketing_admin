@@ -97,6 +97,7 @@ function RevenueRow({
 
 // ── Main Page ─────────────────────────────────────────────────────────────────
 export default function DashboardPage({ data }: DashboardPageProps) {
+  const { locale } = useLanguageStore();
   const successfulEvents = data?.events?.completed ?? 0;
 
   return (
@@ -150,8 +151,8 @@ export default function DashboardPage({ data }: DashboardPageProps) {
           },
           {
             label: "Total Revenue",
-            value: formatCurrency(data?.revenue.total_revenue ?? 0, undefined, useLanguageStore().locale),
-            sub: `${formatCurrency(data?.revenue.organizer_earnings ?? 0, undefined, useLanguageStore().locale)} to organizers`,
+            value: formatCurrency(data?.revenue.total_revenue ?? 0, undefined, locale),
+            sub: `${formatCurrency(data?.revenue.organizer_earnings ?? 0, undefined, locale)} to organizers`,
             color: "text-orange-600",
             border: "border-orange-100",
           },
@@ -216,7 +217,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
             ].map((b) => (
               <div key={b.label} className="text-center">
                 <div className={`text-lg font-bold ${b.color}`}>
-                  {formatCurrency(b.value ?? 0, undefined, useLanguageStore().locale)}
+                  {formatCurrency(b.value ?? 0, undefined, locale)}
                 </div>
                 <div className="text-[11px] text-gray-400 mt-0.5">
                   {b.label}

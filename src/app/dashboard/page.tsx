@@ -74,7 +74,7 @@ const AdminDashboard: React.FC = () => {
               No data available
             </h2>
             <p className="text-sm text-gray-500 leading-relaxed">
-              There's nothing to display here yet. Data will appear once it
+              There&apos;s nothing to display here yet. Data will appear once it
               becomes available.
             </p>
           </div>
