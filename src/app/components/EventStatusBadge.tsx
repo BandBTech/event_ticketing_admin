@@ -66,7 +66,7 @@ const eventStatusConfig: Record<
     variant: "destructive",
   },
   sales_end: {
-    color: "bg-gray-700 text-gray-100 border-gray-600",
+    color: "bg-red-200 text-red-800 border-red-300",
     variant: "secondary",
   },
 };
