@@ -7,7 +7,6 @@ import { useLanguageStore } from "@/store/languageStore";
 import { Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { getInitials } from "@/lib/utils";
 
 interface OrganizerCardProps {
   organizer: Organizer;
@@ -28,18 +27,13 @@ export function OrganizerCard({
 
   return (
     <div
-      className="flex flex-col sm:flex-row items-center gap-4 px-4 py-3 border-gray-100 border-b last:border-b-0"
+      className="flex items-center gap-4 px-3 py-2 m-2 border-b max-w-2xl bg-white rounded-2xl border-gray-100 last:border-b-0 transition-colors"
       onClick={() => router.push(`/organizers/detail?id=${organizer.id}`)}
     >
-      {/* Avatar with Initials */}
+      {/* Organizer Avatar */}
       <div className="w-8 h-8 rounded-full shrink-0 overflow-hidden">
         <div className="w-full h-full bg-gray-300 flex items-center justify-center text-white font-semibold text-lg">
-          {organizer?.name
-            ? getInitials(organizer.name)
-            : getInitials({
-              first_name: organizer?.first_name || "",
-              last_name: organizer?.last_name || "",
-            })}
+          {organizer.first_name?.[0] || "O"}
         </div>
       </div>
 

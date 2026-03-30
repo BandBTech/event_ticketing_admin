@@ -11,6 +11,13 @@ import {
   useApproveEvent,
   useRejectEvent,
 } from "@/hooks/useDashboard";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetFooter,
+} from "@/components/ui/sheet";
 import { EventCard } from "./EventCard";
 import { EmptyState } from "../EmptyState";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -24,14 +31,18 @@ interface ModalState {
 
 const ListItemSkeleton = () => {
   return (
-    <div className="flex flex-col sm:flex-row items-center gap-4 px-4 py-3 border-gray-100 border-b last:border-b-0">
-      <Skeleton className="w-12 h-12 rounded-full shrink-0" />
-      <div className="flex-1 min-w-0 w-full flex flex-col items-center sm:items-start gap-2">
-        <Skeleton className="h-5 w-32" />
-        <Skeleton className="h-3 w-48" />
+    <div className="flex items-center gap-4 px-3 py-2 m-2 border-b max-w-2xl bg-gray-200 rounded-2xl border-gray-100 last:border-b-0 transition-colors">
+      <div>
+        <Skeleton className="w-12 h-12 rounded-full shrink-0" />
       </div>
-      <div className="w-full sm:w-auto flex justify-center sm:justify-end">
-        <Skeleton className="h-9 w-[280px]" />
+      <div className="grid gap-2">
+        <Skeleton className="w-56 h-6 " />
+        <Skeleton className="w-56 h-6 " />
+      </div>
+      <div className="flex gap-2 ml-auto">
+        <Skeleton className="w-8 h-8 " />
+        <Skeleton className="w-8 h-8 " />
+        <Skeleton className="w-8 h-8 " />
       </div>
     </div>
   );
@@ -61,7 +72,9 @@ const EventApprovalList = ({
   const { data: pendingEventsData, isLoading: isLoadingEvents } =
     usePendingEvents();
 
-  const setTotalPendingEvents = useEventStore((state) => state.setTotalPendingEvents);
+  const setTotalPendingEvents = useEventStore(
+    (state) => state.setTotalPendingEvents,
+  );
 
   useEffect(() => {
     const total = pendingEventsData?.events?.length || 0;
@@ -120,28 +133,21 @@ const EventApprovalList = ({
   const events = pendingEventsData?.events || [];
 
   return (
-    <>
-      <div
-        className={`fixed top-0 right-0 h-full z-50 w-[400px] bg-white rounded-l-2xl overflow-scroll border shadow-xl transform transition-transform duration-700 ease-in-out ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+      <SheetContent
+        side="right"
+        className="w-[450px] sm:max-w-[450px] flex flex-col bg-[#f5f7f8]"
       >
-        <div className="px-4 py-3 border-b border-gray-200 flex justify-between items-center">
-          <h2 className="font-medium text-muted-foreground">
+        <SheetHeader>
+          <SheetTitle className="flex items-center gap-2">
             {t("dashboard.eventsAwaitingApproval")}
-          </h2>
-          <button
-            className="text-gray-500 font-bold hover:text-gray-700"
-            onClick={() => setIsOpen(false)}
-          >
-            ✕
-          </button>
-        </div>
+          </SheetTitle>
+        </SheetHeader>
 
-        <div>
+        <div className="overflow-auto">
           {isLoadingEvents ? (
             <div className="space-y-0">
-              {[1, 2, 3].map((i) => (
+              {[1, 2, 3, 4, 5, 6, 7].map((i) => (
                 <ListItemSkeleton key={i} />
               ))}
             </div>
@@ -165,46 +171,48 @@ const EventApprovalList = ({
             />
           )}
         </div>
-      </div>
 
-      {/* Reject Event Modal */}
-      {rejectEventModal.open && (
-        <>
-          <div
-            className="fixed inset-0 bg-black/30 z-40"
-            onClick={() => setRejectEventModal({ open: false })}
-          />
-          <PopupModal
-            title={t("dashboard.modal.rejectEvent")}
-            isApprove={false}
-            showCommissionInput={false}
-            isLoading={rejectEventMutation.isPending}
-            onCancel={() => setRejectEventModal({ open: false })}
-            onConfirm={handleRejectEvent}
-          />
-        </>
-      )}
+        {/* Reject Event Modal */}
+        {rejectEventModal.open && (
+          <>
+            <div
+              className="fixed inset-0 bg-black/30 z-40"
+              onClick={() => setRejectEventModal({ open: false })}
+            />
+            <PopupModal
+              title={t("dashboard.modal.rejectEvent")}
+              isApprove={false}
+              showCommissionInput={false}
+              isLoading={rejectEventMutation.isPending}
+              onCancel={() => setRejectEventModal({ open: false })}
+              onConfirm={handleRejectEvent}
+            />
+          </>
+        )}
 
-      {/* Approve Event Modal */}
-      {acceptEventModal.open && (
-        <>
-          <div
-            className="fixed inset-0 bg-black/30 z-40"
-            onClick={() => setAcceptEventModal({ open: false })}
-          />
-          <PopupModal
-            title={t("dashboard.modal.approveEvent")}
-            isApprove={true}
-            showCommissionInput={true}
-            isLoading={approveEventMutation.isPending}
-            onCancel={() => setAcceptEventModal({ open: false })}
-            onConfirm={handleApproveEvent}
-            eventName={events.find((e) => e.id === acceptEventModal.id)?.title}
-            eventDetails={events.find((e) => e.id === acceptEventModal.id)}
-          />
-        </>
-      )}
-    </>
+        {/* Approve Event Modal */}
+        {acceptEventModal.open && (
+          <>
+            <div
+              className="fixed inset-0 bg-black/30 z-40"
+              onClick={() => setAcceptEventModal({ open: false })}
+            />
+            <PopupModal
+              title={t("dashboard.modal.approveEvent")}
+              isApprove={true}
+              showCommissionInput={true}
+              isLoading={approveEventMutation.isPending}
+              onCancel={() => setAcceptEventModal({ open: false })}
+              onConfirm={handleApproveEvent}
+              eventName={
+                events.find((e) => e.id === acceptEventModal.id)?.title
+              }
+              eventDetails={events.find((e) => e.id === acceptEventModal.id)}
+            />
+          </>
+        )}
+      </SheetContent>
+    </Sheet>
   );
 };
 

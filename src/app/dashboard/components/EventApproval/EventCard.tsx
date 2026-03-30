@@ -26,7 +26,7 @@ export function EventCard({
   const { t } = useTranslation(locale);
 
   return (
-    <div className="flex items-center gap-4 px-3 py-2 border-b bg-white border-gray-100 last:border-b-0 transition-colors w-full">
+    <div className="flex items-center gap-4 px-3 py-2 m-2 border-b max-w-2xl bg-white rounded-2xl border-gray-100 last:border-b-0 transition-colors">
       {/* Event Avatar */}
       <div className="w-8 h-8 rounded-full shrink-0 overflow-hidden">
         <div className="w-full h-full bg-gray-300 flex items-center justify-center text-white font-semibold text-lg">
