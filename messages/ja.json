@@ -246,7 +246,8 @@
       "rejected": "拒否されました",
       "on_sale": "セールスライブ",
       "featured": "注目の",
-      "completed": "完了"
+      "completed": "完了",
+      "scheduled": "スケジュール"
     },
     "analytics": {
       "progress": "販売進捗",

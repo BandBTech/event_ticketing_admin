@@ -6,7 +6,13 @@ import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { CalendarBlankIcon, MapPinIcon, TicketIcon, CrownIcon, EyeIcon } from "@phosphor-icons/react";
+import {
+  CalendarBlankIcon,
+  MapPinIcon,
+  TicketIcon,
+  CrownIcon,
+  EyeIcon,
+} from "@phosphor-icons/react";
 import Image from "next/image";
 import { Event } from "@/types/event";
 import { EventStatusBadge } from "@/app/components/EventStatusBadge";
@@ -34,8 +40,8 @@ export function EventCard({ event }: { event: Event }) {
     ? event.category
     : typeof event.category === "string"
       ? (event.category as string)
-        .split(",")
-        .map((tag: string) => tag.trim().replace(/[\[\]"'{}]/g, ""))
+          .split(",")
+          .map((tag: string) => tag.trim().replace(/[\[\]"'{}]/g, ""))
       : [];
 
   const handleViewDetail = () => {
@@ -64,7 +70,8 @@ export function EventCard({ event }: { event: Event }) {
         />
         {/* Status Badge */}
         <div className="absolute top-3 left-3">
-          {(event.status !== "on_sale" && event.status !== "hold") || event.sales_status === "active" ? (
+          {(event.status !== "on_sale" && event.status !== "hold") ||
+          event.sales_status === "active" ? (
             <EventStatusBadge status={event.status} />
           ) : (
             <SalesStatusBadge status={event.sales_status} />
@@ -104,7 +111,10 @@ export function EventCard({ event }: { event: Event }) {
         )}
 
         {/* Title */}
-        <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 leading-tight group-hover:text-primary transition-colors">
+        <h3
+          title={event.title}
+          className="text-lg font-bold text-gray-900 mb-2 leading-tight group-hover:text-primary transition-colors line-clamp-2"
+        >
           {event.title}
         </h3>
 
@@ -127,7 +137,13 @@ export function EventCard({ event }: { event: Event }) {
               className="w-4 h-4 text-muted-foreground/70 shrink-0"
             />
             <span className="truncate">
-              {((/^-?\d+(\.\d+)?,-?\d+(\.\d+)?$/.test(event.address?.trim() || "") && !event.location) ? event.venue_name : event.address) || event.venue_name || "Location TBA"}
+              {(/^-?\d+(\.\d+)?,-?\d+(\.\d+)?$/.test(
+                event.address?.trim() || "",
+              ) && !event.location
+                ? event.venue_name
+                : event.address) ||
+                event.venue_name ||
+                "Location TBA"}
             </span>
           </div>
         </div>
@@ -160,17 +176,17 @@ export function EventCard({ event }: { event: Event }) {
             {(event.status === "on_sale" ||
               event.status === "approved" ||
               event.status === "completed") && (
-                <div className="flex items-center gap-3 ml-auto">
-                  <div className="flex flex-col items-end">
-                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-bold leading-none mb-1">
-                      Commission
-                    </span>
-                    <div className="flex items-center gap-0.5 text-emerald-600 font-bold">
-                      <span>{event.commission_rate || 0}%</span>
-                    </div>
+              <div className="flex items-center gap-3 ml-auto">
+                <div className="flex flex-col items-end">
+                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-bold leading-none mb-1">
+                    Commission
+                  </span>
+                  <div className="flex items-center gap-0.5 text-emerald-600 font-bold">
+                    <span>{event.commission_rate || 0}%</span>
                   </div>
-                  <div className="w-px h-6 bg-border/60" />
-                  {/* <div className="flex flex-col items-end">
+                </div>
+                <div className="w-px h-6 bg-border/60" />
+                {/* <div className="flex flex-col items-end">
                     <span className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-bold leading-none mb-1">
                       Est. Earnings
                     </span>
@@ -180,8 +196,8 @@ export function EventCard({ event }: { event: Event }) {
                         ((event.commission_rate || 0) / 100)).toFixed(2)}
                     </span>
                   </div> */}
-                </div>
-              )}
+              </div>
+            )}
           </div>
         )}
 

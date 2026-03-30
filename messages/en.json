@@ -288,7 +288,8 @@
       "on_sale": "On Sale",
       "hold": "On Hold",
       "featured": "Featured",
-      "completed": "Completed"
+      "completed": "Completed",
+      "scheduled": "Scheduled"
     },
     "analytics": {
       "progress": "Sales Progress",

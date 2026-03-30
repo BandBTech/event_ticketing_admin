@@ -234,7 +234,8 @@
       "sales_ended": "Vendite terminate",
       "on_sale": "Vendite in diretta",
       "featured": "In primo piano",
-      "completed": "Completato"
+      "completed": "Completato",
+      "scheduled": "Scheduled"
     },
     "analytics": {
       "progress": "Avanzamento Vendite",
