@@ -9,7 +9,10 @@ import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
 import { format, isValid } from "date-fns";
 import { toast } from "sonner";
-import { useEventStatusHistory, useEventAnalyticsById } from "@/hooks/useEvents";
+import {
+  useEventStatusHistory,
+  useEventAnalyticsById,
+} from "@/hooks/useEvents";
 import { queryKeys } from "@/lib/queryKeys";
 
 // UI Components
@@ -35,7 +38,18 @@ import PopupModal from "../../dashboard/components/EventApproval/PopupModal";
 import StatusHistorySidebar from "./components/StatusHistorySidebar";
 import { SalesStatusBadge } from "@/app/components/SalesStatusBadge";
 import { EventStatusBadge } from "@/app/components/EventStatusBadge";
-import { CalendarBlankIcon, CheckIcon, ClockIcon, CurrencyCircleDollarIcon, FireIcon, MapPinIcon, ShieldCheckIcon, TrashIcon, UsersIcon, XIcon } from "@phosphor-icons/react";
+import {
+  CalendarBlankIcon,
+  CheckIcon,
+  ClockIcon,
+  CurrencyCircleDollarIcon,
+  FireIcon,
+  MapPinIcon,
+  ShieldCheckIcon,
+  TrashIcon,
+  UsersIcon,
+  XIcon,
+} from "@phosphor-icons/react";
 import FeaturedBadge from "../components/FeaturedBadge";
 // import { formatDateTime } from "@/lib/utils";
 
@@ -52,15 +66,20 @@ export default function EventDetailsPage() {
   const [showRejectModal, setShowRejectModal] = useState(false);
 
   // Queries
-  const { data: event, isLoading, error } = useQuery({
+  const {
+    data: event,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: queryKeys.events.detail(eventId || ""),
     queryFn: () => EventService.getEventById(eventId!),
     enabled: !!eventId,
   });
 
-  const { data: statusHistory, isLoading: isLoadingHistory } = useEventStatusHistory(eventId || "");
+  const { data: statusHistory, isLoading: isLoadingHistory } =
+    useEventStatusHistory(eventId || "");
   const { data: analytics } = useEventAnalyticsById(eventId || "");
-  // Note: useEventAnalytics fetches list, not single event details usually, but assuming user request context. 
+  // Note: useEventAnalytics fetches list, not single event details usually, but assuming user request context.
   // If analytics endpoint is global, we might not get per-event stats here unless filtered.
   // For now we use event.capacity/available logic as before for "Ticket Analytics".
 
@@ -70,30 +89,40 @@ export default function EventDetailsPage() {
       EventService.approveEvent({
         eventId: eventId!,
         admin_remark: data.adminRemark,
-        status: 'approved',
-        commission_rate: data.commissionRate
+        status: "approved",
+        commission_rate: data.commissionRate,
       }),
     onSuccess: (data) => {
-      toast.success(t("events.messages.approveSuccess", "Event approved successfully"));
+      toast.success(
+        t("events.messages.approveSuccess", "Event approved successfully"),
+      );
       queryClient.setQueryData(queryKeys.events.detail(eventId!), data);
       queryClient.invalidateQueries({ queryKey: queryKeys.events.list });
-      queryClient.invalidateQueries({ queryKey: queryKeys.events.statusHistory(eventId!) });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.events.statusHistory(eventId!),
+      });
       setShowApproveModal(false);
     },
-    onError: () => toast.error(t("events.messages.actionError", "Failed to perform action")),
+    onError: () =>
+      toast.error(t("events.messages.actionError", "Failed to perform action")),
   });
 
   const rejectMutation = useMutation({
     mutationFn: (data: { adminRemark: string }) =>
       EventService.rejectEvent(eventId!, data),
     onSuccess: (data) => {
-      toast.success(t("events.messages.rejectSuccess", "Event rejected successfully"));
+      toast.success(
+        t("events.messages.rejectSuccess", "Event rejected successfully"),
+      );
       queryClient.setQueryData(queryKeys.events.detail(eventId!), data);
       queryClient.invalidateQueries({ queryKey: queryKeys.events.list });
-      queryClient.invalidateQueries({ queryKey: queryKeys.events.statusHistory(eventId!) });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.events.statusHistory(eventId!),
+      });
       setShowRejectModal(false);
     },
-    onError: () => toast.error(t("events.messages.actionError", "Failed to perform action")),
+    onError: () =>
+      toast.error(t("events.messages.actionError", "Failed to perform action")),
   });
 
   // const cancelMutation = useMutation({
@@ -112,26 +141,34 @@ export default function EventDetailsPage() {
   const deleteMutation = useMutation({
     mutationFn: () => EventService.deleteEvent(eventId!),
     onSuccess: () => {
-      toast.success(t("events.messages.deleteSuccess", "Event deleted successfully"));
+      toast.success(
+        t("events.messages.deleteSuccess", "Event deleted successfully"),
+      );
       queryClient.invalidateQueries({ queryKey: queryKeys.events.list });
       router.push("/events");
     },
-    onError: () => toast.error(t("events.messages.deleteError", "Failed to delete event")),
+    onError: () =>
+      toast.error(t("events.messages.deleteError", "Failed to delete event")),
   });
 
   const toggleFeaturedMutation = useMutation({
-    mutationFn: () => EventService.toggleFeatured(eventId!, !event?.is_featured),
+    mutationFn: () =>
+      EventService.toggleFeatured(eventId!, !event?.is_featured),
     onSuccess: () => {
       queryClient.setQueryData(queryKeys.events.detail(eventId!), {
         ...event,
         is_featured: !event?.is_featured,
       });
       queryClient.invalidateQueries({ queryKey: queryKeys.events.list });
-      queryClient.invalidateQueries({ queryKey: queryKeys.events.detail(eventId!) });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.events.detail(eventId!),
+      });
     },
-    onError: () => toast.error(t("events.messages.featuredError", "Failed to update featured status")),
+    onError: () =>
+      toast.error(
+        t("events.messages.featuredError", "Failed to update featured status"),
+      ),
   });
-
 
   if (isLoading) {
     return (
@@ -153,24 +190,36 @@ export default function EventDetailsPage() {
   if (error || !event) {
     return (
       <div className="p-8 text-center bg-red-50 rounded-xl my-8 mx-6">
-        <h3 className="text-red-800 font-semibold text-lg">{t("common.error", "Error")}</h3>
-        <p className="text-red-600 mt-2">{t("events.messages.loadError", "Failed to load event details")}</p>
-        <Button onClick={() => router.back()} variant="outline" className="mt-4 bg-white">
+        <h3 className="text-red-800 font-semibold text-lg">
+          {t("common.error", "Error")}
+        </h3>
+        <p className="text-red-600 mt-2">
+          {t("events.messages.loadError", "Failed to load event details")}
+        </p>
+        <Button
+          onClick={() => router.back()}
+          variant="outline"
+          className="mt-4 bg-white"
+        >
           {t("events.eventDetails.backToEvents", "Back to Events")}
         </Button>
       </div>
     );
   }
 
-
-
-  const totalTicketsSold = analytics?.sold_seats ??
+  const totalTicketsSold =
+    analytics?.sold_seats ??
     (event.tiers?.reduce((sum, ticket) => sum + (ticket.sold || 0), 0) || 0);
-  const totalCapacity = analytics?.total_seats ??
+  const totalCapacity =
+    analytics?.total_seats ??
     (event.tiers?.reduce((sum, ticket) => sum + ticket.quantity, 0) || 0);
-  const totalRevenue = analytics?.total_revenue ??
-    (event.tiers?.reduce((sum, ticket) => sum + ((ticket.sold || 0) * ticket.price), 0) || 0);
-
+  const totalRevenue =
+    analytics?.total_revenue ??
+    (event.tiers?.reduce(
+      (sum, ticket) => sum + (ticket.sold || 0) * ticket.price,
+      0,
+    ) ||
+      0);
 
   // const firstTier = event.tiers?.[0];
   // const salesStartDate = firstTier?.sales_start
@@ -181,7 +230,8 @@ export default function EventDetailsPage() {
   //   : 'Not set';
 
   // Prevent division by zero for progress
-  const progress = totalCapacity > 0 ? (totalTicketsSold / totalCapacity) * 100 : 0;
+  const progress =
+    totalCapacity > 0 ? (totalTicketsSold / totalCapacity) * 100 : 0;
 
   interface StatusHistoryItem {
     id: string;
@@ -201,26 +251,28 @@ export default function EventDetailsPage() {
   // Ensure statusHistory is an array
   const historyList = Array.isArray(statusHistory)
     ? statusHistory
-    : statusHistory && typeof statusHistory === 'object' && 'history' in statusHistory && Array.isArray((statusHistory as { history: unknown[] }).history)
+    : statusHistory &&
+        typeof statusHistory === "object" &&
+        "history" in statusHistory &&
+        Array.isArray((statusHistory as { history: unknown[] }).history)
       ? (statusHistory as { history: unknown[] }).history
       : [];
 
   const mappedStatusHistory = (historyList as StatusHistoryItem[]).map((h) => ({
     id: h.id,
     event_id: h.event_id,
-    old_status: h.from_status || h.old_status || 'unknown',
-    new_status: h.to_status || h.new_status || 'unknown',
-    status_type: h.status_type || 'approval',
-    remark: h.reason || h.remark || '',
+    old_status: h.from_status || h.old_status || "unknown",
+    new_status: h.to_status || h.new_status || "unknown",
+    status_type: h.status_type || "approval",
+    remark: h.reason || h.remark || "",
     changed_by: h.changed_by,
-    changed_by_name: h.changed_by_name || h.changed_by || 'Unknown',
-    created_at: h.created_at
+    changed_by_name: h.changed_by_name || h.changed_by || "Unknown",
+    created_at: h.created_at,
   }));
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50/50">
       <div className="grow p-6 space-y-6 container mx-auto max-w-7xl">
-
         {/* Header - Matching Organizer Layout */}
         <div className="flex flex-col flex-wrap gap-4 md:items-start md:justify-between lg:flex-row">
           <div className="space-y-3">
@@ -234,10 +286,11 @@ export default function EventDetailsPage() {
               {event.title}
             </h1>
             <div className="flex items-center gap-3 text-sm text-gray-600 flex-wrap">
-              {(event.status !== "on_sale" && event.status !== "hold") || event.sales_status === "active" ? (
-                <EventStatusBadge status={event.status} />
-              ) : (
+              {event.sales_status === "stopped" &&
+              !["completed", "cancelled"].includes(event.status) ? (
                 <SalesStatusBadge status={event.sales_status} />
+              ) : (
+                <EventStatusBadge status={event.status} />
               )}
               <div className="flex gap-4 flex-wrap ml-2">
                 <div className="flex items-center gap-1.5 text-gray-600">
@@ -257,7 +310,13 @@ export default function EventDetailsPage() {
                 </div>
                 <div className="flex items-center gap-1.5 text-gray-600">
                   <MapPinIcon size={16} weight="duotone" />
-                  <span>{(/^-?\d+(\.\d+)?,-?\d+(\.\d+)?$/.test(event.address?.trim() || "") && !event.location) ? event.venue_name : (event.address || event.location)}</span>
+                  <span>
+                    {/^-?\d+(\.\d+)?,-?\d+(\.\d+)?$/.test(
+                      event.address?.trim() || "",
+                    ) && !event.location
+                      ? event.venue_name
+                      : event.address || event.location}
+                  </span>
                 </div>
               </div>
             </div>
@@ -265,7 +324,7 @@ export default function EventDetailsPage() {
 
           {/* Admin Actions */}
           <div className="flex flex-col md:flex-row gap-3">
-            {event.status === 'pending' && (
+            {event.status === "pending" && (
               <>
                 <Button
                   onClick={() => setShowApproveModal(true)}
@@ -295,7 +354,7 @@ export default function EventDetailsPage() {
               </Button>
             )} */}
 
-            {(event.status === 'cancelled' || event.is_cancelled) && (
+            {(event.status === "cancelled" || event.is_cancelled) && (
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button
@@ -308,13 +367,23 @@ export default function EventDetailsPage() {
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>{t("events.modals.deleteConfirm", "Are you sure you want to delete this event?")}</AlertDialogTitle>
+                    <AlertDialogTitle>
+                      {t(
+                        "events.modals.deleteConfirm",
+                        "Are you sure you want to delete this event?",
+                      )}
+                    </AlertDialogTitle>
                     <AlertDialogDescription>
-                      {t("events.modals.deleteDesc", "This action cannot be undone. This will permanently delete the event and remove detailed data from our servers.")}
+                      {t(
+                        "events.modals.deleteDesc",
+                        "This action cannot be undone. This will permanently delete the event and remove detailed data from our servers.",
+                      )}
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel>{t("common.cancel", "Cancel")}</AlertDialogCancel>
+                    <AlertDialogCancel>
+                      {t("common.cancel", "Cancel")}
+                    </AlertDialogCancel>
                     <AlertDialogAction
                       onClick={() => deleteMutation.mutate()}
                       className="bg-red-600 hover:bg-red-700 text-white"
@@ -330,10 +399,15 @@ export default function EventDetailsPage() {
 
         {/* Admin Remark Section - if exists */}
         {event.admin_remark && (
-          <div className={`p-4 rounded-xl border ${event.status === 'approved' ? 'bg-green-50 border-green-200 text-green-800' :
-            event.status === 'rejected' ? 'bg-red-50 border-red-200 text-red-800' :
-              'bg-gray-50 border-gray-200 text-gray-800'
-            }`}>
+          <div
+            className={`p-4 rounded-xl border ${
+              event.status === "approved"
+                ? "bg-green-50 border-green-200 text-green-800"
+                : event.status === "rejected"
+                  ? "bg-red-50 border-red-200 text-red-800"
+                  : "bg-gray-50 border-gray-200 text-gray-800"
+            }`}
+          >
             <h3 className="font-semibold mb-1 flex items-center gap-2">
               <ShieldCheckIcon weight="duotone" className="w-5 h-5" />
               {t("common.remark", "Remarks")}
@@ -344,7 +418,6 @@ export default function EventDetailsPage() {
 
         {/* Main Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
           {/* Left Column - Main Details */}
           <div className="lg:col-span-2 space-y-6">
             {/* Banner Image */}
@@ -366,7 +439,9 @@ export default function EventDetailsPage() {
             {/* Description Card */}
             <div className="glass-card-lowest rounded-2xl p-8 shadow-sm border border-gray-100 space-y-6">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">{t("events.sections.description", "Event Description")}</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  {t("events.sections.description", "Event Description")}
+                </h3>
                 <div
                   className="prose prose-gray max-w-none text-gray-600"
                   dangerouslySetInnerHTML={{ __html: event.description || "" }}
@@ -376,7 +451,9 @@ export default function EventDetailsPage() {
               {/* Categories / Tags */}
               {event.category && event.category.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-medium text-gray-900 mb-3">{t("events.fields.tags", "Tags")}</h4>
+                  <h4 className="text-sm font-medium text-gray-900 mb-3">
+                    {t("events.fields.tags", "Tags")}
+                  </h4>
                   <div className="flex flex-wrap gap-2">
                     {(Array.isArray(event.category)
                       ? (event.category as string[])
@@ -387,7 +464,11 @@ export default function EventDetailsPage() {
                       .map((tag) => tag.trim().replace(/^[{"]+|[}"]+$/g, ""))
                       .filter(Boolean)
                       .map((tag) => (
-                        <Badge key={tag} variant="secondary" className="bg-gray-100 text-gray-600 hover:bg-gray-200 font-normal">
+                        <Badge
+                          key={tag}
+                          variant="secondary"
+                          className="bg-gray-100 text-gray-600 hover:bg-gray-200 font-normal"
+                        >
                           {tag}
                         </Badge>
                       ))}
@@ -398,26 +479,48 @@ export default function EventDetailsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-gray-100">
                 <div className="space-y-4">
                   <div>
-                    <h4 className="text-sm font-medium text-gray-500 mb-1">{t("events.fields.venueName", "Venue Name")}</h4>
-                    <p className="font-medium text-gray-900 truncate">{event.venue_name}</p>
+                    <h4 className="text-sm font-medium text-gray-500 mb-1">
+                      {t("events.fields.venueName", "Venue Name")}
+                    </h4>
+                    <p className="font-medium text-gray-900 truncate">
+                      {event.venue_name}
+                    </p>
                   </div>
                   <div>
-                    <h4 className="text-sm font-medium text-gray-500 mb-1">{t("events.fields.location", "Location")}</h4>
-                    <p className="font-medium text-gray-900">{(/^-?\d+(\.\d+)?,-?\d+(\.\d+)?$/.test(event.address?.trim() || "") && !event.location) ? event.venue_name : (event.location || event.address)}</p>
+                    <h4 className="text-sm font-medium text-gray-500 mb-1">
+                      {t("events.fields.location", "Location")}
+                    </h4>
+                    <p className="font-medium text-gray-900">
+                      {/^-?\d+(\.\d+)?,-?\d+(\.\d+)?$/.test(
+                        event.address?.trim() || "",
+                      ) && !event.location
+                        ? event.venue_name
+                        : event.location || event.address}
+                    </p>
                   </div>
                 </div>
                 <div className="space-y-4">
                   <div>
-                    <h4 className="text-sm font-medium text-gray-500 mb-1">{t("events.fields.eventStartsOn", "Event Starts On")}</h4>
-                    <p className="font-medium text-gray-900" suppressHydrationWarning>
+                    <h4 className="text-sm font-medium text-gray-500 mb-1">
+                      {t("events.fields.eventStartsOn", "Event Starts On")}
+                    </h4>
+                    <p
+                      className="font-medium text-gray-900"
+                      suppressHydrationWarning
+                    >
                       {isValid(new Date(event.start_date))
                         ? format(new Date(event.start_date), "PPpp")
                         : "TBD"}
                     </p>
                   </div>
                   <div>
-                    <h4 className="text-sm font-medium text-gray-500 mb-1">{t("events.fields.eventEndsOn", "Event Ends On")}</h4>
-                    <p className="font-medium text-gray-900" suppressHydrationWarning>
+                    <h4 className="text-sm font-medium text-gray-500 mb-1">
+                      {t("events.fields.eventEndsOn", "Event Ends On")}
+                    </h4>
+                    <p
+                      className="font-medium text-gray-900"
+                      suppressHydrationWarning
+                    >
                       {isValid(new Date(event.end_date))
                         ? format(new Date(event.end_date), "PPpp")
                         : "TBD"}
@@ -429,7 +532,10 @@ export default function EventDetailsPage() {
               {event.tiers && event.tiers.length > 0 && (
                 <div className="pt-6 border-t border-gray-100">
                   <h4 className="text-sm font-medium text-gray-500 mb-1">
-                    {t("event.section.ticketSalesDuration", "Ticket Sales Duration")}
+                    {t(
+                      "event.section.ticketSalesDuration",
+                      "Ticket Sales Duration",
+                    )}
                   </h4>
                   <div className="gap-6">
                     {event.tiers.map((tier) => (
@@ -442,14 +548,21 @@ export default function EventDetailsPage() {
                         </span>
                         <div className="flex col-span-2 flex-wrap gap-x-2 gap-y-2 text-gray-500">
                           <span className="text-gray-900 font-medium">
-                            {tier.sales_start && isValid(new Date(tier.sales_start))
-                              ? format(new Date(tier.sales_start), "MMM dd, yyyy h:mm a")
+                            {tier.sales_start &&
+                            isValid(new Date(tier.sales_start))
+                              ? format(
+                                  new Date(tier.sales_start),
+                                  "MMM dd, yyyy h:mm a",
+                                )
                               : "—"}
                           </span>
                           -
                           <span className="text-gray-900 font-medium">
                             {tier.sales_end && isValid(new Date(tier.sales_end))
-                              ? format(new Date(tier.sales_end), "MMM dd, yyyy h:mm a")
+                              ? format(
+                                  new Date(tier.sales_end),
+                                  "MMM dd, yyyy h:mm a",
+                                )
                               : "—"}
                           </span>
                         </div>
@@ -463,34 +576,41 @@ export default function EventDetailsPage() {
 
           {/* Right Column - Sidebar */}
           <div className="space-y-6">
-
-
             {/* Financial Details */}
-            {
-              event.status !== "rejected" && event.status !== "pending" && (
-                <div className="glass-card-lower rounded-2xl p-6 border border-green-300! bg-green-100/40!">
-                  <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <CurrencyCircleDollarIcon weight="duotone" className="w-5 h-5 text-gray-500" />
-                    {t("events.sections.financialDetails", "Financial Details")}
-                  </h2>
-                  <div className="space-y-0">
-                    {event.commission_rate > 0 && (
-                      <div className="flex justify-between items-center py-2">
-                        <span className="text-gray-500 text-sm">{t("events.fields.commission", "Commission Rate")}</span>
-                        <Badge variant="secondary" className="bg-emerald-600 text-white border-emerald-100 px-3 py-1 text-sm">
-                          {event.commission_rate}%
-                        </Badge>
-                      </div>
-                    )}
-                    <div className="flex justify-between items-center pt-1">
-                      <span className="text-gray-500 text-sm">{t("events.sections.totalEarnings", "Total Earnings")}</span>
-                      <span className="font-semibold text-emerald-700 text-lg">
-                        {`${((totalRevenue || 0) * (event.commission_rate || 0) / 100).toFixed(2)} ${analytics?.tiers?.[0]?.currency || event.tiers?.[0]?.currency || 'NPR'}`}
+            {event.status !== "rejected" && event.status !== "pending" && (
+              <div className="glass-card-lower rounded-2xl p-6 border border-green-300! bg-green-100/40!">
+                <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <CurrencyCircleDollarIcon
+                    weight="duotone"
+                    className="w-5 h-5 text-gray-500"
+                  />
+                  {t("events.sections.financialDetails", "Financial Details")}
+                </h2>
+                <div className="space-y-0">
+                  {event.commission_rate > 0 && (
+                    <div className="flex justify-between items-center py-2">
+                      <span className="text-gray-500 text-sm">
+                        {t("events.fields.commission", "Commission Rate")}
                       </span>
+                      <Badge
+                        variant="secondary"
+                        className="bg-emerald-600 text-white border-emerald-100 px-3 py-1 text-sm"
+                      >
+                        {event.commission_rate}%
+                      </Badge>
                     </div>
+                  )}
+                  <div className="flex justify-between items-center pt-1">
+                    <span className="text-gray-500 text-sm">
+                      {t("events.sections.totalEarnings", "Total Earnings")}
+                    </span>
+                    <span className="font-semibold text-emerald-700 text-lg">
+                      {`${(((totalRevenue || 0) * (event.commission_rate || 0)) / 100).toFixed(2)} ${analytics?.tiers?.[0]?.currency || event.tiers?.[0]?.currency || "NPR"}`}
+                    </span>
                   </div>
-                </div>)
-            }
+                </div>
+              </div>
+            )}
 
             {/* Ticket Analytics (Renamed from Ticket Tiers as in Organizer, but retaining our logic) */}
             <div className="glass-card-lower rounded-2xl p-6 border border-gray-100 @container">
@@ -501,7 +621,9 @@ export default function EventDetailsPage() {
                 {/* Sales Progress */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-500">{t("events.analytics.progress", "Sales Progress")}</span>
+                    <span className="text-gray-500">
+                      {t("events.analytics.progress", "Sales Progress")}
+                    </span>
                     <span className="font-medium text-gray-900">
                       {Math.round(progress)}%
                     </span>
@@ -516,101 +638,151 @@ export default function EventDetailsPage() {
 
                 <div className="grid @xs:grid-cols-2 gap-4">
                   <div className="p-3 bg-blue-50 rounded-lg">
-                    <p className="text-xs text-blue-600 mb-1">{t("event.label.totalSold", "Total Sold")}</p>
-                    <p className="text-lg font-bold text-blue-700">{totalTicketsSold} / {analytics?.total_seats}</p>
+                    <p className="text-xs text-blue-600 mb-1">
+                      {t("event.label.totalSold", "Total Sold")}
+                    </p>
+                    <p className="text-lg font-bold text-blue-700">
+                      {totalTicketsSold} / {analytics?.total_seats}
+                    </p>
                   </div>
                   <div className="p-3 bg-emerald-50 rounded-lg">
-                    <p className="text-xs text-emerald-600 mb-1">{t("event.label.totalRevenue", "Revenue")}</p>
+                    <p className="text-xs text-emerald-600 mb-1">
+                      {t("event.label.totalRevenue", "Revenue")}
+                    </p>
                     <p className="text-lg font-bold text-emerald-700">
-                      {event.tiers?.[0]?.currency || 'NPR'} {totalRevenue.toLocaleString()}
+                      {event.tiers?.[0]?.currency || "NPR"}{" "}
+                      {totalRevenue.toLocaleString()}
                     </p>
                   </div>
                 </div>
 
                 {/* Tiers List */}
                 <div className="space-y-3 pt-4 border-t border-gray-100">
-                  <h3 className="text-sm font-medium text-gray-900">{t("event.section.ticketTiers", "Ticket Tiers")}</h3>
-                  {analytics?.tiers ? (
-                    analytics.tiers.map((tier: EventTierAnalytics) => {
-                      const soldPercent = tier.total_seats > 0 ? (tier.sold_seats / tier.total_seats) * 100 : 0;
-                      return (
-                        <div key={tier.tier_id} className="space-y-2 p-3 rounded-lg bg-gray-50 border border-gray-100">
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <p className="font-medium text-gray-900">{tier.tier_name}</p>
+                  <h3 className="text-sm font-medium text-gray-900">
+                    {t("event.section.ticketTiers", "Ticket Tiers")}
+                  </h3>
+                  {analytics?.tiers
+                    ? analytics.tiers.map((tier: EventTierAnalytics) => {
+                        const soldPercent =
+                          tier.total_seats > 0
+                            ? (tier.sold_seats / tier.total_seats) * 100
+                            : 0;
+                        return (
+                          <div
+                            key={tier.tier_id}
+                            className="space-y-2 p-3 rounded-lg bg-gray-50 border border-gray-100"
+                          >
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <p className="font-medium text-gray-900">
+                                  {tier.tier_name}
+                                </p>
+                              </div>
+                              <div className="text-right">
+                                <p className="font-medium text-emerald-600">
+                                  {tier.currency || "NPR"}{" "}
+                                  {tier.revenue.toLocaleString()}
+                                </p>
+                              </div>
                             </div>
-                            <div className="text-right">
-                              <p className="font-medium text-emerald-600">
-                                {tier.currency || 'NPR'} {tier.revenue.toLocaleString()}
-                              </p>
+
+                            <div className="space-y-1">
+                              <div className="w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
+                                <div
+                                  className="bg-blue-500 h-full rounded-full"
+                                  style={{
+                                    width: `${Math.min(soldPercent, 100)}%`,
+                                  }}
+                                />
+                              </div>
+                              <div className="flex justify-between items-center text-xs text-gray-600">
+                                <span>
+                                  {tier.sold_seats} / {tier.total_seats}{" "}
+                                  {t("common.sold", "sold")}
+                                </span>
+
+                                <p className="text-xs text-gray-500">
+                                  {tier.currency || "NPR"}{" "}
+                                  {tier.price.toLocaleString()} /{" "}
+                                  {t("common.ticket", "ticket")}
+                                </p>
+                              </div>
                             </div>
                           </div>
+                        );
+                      })
+                    : event.tiers?.map((tier) => {
+                        const sold = tier.sold || 0;
+                        const soldPercent =
+                          tier.quantity > 0 ? (sold / tier.quantity) * 100 : 0;
+                        const tierRevenue = sold * tier.price;
 
-                          <div className="space-y-1">
-                            <div className="w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
-                              <div className="bg-blue-500 h-full rounded-full" style={{ width: `${Math.min(soldPercent, 100)}%` }} />
+                        return (
+                          <div
+                            key={tier.id}
+                            className="space-y-2 p-3 rounded-lg bg-gray-50 border border-gray-100"
+                          >
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <p className="font-medium text-gray-900">
+                                  {tier.tier_name}
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                  {tier.currency || "NPR"}{" "}
+                                  {tier.price.toLocaleString()} /{" "}
+                                  {t("common.ticket", "ticket")}
+                                </p>
+                              </div>
+                              <div className="text-right">
+                                <p className="font-medium text-emerald-600">
+                                  {tier.currency || "NPR"}{" "}
+                                  {tierRevenue.toLocaleString()}
+                                </p>
+                              </div>
                             </div>
-                            <div className="flex justify-between items-center text-xs text-gray-600">
-                              <span>{tier.sold_seats} / {tier.total_seats} {t("common.sold", "sold")}</span>
 
-                              <p className="text-xs text-gray-500">
-                                {tier.currency || 'NPR'} {tier.price.toLocaleString()} / {t("common.ticket", "ticket")}
-                              </p>
+                            <div className="space-y-1">
+                              <div className="flex justify-end text-xs text-gray-600">
+                                <span>
+                                  {sold} / {tier.quantity}{" "}
+                                  {t("common.sold", "sold")}
+                                </span>
+                              </div>
+                              <div className="w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
+                                <div
+                                  className="bg-blue-500 h-full rounded-full"
+                                  style={{
+                                    width: `${Math.min(soldPercent, 100)}%`,
+                                  }}
+                                />
+                              </div>
                             </div>
-
                           </div>
-                        </div>
-                      );
-                    })
-                  ) : (
-                    event.tiers?.map((tier) => {
-                      const sold = tier.sold || 0;
-                      const soldPercent = tier.quantity > 0 ? (sold / tier.quantity) * 100 : 0;
-                      const tierRevenue = sold * tier.price;
-
-                      return (
-                        <div key={tier.id} className="space-y-2 p-3 rounded-lg bg-gray-50 border border-gray-100">
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <p className="font-medium text-gray-900">{tier.tier_name}</p>
-                              <p className="text-xs text-gray-500">
-                                {tier.currency || 'NPR'} {tier.price.toLocaleString()} / {t("common.ticket", "ticket")}
-                              </p>
-                            </div>
-                            <div className="text-right">
-                              <p className="font-medium text-emerald-600">
-                                {tier.currency || 'NPR'} {tierRevenue.toLocaleString()}
-                              </p>
-                            </div>
-                          </div>
-
-                          <div className="space-y-1">
-                            <div className="flex justify-end text-xs text-gray-600">
-                              <span>{sold} / {tier.quantity} {t("common.sold", "sold")}</span>
-                            </div>
-                            <div className="w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
-                              <div className="bg-blue-500 h-full rounded-full" style={{ width: `${Math.min(soldPercent, 100)}%` }} />
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })
-                  )}
+                        );
+                      })}
                 </div>
               </div>
             </div>
 
             {/* Quick Actions / Featured */}
             <div className="glass-card-lower rounded-2xl p-6 border border-gray-100">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">{t("events.sections.quickActions", "Quick Actions")}</h2>
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                {t("events.sections.quickActions", "Quick Actions")}
+              </h2>
               <div className="space-y-4">
                 {/* Featured Toggle Switch */}
                 <div className="flex items-center justify-between p-3 bg-primary/5 rounded-lg border border-primary-100">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-lg bg-primary-100 flex items-center justify-center">
-                      <FireIcon weight="duotone" className="w-4 h-4 text-primary-600" />
+                      <FireIcon
+                        weight="duotone"
+                        className="w-4 h-4 text-primary-600"
+                      />
                     </div>
-                    <Label htmlFor="featured-switch" className="text-sm font-medium text-gray-700 cursor-pointer">
+                    <Label
+                      htmlFor="featured-switch"
+                      className="text-sm font-medium text-gray-700 cursor-pointer"
+                    >
                       {t("events.fields.markFeatured", "Mark as Featured")}
                     </Label>
                   </div>
@@ -626,7 +798,9 @@ export default function EventDetailsPage() {
                   <Button
                     variant="outline"
                     className="w-full justify-center gap-2"
-                    onClick={() => router.push(`/organizers/detail?id=${event.organizer_id}`)}
+                    onClick={() =>
+                      router.push(`/organizers/detail?id=${event.organizer_id}`)
+                    }
                   >
                     <UsersIcon weight="duotone" size={18} />
                     {t("events.actions.viewOrganizer", "View Organizer")}
@@ -640,7 +814,6 @@ export default function EventDetailsPage() {
               history={mappedStatusHistory}
               isLoading={isLoadingHistory}
             />
-
           </div>
         </div>
       </div>
@@ -655,10 +828,12 @@ export default function EventDetailsPage() {
           showCommissionInput={true}
           isLoading={approveMutation.isPending}
           onCancel={() => setShowApproveModal(false)}
-          onConfirm={(data) => approveMutation.mutate({
-            commissionRate: data.commissionRate || 0,
-            adminRemark: data.adminRemark
-          })}
+          onConfirm={(data) =>
+            approveMutation.mutate({
+              commissionRate: data.commissionRate || 0,
+              adminRemark: data.adminRemark,
+            })
+          }
           eventName={event.title}
           eventDetails={event}
         />
@@ -671,7 +846,9 @@ export default function EventDetailsPage() {
           isApprove={false}
           isLoading={rejectMutation.isPending}
           onCancel={() => setShowRejectModal(false)}
-          onConfirm={(data) => rejectMutation.mutate({ adminRemark: data.adminRemark })}
+          onConfirm={(data) =>
+            rejectMutation.mutate({ adminRemark: data.adminRemark })
+          }
         />
       )}
 
@@ -688,7 +865,6 @@ export default function EventDetailsPage() {
           confirmText={t("events.actions.cancelEvent", "Cancel Event")}
         />
       )} */}
-
     </div>
   );
 }
