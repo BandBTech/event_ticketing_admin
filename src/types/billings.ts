@@ -93,6 +93,25 @@ export interface BillingFilters {
   // };
 }
 
+export interface PaymentHistory {
+  id: number;
+  amount: number;
+  payment_method: string;
+  payment_ref: string;
+  payment_date: string;
+  processed_by: string;
+  notes: string;
+  screenshot_url: string;
+  created_at: string;
+}
+
+export interface BillingHistorySheetProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  historyData?: PaymentHistory[];
+  billId: string;
+}
+
 export interface PaymentHistoryData {
   id: number;
   amount: number;
