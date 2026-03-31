@@ -828,7 +828,8 @@
       "approved": "承認済み",
       "rejected": "却下済み",
       "failed": "失敗",
-      "refunded": "返金済み"
+      "refunded": "返金済み",
+      "awaiting_webhook": "ウェブフックを待機中"
     }
   },
   "payouts": {

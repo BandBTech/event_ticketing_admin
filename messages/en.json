@@ -874,7 +874,8 @@
       "approved": "Approved",
       "rejected": "Rejected",
       "failed": "Failed",
-      "refunded": "Refunded"
+      "refunded": "Refunded",
+      "awaiting_webhook": "Awaiting Webhook"
     }
   },
   "payouts": {
