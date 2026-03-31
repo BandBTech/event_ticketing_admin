@@ -247,7 +247,21 @@ export default function PaymentDetail() {
             ))}
           </div>
         ) : transaction && paymentIntent ? (
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid md:grid-cols-3 gap-4">
+            {/* Buyer */}
+            <div className="bg-white rounded-xl border border-slate-200 p-5">
+              <CardHeader
+                icon={<span className="text-violet-500">{Icon.ticket}</span>}
+                title="Event"
+                iconBg="bg-violet-50"
+              />
+              <InfoRow label="Event Name" value={transaction.event.name} />
+              <InfoRow
+                label="Ticket Quantity"
+                value={`${transaction.quantity} ticket${transaction.quantity !== 1 ? "s" : ""}`}
+              />
+            </div>
+
             {/* Buyer */}
             <div className="bg-white rounded-xl border border-slate-200 p-5">
               <CardHeader
@@ -257,12 +271,6 @@ export default function PaymentDetail() {
               />
               <InfoRow label="User Name" value={transaction.user.name} />
               <InfoRow label="Email" value={transaction.user.email} />
-              <InfoRow label="Event Name" value={transaction.event.name} />
-              <InfoRow
-                label="Quantity"
-                value={`${transaction.quantity} ticket${transaction.quantity !== 1 ? "s" : ""}`}
-              />
-              {/* <InfoRow label="Created At" value={fmtDate(transaction.created_at)} last /> */}
             </div>
 
             {/* Payment Intent */}
