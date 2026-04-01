@@ -258,7 +258,7 @@ export default function TransactionsPage() {
                     refundId: selectedRefund?.id || "",
                   });
                 }}
-                className="h-11 px-8 active:scale-95 bg-destructive text-white hover:bg-destructive/90 focus:bg-destructive/90 transition-colors"
+                className="h-11 px-8 active:scale-95 bg-primary text-white hover:bg-destructive/90 focus:bg-destructive/90 transition-colors"
               >
                 {t("common.confirm", "Confirm")}
               </AlertDialogAction>

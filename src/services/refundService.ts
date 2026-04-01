@@ -58,7 +58,7 @@ export class RefundService {
     refundId: string;
     additionalProp1: string;
   }): Promise<RefundResponse> {
-    return await api.put<RefundResponse>(
+    return await api.post<RefundResponse>(
       API_ENDPOINTS.REJECT_REFUND(payload.refundId),
       {
         additionalProp1: payload.additionalProp1,
@@ -72,8 +72,9 @@ export class RefundService {
   static async approveRefund(payload: {
     refundId: string;
   }): Promise<RefundResponse> {
-    return await api.put<RefundResponse>(
+    return await api.post<RefundResponse>(
       API_ENDPOINTS.APPROVE_REFUND(payload.refundId),
+      {},
       {
         requiresAuth: true,
       },
