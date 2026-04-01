@@ -106,6 +106,34 @@ export const queryKeys = {
   },
 
   /**
+   * Refunds query keys
+   */
+  refunds: {
+    /** Key for fetching bills list with pagination and filters */
+    all: (
+      page?: number,
+      itemsPerPage?: number,
+      search?: string,
+      status?: string,
+      role?: string,
+      accountStatus?: string,
+    ) =>
+      [
+        "refunds",
+        page,
+        itemsPerPage,
+        search,
+        status,
+        role,
+        accountStatus,
+      ] as const,
+    /** Key for all refunds (used for invalidation) */
+    list: ["refunds"] as const,
+    /** Key for fetching a single refund by ID */
+    detail: (id: string) => ["refund", id] as const,
+  },
+
+  /**
    * Permissions query keys
    */
   permissions: {

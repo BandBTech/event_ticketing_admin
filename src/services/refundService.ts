@@ -63,9 +63,6 @@ export class RefundService {
       {
         additionalProp1: payload.additionalProp1,
       },
-      {
-        requiresAuth: true,
-      },
     );
   }
 
@@ -75,9 +72,16 @@ export class RefundService {
     return await api.post<RefundResponse>(
       API_ENDPOINTS.APPROVE_REFUND(payload.refundId),
       {},
-      {
-        requiresAuth: true,
-      },
+
+    );
+  }
+
+  static async retryRefund(payload: {
+    refundId: string;
+  }): Promise<RefundResponse> {
+    return await api.post<RefundResponse>(
+      API_ENDPOINTS.RETRY_REFUND(payload.refundId),
+      {},
     );
   }
 }

@@ -16,9 +16,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import {
-  Funnel as FunnelIcon,
-} from "@phosphor-icons/react";
+import { Funnel as FunnelIcon } from "@phosphor-icons/react";
 import {
   Select,
   SelectContent,
@@ -29,7 +27,6 @@ import {
 import { Search } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
-import { usePathname } from "next/navigation";
 import { useDebounce } from "@/hooks/useDebounce";
 import { PayoutFilterTabs } from "@/app/transactions/components/PayoutFilterTabs";
 import { RefundTable } from "./components/RefundTable";
@@ -37,14 +34,13 @@ import { PaginationState } from "@tanstack/react-table";
 import RejectModal from "@/app/refunds/components/RejectModal";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { queryKeys } from "@/lib/queryKeys";
 
 export default function TransactionsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
-  const pathname = usePathname();
-  const isTransactionsPage = pathname === "/transactions/";
 
   const itemsPerPage = 10;
   const [searchInput, setSearchInput] = React.useState("");
@@ -60,6 +56,7 @@ export default function TransactionsPage() {
   });
   const [isRejectDialogOpen, setIsRejectDialogOpen] = React.useState(false);
   const [openApproveDialog, setOpenApproveDialog] = React.useState(false);
+  const [openRetryDialog, setOpenRetryDialog] = React.useState(false);
   const [selectedRefund, setSelectedRefund] = useState<Refund | null>(null);
 
   const debouncedSearch = useDebounce(searchInput, 500);
@@ -94,12 +91,25 @@ export default function TransactionsPage() {
   });
 
   const createMutation = useMutation({
-    mutationFn: (data: { refundId: string }) => RefundService.approveRefund(data),
+    mutationFn: (data: { refundId: string }) =>
+      RefundService.approveRefund(data),
     onSuccess: async () => {
       toast.success(t("", "Refund approved successfully"));
-      // await queryClient.invalidateQueries({
-      //   queryKey: queryKeys.organizers.list,
-      // });
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.refunds.list,
+      });
+      setOpenApproveDialog(false);
+    },
+  });
+
+  const retryMutation = useMutation({
+    mutationFn: (data: { refundId: string }) =>
+      RefundService.retryRefund(data),
+    onSuccess: async () => {
+      // toast.success(t("", "Refund retried successfully"));
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.refunds.list,
+      });
       setOpenApproveDialog(false);
     },
   });
@@ -219,6 +229,8 @@ export default function TransactionsPage() {
           setSelectedRefund={setSelectedRefund}
           onApproveDialogOpen={openApproveDialog}
           setOpenApproveDialog={setOpenApproveDialog}
+          onRetryDialogOpen={openRetryDialog}
+          setOpenRetryDialog={setOpenRetryDialog}
         />
 
         <RejectModal
@@ -226,7 +238,7 @@ export default function TransactionsPage() {
           onOpenChange={setIsRejectDialogOpen}
           refund={selectedRefund}
         />
-
+        {/* Approve Refund Confirmation Dialog */}
         <AlertDialog
           open={openApproveDialog}
           onOpenChange={setOpenApproveDialog}
@@ -258,9 +270,49 @@ export default function TransactionsPage() {
                     refundId: selectedRefund?.id || "",
                   });
                 }}
-                className="h-11 px-8 active:scale-95 bg-primary text-white hover:bg-destructive/90 focus:bg-destructive/90 transition-colors"
+                className="h-11 px-8 active:scale-95 bg-primary text-white hover:bg-primary/90 focus:bg-primary/90 transition-colors"
               >
                 {t("common.confirm", "Confirm")}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        {/* Retry Confirmation Dialog */}
+        <AlertDialog
+          open={openRetryDialog}
+          onOpenChange={setOpenRetryDialog}
+        >
+          <AlertDialogContent className="rounded-3xl shadow-2xl border-none bg-white/95 backdrop-blur-xl data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 duration-300">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-xl font-bold text-gray-900">
+                {t("", "Confirm Refund Retry")}
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-gray-500 text-base">
+                {t(
+                  "",
+                  "Are you sure you want to retry this refund? This action cannot be undone immediately.",
+                )}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter className="pt-6">
+              <AlertDialogCancel
+                onClick={() =>
+                  setOpenRetryDialog && setOpenRetryDialog(false)
+                }
+                className="h-11 px-6 border-gray-200 hover:bg-gray-50 transition-colors"
+              >
+                {t("common.cancel", "Cancel")}
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => {
+                  retryMutation.mutate({
+                    refundId: selectedRefund?.id || "",
+                  });
+                }}
+                className="h-11 px-8 active:scale-95 bg-primary text-white hover:bg-primary/90 focus:bg-primary/90 transition-colors"
+              >
+                {t("", "Retry")}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

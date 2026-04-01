@@ -5,6 +5,8 @@ import {
   DotsThreeVertical as DotsThreeVerticalIcon,
   XCircleIcon,
   CheckCircleIcon,
+  EyeIcon,
+  ArrowsCounterClockwiseIcon,
 } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -20,6 +22,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Refund } from "@/types/refunds";
 import { formatCurrency } from "@/lib/utils";
+import { RefundDetail } from "@/app/refunds/components/RefundDetail";
 
 interface RefundTableProps {
   refunds: Refund[];
@@ -45,6 +48,9 @@ interface RefundTableProps {
   onApproveDialogOpen?: boolean;
   setOpenApproveDialog?: (open: boolean) => void;
   approveRefund?: (refundId: string) => void;
+  onRetryDialogOpen?: boolean;
+  setOpenRetryDialog?: (open: boolean) => void;
+  retryRefund?: (refundId: string) => void;
 }
 
 export function RefundTable({
@@ -64,9 +70,14 @@ export function RefundTable({
   setSelectedRefund,
   setRejectModalOpen,
   setOpenApproveDialog,
+  setOpenRetryDialog,
+  
+  
 }: RefundTableProps) {
   const { t } = useTranslation();
   const { locale } = useLanguageStore();
+
+  const [openRefundDetail, setOpenRefundDetail] = React.useState(false);
 
   // Table columns
   const columns: ColumnDef<Refund>[] = React.useMemo(
@@ -155,7 +166,7 @@ export function RefundTable({
         id: "actions",
         header: "",
         cell: ({ row }) => {
-          const transaction = row.original;
+          const refund = row.original;
 
           // if (actionLoading === user.id) {
           //   return (
@@ -176,7 +187,17 @@ export function RefundTable({
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuItem
                   onClick={() => {
-                    setSelectedRefund && setSelectedRefund(transaction);
+                    setOpenRefundDetail(true);
+                  }}
+                >
+                  <div className="flex justify-start items-center bg-gray-50 text-gray-700">
+                    <EyeIcon weight="duotone" className="mr-2 h-4 w-4" />
+                    {t(`users.viewDetails`)}
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setSelectedRefund && setSelectedRefund(refund);
                     setOpenApproveDialog && setOpenApproveDialog(true);
                   }}
                 >
@@ -186,13 +207,26 @@ export function RefundTable({
 
                 <DropdownMenuItem
                   onClick={() => {
-                    setSelectedRefund && setSelectedRefund(transaction);
+                    setSelectedRefund && setSelectedRefund(refund);
                     setRejectModalOpen && setRejectModalOpen(true);
                   }}
                   className="text-red-600"
                 >
                   <XCircleIcon weight="duotone" className="mr-2 h-4 w-4" />
                   Reject
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setSelectedRefund && setSelectedRefund(refund);
+                    setOpenRetryDialog && setOpenRetryDialog(true);
+                  }}
+                  className="text-red-600"
+                >
+                  <ArrowsCounterClockwiseIcon
+                    weight="duotone"
+                    className="mr-2 h-4 w-4"
+                  />
+                  Retry
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -246,6 +280,13 @@ export function RefundTable({
             </p>
           </div>
         }
+      />
+
+      <RefundDetail
+        open={openRefundDetail}
+        onOpenChange={() => {
+          setOpenRefundDetail(false);
+        }}
       />
     </>
   );
