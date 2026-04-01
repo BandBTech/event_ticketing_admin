@@ -32,6 +32,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from "@/types/transaction";
+import { RefundResponse, Refund } from "@/types/refunds";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -56,6 +57,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { flexRender } from "@tanstack/react-table";
+import { log } from "console";
 
 export default function TransactionsPage() {
   const router = useRouter();
@@ -83,8 +85,8 @@ export default function TransactionsPage() {
       ? `${sorting[0].id}:${sorting[0].desc ? "desc" : "asc"}`
       : undefined;
 
-  const { data: response, isLoading } = useQuery<TransactionListResponse>({
-    queryKey: ["transactions", currentPage, itemsPerPage, filter, sort],
+  const { data: response, isLoading } = useQuery<RefundResponse>({
+    queryKey: ["refunds", currentPage, itemsPerPage, filter, sort],
     queryFn: () =>
       RefundService.getRefunds({
         page: currentPage,
@@ -94,6 +96,8 @@ export default function TransactionsPage() {
       }),
     placeholderData: (previousData) => previousData,
   });
+
+  console.log("response", response);
 
   const updateParams = useCallback(
     (updates: Record<string, string | null>) => {
@@ -107,7 +111,7 @@ export default function TransactionsPage() {
         }
       });
 
-      router.push(`/transactions?${params.toString()}`, { scroll: false });
+      router.push(`/refunds?${params.toString()}`, { scroll: false });
     },
     [router],
   );
@@ -120,20 +124,32 @@ export default function TransactionsPage() {
   );
 
   // Table columns
-  const columns: ColumnDef<Transaction>[] = React.useMemo(
+  const columns: ColumnDef<Refund>[] = React.useMemo(
     () => [
       {
-        id: "event",
-        header: t("transactions.table.event"),
-        accessorKey: "event_title",
+        id: "date",
+        header: t("transactions.table.date"),
+        accessorKey: "created_at",
         enableSorting: false,
+        enableHiding: false,
+        cell: ({ row }) => {
+          const date = new Date(row.original.created_at);
+          const formattedDate = date.toLocaleDateString("en-CA"); // YYYY-MM-DD format
+          return <span>{formattedDate}</span>;
+        },
       },
       {
-        id: "user",
-        header: t("transactions.table.user"),
-        accessorKey: "user_name",
+        id: "initiated_by",
+        header: t("", "Initiated By"),
+        accessorKey: "initiated_by.name",
         enableSorting: false,
       },
+      // {
+      //   id: "user",
+      //   header: t("transactions.table.user"),
+      //   accessorKey: "user_name",
+      //   enableSorting: false,
+      // },
       {
         id: "ticket_count",
         header: t("transactions.table.ticket"),
@@ -151,31 +167,31 @@ export default function TransactionsPage() {
           </span>
         ),
       },
-      {
-        id: "gateway",
-        accessorKey: "payment_gateway",
-        header: t("transactions.table.gateway"),
-        enableSorting: false,
-        cell: ({ row }) => {
-          const gateway = row.original.payment_gateway;
+      // {
+      //   id: "gateway",
+      //   accessorKey: "payment_gateway",
+      //   header: t("transactions.table.gateway"),
+      //   enableSorting: false,
+      //   cell: ({ row }) => {
+      //     const gateway = row.original.payment_gateway;
 
-          const colors: Record<string, string> = {
-            khalti: "bg-purple-100 text-purple-700",
-            esewa: "bg-green-100 text-green-700",
-            stripe: "bg-indigo-100 text-indigo-700",
-          };
+      //     const colors: Record<string, string> = {
+      //       khalti: "bg-purple-100 text-purple-700",
+      //       esewa: "bg-green-100 text-green-700",
+      //       stripe: "bg-indigo-100 text-indigo-700",
+      //     };
 
-          return (
-            <span
-              className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                colors[gateway?.toLowerCase()] || "bg-gray-100 text-gray-700"
-              }`}
-            >
-              🏦 {t("transactions.gateway." + gateway)}
-            </span>
-          );
-        },
-      },
+      //     return (
+      //       <span
+      //         className={`px-2 py-1 text-xs font-semibold rounded-full ${
+      //           colors[gateway?.toLowerCase()] || "bg-gray-100 text-gray-700"
+      //         }`}
+      //       >
+      //         🏦 {t("transactions.gateway." + gateway)}
+      //       </span>
+      //     );
+      //   },
+      // },
       {
         id: "status",
         header: t("transactions.table.status"),
@@ -203,23 +219,11 @@ export default function TransactionsPage() {
           );
         },
       },
-      {
-        id: "date",
-        header: t("transactions.table.date"),
-        accessorKey: "created_at",
-        enableSorting: false,
-        enableHiding: false,
-        cell: ({ row }) => (
-          <span className="text-sm text-gray-600">
-            {new Date(row.original.created_at).toLocaleDateString()}
-          </span>
-        ),
-      },
     ],
     [t],
   );
   const table = useReactTable({
-    data: response?.transactions || [],
+    data: response?.refunds || [],
     columns,
     state: {
       sorting,

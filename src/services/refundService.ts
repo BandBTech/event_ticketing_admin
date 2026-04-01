@@ -1,6 +1,6 @@
 import { api } from "../lib/apiClient";
 import { API_ENDPOINTS } from "@/app/config/api";
-import { Transaction, TransactionListResponse } from "@/types/transaction";
+import { RefundResponse } from "@/types/refunds";
 
 export class RefundService {
   /**
@@ -25,7 +25,7 @@ export class RefundService {
     limit?: number;
     sort?: string;
     filter?: string;
-  }): Promise<TransactionListResponse> {
+  }): Promise<RefundResponse> {
     const params = new URLSearchParams();
 
     if (filters) {
@@ -37,7 +37,7 @@ export class RefundService {
 
     const query = params.toString();
 
-    const result = await api.get<TransactionListResponse>(
+    const result = await api.get<RefundResponse>(
       `${API_ENDPOINTS.GET_ALL_REFUNDS}${query ? `?${query}` : ""}`,
       {
         requiresAuth: true,
