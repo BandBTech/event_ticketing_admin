@@ -74,6 +74,8 @@ export const API_ENDPOINTS = {
   //Refunds
   CREATE_REFUND: `${API_BASE_URL}/admin/payments/refunds`,
   GET_ALL_REFUNDS: `${API_BASE_URL}/admin/payments/refunds`,
+  REJECT_REFUND: (id: string) => `${API_BASE_URL}/admin/payments/refunds/${id}/reject`,
+  APPROVE_REFUND: (id: string) => `${API_BASE_URL}/admin/payments/refunds/${id}/approve`,
 
   //Bills
   CREATE_BILLS: `${API_BASE_URL}/admin/payments/bills`,

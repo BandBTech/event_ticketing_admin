@@ -1010,6 +1010,27 @@ export type RejectPayoutFormValues = z.infer<
 >;
 
 /**
+ * Reject Refund Schema
+ */
+
+export const rejectRefundSchema = (
+  t: (
+    key: string,
+    fallback?: string,
+    params?: Record<string, string | number>,
+  ) => string,
+) => {
+  const v = createValidationHelpers(t);
+  return z.object({
+    admin_notes: z.string().min(1, v.required(t("", "Admin Notes"))),
+  });
+};
+
+export type RejectRefundFormValues = z.infer<
+  ReturnType<typeof rejectRefundSchema>
+>;
+
+/**
  * Approve Payout Schema
  */
 
@@ -1040,6 +1061,12 @@ export type ApprovePayoutPayload = {
   payoutId: string;
   status: string;
   admin_notes: string;
+};
+
+// Separate type for the full API payload
+export type RejectRefundPayload = {
+  refundId: string;
+  additionalProp1: string;
 };
 
 /**

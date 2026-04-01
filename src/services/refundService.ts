@@ -25,6 +25,10 @@ export class RefundService {
     limit?: number;
     sort?: string;
     filter?: string;
+    status?: string;
+    search?: string;
+    sort_by?: string;
+    sort_order?: "asc" | "desc";
   }): Promise<RefundResponse> {
     const params = new URLSearchParams();
 
@@ -32,7 +36,10 @@ export class RefundService {
       if (filters.page) params.append("page", filters.page.toString());
       if (filters.limit) params.append("limit", filters.limit.toString());
       if (filters.filter) params.append("filter", filters.filter);
-      if (filters.sort) params.append("sort", filters.sort);
+      if (filters.status) params.append("status", filters.status);
+      if (filters.search) params.append("search", filters.search);
+      if (filters.sort_by) params.append("sort_by", filters.sort_by);
+      if (filters.sort_order) params.append("sort_order", filters.sort_order);
     }
 
     const query = params.toString();
@@ -45,5 +52,31 @@ export class RefundService {
     );
 
     return result;
+  }
+
+  static async rejectRefund(payload: {
+    refundId: string;
+    additionalProp1: string;
+  }): Promise<RefundResponse> {
+    return await api.put<RefundResponse>(
+      API_ENDPOINTS.REJECT_REFUND(payload.refundId),
+      {
+        additionalProp1: payload.additionalProp1,
+      },
+      {
+        requiresAuth: true,
+      },
+    );
+  }
+
+  static async approveRefund(payload: {
+    refundId: string;
+  }): Promise<RefundResponse> {
+    return await api.put<RefundResponse>(
+      API_ENDPOINTS.APPROVE_REFUND(payload.refundId),
+      {
+        requiresAuth: true,
+      },
+    );
   }
 }
