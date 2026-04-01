@@ -49,7 +49,7 @@ export function TransactionFilterSheet({
 }: TransactionFilterSheetProps) {
   const [localFilters, setLocalFilters] =
     React.useState<TransactionFilters>(filters);
-  const [dateError, setDateError] = React.useState<string | null>(null);  
+  const [dateError, setDateError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     if (open) {
@@ -192,7 +192,16 @@ export function TransactionFilterSheet({
                     <Calendar
                       mode="single"
                       selected={localFilters.start_date}
-                      onSelect={(date) => handleDateChange("start_date", date)}
+                      onSelect={(date) => {
+                        if (date) {
+                          const normalized = new Date(
+                            format(date, "yyyy-MM-dd"),
+                          );
+                          handleDateChange("start_date", normalized);
+                        } else {
+                          handleDateChange("start_date", undefined);
+                        }
+                      }}
                       captionLayout="dropdown"
                       fromYear={2010}
                       toYear={new Date().getFullYear()}
@@ -228,7 +237,16 @@ export function TransactionFilterSheet({
                     <Calendar
                       mode="single"
                       selected={localFilters.end_date}
-                      onSelect={(date) => handleDateChange("end_date", date)}
+                      onSelect={(date) => {
+                        if (date) {
+                          const normalized = new Date(
+                            format(date, "yyyy-MM-dd"),
+                          );
+                          handleDateChange("end_date", normalized);
+                        } else {
+                          handleDateChange("end_date", undefined);
+                        }
+                      }}
                       captionLayout="dropdown"
                       fromYear={2010}
                       toYear={new Date().getFullYear()}
@@ -261,12 +279,8 @@ export function TransactionFilterSheet({
                 />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="bank_transfer">Bank Transfer</SelectItem>
                 <SelectItem value="cash">Cash</SelectItem>
-                <SelectItem value="cheque">Cheque</SelectItem>
-                <SelectItem value="mobile_payment">Mobile Payment</SelectItem>
                 <SelectItem value="stripe">Stripe</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
               </SelectContent>
             </Select>
           </div>

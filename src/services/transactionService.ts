@@ -37,6 +37,8 @@ export class TransactionService {
     start_date?: Date | undefined;
     end_date?: Date | undefined;
     payment_gateway?: string;
+    sort_by?: string;
+    sort_order?: "asc" | "desc";
   }): Promise<TransactionListResponse> {
     const params = new URLSearchParams();
 
@@ -60,7 +62,8 @@ export class TransactionService {
         );
       if (filters.end_date)
         params.append("end_date", filters.end_date.toISOString().split("T")[0]);
-      if (filters.sort) params.append("sort", filters.sort);
+      if (filters.sort_by) params.append("sort_by", filters.sort_by);
+      if (filters.sort_order) params.append("sort_order", filters.sort_order);
     }
 
     const query = params.toString();

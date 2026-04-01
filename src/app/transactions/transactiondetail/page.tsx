@@ -37,14 +37,6 @@ function fmtDate(iso: string) {
   });
 }
 
-function getInitials(name: string) {
-  return name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase();
-}
-
 export default function TransactionDetailPage() {
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
@@ -78,10 +70,10 @@ export default function TransactionDetailPage() {
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-4 flex items-start justify-between">
         <div className="flex items-center gap-5">
           <div
-            className="w-20 h-20 rounded-full flex items-center justify-center text-xl font-bold flex-shrink-0"
+            className="w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold flex-shrink-0"
             style={{ background: "#eef0fb", color: "#6366f1" }} 
           >
-            {getInitials(transactionDetail?.user.name || "—")}
+            {transactionDetail?.user.name?.trim()?.split(" ")?.[0]?.[0]?.toUpperCase() || "—"}
           </div>
           <div>
             <div className="flex items-center gap-3 mb-1">
