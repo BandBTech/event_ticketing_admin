@@ -30,7 +30,7 @@ const eventStatusConfig: Record<
     variant: "destructive",
   },
   cancelled: {
-    color: "bg-red-700 text-white border-red-600",
+    color: "bg-red-700! text-white border-red-600",
     variant: "destructive",
   },
   draft: {

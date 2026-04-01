@@ -16,11 +16,15 @@ import { queryKeys } from "@/lib/queryKeys";
 import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useDebounce } from "@/hooks/useDebounce";
-import { OrganizerService, AllOrganizers, OrganizerListResponse } from "@/services/organizerService";
+import {
+  OrganizerService,
+  AllOrganizers,
+  OrganizerListResponse,
+} from "@/services/organizerService";
 import AnimatedBox from "@/components/AnimatedBox";
 import { EventCardSkeleton } from "./components/EventCardSkeleton";
 import { EventCard } from "./components/EventCard";
-import { StatusFilterSelect } from "./components/StatusFilterSelect";
+import { EventStatusSelect } from "@/components/EventStatusSelect";
 import { OrganizerFilterSelect } from "./components/OrganizerFilterSelect";
 
 // Empty State
@@ -46,7 +50,6 @@ function EmptyState({ searchQuery }: { searchQuery: string }) {
     </div>
   );
 }
-
 
 export default function EventsPage() {
   const { locale } = useLanguageStore();
@@ -109,9 +112,12 @@ export default function EventsPage() {
 
   const handleOrganizerChange = useCallback(
     (value: string) => {
-      updateParams({ organizer_id: value === "all" ? null : value, page: null });
+      updateParams({
+        organizer_id: value === "all" ? null : value,
+        page: null,
+      });
     },
-    [updateParams]
+    [updateParams],
   );
 
   // Fetch organizers to resolve IDs to names
@@ -123,15 +129,20 @@ export default function EventsPage() {
   const organizers = useMemo(() => {
     if (!organizersData) return [];
     if (Array.isArray(organizersData)) return organizersData;
-    if (typeof organizersData === "object" && "organizers" in organizersData && Array.isArray((organizersData as OrganizerListResponse).organizers)) {
-      return (organizersData as OrganizerListResponse).organizers as unknown as AllOrganizers[];
+    if (
+      typeof organizersData === "object" &&
+      "organizers" in organizersData &&
+      Array.isArray((organizersData as OrganizerListResponse).organizers)
+    ) {
+      return (organizersData as OrganizerListResponse)
+        .organizers as unknown as AllOrganizers[];
     }
     return [];
   }, [organizersData]);
 
   const currentOrganizer = useMemo(
     () => organizers.find((org) => org.id === organizerId),
-    [organizers, organizerId]
+    [organizers, organizerId],
   );
   const {
     data: response,
@@ -234,7 +245,10 @@ export default function EventsPage() {
             value={organizerId}
             onChange={handleOrganizerChange}
           />
-          <StatusFilterSelect value={statusFilter} onChange={handleStatusChange} />
+          <EventStatusSelect
+            value={statusFilter}
+            onChange={handleStatusChange}
+          />
           {/* <Button variant="outline" className="gap-2 bg-background">
             <FunnelIcon weight="duotone" className="h-4 w-4" />
             {t("events.moreFilters")}
