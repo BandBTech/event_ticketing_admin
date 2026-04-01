@@ -12,7 +12,7 @@ import {
   UserIcon,
   ShieldIcon,
   FileTextIcon,
-  CaretDownIcon 
+  CaretDownIcon,
 } from "@phosphor-icons/react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
@@ -20,6 +20,7 @@ import { Badge } from "@/components/ui/badge";
 import { useSearchParams } from "next/navigation";
 import { PaymentHistoryData } from "@/types/billings";
 import { cn } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils";
 
 const fmt = (n: number) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(
@@ -49,6 +50,7 @@ const statusStyles: Record<StatusKey, string> = {
   paid: "bg-green-100 text-green-800",
   pending: "bg-yellow-100 text-yellow-800",
   failed: "bg-red-100 text-red-800",
+  cancelled: "bg-red-100 text-red-800",
 };
 
 const priorityStyles: Record<PriorityKey, string> = {
@@ -122,16 +124,19 @@ const MoneyCard = ({
   label: string;
   value: number;
   accent?: string;
-}) => (
-  <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 flex flex-col gap-1">
-    <span className="text-xs text-slate-400 font-semibold uppercase tracking-widest">
-      {label}
-    </span>
-    <span className={`text-2xl font-bold ${accent ?? "text-slate-800"}`}>
-      {fmt(value)}
-    </span>
-  </div>
-);
+}) => {
+  const { locale } = useLanguageStore();
+  return (
+    <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 flex flex-col gap-1">
+      <span className="text-xs text-slate-400 font-semibold uppercase tracking-widest">
+        {label}
+      </span>
+      <span className={`text-2xl font-bold ${accent ?? "text-slate-800"}`}>
+        {formatCurrency(value, undefined, locale)}
+      </span>
+    </div>
+  );
+};
 
 const SectionTitle = ({ children }: { children: React.ReactNode }) => (
   <p className="text-xs text-slate-400 font-semibold uppercase tracking-widest mb-3">
@@ -231,9 +236,9 @@ export default function BillDetail() {
               >
                 {`${t(`billings.billPriority.${billData?.priority}`) ?? "N/A"} ${t("billings.priority")}`}
               </Badge> */}
-              <Badge className="bg-indigo-50 text-indigo-700 border border-indigo-200">
-                {t(`billings.billType.${billData?.bill_type}`) ?? "N/A"}
-              </Badge>
+              {/* <Badge className="bg-indigo-50 text-indigo-700 border border-indigo-200">
+               Bill Type: {t(`billings.billType.${billData?.bill_type}`) ?? "N/A"}
+              </Badge> */}
             </div>
           </div>
 
@@ -330,7 +335,7 @@ export default function BillDetail() {
         {/* Money Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <MoneyCard
-            label={t("billings.detailPage.totalRevenue", "Total Revenue")}
+            label={t("billings.detailPage.totalRevesnue", "Total Revsenue")}
             value={billData?.total_revenue ?? 0}
           />
           <MoneyCard
@@ -395,13 +400,13 @@ export default function BillDetail() {
               /> */}
               <InfoRow
                 label={t("billings.detailPage.billedAmount", "Billed Amount")}
-                value={fmt(billData?.billed_amount ?? 0)}
+                value={formatCurrency(billData?.billed_amount ?? 0, undefined, locale)}
               />
               <InfoRow
                 label={t("billings.detailPage.paidAmount", "Paid Amount")}
                 value={
                   <span className="text-emerald-600">
-                    {fmt(billData?.paid_amount ?? 0)}
+                    {formatCurrency(billData?.paid_amount ?? 0, undefined, locale)}
                   </span>
                 }
               />
@@ -409,7 +414,7 @@ export default function BillDetail() {
                 label={t("billings.detailPage.remaining", "Remaining")}
                 value={
                   <span className="text-rose-500">
-                    {fmt(billData?.remaining_amount ?? 0)}
+                    {formatCurrency(billData?.remaining_amount ?? 0, undefined, locale)}
                   </span>
                 }
               />

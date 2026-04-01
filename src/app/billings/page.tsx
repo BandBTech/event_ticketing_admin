@@ -100,9 +100,6 @@ export default function BillingsPage() {
     undefined,
   );
 
-  console.log("sort by", sortBy);
-  console.log("sort order", sortOrder);
-
   const { data: response, isLoading } = useQuery<PaymentBillData>({
     queryKey: [
       "bills",
