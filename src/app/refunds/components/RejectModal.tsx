@@ -26,14 +26,11 @@ import { toast } from "sonner";
 import { queryKeys } from "@/lib/queryKeys";
 import { useLanguageStore } from "@/store/languageStore";
 import { Textarea } from "@/components/ui/textarea";
-import { PayoutService } from "@/services/payoutService";
-
 import {
   rejectRefundSchema,
   RejectRefundFormValues,
   RejectRefundPayload,
 } from "@/lib/validation";
-import { PayoutRequest } from "@/types/payout";
 import { RefundService } from "@/services/refundService";
 import { Refund } from "@/types/refunds";
 
@@ -117,13 +114,6 @@ export default function RejectModal({
                     {t("", "Admin Notes")}
                   </FormLabel>
                   <div className="relative group">
-                    {/* <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none transition-colors group-focus-within:text-blue-600">
-                      <CalendarBlankIcon
-                        weight="duotone"
-                        size={22}
-                        className="text-gray-400"
-                      />
-                    </div> */}
                     <FormControl>
                       <Textarea
                         placeholder={t("", "Enter reason for rejection")}

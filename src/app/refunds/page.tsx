@@ -3,7 +3,6 @@
 import React, { useState, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RefundService } from "@/services/refundService";
 import { RefundResponse, Refund } from "@/types/refunds";
@@ -18,38 +17,26 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import {
-  MagnifyingGlass as MagnifyingGlassIcon,
   Funnel as FunnelIcon,
-  ArrowsLeftRight,
-  UserCircleDashedIcon,
 } from "@phosphor-icons/react";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectGroup,
   SelectValue,
 } from "@/components/ui/select";
-
-import { BanknoteArrowUp, CreditCard, Search, Logs } from "lucide-react";
+import { Search } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
 import { usePathname } from "next/navigation";
 import { useDebounce } from "@/hooks/useDebounce";
 import { PayoutFilterTabs } from "@/app/transactions/components/PayoutFilterTabs";
-import { TransactionFilters, getDefaultFilters } from "@/types/transaction";
 import { RefundTable } from "./components/RefundTable";
 import { PaginationState } from "@tanstack/react-table";
 import RejectModal from "@/app/refunds/components/RejectModal";
-import { PayoutRequestsResponse, PayoutRequest } from "@/types/payout";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import {
-  rejectRefundSchema,
-  RejectRefundFormValues,
-  RejectRefundPayload,
-} from "@/lib/validation";
 
 export default function TransactionsPage() {
   const router = useRouter();

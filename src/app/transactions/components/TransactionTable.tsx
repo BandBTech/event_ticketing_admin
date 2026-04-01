@@ -16,6 +16,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { ReusableTable } from "@/components/ReusableTable";
 import { formatCurrency } from "@/lib/utils";
 import { useLanguageStore } from "@/store/languageStore";
+import {formatDateTimeLong} from "@/lib/utils";
 import {
   Tooltip,
   TooltipTrigger,
@@ -77,8 +78,18 @@ export function TransactionTable({
         cell: ({ row }) => {
           const date = new Date(row.original.created_at);
           const formattedDate = date.toLocaleDateString("en-CA");
-          return <span>{formattedDate}</span>;
-        },
+          const formattedTime = date.toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+          });
+          return (
+            <div className="flex flex-col items-center justify-center">
+              <span>{formattedDate}</span>
+              <span className="text-xs text-gray-500">{formattedTime}</span>
+            </div>
+          );
+        }
       },
       {
         id: "event",

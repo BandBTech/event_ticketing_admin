@@ -2,36 +2,24 @@
 
 import React from "react";
 import {
-  Eye as EyeIcon,
   DotsThreeVertical as DotsThreeVerticalIcon,
-  InfoIcon,
-  CoinsIcon,
   XCircleIcon,
   CheckCircleIcon,
 } from "@phosphor-icons/react";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Transaction } from "@/types/transaction";
 import { ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "@/hooks/useTranslation";
 import { ReusableTable } from "@/components/ReusableTable";
-import { formatCurrency } from "@/lib/utils";
 import { useLanguageStore } from "@/store/languageStore";
-
-import {
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-} from "@/components/ui/tooltip";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { RefundResponse, Refund } from "@/types/refunds";
-import { set } from "zod";
+import { Refund } from "@/types/refunds";
+import { formatCurrency } from "@/lib/utils";
 
 interface RefundTableProps {
   refunds: Refund[];
@@ -73,21 +61,22 @@ export function RefundTable({
   sortBy,
   sortOrder,
   onSortChange,
-  onRejectModalOpen,
-  selectedRefund,
   setSelectedRefund,
   setRejectModalOpen,
-  onApproveDialogOpen,
   setOpenApproveDialog,
-  approveRefund,
 }: RefundTableProps) {
   const { t } = useTranslation();
-  const router = useRouter();
   const { locale } = useLanguageStore();
 
   // Table columns
   const columns: ColumnDef<Refund>[] = React.useMemo(
     () => [
+      {
+        id: "refund_number",
+        header: t("", "Refund Number"),
+        accessorKey: "refund_number",
+        meta: { sortKey: "refund_number" },
+      },
       {
         id: "date",
         header: t("transactions.table.date"),
@@ -106,15 +95,23 @@ export function RefundTable({
         meta: { sortKey: "initiated_by" },
       },
       {
-        id: "reason",
-        header: t("", "Reason"),
-        accessorKey: "reason",
-        meta: { sortKey: "refund_reason" },
-        cell: ({ row }) => (
-          <span className="max-w-[200px] text-gray-700 truncate inline-block">
-            {row.original.reason || "-"}
-          </span>
-        ),
+        id: "refund_type",
+        header: t("", "Refund Type"),
+        meta: { sortKey: "refund_type" },
+        cell: ({ row }) => {
+          const type = row.original.refund_type;
+
+          const formatted = type
+            .replace(/_/g, " ")
+            .toLowerCase()
+            .replace(/\b\w/g, (char) => char.toUpperCase());
+
+          return (
+            <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-700">
+              {formatted}
+            </span>
+          );
+        },
       },
       {
         id: "amount",
@@ -123,7 +120,7 @@ export function RefundTable({
         meta: { sortKey: "amount" },
         cell: ({ row }) => (
           <span className="px-2 py-1 text-xs font-medium rounded-full">
-            {row.original.currency} {row.original.amount}
+            {formatCurrency(row.original.amount, row.original.currency, locale)}
           </span>
         ),
       },
@@ -178,10 +175,10 @@ export function RefundTable({
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuItem
-                onClick={() => {
-                  setSelectedRefund && setSelectedRefund(transaction);
-                  setOpenApproveDialog && setOpenApproveDialog(true);
-                }}
+                  onClick={() => {
+                    setSelectedRefund && setSelectedRefund(transaction);
+                    setOpenApproveDialog && setOpenApproveDialog(true);
+                  }}
                 >
                   <CheckCircleIcon weight="duotone" className="mr-2 h-4 w-4" />
                   Approve
@@ -250,8 +247,6 @@ export function RefundTable({
           </div>
         }
       />
-
-
     </>
   );
 }
