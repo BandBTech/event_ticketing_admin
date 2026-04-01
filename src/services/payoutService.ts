@@ -1,6 +1,6 @@
 import { api } from "../lib/apiClient";
 import { API_ENDPOINTS } from "@/app/config/api";
-import {PayoutRequestsResponse} from "@/types/payout"
+import { PayoutRequestsResponse } from "@/types/payout";
 
 interface ApprovePayoutResponse {
   success: boolean;
@@ -36,6 +36,8 @@ export class PayoutService {
     sort?: string;
     status?: string;
     search?: string;
+    sort_by?: string;
+    sort_order?: string;
   }): Promise<PayoutRequestsResponse> {
     const params = new URLSearchParams();
 
@@ -44,7 +46,8 @@ export class PayoutService {
       if (filters.limit) params.append("limit", filters.limit.toString());
       if (filters.status) params.append("status", filters.status);
       if (filters.search) params.append("search", filters.search);
-      if (filters.sort) params.append("sort", filters.sort);
+      if (filters.sort_by) params.append("sort_by", filters.sort_by);
+      if (filters.sort_order) params.append("sort_order", filters.sort_order);
     }
 
     const query = params.toString();
@@ -58,39 +61,38 @@ export class PayoutService {
 
     return result;
   }
-  
 
-    static async approvePayout(payload: {
-      payoutId: string;
-      admin_notes: string;
-      status: string;
-    }): Promise<ApprovePayoutResponse> {
-      return await api.put<ApprovePayoutResponse>(
-        API_ENDPOINTS.APPROVE_PAYOUTS(payload.payoutId),
-        {
-          admin_notes: payload.admin_notes,
-          status: payload.status,
-        },
-        {
-          requiresAuth: true,
-        }
-      );
-    }
+  static async approvePayout(payload: {
+    payoutId: string;
+    admin_notes: string;
+    status: string;
+  }): Promise<ApprovePayoutResponse> {
+    return await api.put<ApprovePayoutResponse>(
+      API_ENDPOINTS.APPROVE_PAYOUTS(payload.payoutId),
+      {
+        admin_notes: payload.admin_notes,
+        status: payload.status,
+      },
+      {
+        requiresAuth: true,
+      },
+    );
+  }
 
-      static async rejectPayout(payload: {
-        payoutId: string;
-        admin_remark: string;
-        status: string;
-      }): Promise<RejectPayoutResponse> {
-        return await api.put<RejectPayoutResponse>(
-          API_ENDPOINTS.REJECT_PAYOUTS(payload.payoutId),
-          {
-            admin_remark: payload.admin_remark,
-            status: payload.status,
-          },
-          {
-            requiresAuth: true,
-          }
-        );
-      }
+  static async rejectPayout(payload: {
+    payoutId: string;
+    admin_remark: string;
+    status: string;
+  }): Promise<RejectPayoutResponse> {
+    return await api.put<RejectPayoutResponse>(
+      API_ENDPOINTS.REJECT_PAYOUTS(payload.payoutId),
+      {
+        admin_remark: payload.admin_remark,
+        status: payload.status,
+      },
+      {
+        requiresAuth: true,
+      },
+    );
+  }
 }

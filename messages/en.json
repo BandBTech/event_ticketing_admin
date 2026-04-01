@@ -874,6 +874,7 @@
       "approved": "Approved",
       "rejected": "Rejected",
       "failed": "Failed",
+      "cancelled": "Cancelled",
       "refunded": "Refunded",
       "awaiting_webhook": "Awaiting Webhook"
     }

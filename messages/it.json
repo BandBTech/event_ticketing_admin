@@ -816,6 +816,7 @@
       "approved": "Approvato",
       "rejected": "Rifiutato",
       "failed": "Fallito",
+      "cancelled": "cancellare",
       "refunded": "Rimborsato",
       "awaiting_webhook": "in attesa del webhook"
     }
