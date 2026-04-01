@@ -67,6 +67,8 @@ export class BillingService {
     start_date?: Date | undefined;
     end_date?: Date | undefined;
     search?: string;
+    sort_by?: string;
+    sort_order?: "asc" | "desc";
   }): Promise<PaymentBillData> {
     const params = new URLSearchParams();
 
@@ -85,7 +87,10 @@ export class BillingService {
       if (filters.end_date)
         params.append("end_date", filters.end_date.toISOString().split("T")[0]);
       if (filters.search) params.append("search", filters.search);
+      if (filters.sort_by) params.append("sort_by", filters.sort_by);
+      if (filters.sort_order) params.append("sort_order", filters.sort_order);
     }
+
 
     const query = params.toString();
 

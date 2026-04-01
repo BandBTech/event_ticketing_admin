@@ -232,11 +232,12 @@ export default function AddBillPopupModal({
   );
 
   const PAYMENT_METHODS = [
-    { label: "Bank Transfer", value: "bank_transfer" },
+    // { label: "Bank Transfer", value: "bank_transfer" },
     { label: "Cash", value: "cash" },
-    { label: "Cheque", value: "cheque" },
-    { label: "Mobile Payment", value: "mobile_payment" },
-    { label: "Other", value: "other" },
+    // { label: "Cheque", value: "cheque" },
+    // { label: "Mobile Payment", value: "mobile_payment" },
+    { label: "Stripe", value: "stripe" },
+    // { label: "Other", value: "other" },
   ];
 
   const onSubmit = (data: AddPaymentToBillFormValues) => {
