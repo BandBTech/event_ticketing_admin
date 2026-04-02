@@ -1,47 +1,22 @@
 "use client";
 
-import React, { useCallback, useEffect } from "react";
-import type { IconProps } from "@phosphor-icons/react";
-import type { ComponentType } from "react";
-import {
-  MagnifyingGlass as MagnifyingGlassIcon,
-  Funnel as FunnelIcon,
-  CaretLeft as CaretLeftIcon,
-  CaretRight as CaretRightIcon,
-  CheckCircle as CheckCircleIcon,
-  XCircle as XCircleIcon,
-  Eye as EyeIcon,
-  Shield as ShieldIcon,
-  User as UserIcon,
-  DotsThreeVertical as DotsThreeVerticalIcon,
-  CrownIcon,
-  UsersIcon,
-  Spinner,
-  UserCircleIcon,
-} from "@phosphor-icons/react";
-import { CaretUp, CaretDown, CaretUpDown } from "@phosphor-icons/react";
-
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { flexRender } from "@tanstack/react-table";
+import React, { useState, useCallback } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { format } from "date-fns";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { UserService } from "@/services/userService";
-import { ApiResponse as UserApiResponse } from "@/types/user";
-import { queryKeys } from "@/lib/queryKeys";
-import { useTranslation } from "@/hooks/useTranslation";
-import { useLanguageStore } from "@/store/languageStore";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Funnel as FunnelIcon } from "@phosphor-icons/react";
+import { Button } from "@/components/ui/button";
+import { ApiResponse as UserApiResponse, User } from "@/types/user";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -49,37 +24,42 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { DataTable } from "@/components/ui/data-table";
-import {
-  useReactTable,
-  getCoreRowModel,
-  getFilteredRowModel,
-  ColumnDef,
-  SortingState,
-} from "@tanstack/react-table";
-import { User } from "@/types/user";
+import { Search } from "lucide-react";
+import { useTranslation } from "@/hooks/useTranslation";
+import { useLanguageStore } from "@/store/languageStore";
+import { UserService } from "@/services/userService";
 import { useDebounce } from "@/hooks/useDebounce";
-import { toast } from "@/lib/toast";
-import { log } from "console";
+import { UsersTable } from "./components/UsersTable";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
-export default function UsersPage() {
+export default function TransactionsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
 
-  const currentPage = Number(searchParams.get("page")) || 1;
-  const searchQuery = searchParams.get("search") || "";
-  const statusFilter = searchParams.get("status") || "";
-  const roleFilter = searchParams.get("role") || "";
-  const accountStatusFilter = searchParams.get("account_status") || "";
   const itemsPerPage = 10;
-  const queryClient = useQueryClient();
-  const [actionLoading, setActionLoading] = React.useState<string | null>(null);
-  const [searchInput, setSearchInput] = React.useState(searchQuery);
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [searchInput, setSearchInput] = React.useState("");
+  const [limit, setLimit] = useState(itemsPerPage);
+  const [currentPage, setCurrentPage] = useState(
+    Number(searchParams.get("page")) || 1,
+  );
+  const roleFilter = searchParams.get("role") || "";
+  const statusFilter = searchParams.get("status") || "";
+  const accountStatusFilter = searchParams.get("account_status") || "";
+
+  const [isToggleConfirmDialog, setIsToggleConfirmDialog] =
+    React.useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const debouncedSearch = useDebounce(searchInput, 500);
+  const queryClient = useQueryClient();
+  // Sorting state
+  const [sortBy, setSortBy] = useState<string | undefined>(undefined);
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | undefined>(
+    undefined,
+  );
 
   const { data: response, isLoading } = useQuery<UserApiResponse>({
     queryKey: [
@@ -90,7 +70,8 @@ export default function UsersPage() {
       statusFilter,
       roleFilter,
       accountStatusFilter,
-      sorting,
+      sortBy,
+      sortOrder,
     ],
 
     queryFn: () =>
@@ -101,11 +82,10 @@ export default function UsersPage() {
         status: statusFilter,
         role: roleFilter,
         account_status: accountStatusFilter,
-        sort: sorting.length ? sorting[0].id : undefined,
+        sort_by: sortBy,
+        sort_order: sortOrder,
       }),
   });
-
-  const SKELETON_ROWS = itemsPerPage;
 
   const mockUserData = response?.users || [];
 
@@ -121,7 +101,7 @@ export default function UsersPage() {
         admin_remark: "Status toggled by admin",
       }),
     onMutate: (employeeId) => {
-      setActionLoading(employeeId);
+      // setActionLoading(employeeId);
     },
     onSuccess: (_, employeeId) => {
       const employee = mockUserData.find((c) => c.id === employeeId);
@@ -138,9 +118,14 @@ export default function UsersPage() {
       toast.error("Failed to update user status");
     },
     onSettled: () => {
-      setActionLoading(null);
+      // setActionLoading(null);
     },
   });
+
+  // Handler functions
+  const handleToggleStatus = (user: User) => {
+    toggleStatusMutation.mutate(user.id);
+  };
 
   const updateParams = useCallback(
     (updates: Record<string, string | null>) => {
@@ -159,11 +144,6 @@ export default function UsersPage() {
     [router],
   );
 
-  // Handler functions
-  const handleToggleStatus = (user: User) => {
-    toggleStatusMutation.mutate(user.id);
-  };
-
   const handlePageChange = useCallback(
     (page: number) => {
       updateParams({ page: page.toString() });
@@ -171,631 +151,246 @@ export default function UsersPage() {
     [updateParams],
   );
 
-  useEffect(() => {
-    updateParams({ search: debouncedSearch, page: "1" });
-    updateParams({ sort: sorting[0]?.id || "", page: "1" });
-  }, [debouncedSearch, sorting, updateParams]);
-
-  // const filteredData = useMemo(() => {
-  //   let result = mockUserData;
-
-  //   if (searchQuery.trim() && !response?.users) {
-  //     const query = searchQuery.toLowerCase();
-  //     result = result.filter(
-  //       (user) =>
-  //         user.first_name?.toLowerCase().includes(query) ||
-  //         user.last_name?.toLowerCase().includes(query) ||
-  //         user.email?.toLowerCase().includes(query) ||
-  //         user.phone?.includes(query) ||
-  //         user.organizer_onboarding?.business_name
-  //           ?.toLowerCase()
-  //           .includes(query),
-  //     );
-  //   }
-
-  //   if (statusFilter && !response?.users) {
-  //     result = result.filter(
-  //       (user) =>
-  //         user.organizer_status?.toLowerCase() === statusFilter.toLowerCase(),
-  //     );
-  //   }
-
-  //   if (accountStatusFilter && !response?.users) {
-  //     result = result.filter(
-  //       (user) =>
-  //         user.account_status?.toLowerCase() ===
-  //         accountStatusFilter.toLowerCase(),
-  //     );
-  //   }
-
-  //   return result;
-  // }, [searchQuery, statusFilter, accountStatusFilter, mockUserData, response]);
-
-  // const paginatedData = mockUserData;
-
-  const ROLE_CONFIG: Record<
-    string,
-    {
-      bg: string;
-      text: string;
-      border: string;
-      Icon: ComponentType<IconProps>;
-    }
-  > = {
-    admin: {
-      bg: "bg-red-50",
-      text: "text-red-700",
-      border: "border-red-200",
-      Icon: CrownIcon,
+  const handleSortChange = useCallback(
+    (
+      newSortBy: string | undefined,
+      newSortOrder: "asc" | "desc" | undefined,
+    ) => {
+      setSortBy(newSortBy);
+      setSortOrder(newSortOrder);
+      setCurrentPage(1);
     },
-    organizer: {
-      bg: "bg-indigo-50",
-      text: "text-indigo-700",
-      border: "border-indigo-200",
-      Icon: ShieldIcon,
-    },
-    staff: {
-      bg: "bg-emerald-50",
-      text: "text-emerald-700",
-      border: "border-emerald-200",
-      Icon: UsersIcon,
-    },
-    user: {
-      bg: "bg-gray-50",
-      text: "text-gray-700",
-      border: "border-gray-200",
-      Icon: UserIcon,
-    },
-    manager: {
-      bg: "bg-amber-50",
-      text: "text-amber-700",
-      border: "border-amber-200",
-      Icon: UserCircleIcon,
-    },
-  };
+    [],
+  );
 
-  // Table columns
-  const columns: ColumnDef<User>[] = React.useMemo(
-    () => [
-      {
-        accessorFn: (row) => `${row.first_name} ${row.last_name}`,
-        id: "name",
-        header: t("users.userTable.name"),
-        enableSorting: true,
-      },
-      {
-        id: "email",
-        accessorKey: "contact",
-        header: t("users.userTable.contact"),
-        cell: ({ row }) => {
-          const { email, phone, country_code } = row.original;
+  const totalItems = response?.pagination.total ?? 0;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const hasNextPage = response?.pagination.has_next ?? currentPage < totalPages;
+  const hasPreviousPage = response?.pagination.has_prev ?? currentPage > 1;
 
-          return (
-            <div className="flex flex-col gap-0.5">
-              <span className="text-sm text-foreground">{email || "-"}</span>
+  return (
+    <div className="min-h-screen p-8 space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">
+            {t("", "User Management")}
+          </h1>
+          <p className="text-gray-500">
+            {t("", "Manage your organization's users.")}
+          </p>
+        </div>
+      </div>
 
-              <span className="text-xs text-muted-foreground">
-                {phone ? `${country_code ?? ""} ${phone}` : "-"}
-              </span>
-            </div>
-          );
-        },
-        enableSorting: true,
-      },
-      {
-        id: "role",
-        header: t("users.userTable.role"),
-        cell: ({ row }) => {
-          const roles = row.original.roles;
+      <div className="glass-card-lowest rounded-2xl flex-1 flex flex-col">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 p-4">
+          <div className="relative w-full sm:w-80">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
+            <Input
+              placeholder={t("", "Search Users")}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              className="pl-9 shadow-sm"
+            />
+          </div>
 
-          if (!roles || roles.length === 0) {
-            return (
-              <span className="text-sm text-muted-foreground">
-                {t("users.noRole")}
-              </span>
-            );
-          }
-
-          // highest priority role first
-          const ROLE_PRIORITY = [
-            "admin",
-            "organizer",
-            "staff",
-            "user",
-            "manager",
-          ];
-
-          const primaryRole =
-            roles
-              .map((r) => r.name.toLowerCase())
-              .sort(
-                (a, b) => ROLE_PRIORITY.indexOf(a) - ROLE_PRIORITY.indexOf(b),
-              )[0] ?? "user";
-
-          const config = ROLE_CONFIG[primaryRole] ?? ROLE_CONFIG.user;
-          const Icon = config.Icon;
-
-          return (
-            <div className="flex items-center gap-2">
-              <Badge
-                variant="outline"
-                className={`gap-1.5 ${config.bg} ${config.text} ${config.border}`}
-              >
-                <Icon weight="duotone" className="w-3 h-3" />
-                {t(`users.userRoles.${primaryRole}`)}
-              </Badge>
-
-              {roles.length > 1 && (
-                <span className="text-xs text-muted-foreground">
-                  +{roles.length - 1} {t("users.more")}
-                </span>
-              )}
-            </div>
-          );
-        },
-        enableSorting: false,
-      },
-      {
-        accessorKey: "account_status",
-        header: t("users.userTable.accountStatus"),
-        cell: ({ row }) => {
-          const accountStatus = row.original.account_status;
-
-          return (
-            <div className="flex items-center gap-2">
-              {accountStatus === "active" ? (
-                <div>
-                  <Badge
-                    variant="outline"
-                    className="gap-1.5 bg-green-50 text-green-700"
-                  >
-                    <CheckCircleIcon weight="duotone" className="w-3 h-3" />
-                    {t(`users.organizerStatus.${accountStatus}`)}
-                  </Badge>
-                </div>
-              ) : (
-                <div>
-                  <Badge
-                    variant="outline"
-                    className="gap-1.5 bg-red-50 text-red-700"
-                  >
-                    <XCircleIcon weight="duotone" className="w-3 h-3" />
-                    {t(`users.organizerStatus.${accountStatus}`)}
-                  </Badge>
-                </div>
-              )}
-            </div>
-          );
-        },
-        enableSorting: false,
-      },
-      {
-        id: "created_at",
-        accessorFn: (row) => new Date(row.created_at).getTime(),
-        header: t("users.userTable.joinedDate"),
-        cell: ({ row }) => {
-          const createdAt = row.original.created_at;
-          return (
-            <span className="text-sm">
-              {createdAt ? format(new Date(createdAt), "MMM dd, yyyy") : "-"}
-            </span>
-          );
-        },
-        enableSorting: true,
-      },
-      {
-        id: "actions",
-        // header: "Actions",
-        cell: ({ row }) => {
-          const user = row.original;
-
-          if (actionLoading === user.id) {
-            return (
-              <div className="h-8 w-8 flex items-center p-0">
-                <Spinner className="w-4 h-4 text-amber-900 animate-spin" />
-              </div>
-            );
-          }
-
-          return (
+          <div className="flex gap-6">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0">
-                  <span className="sr-only">Open menu</span>
-                  <DotsThreeVerticalIcon weight="duotone" className="h-4 w-4" />
+                <Button
+                  variant="outline"
+                  className="gap-2 bg-background/80 backdrop-blur-sm"
+                >
+                  <FunnelIcon weight="duotone" className="h-4 w-4" />
+                  {t("users.filterByRole")}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuItem
-                  onClick={() => {
-                    router.push(`/users/userdetail?id=${user.id}`);
-                  }}
+                  className={
+                    roleFilter === "admin" ? "bg-muted font-medium" : ""
+                  }
+                  onClick={() => updateParams({ role: "admin", page: "1" })}
                 >
-                  <div className="flex justify-start items-center bg-gray-50 text-gray-700">
-                    <EyeIcon weight="duotone" className="mr-2 h-4 w-4" />
-                    {t(`users.viewDetails`)}
-                  </div>
+                  {t("users.userRoles.admin")}
                 </DropdownMenuItem>
 
-                {!user.roles.some((r) => r.name.toLowerCase() === "admin") && (
-                  <DropdownMenuItem
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleToggleStatus(user);
-                    }}
-                  >
-                    {user.account_status === "active" ? (
-                      <div className="flex justify-start items-center bg-red-50 text-red-700">
-                        <XCircleIcon
-                          weight="duotone"
-                          className="mr-2 h-4 w-4"
-                        />
-                        {t(`users.deactivate`)}
-                      </div>
-                    ) : (
-                      <div className="flex justify-start items-center bg-green-50 text-green-700">
-                        <CheckCircleIcon
-                          weight="duotone"
-                          className="mr-2 h-4 w-4"
-                        />
-                        {t(`users.activate`)}
-                      </div>
-                    )}
-                  </DropdownMenuItem>
-                )}
-                {/* <DropdownMenuItem
-                    className="text-red-600"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDeleteClick(user);
-                    }}
-                  >
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    Delete
-                  </DropdownMenuItem> */}
+                <DropdownMenuItem
+                  className={
+                    roleFilter === "organizer" ? "bg-muted font-medium" : ""
+                  }
+                  onClick={() => updateParams({ role: "organizer", page: "1" })}
+                >
+                  {t("users.userRoles.organizer")}
+                </DropdownMenuItem>
+
+                <DropdownMenuItem
+                  className={
+                    roleFilter === "staff" ? "bg-muted font-medium" : ""
+                  }
+                  onClick={() => updateParams({ role: "staff", page: "1" })}
+                >
+                  {t("users.userRoles.staff")}
+                </DropdownMenuItem>
+
+                <DropdownMenuItem
+                  className={
+                    roleFilter === "manager" ? "bg-muted font-medium" : ""
+                  }
+                  onClick={() => updateParams({ role: "manager", page: "1" })}
+                >
+                  {t("users.userRoles.manager")}
+                </DropdownMenuItem>
+
+                <DropdownMenuItem
+                  className={
+                    roleFilter === "user" ? "bg-muted font-medium" : ""
+                  }
+                  onClick={() => updateParams({ role: "user", page: "1" })}
+                >
+                  {t("users.userRoles.user")}
+                </DropdownMenuItem>
+
+                <DropdownMenuSeparator />
+
+                <DropdownMenuItem
+                  className={`text-red-600 font-medium ${
+                    !roleFilter ? "hidden" : ""
+                  }`}
+                  onClick={() => updateParams({ role: null, page: "1" })}
+                >
+                  {t("users.clearFilters")}
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          );
-        },
-        enableSorting: false,
-        enableHiding: false,
-      },
-    ],
-    [t],
-  );
-
-  const table = useReactTable({
-    data: mockUserData,
-    columns,
-    state: {
-      sorting,
-    },
-    onSortingChange: setSorting,
-    manualSorting: true,
-    getCoreRowModel: getCoreRowModel(),
-  });
-
-  const totalItems = response?.pagination?.total || mockUserData.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const hasNextPage = response?.has_more ?? currentPage < totalPages;
-
-  const startItem =
-    mockUserData.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0;
-  const endItem = (currentPage - 1) * itemsPerPage + mockUserData.length;
-
-  return (
-    <div className="min-h-screen p-8 space-y-6">
-      <div className="flex items-center justify-between gap-4">
-        <div className="relative flex-1 max-w-md">
-          <MagnifyingGlassIcon
-            weight="duotone"
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground"
-          />
-          <Input
-            type="text"
-            placeholder={t("users.searchUsers")}
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-            className="pl-9"
-          />
-        </div>
-
-        <div className="flex gap-6">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className="gap-2 bg-background/80 backdrop-blur-sm"
-              >
-                <FunnelIcon weight="duotone" className="h-4 w-4" />
-                {t("users.filterByRole")}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem
-                className={roleFilter === "admin" ? "bg-muted font-medium" : ""}
-                onClick={() => updateParams({ role: "admin", page: "1" })}
-              >
-                {t("users.userRoles.admin")}
-              </DropdownMenuItem>
-
-              <DropdownMenuItem
-                className={
-                  roleFilter === "organizer" ? "bg-muted font-medium" : ""
-                }
-                onClick={() => updateParams({ role: "organizer", page: "1" })}
-              >
-                {t("users.userRoles.organizer")}
-              </DropdownMenuItem>
-
-              <DropdownMenuItem
-                className={roleFilter === "staff" ? "bg-muted font-medium" : ""}
-                onClick={() => updateParams({ role: "staff", page: "1" })}
-              >
-                {t("users.userRoles.staff")}
-              </DropdownMenuItem>
-
-              <DropdownMenuItem
-                className={
-                  roleFilter === "manager" ? "bg-muted font-medium" : ""
-                }
-                onClick={() => updateParams({ role: "manager", page: "1" })}
-              >
-                {t("users.userRoles.manager")}
-              </DropdownMenuItem>
-
-              <DropdownMenuItem
-                className={roleFilter === "user" ? "bg-muted font-medium" : ""}
-                onClick={() => updateParams({ role: "user", page: "1" })}
-              >
-                {t("users.userRoles.user")}
-              </DropdownMenuItem>
-
-              <DropdownMenuSeparator />
-
-              <DropdownMenuItem
-                className={`text-red-600 font-medium ${
-                  !roleFilter ? "hidden" : ""
-                }`}
-                onClick={() => updateParams({ role: null, page: "1" })}
-              >
-                {t("users.clearFilters")}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className="gap-2 bg-background/80 backdrop-blur-sm"
-              >
-                <FunnelIcon weight="duotone" className="h-4 w-4" />
-                {t("users.filterByAccountStatus")}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem
-                className={
-                  statusFilter === "active" ? "bg-muted font-medium" : ""
-                }
-                onClick={() => updateParams({ status: "active", page: "1" })}
-              >
-                {t("users.accountStatus.active")}
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className={
-                  statusFilter === "inactive" ? "bg-muted font-medium" : ""
-                }
-                onClick={() => updateParams({ status: "inactive", page: "1" })}
-              >
-                {t("users.accountStatus.inactive")}
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className={
-                  statusFilter === "suspended" ? "bg-muted font-medium" : ""
-                }
-                onClick={() => updateParams({ status: "suspended", page: "1" })}
-              >
-                {t("users.accountStatus.suspended")}
-              </DropdownMenuItem>
-
-              <DropdownMenuSeparator />
-
-              <DropdownMenuItem
-                className={`text-red-600 font-medium ${!statusFilter ? "hidden" : ""}`}
-                onClick={() => updateParams({ status: null, page: "1" })}
-              >
-                {t("users.clearFilters")}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </div>
-
-      {/* Table Container */}
-      {/* <DataTable
-        table={table}
-        columns={columns}
-        loadingMessage={t("users.loadingUsers")}
-        emptyIcon={<UserIcon className="w-8 h-8 text-gray-400" />}
-        emptyMessage={t("users.noUsersFound")}
-        showSerialNumber
-        serialNumberStart={(currentPage - 1) * itemsPerPage + 1}
-      /> */}
-
-      <div className="rounded-lg border bg-background max-h-[60vh] overflow-auto">
-        <Table>
-          <TableHeader className="sticky top-0 bg-background z-10">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {/* Serial number header */}
-                <TableHead className="w-16 text-center">SN</TableHead>
-
-                {headerGroup.headers.map((header) => (
-                  <TableHead
-                    key={header.id}
-                    className={
-                      header.column.getCanSort()
-                        ? "cursor-pointer select-none"
-                        : ""
-                    }
-                    onClick={header.column.getToggleSortingHandler()}
-                  >
-                    <div className="flex items-center gap-1">
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(header.column.columnDef.header, header.getContext())}
-
-                      {header.column.getCanSort() && (
-                        <>
-                          {header.column.getIsSorted() === "asc" && (
-                            <CaretUp weight="bold" className="w-3 h-3" />
-                          )}
-
-                          {header.column.getIsSorted() === "desc" && (
-                            <CaretDown weight="bold" className="w-3 h-3" />
-                          )}
-
-                          {!header.column.getIsSorted() && (
-                            <CaretUpDown className="w-3 h-3 text-muted-foreground" />
-                          )}
-                        </>
-                      )}
-                    </div>
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-
-          <TableBody>
-            {/* Loading */}
-            {isLoading &&
-              Array.from({ length: SKELETON_ROWS }).map((_, rowIndex) => (
-                <TableRow key={`skeleton-${rowIndex}`}>
-                  {/* SN skeleton */}
-                  <TableCell className="text-center">
-                    <Skeleton className="h-4 w-6 mx-auto" />
-                  </TableCell>
-
-                  {/* Column skeletons */}
-                  {columns.map((_, colIndex) => (
-                    <TableCell key={colIndex}>
-                      <Skeleton className="h-4 w-full max-w-[220px]" />
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))}
-
-            {/* Empty */}
-            {!isLoading && table.getRowModel().rows.length === 0 && (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length + 1}
-                  className="text-center py-10 h-[50vh]"
-                >
-                  <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                    <UserIcon className="w-8 h-8" />
-                    <span>{t("users.noUsersFound")}</span>
-                  </div>
-                </TableCell>
-              </TableRow>
-            )}
-
-            {/* Rows */}
-            {!isLoading &&
-              table.getRowModel().rows.map((row, index) => (
-                <TableRow key={row.id}>
-                  {/* Serial number */}
-                  <TableCell className="text-center text-sm text-muted-foreground">
-                    {(currentPage - 1) * itemsPerPage + index + 1}
-                  </TableCell>
-
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      className="max-w-[10vw] overflow-hidden"
-                    >
-                      <div
-                        className="truncate"
-                        title={String(cell.getValue() ?? "")}
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </div>
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-      </div>
-
-      {/* Pagination */}
-      {totalPages > 0 && !isLoading && (
-        <div className="flex items-center justify-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
-            disabled={currentPage === 1}
-            className="gap-2 bg-gray-50"
-          >
-            <CaretLeftIcon weight="bold" className="w-4 h-4" />
-            {t("pagination.previous")}
-          </Button>
-
-          <div className="flex gap-2 bg-gray-50">
-            {Array.from({ length: Math.min(totalPages, 5) }).map((_, i) => {
-              let pageNumber: number;
-
-              // Show pages around current page
-              if (totalPages <= 5) {
-                pageNumber = i + 1;
-              } else if (currentPage <= 3) {
-                pageNumber = i + 1;
-              } else if (currentPage >= totalPages - 2) {
-                pageNumber = totalPages - 4 + i;
-              } else {
-                pageNumber = currentPage - 2 + i;
-              }
-
-              return (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
                 <Button
-                  key={pageNumber}
-                  variant={currentPage === pageNumber ? "default" : "outline"}
-                  size="icon"
-                  onClick={() => handlePageChange(pageNumber)}
-                  className="w-10 h-10"
+                  variant="outline"
+                  className="gap-2 bg-background/80 backdrop-blur-sm"
                 >
-                  {pageNumber}
+                  <FunnelIcon weight="duotone" className="h-4 w-4" />
+                  {t("users.filterByAccountStatus")}
                 </Button>
-              );
-            })}
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem
+                  className={
+                    statusFilter === "active" ? "bg-muted font-medium" : ""
+                  }
+                  onClick={() => updateParams({ status: "active", page: "1" })}
+                >
+                  {t("users.accountStatus.active")}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className={
+                    statusFilter === "inactive" ? "bg-muted font-medium" : ""
+                  }
+                  onClick={() =>
+                    updateParams({ status: "inactive", page: "1" })
+                  }
+                >
+                  {t("users.accountStatus.inactive")}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className={
+                    statusFilter === "suspended" ? "bg-muted font-medium" : ""
+                  }
+                  onClick={() =>
+                    updateParams({ status: "suspended", page: "1" })
+                  }
+                >
+                  {t("users.accountStatus.suspended")}
+                </DropdownMenuItem>
+
+                <DropdownMenuSeparator />
+
+                <DropdownMenuItem
+                  className={`text-red-600 font-medium ${!statusFilter ? "hidden" : ""}`}
+                  onClick={() => updateParams({ status: null, page: "1" })}
+                >
+                  {t("users.clearFilters")}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
-
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={!hasNextPage || currentPage >= totalPages}
-            className="gap-2"
-          >
-            {t("pagination.next")}
-            <CaretRightIcon weight="bold" className="w-4 h-4" />
-          </Button>
         </div>
-      )}
 
-      {/* Results count */}
-      {mockUserData.length > 0 && !isLoading && (
-        <div className="text-center text-sm text-muted-foreground">
-          {t("pagination.showing")} {startItem}-{endItem} {t("pagination.of")}{" "}
-          {totalItems} {t("sidebar.users")}
-        </div>
-      )}
+        <UsersTable
+          users={response?.users || []}
+          isLoading={isLoading}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          total={totalItems}
+          limit={limit}
+          onLimitChange={setLimit}
+          hasNextPage={hasNextPage}
+          hasPreviousPage={hasPreviousPage}
+          onPageChange={handlePageChange}
+          sortBy={sortBy}
+          sortOrder={sortOrder}
+          onSortChange={handleSortChange}
+          handleToggleStatus={handleToggleStatus}
+          setSelectedUser={setSelectedUser}
+          setIsToggleConfirmDialog={setIsToggleConfirmDialog}
+        />
+
+        {/* Approve Refund Confirmation Dialog */}
+        <AlertDialog
+          open={isToggleConfirmDialog}
+          onOpenChange={setIsToggleConfirmDialog}
+        >
+          <AlertDialogContent className="rounded-3xl shadow-2xl border-none bg-white/95 backdrop-blur-xl data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 duration-300">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-xl font-bold text-gray-900">
+                {/* {t("", "Confirm Activate User")} */}
+                <span>
+                  Confirm{" "}
+                  {selectedUser?.account_status == "active"
+                    ? "Deactivate"
+                    : "Activate"}{" "}
+                  User
+                </span>
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-gray-500 text-base">
+                <span>
+                  Are you sure you want to{" "}
+                  <strong>
+                    {" "}
+                    {selectedUser?.account_status == "active"
+                      ? "deactivate"
+                      : "activate"}
+                  </strong>{" "}
+                  this{" "}
+                  <strong>
+                    {selectedUser?.first_name} {selectedUser?.last_name}
+                  </strong>
+                  ?
+                </span>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter className="pt-6">
+              <AlertDialogCancel
+                onClick={() =>
+                  setIsToggleConfirmDialog && setIsToggleConfirmDialog(false)
+                }
+                className="h-11 px-6 border-gray-200 hover:bg-gray-50 transition-colors"
+              >
+                {t("common.cancel", "Cancel")}
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => {
+                  toggleStatusMutation.mutate(selectedUser?.id || "");
+                }}
+                className={`h-11 px-8 active:scale-95 
+  ${selectedUser?.account_status === "active" ? "deactivate bg-destructive hover:bg-destructive/90" : "activate bg-primary"} 
+  text-white hover:opacity-90 focus:opacity-90 transition-colors`}
+              >
+                {t("common.confirm", "Confirm")}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
     </div>
   );
 }

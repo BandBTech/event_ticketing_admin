@@ -10,7 +10,8 @@ export class UserService {
     status?: string;
     role?: string;
     account_status?: string;
-    sort?: string;
+    sort_by?: string;
+    sort_order?: string;
   }): Promise<UserApiResponse> {
     const params = new URLSearchParams();
 
@@ -22,7 +23,8 @@ export class UserService {
       if (filters.role) params.append("role", filters.role);
       if (filters.account_status)
         params.append("account_status", filters.account_status);
-      if (filters.sort) params.append("sort", filters.sort);
+      if (filters.sort_by) params.append("sort_by", filters.sort_by);
+      if (filters.sort_order) params.append("sort_order", filters.sort_order);
     }
 
     const query = params.toString();
