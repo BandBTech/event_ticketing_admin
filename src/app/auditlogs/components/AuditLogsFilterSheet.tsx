@@ -24,15 +24,8 @@ import {
   AsyncCombobox,
   AsyncComboboxOption,
 } from "@/components/ui/async-combobox";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { adminService } from "@/services/adminService";
-import { BillingFilters, getDefaultFilters } from "@/types/billings";
+import { BillingFilters, getDefaultFilters } from "@/types/auditlogs";
 
 interface BillingFilterSheetProps {
   open: boolean;
@@ -58,10 +51,10 @@ export function AuditLogsFilterSheet({
     }
   }, [open, filters]);
 
-  const fetchOrganizers = useCallback(
+  const fetchUsers = useCallback(
     async (search: string): Promise<AsyncComboboxOption[]> => {
       try {
-        const response = await adminService.getAllEntities("organizers");
+        const response = await adminService.getAllEntities("users");
         if (!response || !Array.isArray(response)) return [];
 
         const filtered = search
@@ -72,7 +65,31 @@ export function AuditLogsFilterSheet({
 
         return filtered.map((org) => ({ value: org.id, label: `${org.name}` }));
       } catch (error) {
-        console.error("Failed to fetch organizers:", error);
+        console.error("Failed to fetch users:", error);
+        return [];
+      }
+    },
+    [],
+  );
+
+  const fetchEvents = useCallback(
+    async (search: string): Promise<AsyncComboboxOption[]> => {
+      try {
+        const response = await adminService.getAllEntities("events");
+        if (!response || !Array.isArray(response)) return [];
+
+        const filtered = search
+          ? response.filter((event) =>
+              event.title.toLowerCase().includes(search.toLowerCase()),
+            )
+          : response;
+
+        return filtered.map((event) => ({
+          value: event.id,
+          label: event.title,
+        }));
+      } catch (error) {
+        console.error("Failed to fetch events:", error);
         return [];
       }
     },
@@ -118,8 +135,8 @@ export function AuditLogsFilterSheet({
     let count = 0;
     if (localFilters.start_date) count++;
     if (localFilters.end_date) count++;
-    if (localFilters.organizer_id) count++;
-    if (localFilters.status !== "") count++;
+    if (localFilters.user_id) count++;
+    if (localFilters.event_id) count++;
     return count;
   }, [localFilters]);
 
@@ -163,7 +180,16 @@ export function AuditLogsFilterSheet({
                     <Calendar
                       mode="single"
                       selected={localFilters.start_date}
-                      onSelect={(date) => handleDateChange("start_date", date)}
+                      onSelect={(date) => {
+                        if (date) {
+                          const normalized = new Date(
+                            format(date, "yyyy-MM-dd"),
+                          );
+                          handleDateChange("start_date", normalized);
+                        } else {
+                          handleDateChange("start_date", undefined);
+                        }
+                      }}
                       captionLayout="dropdown"
                       fromYear={2010}
                       toYear={new Date().getFullYear()}
@@ -199,7 +225,16 @@ export function AuditLogsFilterSheet({
                     <Calendar
                       mode="single"
                       selected={localFilters.end_date}
-                      onSelect={(date) => handleDateChange("end_date", date)}
+                      onSelect={(date) => {
+                        if (date) {
+                          const normalized = new Date(
+                            format(date, "yyyy-MM-dd"),
+                          );
+                          handleDateChange("end_date", normalized);
+                        } else {
+                          handleDateChange("end_date", undefined);
+                        }
+                      }}
                       captionLayout="dropdown"
                       fromYear={2010}
                       toYear={new Date().getFullYear()}
@@ -219,101 +254,39 @@ export function AuditLogsFilterSheet({
             </p> */}
           </div>
 
-          {/* Status */}
-          <div className="space-y-2">
-            <Label>Entity Type</Label>
-            <Select
-              value={localFilters.status}
-              onValueChange={(value) =>
-                setLocalFilters((prev) => ({ ...prev, status: value }))
-              }
-            >
-              <SelectTrigger className="w-full text-sm h-9 justify-between px-3! bg-white">
-                <SelectValue
-                  placeholder="Select Entity Type"
-                  className="text-black data-[placeholder]:text-black"
-                />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="payment">Payment</SelectItem>
-                <SelectItem value="refund">Refund</SelectItem>
-                <SelectItem value="payment_config">Payment Config</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Entity */}
-          <div className="space-y-2">
-            <Label>Entity ID</Label>
-            <AsyncCombobox
-              queryKey={["filter", "entity"]}
-              value={localFilters.organizer_id ?? ""}
-              onValueChange={(val) =>
-                setLocalFilters((prev) => ({ ...prev, organizer_id: val }))
-              }
-              fetchOptions={fetchOrganizers}
-              placeholder="Select entity"
-              searchPlaceholder="Search Entity"
-              emptyText="No entity found"
-              className="w-full text-sm h-9 justify-between px-3!"
-              debounceMs={300}
-            />
-          </div>
           {/* Organizer */}
           <div className="space-y-2">
-            <Label>Actor ID</Label>
+            <Label>Initiator</Label>
             <AsyncCombobox
-              queryKey={["filter", "organizers"]}
-              value={localFilters.organizer_id ?? ""}
+              queryKey={["filter", "initiator"]}
+              value={localFilters.user_id ?? ""}
               onValueChange={(val) =>
-                setLocalFilters((prev) => ({ ...prev, organizer_id: val }))
+                setLocalFilters((prev) => ({ ...prev, user_id: val }))
               }
-              fetchOptions={fetchOrganizers}
-              placeholder="Select Actor"
-              searchPlaceholder="Search Organizers"
-              emptyText="No organizers found."
+              fetchOptions={fetchUsers}
+              placeholder="Select Initiator"
+              searchPlaceholder="Search Initiator"
+              emptyText="No initiator found."
               className="w-full text-sm h-9 justify-between px-3!"
               debounceMs={300}
             />
           </div>
-          {/* Events */}
+          {/* Event ID */}
           <div className="space-y-2">
-            <Label>Event ID</Label>
+            <Label>Event</Label>
             <AsyncCombobox
-              queryKey={["filter", "organizers"]}
-              value={localFilters.organizer_id ?? ""}
+              queryKey={["filter", "events"]}
+              value={localFilters.event_id ?? ""}
               onValueChange={(val) =>
-                setLocalFilters((prev) => ({ ...prev, organizer_id: val }))
+                setLocalFilters((prev) => ({ ...prev, event_id: val }))
               }
-              fetchOptions={fetchOrganizers}
+              fetchOptions={fetchEvents}
               placeholder="Select Event"
               searchPlaceholder="Search Events"
               emptyText="No events found."
               className="w-full text-sm h-9 justify-between px-3!"
               debounceMs={300}
             />
-          </div>
-
-          {/* Status */}
-          <div className="space-y-2">
-            <Label>Action</Label>
-            <Select
-              value={localFilters.status}
-              onValueChange={(value) =>
-                setLocalFilters((prev) => ({ ...prev, status: value }))
-              }
-            >
-              <SelectTrigger className="w-full text-sm h-9 justify-between px-3! bg-white">
-                <SelectValue
-                  placeholder="Select Action"
-                  className="text-black data-[placeholder]:text-black"
-                />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="payment_created">Payment Created</SelectItem>
-                <SelectItem value="refund_approved">Refund Approved</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
         </div>
 

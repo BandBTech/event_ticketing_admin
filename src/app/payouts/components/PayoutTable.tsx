@@ -74,6 +74,12 @@ export function PayoutTable({
   // Table columns
   const columns: ColumnDef<PayoutRequest>[] = React.useMemo(
     () => [
+            {
+        id: "request_number",
+        header: t("", "Request Number"),
+        accessorKey: "request_number",
+        meta: { sortKey: "request_number" },
+      },
       {
         id: "date",
         header: t("transactions.table.date"),
@@ -105,32 +111,6 @@ export function PayoutTable({
         ),
       },
       {
-        id: "event_status",
-        header: t("payouts.table.eventStatus"),
-        meta: { sortKey: "event_status" },
-        cell: ({ row }) => {
-          const eventStatus = row.original.event.status;
-
-          const EventStatusStyles: Record<string, string> = {
-            completed: "bg-green-100 text-green-700",
-            pending: "bg-yellow-100 text-yellow-700",
-            failed: "bg-red-100 text-red-700",
-            live: "bg-gray-200 text-gray-700",
-          };
-
-          return (
-            <span
-              className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                EventStatusStyles[eventStatus?.toLowerCase()] ||
-                "bg-gray-100 text-gray-700"
-              }`}
-            >
-              {t("payouts.eventStatus." + eventStatus)}
-            </span>
-          );
-        },
-      },
-      {
         id: "status",
         header: t("payouts.table.status"),
         meta: { sortKey: "status" },
@@ -157,15 +137,6 @@ export function PayoutTable({
               {t("transactions.transactionStatus." + status)}
             </span>
           );
-        },
-      },
-      {
-        id: "request_type",
-        header: t("payouts.table.requestType"),
-        meta: { sortKey: "request_type" },
-        cell: ({ row }) => {
-          const requestType = row.original.request_type;
-          return <span>{t("payouts.requestType." + requestType)}</span>;
         },
       },
       {

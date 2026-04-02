@@ -1,33 +1,37 @@
 import { boolean } from "zod";
 
-export type OrganizerStatus = 'inactive' | 'active' | 'pending' | 'rejected';
-export type AccountStatus = 'active' | 'inactive' | 'suspended' | 'blocked';
+export type OrganizerStatus = "inactive" | "active" | "pending" | "rejected";
+export type AccountStatus = "active" | "inactive" | "suspended" | "blocked";
+
+export interface BillingFilters {
+  user_id: string;
+  event_id: string;
+  start_date: Date | undefined;
+  end_date: Date | undefined;
+  // dateRange: {
+  //   from: Date | undefined;
+  //   to: Date | undefined;
+  // };
+}
 
 export interface Logs {
-  action: string;
-  id: string;
-  entity_type: string;
-  entity_id: string;
-  actor_id: string;
-  timestamp: string;
-  actor: {
     id: string;
-    email: string;
-    first_name: string;
-    last_name: string;
-    phone: string;
-    country_code: string;
-    is_email_verified: boolean;
-    organizer_status: OrganizerStatus;
-    account_status: AccountStatus;
-    admin_remark: string;
-    approved_at: string | null;
-    rejected_at: string | null;
-    organizer_id: string | null;
-    created_by: string | null;
+    action:string;
+    entity_type: string;
+    entity_id: string;
+    actor: {
+      id: string;
+      name: string;
+      email: string;
+    };
+    event: {
+      id: string;
+      title: string;
+      banner_image: string;
+      organizer_id: string;
+    };
+    timestamp: string;
     created_at: string;
-    updated_at: string;
-  };
 }
 
 export interface AuditLogsListResponse {
@@ -41,3 +45,11 @@ export interface AuditLogsListResponse {
   };
   logs: Logs[];
 }
+
+export const getDefaultFilters = (): BillingFilters => ({
+  user_id: "",
+  event_id: "",
+  start_date: undefined,
+  end_date: undefined,
+  // dateRange: getDefaultDateRange(),
+});
