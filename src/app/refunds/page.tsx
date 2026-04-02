@@ -28,7 +28,7 @@ import { Search } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
 import { useDebounce } from "@/hooks/useDebounce";
-import { PayoutFilterTabs } from "@/app/transactions/components/PayoutFilterTabs";
+import { TransactionScreenTabs } from "@/components/TransactionScreenTabs";
 import { RefundTable } from "./components/RefundTable";
 import { PaginationState } from "@tanstack/react-table";
 import RejectModal from "@/app/refunds/components/RejectModal";
@@ -48,7 +48,6 @@ export default function TransactionsPage() {
   const [currentPage, setCurrentPage] = useState(
     Number(searchParams.get("page")) || 1,
   );
-  const [activeTab, setActiveTab] = useState("all");
   const [status, setStatus] = useState<string>("");
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -131,10 +130,6 @@ export default function TransactionsPage() {
     [router],
   );
 
-  const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
-    setCurrentPage(1);
-  };
   const handleStatusChange = useCallback((value: string) => {
     setStatus(value);
     setPagination((prev) => ({ ...prev, pageIndex: 0 }));
@@ -208,7 +203,7 @@ export default function TransactionsPage() {
           </div>
         </div>
 
-        <PayoutFilterTabs activeTab={activeTab} onTabChange={handleTabChange} />
+        <TransactionScreenTabs />
 
         <RefundTable
           refunds={response?.refunds || []}

@@ -11,7 +11,7 @@ import { Search } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
 import { useDebounce } from "@/hooks/useDebounce";
-import { PayoutFilterTabs } from "@/app/transactions/components/PayoutFilterTabs";
+import { TransactionScreenTabs } from "@/components/TransactionScreenTabs";
 import { AuditLogsTable } from "./components/AuditLogsTable";
 import {
   BillingFilters,
@@ -31,14 +31,12 @@ export default function TransactionsPage() {
   const searchParams = useSearchParams();
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
-
   const itemsPerPage = 10;
   const [searchInput, setSearchInput] = React.useState("");
   const [limit, setLimit] = useState(itemsPerPage);
   const [currentPage, setCurrentPage] = useState(
     Number(searchParams.get("page")) || 1,
   );
-  const [activeTab, setActiveTab] = useState("all");
   const [filterSheetOpen, setFilterSheetOpen] = React.useState(false);
   const [appliedFilters, setAppliedFilters] =
     React.useState<BillingFilters>(getDefaultFilters());
@@ -71,7 +69,6 @@ export default function TransactionsPage() {
       "auditlogs",
       currentPage,
       itemsPerPage,
-      status,
       debouncedSearch,
       appliedFilters.event_id,
       appliedFilters.user_id,
@@ -109,11 +106,6 @@ export default function TransactionsPage() {
     },
     [router],
   );
-
-  const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
-    setCurrentPage(1);
-  };
 
   const handlePageChange = useCallback(
     (page: number) => {
@@ -183,7 +175,7 @@ export default function TransactionsPage() {
           </div>
         </div>
 
-        <PayoutFilterTabs activeTab={activeTab} onTabChange={handleTabChange} />
+        <TransactionScreenTabs />
 
         <AuditLogsTable
           auditlogs={response?.logs || []}

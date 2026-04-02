@@ -6,19 +6,13 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { TransactionService } from "@/services/transactionService";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  MagnifyingGlass as MagnifyingGlassIcon,
-  Funnel as FunnelIcon,
-  ArrowsLeftRight,
-  UserCircleDashedIcon,
-} from "@phosphor-icons/react";
-import { BanknoteArrowUp, CreditCard, Search, Logs } from "lucide-react";
+import { Funnel as FunnelIcon } from "@phosphor-icons/react";
+import { Search } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
 import { TransactionListResponse } from "@/types/transaction";
-import { usePathname } from "next/navigation";
 import { useDebounce } from "@/hooks/useDebounce";
-import { PayoutFilterTabs } from "@/app/transactions/components/PayoutFilterTabs";
+import { TransactionScreenTabs } from "@/components/TransactionScreenTabs";
 import { TransactionFilterSheet } from "./components/TransactionFilterSheet";
 import { TransactionFilters, getDefaultFilters } from "@/types/transaction";
 import { TransactionTable } from "./components/TransactionTable";
@@ -28,31 +22,21 @@ export default function TransactionsPage() {
   const searchParams = useSearchParams();
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
-  const pathname = usePathname();
-  const isTransactionsPage = pathname === "/transactions/";
-
   const itemsPerPage = 10;
   const statusFilter = searchParams.get("status") || "";
-  const [sorting, setSorting] = useState<{ id: string; desc: boolean }[]>([]);
   const [searchInput, setSearchInput] = React.useState("");
   const [filterSheetOpen, setFilterSheetOpen] = React.useState(false);
   const [appliedFilters, setAppliedFilters] =
     React.useState<TransactionFilters>(getDefaultFilters());
   const [limit, setLimit] = useState(itemsPerPage);
-  const [currentPage, setCurrentPage] = useState(Number(searchParams.get("page")) || 1);
-  const [activeTab, setActiveTab] = useState("all");
-
+  const [currentPage, setCurrentPage] = useState(
+    Number(searchParams.get("page")) || 1,
+  );
   const debouncedSearch = useDebounce(searchInput, 500);
-
-    // Sorting state
-    const [sortBy, setSortBy] = useState<string | undefined>(undefined);
-    const [sortOrder, setSortOrder] = useState<"asc" | "desc" | undefined>(
-      undefined,
-    );
-
-    console.log("sort by", sortBy);
-    console.log("sort order", sortOrder);
-    
+  const [sortBy, setSortBy] = useState<string | undefined>(undefined);
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | undefined>(
+    undefined,
+  );
 
   const defaultFilters = getDefaultFilters();
 
@@ -123,11 +107,6 @@ export default function TransactionsPage() {
     [router],
   );
 
-  const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
-    setCurrentPage(1);
-  };
-
   const handlePageChange = useCallback(
     (page: number) => {
       updateParams({ page: page.toString() });
@@ -135,17 +114,17 @@ export default function TransactionsPage() {
     [updateParams],
   );
 
-    const handleSortChange = useCallback(
-      (
-        newSortBy: string | undefined,
-        newSortOrder: "asc" | "desc" | undefined,
-      ) => {
-        setSortBy(newSortBy);
-        setSortOrder(newSortOrder);
-        setCurrentPage(1);
-      },
-      [],
-    );
+  const handleSortChange = useCallback(
+    (
+      newSortBy: string | undefined,
+      newSortOrder: "asc" | "desc" | undefined,
+    ) => {
+      setSortBy(newSortBy);
+      setSortOrder(newSortOrder);
+      setCurrentPage(1);
+    },
+    [],
+  );
 
   const totalItems = response?.pagination.total ?? 0;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -196,7 +175,7 @@ export default function TransactionsPage() {
           </div>
         </div>
 
-        <PayoutFilterTabs activeTab={activeTab} onTabChange={handleTabChange} />
+        <TransactionScreenTabs />
 
         <TransactionTable
           billings={response?.transactions || []}

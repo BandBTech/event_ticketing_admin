@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 export interface PayoutTab {
   value: string;
@@ -8,24 +9,26 @@ export interface PayoutTab {
   link: string;
 }
 
-interface PayoutFilterTabsProps {
-  activeTab: string;
-  onTabChange: (tab: string) => void;
-}
-
-export function PayoutFilterTabs({
-  activeTab,
-  onTabChange,
-}: PayoutFilterTabsProps) {
+export function TransactionScreenTabs() {
   const { t } = useTranslation();
   const router = useRouter();
+  const pathname = usePathname();
+  const normalizedPathname = pathname.replace(/\/$/, "");
 
   const tabs: PayoutTab[] = [
-    { value: "transactions", label: t("", "Transactions"), link: "/transactions" },
+    {
+      value: "transactions",
+      label: t("", "Transactions"),
+      link: "/transactions",
+    },
     { value: "refunds", label: t("", "Refunds"), link: "/refunds" },
     { value: "payouts", label: t("", "Payouts"), link: "/payouts" },
     { value: "audit-logs", label: t("", "Audit Logs"), link: "/auditlogs" },
-    { value: "checkout-sessions", label: t("", "Checkout Sessions"), link: "/checkoutsessions" },
+    {
+      value: "checkout-sessions",
+      label: t("", "Checkout Sessions"),
+      link: "/checkoutsessions",
+    },
   ];
 
   return (
@@ -34,9 +37,8 @@ export function PayoutFilterTabs({
         <Button
           key={tab.value}
           size="sm"
-          variant={activeTab === tab.value ? "default" : "outline"}
+          variant={normalizedPathname === tab.link ? "default" : "outline"}
           onClick={() => {
-            onTabChange(tab.value);
             router.push(tab.link);
           }}
         >

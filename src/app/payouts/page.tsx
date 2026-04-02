@@ -17,7 +17,7 @@ import { PayoutService } from "@/services/payoutService";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
 import { useDebounce } from "@/hooks/useDebounce";
-import { PayoutFilterTabs } from "@/app/transactions/components/PayoutFilterTabs";
+import { TransactionScreenTabs } from "@/components/TransactionScreenTabs";
 import { PayoutRequestsResponse, PayoutRequest } from "@/types/payout";
 import { PayoutTable } from "./components/PayoutTable";
 import { PaginationState } from "@tanstack/react-table";
@@ -29,14 +29,12 @@ export default function TransactionsPage() {
   const searchParams = useSearchParams();
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
-
   const itemsPerPage = 10;
   const [searchInput, setSearchInput] = React.useState("");
   const [limit, setLimit] = useState(itemsPerPage);
   const [currentPage, setCurrentPage] = useState(
     Number(searchParams.get("page")) || 1,
   );
-  const [activeTab, setActiveTab] = useState("all");
   const [status, setStatus] = useState<string>("");
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -47,9 +45,6 @@ export default function TransactionsPage() {
   const [selectedPayout, setSelectedPayout] = useState<PayoutRequest | null>(
     null,
   );
-
-  // const [isApproveDialogOpen, setIsApproveDialogOpen] = React.useState(false);
-
   const debouncedSearch = useDebounce(searchInput, 500);
 
   // Sorting state
@@ -97,10 +92,6 @@ export default function TransactionsPage() {
     [router],
   );
 
-  const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
-    setCurrentPage(1);
-  };
   const handleStatusChange = useCallback((value: string) => {
     setStatus(value);
     setPagination((prev) => ({ ...prev, pageIndex: 0 }));
@@ -174,7 +165,7 @@ export default function TransactionsPage() {
           </div>
         </div>
 
-        <PayoutFilterTabs activeTab={activeTab} onTabChange={handleTabChange} />
+        <TransactionScreenTabs />
 
         <PayoutTable
           payouts={response?.requests || []}
