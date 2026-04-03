@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Funnel as FunnelIcon } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
@@ -32,19 +32,19 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { UsersTable } from "./components/UsersTable";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { usePaginationSync } from "@/hooks/usePaginationSync";
 
 export default function TransactionsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
+  const pathname = usePathname();
 
-  const itemsPerPage = 10;
+  const { currentPage, limit, handlePageChange, handleLimitChange } =
+    usePaginationSync();
+
   const [searchInput, setSearchInput] = React.useState("");
-  const [limit, setLimit] = useState(itemsPerPage);
-  const [currentPage, setCurrentPage] = useState(
-    Number(searchParams.get("page")) || 1,
-  );
   const roleFilter = searchParams.get("role") || "";
   const statusFilter = searchParams.get("status") || "";
   const accountStatusFilter = searchParams.get("account_status") || "";
@@ -65,7 +65,7 @@ export default function TransactionsPage() {
     queryKey: [
       "users",
       currentPage,
-      itemsPerPage,
+      limit,
       debouncedSearch,
       statusFilter,
       roleFilter,
@@ -77,7 +77,7 @@ export default function TransactionsPage() {
     queryFn: () =>
       UserService.getUsers({
         page: currentPage,
-        limit: itemsPerPage,
+        limit: limit,
         search: debouncedSearch,
         status: statusFilter,
         role: roleFilter,
@@ -127,28 +127,17 @@ export default function TransactionsPage() {
     toggleStatusMutation.mutate(user.id);
   };
 
+  // Update URL params for filters (resets page to 1)
   const updateParams = useCallback(
     (updates: Record<string, string | null>) => {
-      const params = new URLSearchParams(window.location.search);
-
+      const params = new URLSearchParams(searchParams.toString());
       Object.entries(updates).forEach(([key, value]) => {
-        if (!value) {
-          params.delete(key);
-        } else {
-          params.set(key, value);
-        }
+        if (!value) params.delete(key);
+        else params.set(key, value);
       });
-
-      router.push(`/users?${params.toString()}`, { scroll: false });
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
     },
-    [router],
-  );
-
-  const handlePageChange = useCallback(
-    (page: number) => {
-      updateParams({ page: page.toString() });
-    },
-    [updateParams],
+    [router, pathname, searchParams],
   );
 
   const handleSortChange = useCallback(
@@ -158,13 +147,13 @@ export default function TransactionsPage() {
     ) => {
       setSortBy(newSortBy);
       setSortOrder(newSortOrder);
-      setCurrentPage(1);
+      handlePageChange(1);
     },
-    [],
+    [handlePageChange],
   );
 
   const totalItems = response?.pagination.total ?? 0;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const totalPages = Math.ceil(totalItems / limit);
   const hasNextPage = response?.pagination.has_next ?? currentPage < totalPages;
   const hasPreviousPage = response?.pagination.has_prev ?? currentPage > 1;
 
@@ -322,7 +311,7 @@ export default function TransactionsPage() {
           totalPages={totalPages}
           total={totalItems}
           limit={limit}
-          onLimitChange={setLimit}
+          onLimitChange={handleLimitChange}
           hasNextPage={hasNextPage}
           hasPreviousPage={hasPreviousPage}
           onPageChange={handlePageChange}
@@ -381,8 +370,8 @@ export default function TransactionsPage() {
                 onClick={() => {
                   toggleStatusMutation.mutate(selectedUser?.id || "");
                 }}
-                className={`h-11 px-8 active:scale-95 
-  ${selectedUser?.account_status === "active" ? "deactivate bg-destructive hover:bg-destructive/90" : "activate bg-primary"} 
+                className={`h-11 px-8 active:scale-95
+  ${selectedUser?.account_status === "active" ? "deactivate bg-destructive hover:bg-destructive/90" : "activate bg-primary"}
   text-white hover:opacity-90 focus:opacity-90 transition-colors`}
               >
                 {t("common.confirm", "Confirm")}

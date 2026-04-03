@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { RefundService } from "@/services/refundService";
 import { RefundResponse, Refund } from "@/types/refunds";
@@ -30,29 +30,24 @@ import { useLanguageStore } from "@/store/languageStore";
 import { useDebounce } from "@/hooks/useDebounce";
 import { TransactionScreenTabs } from "@/components/TransactionScreenTabs";
 import { RefundTable } from "./components/RefundTable";
-import { PaginationState } from "@tanstack/react-table";
 import RejectModal from "@/app/refunds/components/RejectModal";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { queryKeys } from "@/lib/queryKeys";
+import { usePaginationSync } from "@/hooks/usePaginationSync";
 
 export default function TransactionsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
 
-  const itemsPerPage = 10;
+  const { currentPage, limit, handlePageChange, handleLimitChange } =
+    usePaginationSync();
+
   const [searchInput, setSearchInput] = React.useState("");
-  const [limit, setLimit] = useState(itemsPerPage);
-  const [currentPage, setCurrentPage] = useState(
-    Number(searchParams.get("page")) || 1,
-  );
   const [status, setStatus] = useState<string>("");
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  });
   const [isRejectDialogOpen, setIsRejectDialogOpen] = React.useState(false);
   const [openApproveDialog, setOpenApproveDialog] = React.useState(false);
   const [openRetryDialog, setOpenRetryDialog] = React.useState(false);
@@ -71,7 +66,7 @@ export default function TransactionsPage() {
     queryKey: [
       "refunds",
       currentPage,
-      itemsPerPage,
+      limit,
       status,
       debouncedSearch,
       sortBy,
@@ -80,7 +75,7 @@ export default function TransactionsPage() {
     queryFn: () =>
       RefundService.getRefunds({
         page: currentPage,
-        limit: itemsPerPage,
+        limit: limit,
         search: debouncedSearch,
         status: status,
         sort_by: sortBy,
@@ -102,8 +97,7 @@ export default function TransactionsPage() {
   });
 
   const retryMutation = useMutation({
-    mutationFn: (data: { refundId: string }) =>
-      RefundService.retryRefund(data),
+    mutationFn: (data: { refundId: string }) => RefundService.retryRefund(data),
     onSuccess: async () => {
       // toast.success(t("", "Refund retried successfully"));
       await queryClient.invalidateQueries({
@@ -113,33 +107,12 @@ export default function TransactionsPage() {
     },
   });
 
-  const updateParams = useCallback(
-    (updates: Record<string, string | null>) => {
-      const params = new URLSearchParams(window.location.search);
-
-      Object.entries(updates).forEach(([key, value]) => {
-        if (!value) {
-          params.delete(key);
-        } else {
-          params.set(key, value);
-        }
-      });
-
-      router.push(`/refunds?${params.toString()}`, { scroll: false });
+  const handleStatusChange = useCallback(
+    (value: string) => {
+      setStatus(value);
+      handlePageChange(1);
     },
-    [router],
-  );
-
-  const handleStatusChange = useCallback((value: string) => {
-    setStatus(value);
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-  }, []);
-
-  const handlePageChange = useCallback(
-    (page: number) => {
-      updateParams({ page: page.toString() });
-    },
-    [updateParams],
+    [handlePageChange],
   );
 
   const handleSortChange = useCallback(
@@ -149,13 +122,13 @@ export default function TransactionsPage() {
     ) => {
       setSortBy(newSortBy);
       setSortOrder(newSortOrder);
-      setCurrentPage(1);
+      handlePageChange(1);
     },
-    [],
+    [handlePageChange],
   );
 
   const totalItems = response?.pagination.total ?? 0;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const totalPages = Math.ceil(totalItems / limit);
   const hasNextPage = response?.pagination.has_next ?? currentPage < totalPages;
   const hasPreviousPage = response?.pagination.has_prev ?? currentPage > 1;
 
@@ -212,7 +185,7 @@ export default function TransactionsPage() {
           totalPages={totalPages}
           total={totalItems}
           limit={limit}
-          onLimitChange={setLimit}
+          onLimitChange={handleLimitChange}
           hasNextPage={hasNextPage}
           hasPreviousPage={hasPreviousPage}
           onPageChange={handlePageChange}
@@ -274,10 +247,7 @@ export default function TransactionsPage() {
         </AlertDialog>
 
         {/* Retry Confirmation Dialog */}
-        <AlertDialog
-          open={openRetryDialog}
-          onOpenChange={setOpenRetryDialog}
-        >
+        <AlertDialog open={openRetryDialog} onOpenChange={setOpenRetryDialog}>
           <AlertDialogContent className="rounded-3xl shadow-2xl border-none bg-white/95 backdrop-blur-xl data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 duration-300">
             <AlertDialogHeader>
               <AlertDialogTitle className="text-xl font-bold text-gray-900">
@@ -292,9 +262,7 @@ export default function TransactionsPage() {
             </AlertDialogHeader>
             <AlertDialogFooter className="pt-6">
               <AlertDialogCancel
-                onClick={() =>
-                  setOpenRetryDialog && setOpenRetryDialog(false)
-                }
+                onClick={() => setOpenRetryDialog && setOpenRetryDialog(false)}
                 className="h-11 px-6 border-gray-200 hover:bg-gray-50 transition-colors"
               >
                 {t("common.cancel", "Cancel")}

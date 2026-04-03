@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Funnel as FunnelIcon } from "@phosphor-icons/react";
 import {
@@ -20,31 +20,26 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { TransactionScreenTabs } from "@/components/TransactionScreenTabs";
 import { PayoutRequestsResponse, PayoutRequest } from "@/types/payout";
 import { PayoutTable } from "./components/PayoutTable";
-import { PaginationState } from "@tanstack/react-table";
 import ApproveModal from "@/app/payouts/components/ApproveModal";
-import RejectModal from "@/app/payouts/components/RejectModal";
+import RejectModal from "@/app/refunds/components/RejectModal";
+import { usePaginationSync } from "@/hooks/usePaginationSync";
 
 export default function TransactionsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
-  const itemsPerPage = 10;
   const [searchInput, setSearchInput] = React.useState("");
-  const [limit, setLimit] = useState(itemsPerPage);
-  const [currentPage, setCurrentPage] = useState(
-    Number(searchParams.get("page")) || 1,
-  );
   const [status, setStatus] = useState<string>("");
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  });
   const [isRejectDialogOpen, setIsRejectDialogOpen] = React.useState(false);
   const [openApproveDialog, setOpenApproveDialog] = React.useState(false);
   const [selectedPayout, setSelectedPayout] = useState<PayoutRequest | null>(
     null,
   );
+
+  const { currentPage, limit, handlePageChange, handleLimitChange } =
+    usePaginationSync();
   const debouncedSearch = useDebounce(searchInput, 500);
 
   // Sorting state
@@ -57,7 +52,7 @@ export default function TransactionsPage() {
     queryKey: [
       "payouts",
       currentPage,
-      itemsPerPage,
+      limit,
       status,
       debouncedSearch,
       sortBy,
@@ -66,7 +61,7 @@ export default function TransactionsPage() {
     queryFn: () =>
       PayoutService.getPayouts({
         page: currentPage,
-        limit: itemsPerPage,
+        limit: limit,
         search: debouncedSearch,
         status: status,
         sort_by: sortBy,
@@ -75,33 +70,12 @@ export default function TransactionsPage() {
     placeholderData: (previousData) => previousData,
   });
 
-  const updateParams = useCallback(
-    (updates: Record<string, string | null>) => {
-      const params = new URLSearchParams(window.location.search);
-
-      Object.entries(updates).forEach(([key, value]) => {
-        if (!value) {
-          params.delete(key);
-        } else {
-          params.set(key, value);
-        }
-      });
-
-      router.push(`/payouts?${params.toString()}`, { scroll: false });
+  const handleStatusChange = useCallback(
+    (value: string) => {
+      setStatus(value);
+      handlePageChange(1);
     },
-    [router],
-  );
-
-  const handleStatusChange = useCallback((value: string) => {
-    setStatus(value);
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-  }, []);
-
-  const handlePageChange = useCallback(
-    (page: number) => {
-      updateParams({ page: page.toString() });
-    },
-    [updateParams],
+    [handlePageChange],
   );
 
   const handleSortChange = useCallback(
@@ -111,13 +85,13 @@ export default function TransactionsPage() {
     ) => {
       setSortBy(newSortBy);
       setSortOrder(newSortOrder);
-      setCurrentPage(1);
+      handlePageChange(1);
     },
-    [],
+    [handlePageChange],
   );
 
   const totalItems = response?.pagination.total ?? 0;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const totalPages = Math.ceil(totalItems / limit);
   const hasNextPage = response?.pagination.has_next ?? currentPage < totalPages;
   const hasPreviousPage = response?.pagination.has_prev ?? currentPage > 1;
 
@@ -174,7 +148,7 @@ export default function TransactionsPage() {
           totalPages={totalPages}
           total={totalItems}
           limit={limit}
-          onLimitChange={setLimit}
+          onLimitChange={handleLimitChange}
           hasNextPage={hasNextPage}
           hasPreviousPage={hasPreviousPage}
           onPageChange={handlePageChange}

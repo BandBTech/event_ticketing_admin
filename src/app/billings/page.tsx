@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useMemo } from "react";
 import { Funnel as FunnelIcon } from "@phosphor-icons/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,31 +33,31 @@ const BillingHistorySheet = React.lazy(() =>
   })),
 );
 
+import { usePaginationSync } from "@/hooks/usePaginationSync";
+
 export default function BillingsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
 
   const searchQuery = searchParams.get("search") || "";
-  const itemsPerPage = 10;
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [searchInput, setSearchInput] = useState(searchQuery);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isAddPaymentToBillDialogOpen, setIsAddPaymentToBillDialogOpen] =
     useState(false);
-  // const [isUpdateBillDialogOpen, setIsUpdateBillDialogOpen] = useState(false);
   const [isCancelBillDialogOpen, setIsCancelBillDialogOpen] = useState(false);
   const [filterSheetOpen, setFilterSheetOpen] = useState(false);
   const [historySheetOpen, setHistorySheetOpen] = useState(false);
   const [appliedFilters, setAppliedFilters] =
     useState<BillingFilters>(getDefaultFilters());
   const [paymentBillData, setPaymentBillData] = useState<Bill | null>(null);
-  const [currentPage, setCurrentPage] = useState(
-    Number(searchParams.get("page")) || 1,
-  );
-  const [limit, setLimit] = useState(10);
+
+  const { currentPage, limit, handlePageChange, handleLimitChange } =
+    usePaginationSync();
 
   const defaultFilters = getDefaultFilters();
 
@@ -78,22 +78,6 @@ export default function BillingsPage() {
 
   const debouncedSearch = useDebounce(searchInput, 500);
 
-  // Helper to update URL params
-  const updateParams = useCallback(
-    (updates: Record<string, string | null>) => {
-      const params = new URLSearchParams(searchParams.toString());
-      Object.entries(updates).forEach(([key, value]) => {
-        if (value === null || value === "") {
-          params.delete(key);
-        } else {
-          params.set(key, value);
-        }
-      });
-      router.push(`/billings?${params.toString()}`, { scroll: false });
-    },
-    [router, searchParams],
-  );
-
   // Sorting state
   const [sortBy, setSortBy] = useState<string | undefined>(undefined);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | undefined>(
@@ -104,7 +88,7 @@ export default function BillingsPage() {
     queryKey: [
       "bills",
       currentPage,
-      itemsPerPage,
+      limit,
       appliedFilters.status,
       appliedFilters.organizer_id,
       appliedFilters.start_date,
@@ -116,7 +100,7 @@ export default function BillingsPage() {
     queryFn: () =>
       BillingService.getAllBills({
         page: currentPage,
-        limit: itemsPerPage,
+        limit: limit,
         status: appliedFilters.status,
         organizer_id: appliedFilters.organizer_id,
         start_date: appliedFilters.start_date,
@@ -129,13 +113,6 @@ export default function BillingsPage() {
 
   const mockUserData = response?.bills || [];
 
-  const handlePageChange = useCallback(
-    (page: number) => {
-      updateParams({ page: page.toString() });
-    },
-    [updateParams],
-  );
-
   const handleSortChange = useCallback(
     (
       newSortBy: string | undefined,
@@ -143,19 +120,18 @@ export default function BillingsPage() {
     ) => {
       setSortBy(newSortBy);
       setSortOrder(newSortOrder);
-      setCurrentPage(1);
+      handlePageChange(1);
     },
-    [],
+    [handlePageChange],
   );
 
   const totalItems = response?.pagination?.total || mockUserData.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const totalPages = Math.ceil(totalItems / limit);
   const hasNextPage =
     response?.pagination?.has_next ?? currentPage < totalPages;
 
-  const startItem =
-    mockUserData.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0;
-  const endItem = (currentPage - 1) * itemsPerPage + mockUserData.length;
+  const startItem = mockUserData.length > 0 ? (currentPage - 1) * limit + 1 : 0;
+  const endItem = (currentPage - 1) * limit + mockUserData.length;
 
   return (
     <div className="min-h-screen p-8 space-y-6">
@@ -208,7 +184,7 @@ export default function BillingsPage() {
           totalPages={totalPages}
           total={totalItems}
           limit={limit}
-          onLimitChange={setLimit}
+          onLimitChange={handleLimitChange}
           hasNextPage={hasNextPage}
           hasPreviousPage={currentPage > 1}
           onPageChange={handlePageChange}
@@ -239,8 +215,6 @@ export default function BillingsPage() {
         onOpenChange={setIsUpdateBillDialogOpen}
         billData={paymentBillData}
       /> */}
-
-
 
       {/* Filter Sheet */}
       <React.Suspense fallback={null}>

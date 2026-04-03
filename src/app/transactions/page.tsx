@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { TransactionService } from "@/services/transactionService";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,22 +16,22 @@ import { TransactionScreenTabs } from "@/components/TransactionScreenTabs";
 import { TransactionFilterSheet } from "./components/TransactionFilterSheet";
 import { TransactionFilters, getDefaultFilters } from "@/types/transaction";
 import { TransactionTable } from "./components/TransactionTable";
+import { usePaginationSync } from "@/hooks/usePaginationSync";
 
 export default function TransactionsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
-  const itemsPerPage = 10;
   const statusFilter = searchParams.get("status") || "";
   const [searchInput, setSearchInput] = React.useState("");
   const [filterSheetOpen, setFilterSheetOpen] = React.useState(false);
   const [appliedFilters, setAppliedFilters] =
     React.useState<TransactionFilters>(getDefaultFilters());
-  const [limit, setLimit] = useState(itemsPerPage);
-  const [currentPage, setCurrentPage] = useState(
-    Number(searchParams.get("page")) || 1,
-  );
+
+  const { currentPage, limit, handlePageChange, handleLimitChange } =
+    usePaginationSync();
   const debouncedSearch = useDebounce(searchInput, 500);
   const [sortBy, setSortBy] = useState<string | undefined>(undefined);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | undefined>(
@@ -60,7 +60,7 @@ export default function TransactionsPage() {
     queryKey: [
       "transactions",
       currentPage,
-      itemsPerPage,
+      limit,
       statusFilter,
       appliedFilters.status,
       appliedFilters.event_id,
@@ -75,7 +75,7 @@ export default function TransactionsPage() {
     queryFn: () =>
       TransactionService.getTransactions({
         page: currentPage,
-        limit: itemsPerPage,
+        limit: limit,
         search: debouncedSearch,
         filter: statusFilter,
         status: appliedFilters.status,
@@ -90,30 +90,6 @@ export default function TransactionsPage() {
     placeholderData: (previousData) => previousData,
   });
 
-  const updateParams = useCallback(
-    (updates: Record<string, string | null>) => {
-      const params = new URLSearchParams(window.location.search);
-
-      Object.entries(updates).forEach(([key, value]) => {
-        if (!value) {
-          params.delete(key);
-        } else {
-          params.set(key, value);
-        }
-      });
-
-      router.push(`/transactions?${params.toString()}`, { scroll: false });
-    },
-    [router],
-  );
-
-  const handlePageChange = useCallback(
-    (page: number) => {
-      updateParams({ page: page.toString() });
-    },
-    [updateParams],
-  );
-
   const handleSortChange = useCallback(
     (
       newSortBy: string | undefined,
@@ -121,13 +97,13 @@ export default function TransactionsPage() {
     ) => {
       setSortBy(newSortBy);
       setSortOrder(newSortOrder);
-      setCurrentPage(1);
+      handlePageChange(1);
     },
-    [],
+    [handlePageChange],
   );
 
   const totalItems = response?.pagination.total ?? 0;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const totalPages = Math.ceil(totalItems / limit);
   const hasNextPage = response?.pagination.has_next ?? currentPage < totalPages;
   const hasPreviousPage = response?.pagination.has_prev ?? currentPage > 1;
 
@@ -184,7 +160,7 @@ export default function TransactionsPage() {
           totalPages={totalPages}
           total={totalItems}
           limit={limit}
-          onLimitChange={setLimit}
+          onLimitChange={handleLimitChange}
           hasNextPage={hasNextPage}
           hasPreviousPage={hasPreviousPage}
           onPageChange={handlePageChange}

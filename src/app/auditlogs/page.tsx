@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Funnel as FunnelIcon } from "@phosphor-icons/react";
@@ -16,8 +16,9 @@ import { AuditLogsTable } from "./components/AuditLogsTable";
 import {
   BillingFilters,
   getDefaultFilters,
-  AuditLogsListResponse
+  AuditLogsListResponse,
 } from "@/types/auditlogs";
+import { usePaginationSync } from "@/hooks/usePaginationSync";
 
 // Lazy load heavy sub-components to reduce initial bundle size
 const AuditLogsFilterSheet = React.lazy(() =>
@@ -29,17 +30,16 @@ const AuditLogsFilterSheet = React.lazy(() =>
 export default function TransactionsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
-  const itemsPerPage = 10;
   const [searchInput, setSearchInput] = React.useState("");
-  const [limit, setLimit] = useState(itemsPerPage);
-  const [currentPage, setCurrentPage] = useState(
-    Number(searchParams.get("page")) || 1,
-  );
   const [filterSheetOpen, setFilterSheetOpen] = React.useState(false);
   const [appliedFilters, setAppliedFilters] =
     React.useState<BillingFilters>(getDefaultFilters());
+
+  const { currentPage, limit, handlePageChange, handleLimitChange } =
+    usePaginationSync();
 
   const debouncedSearch = useDebounce(searchInput, 500);
 
@@ -68,7 +68,7 @@ export default function TransactionsPage() {
     queryKey: [
       "auditlogs",
       currentPage,
-      itemsPerPage,
+      limit,
       debouncedSearch,
       appliedFilters.event_id,
       appliedFilters.user_id,
@@ -80,7 +80,7 @@ export default function TransactionsPage() {
     queryFn: () =>
       AuditlogService.getAuditlogs({
         page: currentPage,
-        limit: itemsPerPage,
+        limit: limit,
         search: debouncedSearch,
         event_id: appliedFilters.event_id,
         user_id: appliedFilters.user_id,
@@ -90,30 +90,6 @@ export default function TransactionsPage() {
     placeholderData: (previousData) => previousData,
   });
 
-  const updateParams = useCallback(
-    (updates: Record<string, string | null>) => {
-      const params = new URLSearchParams(window.location.search);
-
-      Object.entries(updates).forEach(([key, value]) => {
-        if (!value) {
-          params.delete(key);
-        } else {
-          params.set(key, value);
-        }
-      });
-
-      router.push(`/auditlogs?${params.toString()}`, { scroll: false });
-    },
-    [router],
-  );
-
-  const handlePageChange = useCallback(
-    (page: number) => {
-      updateParams({ page: page.toString() });
-    },
-    [updateParams],
-  );
-
   const handleSortChange = useCallback(
     (
       newSortBy: string | undefined,
@@ -121,13 +97,13 @@ export default function TransactionsPage() {
     ) => {
       setSortBy(newSortBy);
       setSortOrder(newSortOrder);
-      setCurrentPage(1);
+      handlePageChange(1);
     },
-    [],
+    [handlePageChange],
   );
 
   const totalItems = response?.pagination.total ?? 0;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const totalPages = Math.ceil(totalItems / limit);
   const hasNextPage = response?.pagination.has_next ?? currentPage < totalPages;
   const hasPreviousPage = response?.pagination.has_prev ?? currentPage > 1;
 
@@ -184,7 +160,7 @@ export default function TransactionsPage() {
           totalPages={totalPages}
           total={totalItems}
           limit={limit}
-          onLimitChange={setLimit}
+          onLimitChange={handleLimitChange}
           hasNextPage={hasNextPage}
           hasPreviousPage={hasPreviousPage}
           onPageChange={handlePageChange}
