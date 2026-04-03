@@ -21,7 +21,7 @@ import { TransactionScreenTabs } from "@/components/TransactionScreenTabs";
 import { PayoutRequestsResponse, PayoutRequest } from "@/types/payout";
 import { PayoutTable } from "./components/PayoutTable";
 import ApproveModal from "@/app/payouts/components/ApproveModal";
-import RejectModal from "@/app/refunds/components/RejectModal";
+import RejectModal from "@/app/payouts/components/RejectModal";
 import { usePaginationSync } from "@/hooks/usePaginationSync";
 
 export default function TransactionsPage() {
