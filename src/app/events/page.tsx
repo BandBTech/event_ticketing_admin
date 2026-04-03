@@ -16,6 +16,7 @@ import { queryKeys } from "@/lib/queryKeys";
 import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useDebounce } from "@/hooks/useDebounce";
+import TablePagination from "@/components/TablePagination";
 import {
   OrganizerService,
   AllOrganizers,
@@ -62,8 +63,9 @@ export default function EventsPage() {
   const searchQuery = searchParams.get("search") || "";
   const statusFilter = searchParams.get("status") || "all";
   const organizerId = searchParams.get("organizer_id") || "";
-  const itemsPerPage = 12;
+  const itemsPerPage = 10;
   const [searchInput, setSearchInput] = React.useState(searchQuery);
+  const [limit, setLimit] = React.useState(itemsPerPage);
 
   const debouncedSearch = useDebounce(searchInput, 500);
 
@@ -188,6 +190,13 @@ export default function EventsPage() {
     startIndex + itemsPerPage,
   );
 
+
+  const totalItems = response?.pagination.total ?? 0;
+  // const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const hasNextPage = response?.pagination.has_next;
+  const hasPreviousPage = response?.pagination.has_prev;
+  
+
   if (isError) {
     return (
       <div className="min-h-screen bg-linear-to-br from-gray-50 via-blue-50 to-purple-50 flex items-center justify-center">
@@ -276,60 +285,20 @@ export default function EventsPage() {
         )}
       </div>
 
-      {/* Pagination */}
-      {!isLoading && totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2 mt-8">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
-            disabled={currentPage === 1}
-            className="gap-1"
-          >
-            <CaretLeftIcon weight="bold" className="w-4 h-4" />
-            {t("pagination.previous")}
-          </Button>
-
-          <div className="flex gap-1">
-            {Array.from({ length: Math.min(totalPages, 5) }).map((_, i) => {
-              const pageNumber = i + 1;
-              return (
-                <Button
-                  key={pageNumber}
-                  variant={currentPage === pageNumber ? "default" : "outline"}
-                  size="icon"
-                  onClick={() => handlePageChange(pageNumber)}
-                  className="w-10 h-10"
-                >
-                  {pageNumber}
-                </Button>
-              );
-            })}
-          </div>
-
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() =>
-              handlePageChange(Math.min(totalPages, currentPage + 1))
-            }
-            disabled={currentPage === totalPages}
-            className="gap-1"
-          >
-            {t("pagination.next")}
-            <CaretRightIcon weight="bold" className="w-4 h-4" />
-          </Button>
-        </div>
-      )}
-
-      {/* Results Summary */}
-      {!isLoading && filteredEvents.length > 0 && (
-        <div className="text-center text-sm text-muted-foreground mt-4">
-          {t("pagination.showing")} {startIndex + 1}-
-          {Math.min(startIndex + itemsPerPage, filteredEvents.length)}{" "}
-          {t("pagination.of")} {filteredEvents.length} {t("pagination.events")}
-        </div>
-      )}
+          {!isLoading && totalItems > 1 && (
+            <div className="border-t border-gray-100 bg-gray-50/30 rounded-b-2xl mt-auto">
+              <TablePagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                total={totalItems}
+                limit={limit}
+                onLimitChange={setLimit}
+                hasNext={hasNextPage}
+                hasPrev={hasPreviousPage}
+                onPageChange={handlePageChange}
+              />
+            </div>
+          )}
     </div>
   );
 }
