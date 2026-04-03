@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useRef, useEffect } from "react";
 import {
   UserIcon,
   LockKeyIcon,
@@ -79,13 +79,37 @@ export default function SettingsLayout({
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
   useSidebarResponsive();
+  const headerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const updateHeight = () => {
+      if (headerRef.current) {
+        const height = headerRef.current.offsetHeight;
+        document.documentElement.style.setProperty(
+          "--header-height",
+          `${height}px`,
+        );
+      }
+    };
+    updateHeight();
+    window.addEventListener("resize", updateHeight);
+    const observer = new ResizeObserver(updateHeight);
+    if (headerRef.current) observer.observe(headerRef.current);
+    return () => {
+      window.removeEventListener("resize", updateHeight);
+      observer.disconnect();
+    };
+  }, []);
 
   return (
     <ProtectedRoute>
       <div className=" flex h-screen overflow-hidden bg-gray-50/50">
         <AppSidebar />
         <div className="flex flex-1 flex-col">
-          <header className="flex h-16 shrink-0 items-center gap-4 border-b bg-white px-6">
+          <header
+            ref={headerRef}
+            className="flex h-16 shrink-0 items-center gap-4 border-b bg-white px-6"
+          >
             <Suspense fallback={<div className="flex-1" />}>
               <DashboardHeader />
             </Suspense>
