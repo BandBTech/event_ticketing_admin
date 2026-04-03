@@ -1,17 +1,23 @@
 "use client";
 
-import { useState } from "react";
 import { ElementType } from "react";
 import { formatCurrency } from "@/lib/utils";
-import { AdminDashboardData, AdminDashboardResponse } from "@/types/dashboard";
-import { ClockIcon, CalendarCheckIcon, UsersIcon } from "@phosphor-icons/react";
+import { AdminDashboardData } from "@/types/dashboard";
+import {
+  ClockIcon,
+  CalendarCheckIcon,
+  UsersIcon,
+  TicketIcon,
+  ArrowsClockwiseIcon,
+  CurrencyDollarIcon,
+} from "@phosphor-icons/react";
 import { useLanguageStore } from "@/store/languageStore";
 
 type DashboardPageProps = {
   data: AdminDashboardData;
 };
 
-// ── Top Stat Card (matches screenshot style) ──────────────────────────────────
+// ── Top Stat Card ─────────────────────────────────────────────────────────────
 function TopStatCard({
   icon: Icon,
   value,
@@ -78,7 +84,6 @@ function RevenueRow({
   color: string;
 }) {
   const { locale } = useLanguageStore();
-
   return (
     <div className="flex items-center gap-4 py-2">
       <span className="text-sm text-gray-500 w-44 flex-shrink-0">{label}</span>
@@ -95,17 +100,80 @@ function RevenueRow({
   );
 }
 
+// ── Status Grid (reusable) ────────────────────────────────────────────────────
+function StatusGrid({
+  items,
+}: {
+  items: {
+    label: string;
+    value: number | undefined;
+    bg: string;
+    text: string;
+  }[];
+}) {
+  return (
+    <div className="px-6 py-5 grid grid-cols-2 sm:grid-cols-4 gap-3">
+      {items.map((s) => (
+        <div
+          key={s.label}
+          className={`rounded-xl px-2 py-3 text-center ${s.bg}`}
+        >
+          <div className={`text-2xl font-bold leading-none ${s.text}`}>
+            {s.value ?? 0}
+          </div>
+          <div
+            className={`text-[11px] font-semibold mt-1.5 ${s.text} opacity-75`}
+          >
+            {s.label}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 // ── Main Page ─────────────────────────────────────────────────────────────────
 export default function DashboardPage({ data }: DashboardPageProps) {
   const { locale } = useLanguageStore();
-  const successfulEvents = data?.events?.completed ?? 0;
 
   return (
-    <main className="flex-1 overflow-y-auto  space-y-5">
-      <div className="grid grid-cols-3 gap-5">
+    <main className="flex-1 overflow-y-auto space-y-5">
+      {/* ── Row 6: Users ── */}
+      <SectionCard title="Users">
+        <StatusGrid
+          items={[
+            {
+              label: "Total Users",
+              value: data?.users.total,
+              bg: "bg-gray-100",
+              text: "text-gray-700",
+            },
+            {
+              label: "Active Users",
+              value: data?.users.active,
+              bg: "bg-green-50",
+              text: "text-green-700",
+            },
+            {
+              label: "Inactive Users",
+              value: data?.users.inactive,
+              bg: "bg-yellow-50",
+              text: "text-yellow-700",
+            },
+            {
+              label: "Suspended Users",
+              value: data?.users.suspended,
+              bg: "bg-red-50",
+              text: "text-red-600",
+            },
+          ]}
+        />
+      </SectionCard>
+      {/* ── Row 1: Top KPI cards ── */}
+      {/* <div className="grid grid-cols-3 gap-5">
         <TopStatCard
           icon={CalendarCheckIcon}
-          value={successfulEvents}
+          value={data?.events.completed ?? 0}
           label="Successful Events"
           iconBg="bg-green-50"
           iconColor="text-green-500"
@@ -124,9 +192,10 @@ export default function DashboardPage({ data }: DashboardPageProps) {
           iconBg="bg-blue-50"
           iconColor="text-blue-500"
         />
-      </div>
+      </div> */}
 
-      <div className="grid grid-cols-4 gap-4">
+      {/* ── Row 2: Summary mini-cards ── */}
+      {/* <div className="grid grid-cols-4 gap-4">
         {[
           {
             label: "Total Users",
@@ -150,9 +219,13 @@ export default function DashboardPage({ data }: DashboardPageProps) {
             border: "border-emerald-100",
           },
           {
-            label: "Total Revenue",
-            value: formatCurrency(data?.revenue.total_revenue ?? 0, undefined, locale),
-            sub: `${formatCurrency(data?.revenue.organizer_earnings ?? 0, undefined, locale)} to organizers`,
+            label: "Gross Revenue",
+            value: formatCurrency(
+              data?.revenue.gross_revenue ?? 0,
+              undefined,
+              locale,
+            ),
+            sub: `${formatCurrency(data?.revenue.gross_organizer_earnings ?? 0, undefined, locale)} to organizers`,
             color: "text-orange-600",
             border: "border-orange-100",
           },
@@ -168,68 +241,81 @@ export default function DashboardPage({ data }: DashboardPageProps) {
             <div className="text-xs text-gray-400 mt-0.5">{s.sub}</div>
           </div>
         ))}
-      </div>
+      </div> */}
 
+      {/* ── Row 3: Revenue + Events ── */}
       <div className="grid grid-cols-2 gap-5">
         {/* Revenue Overview */}
         <SectionCard title="Revenue Overview">
           <div className="px-6 pt-2 pb-4 divide-y divide-gray-50">
             <RevenueRow
-              label="Total Revenue"
-              value={data?.revenue.total_revenue ?? 0}
+              label="Gross Revenue"
+              value={data?.revenue.gross_revenue ?? 0}
               pct={100}
               color="#3b82f6"
             />
             <RevenueRow
-              label="Organizer Earnings"
-              value={data?.revenue.organizer_earnings ?? 0}
+              label="Net Revenue"
+              value={data?.revenue.net_revenue ?? 0}
               pct={Math.round(
-                ((data?.revenue.organizer_earnings ?? 0) /
-                  (data?.revenue.total_revenue ?? 0)) *
+                ((data?.revenue.net_revenue ?? 0) /
+                  (data?.revenue.gross_revenue ?? 1)) *
+                  100,
+              )}
+              color="#6366f1"
+            />
+            <RevenueRow
+              label="Organizer Earnings"
+              value={data?.revenue.gross_organizer_earnings ?? 0}
+              pct={Math.round(
+                ((data?.revenue.gross_organizer_earnings ?? 0) /
+                  (data?.revenue.gross_revenue ?? 1)) *
                   100,
               )}
               color="#10b981"
             />
             <RevenueRow
               label="Platform Commission"
-              value={data?.revenue.total_commission ?? 0}
+              value={data?.revenue.gross_commission ?? 0}
               pct={Math.round(
-                ((data?.revenue.total_commission ?? 0) /
-                  (data?.revenue.total_revenue ?? 0)) *
+                ((data?.revenue.gross_commission ?? 0) /
+                  (data?.revenue.gross_revenue ?? 1)) *
                   100,
               )}
               color="#f59e0b"
             />
           </div>
 
-          <div className="mx-6 mb-4 flex justify-between gap-3 bg-gray-50 rounded-xl p-4">
+          {/* Net split */}
+          {/* <div className="mx-6 mb-3 grid grid-cols-2 gap-3 bg-gray-50 rounded-xl p-4">
             {[
               {
-                label: "Amount Due",
-                value: data?.payment_bills.total_due,
-                color: "text-red-500",
+                label: "Net Organizer Earnings",
+                value: data?.revenue.net_organizer_earnings ?? 0,
+                color: "text-emerald-600",
               },
               {
-                label: "Paid Out",
-                value: data?.payment_bills.total_paid_out,
-                color: "text-blue-500",
+                label: "Net Commission",
+                value: data?.revenue.net_commission ?? 0,
+                color: "text-amber-600",
               },
             ].map((b) => (
               <div key={b.label} className="text-center">
                 <div className={`text-lg font-bold ${b.color}`}>
-                  {formatCurrency(b.value ?? 0, undefined, locale)}
+                  {formatCurrency(b.value, undefined, locale)}
                 </div>
                 <div className="text-[11px] text-gray-400 mt-0.5">
                   {b.label}
                 </div>
               </div>
             ))}
-          </div>
+          </div> */}
         </SectionCard>
 
+        {/* Event Status Overview */}
         <SectionCard title="Event Status Overview">
-          <div className="px-6 py-5 grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {[
+          <StatusGrid
+            items={[
               {
                 label: "Total",
                 value: data?.events.total,
@@ -266,12 +352,6 @@ export default function DashboardPage({ data }: DashboardPageProps) {
                 bg: "bg-red-50",
                 text: "text-red-600",
               },
-              // {
-              //   label: "Draft",
-              //   value: data?.events.draft,
-              //   bg: "bg-slate-50",
-              //   text: "text-slate-500",
-              // },
               {
                 label: "Live",
                 value: data?.events.live,
@@ -284,18 +364,283 @@ export default function DashboardPage({ data }: DashboardPageProps) {
                 bg: "bg-red-50",
                 text: "text-red-700",
               },
-            ].map((s) => (
-              <div
-                key={s.label}
-                className={`rounded-xl px-2 py-3 text-center ${s.bg}`}
-              >
-                <div className={`text-2xl font-bold leading-none ${s.text}`}>
-                  {s.value}
-                </div>
+            ]}
+          />
+        </SectionCard>
+      </div>
+
+      {/* ── Row 4: Organizers + Tickets + Transactions ── */}
+      <div className="grid grid-cols-3 gap-5">
+        {/* Organizers */}
+        <SectionCard title="Organizers">
+          <StatusGrid
+            items={[
+              {
+                label: "Total",
+                value: data?.organizers.total,
+                bg: "bg-gray-100",
+                text: "text-gray-700",
+              },
+              {
+                label: "Approved",
+                value: data?.organizers.approved,
+                bg: "bg-green-50",
+                text: "text-green-700",
+              },
+              {
+                label: "Pending",
+                value: data?.organizers.pending,
+                bg: "bg-yellow-50",
+                text: "text-yellow-700",
+              },
+              {
+                label: "Rejected",
+                value: data?.organizers.rejected,
+                bg: "bg-red-50",
+                text: "text-red-700",
+              },
+            ]}
+          />
+        </SectionCard>
+
+        {/* Tickets */}
+        <SectionCard title="Tickets">
+          <StatusGrid
+            items={[
+              {
+                label: "Total Sold",
+                value: data?.tickets.total_sold,
+                bg: "bg-violet-50",
+                text: "text-violet-700",
+              },
+              {
+                label: "Active",
+                value: data?.tickets.active,
+                bg: "bg-blue-50",
+                text: "text-blue-700",
+              },
+              {
+                label: "Cancelled",
+                value: data?.tickets.cancelled,
+                bg: "bg-red-50",
+                text: "text-red-600",
+              },
+              {
+                label: "Used",
+                value: data?.tickets.used,
+                bg: "bg-gray-100",
+                text: "text-gray-600",
+              },
+            ]}
+          />
+        </SectionCard>
+
+        {/* Transactions */}
+        <SectionCard title="Transactions">
+          <StatusGrid
+            items={[
+              {
+                label: "Total",
+                value: data?.transactions.total,
+                bg: "bg-gray-100",
+                text: "text-gray-700",
+              },
+              {
+                label: "Completed",
+                value: data?.transactions.completed,
+                bg: "bg-emerald-50",
+                text: "text-emerald-700",
+              },
+              {
+                label: "Pending",
+                value: data?.transactions.pending,
+                bg: "bg-yellow-50",
+                text: "text-yellow-700",
+              },
+              {
+                label: "Failed",
+                value: data?.transactions.failed,
+                bg: "bg-red-50",
+                text: "text-red-600",
+              },
+            ]}
+          />
+        </SectionCard>
+      </div>
+
+      {/* ── Row 5: Payout Requests + Payment Bills + Refunds ── */}
+      <div className="grid grid-cols-3 gap-5">
+        {/* Payout Requests */}
+        <SectionCard
+          title="Payout Requests"
+          badge={
+            <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+              {formatCurrency(
+                data?.payout_requests.total_amount ?? 0,
+                undefined,
+                locale,
+              )}
+            </span>
+          }
+        >
+          <StatusGrid
+            items={[
+              {
+                label: "Total",
+                value: data?.payout_requests.total,
+                bg: "bg-gray-100",
+                text: "text-gray-700",
+              },
+              {
+                label: "Approved",
+                value: data?.payout_requests.approved,
+                bg: "bg-green-50",
+                text: "text-green-700",
+              },
+              {
+                label: "Pending",
+                value: data?.payout_requests.pending,
+                bg: "bg-yellow-50",
+                text: "text-yellow-700",
+              },
+              {
+                label: "Paid",
+                value: data?.payout_requests.paid,
+                bg: "bg-blue-50",
+                text: "text-blue-700",
+              },
+              {
+                label: "Rejected",
+                value: data?.payout_requests.rejected,
+                bg: "bg-red-50",
+                text: "text-red-600",
+              },
+              {
+                label: "Cancelled",
+                value: data?.payout_requests.cancelled,
+                bg: "bg-gray-50",
+                text: "text-gray-500",
+              },
+            ]}
+          />
+        </SectionCard>
+
+        {/* Payment Bills */}
+        <SectionCard title="Payment Bills">
+          <div className="px-6 py-5 space-y-3">
+            {/* Bills status counts */}
+            <div className="grid grid-cols-3 gap-3">
+              {[
+                {
+                  label: "Total Bills",
+                  value: data?.payment_bills.total,
+                  bg: "bg-gray-100",
+                  text: "text-gray-700",
+                },
+                {
+                  label: "Paid",
+                  value: data?.payment_bills.paid,
+                  bg: "bg-green-50",
+                  text: "text-green-700",
+                },
+                {
+                  label: "Pending",
+                  value: data?.payment_bills.pending,
+                  bg: "bg-yellow-50",
+                  text: "text-yellow-700",
+                },
+              ].map((s) => (
                 <div
-                  className={`text-[11px] font-semibold mt-1.5 ${s.text} opacity-75`}
+                  key={s.label}
+                  className={`rounded-xl px-2 py-3 text-center ${s.bg}`}
                 >
-                  {s.label}
+                  <div className={`text-2xl font-bold leading-none ${s.text}`}>
+                    {s.value ?? 0}
+                  </div>
+                  <div
+                    className={`text-[11px] font-semibold mt-1.5 ${s.text} opacity-75`}
+                  >
+                    {s.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+            {/* Amount breakdown */}
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                {
+                  label: "Amount Due",
+                  value: data?.payment_bills.total_due,
+                  color: "text-red-500",
+                  bg: "bg-red-50",
+                },
+                {
+                  label: "Paid Out",
+                  value: data?.payment_bills.total_paid_out,
+                  color: "text-blue-500",
+                  bg: "bg-blue-50",
+                },
+              ].map((b) => (
+                <div
+                  key={b.label}
+                  className={`rounded-xl p-3 text-center ${b.bg}`}
+                >
+                  <div className={`text-base font-bold ${b.color}`}>
+                    {formatCurrency(b.value ?? 0, undefined, locale)}
+                  </div>
+                  <div className="text-[11px] text-gray-400 mt-0.5">
+                    {b.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </SectionCard>
+
+        {/* Refunds */}
+        <SectionCard title="Refunds">
+          <StatusGrid
+            items={[
+              {
+                label: "Completed",
+                value: data?.refunds.completed,
+                bg: "bg-green-50",
+                text: "text-green-700",
+              },
+              {
+                label: "Pending",
+                value: data?.refunds.pending,
+                bg: "bg-yellow-50",
+                text: "text-yellow-700",
+              },
+            ]}
+          />
+
+          {/* Refunds */}
+          <div className="mx-6 mb-3 grid grid-cols-3 gap-3 bg-red-50 rounded-xl p-4">
+            {[
+              {
+                label: "Total Refunds",
+                value: data?.revenue.total_refunds ?? 0,
+                color: "text-red-500",
+              },
+              {
+                label: "Organizer Refunds",
+                value: data?.revenue.organizer_refunds ?? 0,
+                color: "text-orange-500",
+              },
+              {
+                label: "Commission Refunds",
+                value: data?.revenue.commission_refunds ?? 0,
+                color: "text-amber-500",
+              },
+            ].map((b) => (
+              <div key={b.label} className="text-center">
+                <div className={`text-lg font-bold ${b.color}`}>
+                  {formatCurrency(b.value, undefined, locale)}
+                </div>
+                <div className="text-[11px] text-gray-400 mt-0.5">
+                  {b.label}
                 </div>
               </div>
             ))}
