@@ -2,109 +2,12 @@
 
 import { formatCurrency } from "@/lib/utils";
 import { useLanguageStore } from "@/store/languageStore";
-import { ReportResponse } from "@/types/reports";
+import { ReportPageProps } from "@/types/reports";
+import {MetricCard} from "@/app/reports/components/CardComponents"
+import {SectionCard} from "@/app/reports/components/CardComponents"
+import {RevenueBar} from "@/app/reports/components/CardComponents"
+import {StatRow} from "@/app/reports/components/CardComponents"
 
-type ReportPageProps = {
-  data: ReportResponse | undefined;
-};
-
-// ── Helpers ───────────────────────────────────────────────────────────────────
-function MetricCard({
-  label,
-  value,
-  sub,
-  valueColor,
-}: {
-  label: string;
-  value: string | number;
-  sub?: string;
-  valueColor?: string;
-}) {
-  return (
-    <div className="bg-gray-50 rounded-xl p-4">
-      <div className="text-xs text-gray-400 mb-1.5">{label}</div>
-      <div
-        className={`text-2xl font-semibold ${valueColor ?? "text-gray-800"}`}
-      >
-        {value}
-      </div>
-      {sub && <div className="text-[11px] text-gray-400 mt-1">{sub}</div>}
-    </div>
-  );
-}
-
-function SectionCard({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-      <div className="px-5 py-3 border-b border-gray-50">
-        <h2 className="text-sm font-semibold text-gray-500 tracking-wide uppercase">
-          {title}
-        </h2>
-      </div>
-      <div className="p-5">{children}</div>
-    </div>
-  );
-}
-
-function RevenueBar({
-  label,
-  pct,
-  color,
-}: {
-  label: string;
-  pct: number;
-  color: string;
-}) {
-  return (
-    <div className="flex items-center gap-3 mb-3">
-      <span className="text-sm text-gray-500 w-24 text-right flex-shrink-0">
-        {label}
-      </span>
-      <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-        <div
-          className="h-full rounded-full"
-          style={{ width: `${pct}%`, background: color }}
-        />
-      </div>
-      <span className="text-sm font-medium text-gray-700 w-8 flex-shrink-0">
-        {pct}%
-      </span>
-    </div>
-  );
-}
-
-function StatRow({
-  label,
-  value,
-  badge,
-}: {
-  label: string;
-  value: string | number;
-  badge?: { bg: string; text: string };
-}) {
-  return (
-    <div className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
-      <span className="text-sm text-gray-500">{label}</span>
-      {badge ? (
-        <span
-          className={`text-xs font-semibold px-2.5 py-0.5 rounded-lg ${badge.bg} ${badge.text}`}
-        >
-          {value}
-        </span>
-      ) : (
-        <span className="text-sm font-semibold text-gray-700">{value}</span>
-      )}
-    </div>
-  );
-}
-
-// ── Main Page ─────────────────────────────────────────────────────────────────
 export default function ReportPage({ data }: ReportPageProps) {
   const { locale } = useLanguageStore();
   const m = data?.summary_metrics;
@@ -173,7 +76,7 @@ export default function ReportPage({ data }: ReportPageProps) {
           <RevenueBar label="Commission" pct={commissionPct} color="#f59e0b" />
 
           <div className="mt-5 pt-4 border-t border-gray-50">
-            <p className="text-xs font-semibold text-gray-400 uppercase mb-3">
+            <p className="text-xs font-semibold text-gray-700 uppercase mb-3">
               Transactions
             </p>
             <StatRow

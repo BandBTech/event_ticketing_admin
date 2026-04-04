@@ -84,7 +84,7 @@ type EventsStatistics = {
 
 // sales type interface 
 
-type DailySale = {
+export type DailySale = {
   date: string;
   revenue: number;
   tickets_sold: number;
@@ -99,6 +99,8 @@ type PaymentGateway = {
   percentage_of_total: number;
   status: string;
 };
+
+export type ChartTab = "revenue" | "tickets" | "aov";
 
 // type SummaryMetrics = {
 //   total_revenue: number;
@@ -119,10 +121,6 @@ type SalesReportData = {
   summary_metrics: SummaryMetrics;
   daily_sales: DailySale[];
   sales_by_payment_gateway: PaymentGateway[];
-};
-
-type SalesReportProps = {
-  data: SalesReportData;
 };
 
 // customer analytics type interface
@@ -150,4 +148,16 @@ type CustomerAnalyticsData = {
   average_order_value: number;
   customer_segments: CustomerSegment[];
   customer_retention: CustomerRetention;
+};
+
+export type ReportPageProps = {
+  data: ReportResponse | undefined;
+};
+
+export type SalesReportProps = {
+  data: ReportResponse | undefined;
+};
+
+export type CustomerAnalyticsProps = {
+  data: ReportResponse | undefined;
 };
