@@ -10,16 +10,35 @@ export interface ReportResponse {
   overview: Overview;
   summary_metrics: SummaryMetrics;
   events_statistics: EventsStatistics;
-  sales_by_payment_gateway: PaymentGateway[]
+  sales_by_payment_gateway: PaymentGateway[];
   daily_sales: DailySale[] | undefined;
   customer_retention: CustomerRetention;
   customer_segments: CustomerSegment[];
+  revenue_breakdown: RevenueBreakdownItem[];
+  currency_breakdown: CurrencyBreakdownItem[];
+  commission_history: CommissionHistoryItem[];
   repeat_customers: number;
   total_customers: number;
   registered_users: number;
   guest_purchases: number;
   average_order_value: number;
-  
+  total_gross_revenue: number;
+  status: string;
+  event_id: string;
+  event_title: string;
+  banner_image: string;
+  start_date: string;
+  end_date: string;
+  capacity: number;
+  tickets_sold: number;
+  sold_percentage: number;
+  revenue: number;
+  commission: number;
+  organizer_earnings: number;
+  average_ticket_price: number;
+  total_transactions: number;
+  top_tier: TierPerformance | null;
+  tier_performance: TierPerformance[];
 }
 
 export interface Overview {
@@ -67,6 +86,13 @@ type SummaryMetrics = {
   failed_transactions: number;
   average_order_value: number;
   conversion_rate: number;
+  total_gross_revenue: number;
+  net_revenue: number;
+  total_refunds: number;
+  total_organizer_share: number;
+  pending_payouts: number;
+  completed_payouts: number;
+  average_ticket_price: number;
 };
 
 type EventsStatistics = {
@@ -81,8 +107,7 @@ type EventsStatistics = {
   cancelled_events: number;
 };
 
-
-// sales type interface 
+// sales type interface
 
 export type DailySale = {
   date: string;
@@ -150,6 +175,90 @@ type CustomerAnalyticsData = {
   customer_retention: CustomerRetention;
 };
 
+// Financial Type Interface
+type FinancialSummaryMetrics = {
+  total_gross_revenue: number;
+  total_commission: number;
+  total_organizer_share: number;
+  total_refunds: number;
+  net_revenue: number;
+  pending_payouts: number;
+  completed_payouts: number;
+  average_ticket_price: number;
+  total_transactions: number;
+};
+
+type RevenueBreakdownItem = {
+  event_id: string;
+  event_title: string;
+  gross_revenue: number;
+  commission: number;
+  organizer_share: number;
+  refunds: number;
+  net_revenue: number;
+  transaction_count: number;
+};
+
+type CommissionHistoryItem = {
+  transaction_id: string;
+  event_id: string;
+  event_title: string;
+  revenue: number;
+  commission_rate: number;
+  commission_amount: number;
+  created_at: string;
+};
+
+type CurrencyBreakdownItem = {
+  currency: string;
+  gross_revenue: number;
+  commission: number;
+  organizer_share: number;
+  transaction_count: number;
+  percentage_of_total: number;
+};
+
+type RevenueReportData = {
+  summary_metrics: FinancialSummaryMetrics;
+  revenue_breakdown: RevenueBreakdownItem[];
+  commission_history: CommissionHistoryItem[];
+  payout_history: null | unknown[];
+  currency_breakdown: CurrencyBreakdownItem[];
+};
+
+type TierPerformance = {
+  tier_id: string;
+  tier_name: string;
+  ticket_price: number;
+  ticket_capacity: number;
+  tickets_sold: number;
+  sold_percentage: number;
+  revenue: number;
+};
+
+type EventPerformanceData = {
+  event_id: string;
+  event_title: string;
+  banner_image: string;
+  status: string;
+  start_date: string;
+  end_date: string;
+  capacity: number;
+  tickets_sold: number;
+  sold_percentage: number;
+  revenue: number;
+  commission: number;
+  organizer_earnings: number;
+  average_ticket_price: number;
+  total_transactions: number;
+  top_tier: TierPerformance | null;
+  tier_performance: TierPerformance[];
+};
+
+export type RevenueReportProps = {
+  data: ReportResponse | undefined;
+};
+
 export type ReportPageProps = {
   data: ReportResponse | undefined;
 };
@@ -159,5 +268,9 @@ export type SalesReportProps = {
 };
 
 export type CustomerAnalyticsProps = {
+  data: ReportResponse | undefined;
+};
+
+export type EventPerformanceProps = {
   data: ReportResponse | undefined;
 };

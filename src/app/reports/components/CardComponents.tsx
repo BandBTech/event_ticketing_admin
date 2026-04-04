@@ -1,9 +1,7 @@
 import { formatCurrency } from "@/lib/utils";
 import { useLanguageStore } from "@/store/languageStore";
 import {
-  ReportResponse,
   DailySale,
-  SalesReportProps,
   ChartTab,
 } from "@/types/reports";
 
@@ -32,7 +30,7 @@ export function MetricCard({
   valueColor?: string;
 }) {
   return (
-    <div className="bg-white rounded-xl p-4">
+    <div className="bg-white rounded-2xl p-4">
       <div className="text-xs text-gray-700 mb-1.5">{label}</div>
       <div
         className={`text-2xl font-semibold ${valueColor ?? "text-gray-800"}`}
