@@ -262,14 +262,14 @@ export default function UpcomingEventsList({ data }: UpcomingEventsListProps) {
   return (
     <div className="p-6 min-h-screen">
       {/* Header */}
-      <div className="flex items-center justify-between mb-5">
-        <div>
-          <h2 className="text-lg font-bold text-gray-800">Upcoming Events</h2>
-          <p className="text-xs text-gray-400 mt-0.5">
-            {EVENTS.length} events scheduled
-          </p>
+        <div className="flex items-center justify-between mb-5">
+          <div>
+            <h2 className="text-lg font-bold text-gray-800">Upcoming Events</h2>
+            <p className="text-xs text-gray-400 mt-0.5">
+              {EVENTS.length} events scheduled
+            </p>
+          </div>
         </div>
-      </div>
 
       {/* 2-column grid */}
       <div className="grid grid-cols-2 gap-4">

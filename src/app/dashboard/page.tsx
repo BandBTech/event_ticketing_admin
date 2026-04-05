@@ -96,7 +96,9 @@ const AdminDashboard: React.FC = () => {
     <div className="min-h-[80vh] bg-linear-to-br from-gray-50 via-blue-50 to-purple-50">
       <div className="p-6 rounded-lg shadow-sm grid gap-6">
         <DashboardStats data={data} />
-        <UpcomingEventsList data={data.upcoming_events_list} />
+        {data.upcoming_events_list.length > 0 && (
+          <UpcomingEventsList data={data.upcoming_events_list} />
+        )}
       </div>
     </div>
   );

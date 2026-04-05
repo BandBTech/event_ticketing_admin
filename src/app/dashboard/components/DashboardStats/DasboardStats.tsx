@@ -103,7 +103,9 @@ function RevenueRow({
 // ── Status Grid (reusable) ────────────────────────────────────────────────────
 function StatusGrid({
   items,
+  classname,
 }: {
+  classname?: string;
   items: {
     label: string;
     value: number | undefined;
@@ -112,7 +114,9 @@ function StatusGrid({
   }[];
 }) {
   return (
-    <div className="px-6 py-5 grid grid-cols-2 sm:grid-cols-4 gap-3">
+    <div
+      className={`px-6 py-5 gap-3 ${classname ? `${classname}` : "grid grid-cols-2 sm:grid-cols-4"}`}
+    >
       {items.map((s) => (
         <div
           key={s.label}
@@ -138,7 +142,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
 
   return (
     <main className="flex-1 overflow-y-auto space-y-5">
-      {/* ── Row 6: Users ── */}
+      {/* ── Row 1: Users ── */}
       <SectionCard title="Users">
         <StatusGrid
           items={[
@@ -169,81 +173,8 @@ export default function DashboardPage({ data }: DashboardPageProps) {
           ]}
         />
       </SectionCard>
-      {/* ── Row 1: Top KPI cards ── */}
-      {/* <div className="grid grid-cols-3 gap-5">
-        <TopStatCard
-          icon={CalendarCheckIcon}
-          value={data?.events.completed ?? 0}
-          label="Successful Events"
-          iconBg="bg-green-50"
-          iconColor="text-green-500"
-        />
-        <TopStatCard
-          icon={ClockIcon}
-          value={data?.events.pending ?? 0}
-          label="Pending Approval"
-          iconBg="bg-yellow-50"
-          iconColor="text-yellow-500"
-        />
-        <TopStatCard
-          icon={UsersIcon}
-          value={data?.organizers.total ?? 0}
-          label="Organizers"
-          iconBg="bg-blue-50"
-          iconColor="text-blue-500"
-        />
-      </div> */}
 
-      {/* ── Row 2: Summary mini-cards ── */}
-      {/* <div className="grid grid-cols-4 gap-4">
-        {[
-          {
-            label: "Total Users",
-            value: data?.users.total,
-            sub: `${data?.users.active} active`,
-            color: "text-blue-600",
-            border: "border-blue-100",
-          },
-          {
-            label: "Tickets Sold",
-            value: data?.tickets.total_sold,
-            sub: `${data?.tickets.active} active`,
-            color: "text-violet-600",
-            border: "border-violet-100",
-          },
-          {
-            label: "Transactions",
-            value: data?.transactions.total,
-            sub: `${data?.transactions.completed} completed`,
-            color: "text-emerald-600",
-            border: "border-emerald-100",
-          },
-          {
-            label: "Gross Revenue",
-            value: formatCurrency(
-              data?.revenue.gross_revenue ?? 0,
-              undefined,
-              locale,
-            ),
-            sub: `${formatCurrency(data?.revenue.gross_organizer_earnings ?? 0, undefined, locale)} to organizers`,
-            color: "text-orange-600",
-            border: "border-orange-100",
-          },
-        ].map((s) => (
-          <div
-            key={s.label}
-            className={`bg-white rounded-2xl border ${s.border} p-4 shadow-sm`}
-          >
-            <div className={`text-2xl font-bold ${s.color}`}>{s.value}</div>
-            <div className="text-sm font-semibold text-gray-600 mt-1">
-              {s.label}
-            </div>
-            <div className="text-xs text-gray-400 mt-0.5">{s.sub}</div>
-          </div>
-        ))}
-      </div> */}
-
-      {/* ── Row 3: Revenue + Events ── */}
+      {/* ── Row 2: Revenue + Events ── */}
       <div className="grid grid-cols-2 gap-5">
         {/* Revenue Overview */}
         <SectionCard title="Revenue Overview">
@@ -285,31 +216,6 @@ export default function DashboardPage({ data }: DashboardPageProps) {
               color="#f59e0b"
             />
           </div>
-
-          {/* Net split */}
-          {/* <div className="mx-6 mb-3 grid grid-cols-2 gap-3 bg-gray-50 rounded-xl p-4">
-            {[
-              {
-                label: "Net Organizer Earnings",
-                value: data?.revenue.net_organizer_earnings ?? 0,
-                color: "text-emerald-600",
-              },
-              {
-                label: "Net Commission",
-                value: data?.revenue.net_commission ?? 0,
-                color: "text-amber-600",
-              },
-            ].map((b) => (
-              <div key={b.label} className="text-center">
-                <div className={`text-lg font-bold ${b.color}`}>
-                  {formatCurrency(b.value, undefined, locale)}
-                </div>
-                <div className="text-[11px] text-gray-400 mt-0.5">
-                  {b.label}
-                </div>
-              </div>
-            ))}
-          </div> */}
         </SectionCard>
 
         {/* Event Status Overview */}
@@ -369,11 +275,12 @@ export default function DashboardPage({ data }: DashboardPageProps) {
         </SectionCard>
       </div>
 
-      {/* ── Row 4: Organizers + Tickets + Transactions ── */}
+      {/* ── Row 3: Organizers + Tickets + Transactions ── */}
       <div className="grid grid-cols-3 gap-5">
         {/* Organizers */}
         <SectionCard title="Organizers">
           <StatusGrid
+            classname="grid grid-cols-2 md:grid-cols-4"
             items={[
               {
                 label: "Total",
@@ -406,6 +313,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
         {/* Tickets */}
         <SectionCard title="Tickets">
           <StatusGrid
+            classname="grid grid-cols-2 md:grid-cols-4"
             items={[
               {
                 label: "Total Sold",
@@ -438,6 +346,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
         {/* Transactions */}
         <SectionCard title="Transactions">
           <StatusGrid
+            classname="grid grid-cols-2 md:grid-cols-4"
             items={[
               {
                 label: "Total",
@@ -468,7 +377,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
         </SectionCard>
       </div>
 
-      {/* ── Row 5: Payout Requests + Payment Bills + Refunds ── */}
+      {/* ── Row 4: Payout Requests + Payment Bills + Refunds ── */}
       <div className="grid grid-cols-3 gap-5">
         {/* Payout Requests */}
         <SectionCard
@@ -484,6 +393,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
           }
         >
           <StatusGrid
+            classname="grid grid-cols-2 sm:grid-cols-3"
             items={[
               {
                 label: "Total",
@@ -529,7 +439,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
         <SectionCard title="Payment Bills">
           <div className="px-6 py-5 space-y-3">
             {/* Bills status counts */}
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid gap-3 grid-cols-2 sm:grid-cols-3">
               {[
                 {
                   label: "Total Bills",
@@ -566,7 +476,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
               ))}
             </div>
             {/* Amount breakdown */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {[
                 {
                   label: "Amount Due",
@@ -600,6 +510,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
         {/* Refunds */}
         <SectionCard title="Refunds">
           <StatusGrid
+            classname="grid grid-cols-2"
             items={[
               {
                 label: "Completed",
@@ -617,7 +528,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
           />
 
           {/* Refunds */}
-          <div className="mx-6 mb-3 grid grid-cols-3 gap-3 bg-red-50 rounded-xl p-4">
+          <div className="mx-6 mb-3 grid sm:grid-cols-2 md:grid-cols-3 grid-cols-1 gap-3 bg-red-50 rounded-xl p-4">
             {[
               {
                 label: "Total Refunds",
