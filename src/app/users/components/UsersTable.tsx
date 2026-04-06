@@ -127,12 +127,12 @@ export function UsersTable({
             {row.original.first_name || "-"} {row.original.last_name || "-"}
           </span>
         ),
-        meta: { sortKey: "user_name" },
+        meta: { sortKey: "name" },
       },
       {
         id: "email",
         header: t("users.userTable.contact"),
-        meta: { sortKey: "contact" },
+        meta: { sortKey: "email" },
         cell: ({ row }) => {
           const { email, phone, country_code } = row.original;
 
