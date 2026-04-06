@@ -29,3 +29,34 @@ export interface Refund {
   created_at: string;
   updated_at: string;
 }
+
+export interface RefundData {
+  id: string;
+  refund_number: string;
+  transaction: Transaction;
+  initiated_by: User;
+  amount: number;
+  currency: string;
+  reason: string;
+  refund_type: "customer_request" | string;
+  status: "pending" | "completed" | "failed" | string;
+  affected_ticket_ids: string[];
+  ticket_count: number;
+  requested_at: string; // ISO date
+  created_at: string;   // ISO date
+  updated_at: string;   // ISO date
+}
+
+interface Transaction {
+  id: string;
+  amount: number;
+  gateway: "stripe" | string;
+  status: "completed" | "pending" | "failed" | string;
+  created_at: string; // ISO date
+}
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}

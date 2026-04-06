@@ -130,7 +130,7 @@ export const queryKeys = {
     /** Key for all refunds (used for invalidation) */
     list: ["refunds"] as const,
     /** Key for fetching a single refund by ID */
-    detail: (id: string) => ["refund", id] as const,
+    detail: (id: string | undefined) => ["refund", id] as const,
   },
 
   /**

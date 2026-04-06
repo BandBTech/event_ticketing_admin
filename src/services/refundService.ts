@@ -1,6 +1,6 @@
 import { api } from "../lib/apiClient";
 import { API_ENDPOINTS } from "@/app/config/api";
-import { RefundResponse } from "@/types/refunds";
+import { RefundResponse, RefundData } from "@/types/refunds";
 
 export class RefundService {
   /**
@@ -54,6 +54,20 @@ export class RefundService {
     return result;
   }
 
+  static async getRefundbyId(refundId: string | undefined): Promise<RefundData> {
+    const params = new URLSearchParams();
+    const query = params.toString();
+
+    const result = await api.get<RefundData>(
+      `${API_ENDPOINTS.GET_ALL_REFUNDS}/${refundId}`,
+      {
+        requiresAuth: true,
+      },
+    );
+
+    return result;
+  }
+
   static async rejectRefund(payload: {
     refundId: string;
     additionalProp1: string;
@@ -62,6 +76,9 @@ export class RefundService {
       API_ENDPOINTS.REJECT_REFUND(payload.refundId),
       {
         additionalProp1: payload.additionalProp1,
+      },
+      {
+        requiresAuth: true,
       },
     );
   }
@@ -72,7 +89,9 @@ export class RefundService {
     return await api.post<RefundResponse>(
       API_ENDPOINTS.APPROVE_REFUND(payload.refundId),
       {},
-
+      {
+        requiresAuth: true,
+      },
     );
   }
 
@@ -82,6 +101,9 @@ export class RefundService {
     return await api.post<RefundResponse>(
       API_ENDPOINTS.RETRY_REFUND(payload.refundId),
       {},
+      {
+        requiresAuth: true,
+      },
     );
   }
 }
