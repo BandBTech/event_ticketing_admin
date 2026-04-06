@@ -16,7 +16,6 @@ import { queryKeys } from "@/lib/queryKeys";
 import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useDebounce } from "@/hooks/useDebounce";
-import TablePagination from "@/components/TablePagination";
 import {
   OrganizerService,
   AllOrganizers,
@@ -63,9 +62,8 @@ export default function EventsPage() {
   const searchQuery = searchParams.get("search") || "";
   const statusFilter = searchParams.get("status") || "all";
   const organizerId = searchParams.get("organizer_id") || "";
-  const itemsPerPage = 10;
+  const itemsPerPage = 12;
   const [searchInput, setSearchInput] = React.useState(searchQuery);
-  const [limit, setLimit] = React.useState(itemsPerPage);
 
   const debouncedSearch = useDebounce(searchInput, 500);
 
@@ -156,6 +154,7 @@ export default function EventsPage() {
       limit: itemsPerPage,
       status: statusFilter !== "all" ? statusFilter : undefined,
       organizerId: organizerId || undefined,
+      page: currentPage,
     }),
     queryFn: () =>
       EventService.getAdminEvents({
@@ -163,39 +162,19 @@ export default function EventsPage() {
           statusFilter && statusFilter !== "all" ? statusFilter : undefined,
         organizer_id: organizerId || undefined,
         limit: itemsPerPage,
+        page: currentPage,
         sort: "-created_at",
       }),
   });
 
-  // Client-side search filtering
-  const filteredEvents = useMemo(() => {
-    const events = response?.events || [];
-    if (!searchQuery.trim()) return events;
+  const filteredEvents = response?.events || [];
 
-    const query = searchQuery.toLowerCase();
-    return events.filter(
-      (event) =>
-        event.title?.toLowerCase().includes(query) ||
-        event.description?.toLowerCase().includes(query) ||
-        event.venue_name?.toLowerCase().includes(query) ||
-        event.address?.toLowerCase().includes(query),
-    );
-  }, [response?.events, searchQuery]);
-
-  // Pagination
-  const totalPages = Math.ceil(filteredEvents.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentEvents = filteredEvents.slice(
-    startIndex,
-    startIndex + itemsPerPage,
-  );
-
-
+  const paginationInfo = response?.pagination;
   const totalItems = response?.pagination.total ?? 0;
-  // const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const totalPages =
+    paginationInfo?.total_pages || Math.ceil(totalItems / itemsPerPage) || 1;
   const hasNextPage = response?.pagination.has_next;
   const hasPreviousPage = response?.pagination.has_prev;
-  
 
   if (isError) {
     return (
@@ -276,29 +255,67 @@ export default function EventsPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {isLoading ? (
           Array.from({ length: 8 }).map((_, i) => <EventCardSkeleton key={i} />)
-        ) : currentEvents.length === 0 ? (
+        ) : filteredEvents.length === 0 ? (
           <EmptyState searchQuery={searchQuery} />
         ) : (
-          currentEvents.map((event) => (
+          filteredEvents.map((event) => (
             <EventCard key={event.id} event={event} />
           ))
         )}
       </div>
 
-          {!isLoading && totalItems > 1 && (
-            <div className="border-t border-gray-100 bg-gray-50/30 rounded-b-2xl mt-auto">
-              <TablePagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                total={totalItems}
-                limit={limit}
-                onLimitChange={setLimit}
-                hasNext={hasNextPage}
-                hasPrev={hasPreviousPage}
-                onPageChange={handlePageChange}
-              />
-            </div>
-          )}
+      {!isLoading && totalPages > 1 && (
+        <div className="flex items-center justify-center gap-2 mt-10 mb-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+            disabled={currentPage === 1}
+            className="gap-2"
+          >
+            <CaretLeftIcon weight="bold" className="w-4 h-4" />
+            {t("pagination.previous")}
+          </Button>
+
+          <div className="flex gap-2">
+            {Array.from({ length: Math.min(totalPages, 5) }).map((_, i) => {
+              const pageNumber = i + 1;
+              return (
+                <Button
+                  key={pageNumber}
+                  variant={currentPage === pageNumber ? "default" : "outline"}
+                  size="icon"
+                  onClick={() => handlePageChange(pageNumber)}
+                  className="w-10 h-10"
+                >
+                  {pageNumber}
+                </Button>
+              );
+            })}
+          </div>
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() =>
+              handlePageChange(Math.min(totalPages, currentPage + 1))
+            }
+            disabled={currentPage === totalPages}
+            className="gap-2"
+          >
+            {t("pagination.next")}
+            <CaretRightIcon weight="bold" className="w-4 h-4" />
+          </Button>
+        </div>
+      )}
+
+      {!isLoading && filteredEvents.length > 0 && (
+        <div className="text-center text-sm text-muted-foreground">
+          {t("pagination.showing")} {(currentPage - 1) * itemsPerPage + 1}-
+          {Math.min(currentPage * itemsPerPage, totalItems)}{" "}
+          {t("pagination.of")} {totalItems} {t("", "Events")}
+        </div>
+      )}
     </div>
   );
 }
