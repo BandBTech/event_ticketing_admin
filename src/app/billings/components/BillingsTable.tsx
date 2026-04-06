@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React from "react";
 import {
   Eye as EyeIcon,
   FilePlus as FilePlusIcon,
   DotsThreeVertical as DotsThreeVerticalIcon,
   InfoIcon,
   XCircleIcon,
-  HardDrivesIcon 
+  HardDrivesIcon,
 } from "@phosphor-icons/react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useRouter } from "next/navigation";
@@ -43,8 +43,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-
-interface PayoutTableProps {
+interface BillingsTableProps {
   billings: Bill[];
   isLoading: boolean;
   currentPage: number;
@@ -91,7 +90,7 @@ export function BillingTable({
   setIsAddPaymentToBillDialogOpen,
   setIsCancelBillDialogOpen,
   setHistorySheetOpen,
-}: PayoutTableProps) {
+}: BillingsTableProps) {
   const { t } = useTranslation();
   const router = useRouter();
   const { locale } = useLanguageStore();
@@ -108,7 +107,6 @@ export function BillingTable({
     },
   });
 
-
   // Table columns
   const columns: ColumnDef<Bill>[] = React.useMemo(
     () => [
@@ -119,7 +117,7 @@ export function BillingTable({
         meta: { sortKey: "created_at" },
         cell: ({ row }) => {
           const date = new Date(row.original.created_at);
-          const formattedDate = date.toLocaleDateString("en-CA"); // YYYY-MM-DD format
+          const formattedDate = date.toLocaleDateString("en-CA");
           return <span>{formattedDate}</span>;
         },
       },
@@ -157,11 +155,26 @@ export function BillingTable({
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>
-                    Total Amount: {formatCurrency(row.original.billed_amount, undefined, locale)}
+                    Total Amount:{" "}
+                    {formatCurrency(
+                      row.original.billed_amount,
+                      undefined,
+                      locale,
+                    )}
                     <br />
-                    Paid Amount: {formatCurrency(row.original.paid_amount, undefined, locale)}
+                    Paid Amount:{" "}
+                    {formatCurrency(
+                      row.original.paid_amount,
+                      undefined,
+                      locale,
+                    )}
                     <br />
-                    Remaining Amount: {formatCurrency(row.original.remaining_amount, undefined, locale)}
+                    Remaining Amount:{" "}
+                    {formatCurrency(
+                      row.original.remaining_amount,
+                      undefined,
+                      locale,
+                    )}
                   </p>
                 </TooltipContent>
               </Tooltip>
@@ -240,20 +253,23 @@ export function BillingTable({
                     </div>
                   </DropdownMenuItem>
                 )}
-                <DropdownMenuItem
-                  onClick={() => {
-                    setPaymentBillData(bills);
-                    setHistorySheetOpen(true);
-                  }}
-                >
-                  <div className="flex justify-start items-center bg-gray-50 text-gray-700">
-                    <HardDrivesIcon 
-                      weight="duotone"
-                      className="mr-2 h-4 w-4"
-                    />
-                    View Payment History
-                  </div>
-                </DropdownMenuItem>
+                {(bills.status === "paid" ||
+                  bills.status === "partially_paid") && (
+                    <DropdownMenuItem
+                      onClick={() => {
+                        setPaymentBillData(bills);
+                        setHistorySheetOpen(true);
+                      }}
+                    >
+                      <div className="flex justify-start items-center bg-gray-50 text-gray-700">
+                        <HardDrivesIcon
+                          weight="duotone"
+                          className="mr-2 h-4 w-4"
+                        />
+                        View Payment History
+                      </div>
+                    </DropdownMenuItem>
+                  )}
                 {bills.status === "pending" && (
                   <DropdownMenuItem
                     onClick={() => {

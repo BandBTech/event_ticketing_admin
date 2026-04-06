@@ -11,18 +11,11 @@ import { useLanguageStore } from "@/store/languageStore";
 import { useQuery } from "@tanstack/react-query";
 import { BillingService } from "@/services/billingService";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  PaymentHistoryData,
-  BillingHistorySheetProps,
-  PaymentHistory,
-} from "@/types/billings";
+import { PaymentHistory, BillingHistorySheetProps } from "@/types/billings";
+import { formatCurrency } from "@/lib/utils";
 
 function formatDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
+  return new Date(dateStr).toLocaleDateString("en-CA");
 }
 
 const ListItemSkeleton = () => {
@@ -75,7 +68,7 @@ export function BillingHistorySheet({
     data: billHistoryData,
     isLoading,
     isError,
-  } = useQuery<PaymentHistoryData[]>({
+  } = useQuery<PaymentHistory[]>({
     queryKey: ["billHistory", billsId],
     queryFn: () => BillingService.getBillHistory(billsId),
     enabled: open,
@@ -120,14 +113,14 @@ export function BillingHistorySheet({
         ) : (
           <div className="flex-1 overflow-y-auto space-y-2 py-2 px-1">
             <div className="mx-1 mt-3 mb-1 rounded-xl bg-white border border-gray-100 px-4 py-3 flex items-center justify-between shadow-sm">
-              <div className="flex items-center gap-2 text-sm text-gray-500">
+              <div className="flex items-center gap-2 text-sm text-black">
                 <Receipt className="h-4 w-4" />
                 <span>{totalTransactions} transactions</span>
               </div>
               <div className="text-sm font-semibold text-gray-800">
                 Total:{" "}
                 <span className="text-indigo-600">
-                  ${totalAmount?.toLocaleString()}
+                  {formatCurrency(totalAmount, undefined, locale)}
                 </span>
               </div>
             </div>
@@ -149,16 +142,17 @@ export function BillingHistorySheet({
                     {/* Top row: amount + method */}
                     <div className="flex items-center justify-between">
                       <span className="text-lg font-bold text-gray-800">
-                        ${item.amount?.toLocaleString()}
+                        {/* ${item.amount?.toLocaleString()} */}
+                        {formatCurrency(item.amount, undefined, locale)}
                       </span>
                       <PaymentMethodBadge method={item.payment_method} />
                     </div>
 
                     {/* Middle: dates */}
-                    <div className="flex items-center justify-between text-xs text-gray-500">
+                    <div className="flex items-center justify-between text-xs text-black">
                       <span>
                         Payment date:{" "}
-                        <span className="font-medium text-gray-700">
+                        <span className="font-semibold text-black">
                           {formatDate(item.payment_date)}
                         </span>
                       </span>
@@ -177,18 +171,18 @@ export function BillingHistorySheet({
                     </div>
 
                     {/* Bottom: processed by */}
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-black">
                       Processed by:{" "}
-                      <span className="font-medium text-gray-700">
+                      <span className="font-semibold text-black">
                         {item.processed_by}
                       </span>
                     </div>
 
                     {/* Notes */}
                     {item.notes && (
-                      <div className="text-xs text-gray-500 overflow-hidden text-ellipsis whitespace-nowrap">
+                      <div className="text-xs text-black overflow-hidden text-ellipsis whitespace-nowrap">
                         Notes:{" "}
-                        <span className="font-medium text-gray-700">
+                        <span className="font-semibold text-black">
                           {item.notes}
                         </span>
                       </div>

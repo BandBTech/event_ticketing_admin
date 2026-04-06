@@ -18,30 +18,10 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
 import { Badge } from "@/components/ui/badge";
 import { useSearchParams } from "next/navigation";
-import { PaymentHistoryData } from "@/types/billings";
+import { PaymentHistory } from "@/types/billings";
 import { cn } from "@/lib/utils";
-import { formatCurrency } from "@/lib/utils";
-
-const fmt = (n: number) =>
-  new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(
-    n,
-  );
-
-const fmtDate = (d: string | null) => {
-  if (!d) return "N/A";
-
-  const date = new Date(d);
-
-  if (isNaN(date.getTime())) return "N/A";
-
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-};
+import { formatCurrency, formatDateTimeLong } from "@/lib/utils";
+import { BillHistoryTable } from "@/app/billings/components/BillHistoryTable";
 
 type StatusKey = "Paid" | "Partial" | "Unpaid" | "Overdue" | string;
 type PriorityKey = "High" | "Medium" | "Low" | string;
@@ -158,13 +138,13 @@ export default function BillDetail() {
     enabled: !!billId,
   });
 
-  const [billHistory, setBillHistory] = useState<PaymentHistoryData[]>([]);
+  const [billHistory, setBillHistory] = useState<PaymentHistory[]>([]);
   const [expanded, setExpanded] = React.useState<
     "event" | "organizer" | "admin" | null
   >(null);
 
   const { data: billHistoryData, isLoading: isBillHistoryLoading } = useQuery<
-    PaymentHistoryData[]
+    PaymentHistory[]
   >({
     queryKey: [...queryKeys.users.detail(billId), "history"],
     queryFn: () => BillingService.getBillHistory(billId),
@@ -368,15 +348,18 @@ export default function BillDetail() {
               </SectionTitle>
               <InfoRow
                 label={t("billings.detailPage.billedDate", "Billed Date")}
-                value={fmtDate(billData?.bill_date ?? "N/A")}
+                // value={fmtDate(billData?.bill_date ?? "N/A")}
+                value={formatDateTimeLong(billData?.bill_date, locale) || "N/A"}
               />
               <InfoRow
                 label={t("billings.detailPage.createdDate", "Created Date")}
-                value={fmtDate(billData?.created_at ?? "N/A")}
+                value={
+                  formatDateTimeLong(billData?.created_at, locale) || "N/A"
+                }
               />
               <InfoRow
                 label={t("billings.detailPage.paidDate", "Paid Date")}
-                value={fmtDate(billData?.paid_date ?? "N/A")}
+                value={formatDateTimeLong(billData?.paid_date, locale) || "N/A"}
               />
             </div>
             <div>
@@ -400,13 +383,21 @@ export default function BillDetail() {
               /> */}
               <InfoRow
                 label={t("billings.detailPage.billedAmount", "Billed Amount")}
-                value={formatCurrency(billData?.billed_amount ?? 0, undefined, locale)}
+                value={formatCurrency(
+                  billData?.billed_amount ?? 0,
+                  undefined,
+                  locale,
+                )}
               />
               <InfoRow
                 label={t("billings.detailPage.paidAmount", "Paid Amount")}
                 value={
                   <span className="text-emerald-600">
-                    {formatCurrency(billData?.paid_amount ?? 0, undefined, locale)}
+                    {formatCurrency(
+                      billData?.paid_amount ?? 0,
+                      undefined,
+                      locale,
+                    )}
                   </span>
                 }
               />
@@ -414,7 +405,11 @@ export default function BillDetail() {
                 label={t("billings.detailPage.remaining", "Remaining")}
                 value={
                   <span className="text-rose-500">
-                    {formatCurrency(billData?.remaining_amount ?? 0, undefined, locale)}
+                    {formatCurrency(
+                      billData?.remaining_amount ?? 0,
+                      undefined,
+                      locale,
+                    )}
                   </span>
                 }
               />
@@ -431,90 +426,22 @@ export default function BillDetail() {
                   "Bill Payment History",
                 )}
               </SectionTitle>
-              <div className="rounded-md border overflow-hidden">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="bg-muted/50 border-b">
-                      <th className="text-left text-[10px] text-muted-foreground uppercase tracking-wide font-medium px-4 py-3 w-8">
-                        SN
-                      </th>
-                      {/* <th className="text-left text-[10px] text-muted-foreground uppercase tracking-wide font-medium px-4 py-3">
-                        {t("billings.billHistory.reference", "Reference")}
-                      </th> */}
-                      <th className="text-left text-[10px] text-muted-foreground uppercase tracking-wide font-medium px-4 py-3">
-                        {t("billings.billHistory.amount", "Amount")}
-                      </th>
-                      <th className="text-left text-[10px] text-muted-foreground uppercase tracking-wide font-medium px-4 py-3">
-                        {t("billings.billHistory.method", "Method")}
-                      </th>
-                      <th className="text-left text-[10px] text-muted-foreground uppercase tracking-wide font-medium px-4 py-3">
-                        {t("billings.billHistory.date", "Date")}
-                      </th>
-                      <th className="text-left text-[10px] text-muted-foreground uppercase tracking-wide font-medium px-4 py-3">
-                        {t("billings.billHistory.processedBy", "Processed By")}
-                      </th>
-                      <th className="text-left text-[10px] text-muted-foreground uppercase tracking-wide font-medium px-4 py-3">
-                        {t("billings.billHistory.screenshot", "Screenshot")}
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {billHistory.map((item, i) => (
-                      <tr
-                        key={item.id}
-                        className={`border-b last:border-0 hover:bg-muted/20 transition-colors ${
-                          i % 2 === 0 ? "bg-background" : "bg-muted/30"
-                        }`}
-                      >
-                        <td className="px-4 py-3">
-                          <div>{i + 1}</div>
-                        </td>
-                        {/* <td className="px-4 py-3 font-mono truncate max-w-[160px]">
-                          {item.payment_ref || "—"}
-                        </td> */}
-                        <td className="px-4 py-3 font-semibold">
-                          {item.amount.toLocaleString()}
-                        </td>
-                        <td className="px-4 py-3 capitalize">
-                          {item.payment_method
-                            ? t(`billings.method.${item.payment_method}`)
-                            : "—"}
-                        </td>
-                        <td className="px-4 py-3 whitespace-nowrap">
-                          {new Date(item.payment_date).toLocaleDateString(
-                            "en-US",
-                            {
-                              year: "numeric",
-                              month: "short",
-                              day: "numeric",
-                            },
-                          )}
-                        </td>
-                        <td className="px-4 py-3 truncate max-w-[140px]">
-                          {item.processed_by || "—"}
-                        </td>
-                        <td className="px-4 py-3 truncate max-w-[140px]">
-                          {item.screenshot_url ? (
-                            <a
-                              href={item.screenshot_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-500 hover:underline"
-                            >
-                              {t(
-                                "billings.billHistory.viewScreenshot",
-                                "View Screenshot",
-                              )}
-                            </a>
-                          ) : (
-                            "—"
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+
+              <BillHistoryTable
+                billHistory={billHistory}
+                isLoading={isLoading}
+                currentPage={1}
+                totalPages={1}
+                total={billHistory.length}
+                limit={10}
+                onLimitChange={() => {}}
+                hasNextPage={false}
+                hasPreviousPage={false}
+                onPageChange={() => {}}
+                sortBy={""}
+                sortOrder={"asc"}
+                onSortChange={() => {}}
+              />
             </div>
           )}
         </div>
