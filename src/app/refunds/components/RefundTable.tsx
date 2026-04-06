@@ -71,14 +71,13 @@ export function RefundTable({
   setRejectModalOpen,
   setOpenApproveDialog,
   setOpenRetryDialog,
-  
-  
 }: RefundTableProps) {
   const { t } = useTranslation();
   const { locale } = useLanguageStore();
 
   const [openRefundDetail, setOpenRefundDetail] = React.useState(false);
-  const [selectedRefundData, setSelectedRefundData] = React.useState<Refund | null>(null);
+  const [selectedRefundData, setSelectedRefundData] =
+    React.useState<Refund | null>(null);
 
   // Table columns
   const columns: ColumnDef<Refund>[] = React.useMemo(
@@ -188,12 +187,12 @@ export function RefundTable({
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuItem
                   onClick={() => {
-                    setSelectedRefundData && setSelectedRefundData(refund)
+                    setSelectedRefundData && setSelectedRefundData(refund);
                     setOpenRefundDetail(true);
                   }}
                 >
-                    <EyeIcon weight="duotone" className="mr-2 h-4 w-4" />
-                    {t(`users.viewDetails`)}
+                  <EyeIcon weight="duotone" className="mr-2 h-4 w-4" />
+                  {t(`users.viewDetails`)}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => {
@@ -284,7 +283,7 @@ export function RefundTable({
 
       <RefundDetail
         open={openRefundDetail}
-        // refundData={selectedRefundData}
+        refundData={selectedRefundData}
         onOpenChange={() => {
           setOpenRefundDetail(false);
         }}

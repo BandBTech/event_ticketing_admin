@@ -222,6 +222,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
         {/* Event Status Overview */}
         <SectionCard title="Event Status Overview">
           <StatusGrid
+          classname="grid grid-cols-2 sm:grid-cols-3"
             items={[
               {
                 label: "Total",
@@ -234,6 +235,12 @@ export default function DashboardPage({ data }: DashboardPageProps) {
                 value: data?.events.completed,
                 bg: "bg-green-50",
                 text: "text-green-700",
+              },
+              {
+                label: "Scheduled",
+                value: data?.events.scheduled,
+                bg: "bg-teal-50",
+                text: "text-teal-700",
               },
               {
                 label: "On Sale",

@@ -23,6 +23,7 @@ export interface EventsStats {
   approved: number;
   cancelled: number;
   completed: number;
+  scheduled: number;
   draft: number;
   live: number;
   on_sale: number;
