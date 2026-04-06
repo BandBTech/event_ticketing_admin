@@ -145,6 +145,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
       {/* ── Row 1: Users ── */}
       <SectionCard title="Users">
         <StatusGrid
+          classname="grid grid-cols-3"
           items={[
             {
               label: "Total Users",
@@ -164,12 +165,12 @@ export default function DashboardPage({ data }: DashboardPageProps) {
               bg: "bg-yellow-50",
               text: "text-yellow-700",
             },
-            {
-              label: "Suspended Users",
-              value: data?.users.suspended,
-              bg: "bg-red-50",
-              text: "text-red-600",
-            },
+            // {
+            //   label: "Suspended Users",
+            //   value: data?.users.suspended,
+            //   bg: "bg-red-50",
+            //   text: "text-red-600",
+            // },
           ]}
         />
       </SectionCard>

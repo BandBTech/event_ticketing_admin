@@ -127,6 +127,14 @@ export default function TransactionsPage() {
     toggleStatusMutation.mutate(user.id);
   };
 
+  const roles = [
+    { key: "admin", label: "users.userRoles.admin" },
+    { key: "manager", label: "users.userRoles.manager" },
+    { key: "organizer", label: "users.userRoles.organizer" },
+    { key: "staff", label: "users.userRoles.staff" },
+    { key: "user", label: "users.userRoles.user" },
+  ];
+
   // Update URL params for filters (resets page to 1)
   const updateParams = useCallback(
     (updates: Record<string, string | null>) => {
@@ -187,58 +195,27 @@ export default function TransactionsPage() {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
-                  className="gap-2 bg-background/80 backdrop-blur-sm"
+                  className={
+                    roleFilter
+                      ? "gap-2 bg-primary/10 text-black hover:bg-primary/10"
+                      : `gap-2 bg-background/80 backdrop-blur-sm`
+                  }
                 >
                   <FunnelIcon weight="duotone" className="h-4 w-4" />
                   {t("users.filterByRole")}
                 </Button>
               </DropdownMenuTrigger>
+
               <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem
-                  className={
-                    roleFilter === "admin" ? "bg-muted font-medium" : ""
-                  }
-                  onClick={() => updateParams({ role: "admin", page: "1" })}
-                >
-                  {t("users.userRoles.admin")}
-                </DropdownMenuItem>
-
-                <DropdownMenuItem
-                  className={
-                    roleFilter === "organizer" ? "bg-muted font-medium" : ""
-                  }
-                  onClick={() => updateParams({ role: "organizer", page: "1" })}
-                >
-                  {t("users.userRoles.organizer")}
-                </DropdownMenuItem>
-
-                <DropdownMenuItem
-                  className={
-                    roleFilter === "staff" ? "bg-muted font-medium" : ""
-                  }
-                  onClick={() => updateParams({ role: "staff", page: "1" })}
-                >
-                  {t("users.userRoles.staff")}
-                </DropdownMenuItem>
-
-                <DropdownMenuItem
-                  className={
-                    roleFilter === "manager" ? "bg-muted font-medium" : ""
-                  }
-                  onClick={() => updateParams({ role: "manager", page: "1" })}
-                >
-                  {t("users.userRoles.manager")}
-                </DropdownMenuItem>
-
-                <DropdownMenuItem
-                  className={
-                    roleFilter === "user" ? "bg-muted font-medium" : ""
-                  }
-                  onClick={() => updateParams({ role: "user", page: "1" })}
-                >
-                  {t("users.userRoles.user")}
-                </DropdownMenuItem>
-
+                {roles.map(({ key, label }) => (
+                  <DropdownMenuItem
+                    key={key}
+                    className={roleFilter === key ? "bg-muted font-medium" : ""}
+                    onClick={() => updateParams({ role: key, page: "1" })}
+                  >
+                    {t(label)}
+                  </DropdownMenuItem>
+                ))}
                 <DropdownMenuSeparator />
 
                 <DropdownMenuItem
@@ -255,7 +232,12 @@ export default function TransactionsPage() {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
-                  className="gap-2 bg-background/80 backdrop-blur-sm"
+                  // className="gap-2 bg-background/80 backdrop-blur-sm"
+                  className={
+                    statusFilter
+                      ? "gap-2 bg-primary/10 text-black hover:bg-primary/10"
+                      : `gap-2 bg-background/80 backdrop-blur-sm`
+                  }
                 >
                   <FunnelIcon weight="duotone" className="h-4 w-4" />
                   {t("users.filterByAccountStatus")}
@@ -279,16 +261,6 @@ export default function TransactionsPage() {
                   }
                 >
                   {t("users.accountStatus.inactive")}
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className={
-                    statusFilter === "suspended" ? "bg-muted font-medium" : ""
-                  }
-                  onClick={() =>
-                    updateParams({ status: "suspended", page: "1" })
-                  }
-                >
-                  {t("users.accountStatus.suspended")}
                 </DropdownMenuItem>
 
                 <DropdownMenuSeparator />

@@ -78,8 +78,8 @@ export default function OrganizerProfilePage() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="flex flex-col items-center gap-2">
-          <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-          <p className="text-sm text-gray-500">Loading user details...</p>
+          <Loader2 className="h-8 w-8 animate-spin text-black" />
+          <p className="text-sm text-black">Loading user details...</p>
         </div>
       </div>
     );
@@ -130,42 +130,7 @@ export default function OrganizerProfilePage() {
                 </span>
               )}
             </div>
-            <p className="text-sm text-gray-500 mb-3">{data?.email}</p>
-            <div className="flex flex-wrap gap-2">
-              {data?.organizer_status && (
-                <span
-                  className="text-xs font-medium px-3 py-1 rounded-full flex items-center gap-1"
-                  style={getStatusStyle(data.organizer_status)}
-                >
-                  {data.organizer_status.toLowerCase() === "approved" && "✓ "}
-                  {t(
-                    `users.organizerStatus.${data.organizer_status.toLowerCase()}`,
-                  )}
-                </span>
-              )}
-              {data?.is_email_verified !== undefined && (
-                <span
-                  className="text-xs font-medium px-3 py-1 rounded-full"
-                  style={
-                    data.is_email_verified
-                      ? {
-                          background: "#f0fdf4",
-                          color: "#16a34a",
-                          border: "1px solid #bbf7d0",
-                        }
-                      : {
-                          background: "#fef3c7",
-                          color: "#d97706",
-                          border: "1px solid #fde68a",
-                        }
-                  }
-                >
-                  {data.is_email_verified
-                    ? `⚠ ${t("users.userDetail.onboardingIncomplete", "Email Verified")}`
-                    : "Email Not Verified"}
-                </span>
-              )}
-            </div>
+            <p className="text-sm text-black mb-3">{data?.email}</p>
           </div>
         </div>
       </div>
@@ -188,7 +153,7 @@ export default function OrganizerProfilePage() {
                 <Mail size={16} color="#6366f1" />
               </div>
               <div>
-                <p className="text-xs text-gray-400 mb-0.5">
+                <p className="text-xs text-black mb-0.5">
                   {t("users.userDetail.email", "Email")}
                 </p>
                 <p className="text-sm font-semibold text-gray-800">
@@ -206,7 +171,7 @@ export default function OrganizerProfilePage() {
                 <Phone size={16} color="#22c55e" />
               </div>
               <div>
-                <p className="text-xs text-gray-400 mb-0.5">
+                <p className="text-xs text-black mb-0.5">
                   {t("users.userDetail.phone", "Phone")}
                 </p>
                 <p className="text-sm font-semibold text-gray-800">
@@ -226,32 +191,12 @@ export default function OrganizerProfilePage() {
                 <Calendar size={16} color="#6366f1" />
               </div>
               <div>
-                <p className="text-xs text-gray-400 mb-0.5">
-                  {t("users.userDetail.createdOn", "Joined")}
+                <p className="text-xs text-black mb-0.5">
+                  {t("users.userDetail.createdOn", "Created On")}
                 </p>
                 <p className="text-sm font-semibold text-gray-800">
                   {data?.created_at
                     ? format(new Date(data.created_at), "PPp")
-                    : "—"}
-                </p>
-              </div>
-            </div>
-
-            {/* Updated */}
-            <div className="flex items-start gap-4">
-              <div
-                className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
-                style={{ background: "#fdf4ff" }}
-              >
-                <RefreshCw size={16} color="#a855f7" />
-              </div>
-              <div>
-                <p className="text-xs text-gray-400 mb-0.5">
-                  {t("users.userDetail.updatedOn", "Last Updated")}
-                </p>
-                <p className="text-sm font-semibold text-gray-800">
-                  {data?.updated_at
-                    ? format(new Date(data.updated_at), "PPp")
                     : "—"}
                 </p>
               </div>
@@ -266,7 +211,7 @@ export default function OrganizerProfilePage() {
           </h2>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-500">Organizer Status</span>
+              <span className="text-sm text-black">Organizer Status</span>
               {data?.organizer_status && (
                 <span
                   className="text-xs font-semibold px-3 py-1 rounded-full capitalize"
@@ -279,7 +224,7 @@ export default function OrganizerProfilePage() {
               )}
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-500">Account Status</span>
+              <span className="text-sm text-black">Account Status</span>
               {data?.account_status && (
                 <span
                   className="text-xs font-semibold px-3 py-1 rounded-full capitalize"
@@ -292,7 +237,7 @@ export default function OrganizerProfilePage() {
               )}
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-500">Verified</span>
+              <span className="text-sm text-black">Verified</span>
               <span
                 className="text-xs font-semibold px-3 py-1 rounded-full"
                 style={
@@ -313,7 +258,7 @@ export default function OrganizerProfilePage() {
         {/* Roles */}
         <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
           <h2 className="text-base font-semibold text-gray-900 mb-5 flex items-center gap-2">
-            <Shield size={16} className="text-gray-400" />
+            <Shield size={16} className="text-black" />
             {t("users.userDetail.rolesAndPermissions", "Roles & Permissions")}
           </h2>
           <div className="flex flex-wrap gap-2">
@@ -339,7 +284,7 @@ export default function OrganizerProfilePage() {
               </div>
             ))}
             {(!data?.roles || data.roles.length === 0) && (
-              <p className="text-sm text-gray-400">No roles assigned</p>
+              <p className="text-sm text-black">No roles assigned</p>
             )}
           </div>
         </div>
@@ -348,7 +293,7 @@ export default function OrganizerProfilePage() {
         {data?.admin_remark && (
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
             <h2 className="text-base font-semibold text-gray-900 mb-3 flex items-center gap-2">
-              <MessageSquare size={16} className="text-gray-400" />
+              <MessageSquare size={16} className="text-black" />
               Admin Remark
             </h2>
             <p className="text-sm text-gray-600 italic leading-relaxed">
