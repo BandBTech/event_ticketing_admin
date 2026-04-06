@@ -1,41 +1,18 @@
 "use client";
 
 import React from "react";
-import {
-  //   ArrowLeft,
-  Mail,
-  Calendar,
-  RefreshCw,
-  Ticket,
-  CreditCard,
-  Hash,
-} from "lucide-react";
+import { Ticket, CreditCard, CalendarPlusIcon, Hash } from "lucide-react";
 import { ArrowLeft } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
 import { TransactionService } from "@/services/transactionService";
 import { useQuery } from "@tanstack/react-query";
-import { UserData } from "@/types/user";
 import { queryKeys } from "@/lib/queryKeys";
 import { useSearchParams } from "next/navigation";
+import { formatCurrency } from "@/lib/utils";
+import { formatDateTimeLong } from "@/lib/utils";
 import { Transaction } from "@/types/transaction";
-
-function fmt(amount?: number, currency?: string): string {
-  if (amount == null || !currency) return "—";
-  
-  return new Intl.NumberFormat("en-US", { style: "currency", currency }).format(amount);
-}
-
-function fmtDate(iso: string) {
-  return new Date(iso).toLocaleString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
 
 export default function TransactionDetailPage() {
   const { locale } = useLanguageStore();
@@ -71,9 +48,12 @@ export default function TransactionDetailPage() {
         <div className="flex items-center gap-5">
           <div
             className="w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold flex-shrink-0"
-            style={{ background: "#eef0fb", color: "#6366f1" }} 
+            style={{ background: "#eef0fb", color: "#6366f1" }}
           >
-            {transactionDetail?.user.name?.trim()?.split(" ")?.[0]?.[0]?.toUpperCase() || "—"}
+            {transactionDetail?.user?.name
+              ?.trim()
+              ?.split(" ")?.[0]?.[0]
+              ?.toUpperCase() || "—"}
           </div>
           <div>
             <div className="flex items-center gap-3 mb-1">
@@ -84,9 +64,13 @@ export default function TransactionDetailPage() {
                 className="text-xs font-semibold px-3 py-1 rounded-full capitalize"
                 style={{
                   background:
-                    transactionDetail?.status === "completed" ? "#dcfce7" : "#fef9c3",
+                    transactionDetail?.status === "completed"
+                      ? "#dcfce7"
+                      : "#fef9c3",
                   color:
-                    transactionDetail?.status === "completed" ? "#16a34a" : "#a16207",
+                    transactionDetail?.status === "completed"
+                      ? "#16a34a"
+                      : "#a16207",
                 }}
               >
                 {transactionDetail?.status}
@@ -125,21 +109,6 @@ export default function TransactionDetailPage() {
             <div className="flex items-start gap-4">
               <div
                 className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
-                style={{ background: "#eef2ff" }}
-              >
-                <Hash size={16} color="#6366f1" />
-              </div>
-              <div>
-                <p className="text-xs text-gray-400 mb-0.5">Transaction ID</p>
-                <p className="text-sm font-semibold text-gray-800 break-all">
-                  {transactionDetail?.id}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4">
-              <div
-                className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
                 style={{ background: "#f0fdf4" }}
               >
                 <Ticket size={16} color="#22c55e" />
@@ -164,22 +133,12 @@ export default function TransactionDetailPage() {
               <div>
                 <p className="text-xs text-gray-400 mb-0.5">Payment Gateway</p>
                 <p className="text-sm font-semibold text-gray-800">
-                  {transactionDetail?.payment_gateway || "—"}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4">
-              <div
-                className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
-                style={{ background: "#eef2ff" }}
-              >
-                <Calendar size={16} color="#6366f1" />
-              </div>
-              <div>
-                <p className="text-xs text-gray-400 mb-0.5">Updated At</p>
-                <p className="text-sm font-semibold text-gray-800">
-                  {fmtDate(transactionDetail?.updated_at || "")}
+                  {transactionDetail?.payment_gateway
+                    ? transactionDetail.payment_gateway
+                        .charAt(0)
+                        .toUpperCase() +
+                      transactionDetail.payment_gateway.slice(1)
+                    : "—"}
                 </p>
               </div>
             </div>
@@ -189,12 +148,15 @@ export default function TransactionDetailPage() {
                 className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
                 style={{ background: "#fdf4ff" }}
               >
-                <RefreshCw size={16} color="#a855f7" />
+                <CalendarPlusIcon size={16} color="#a855f7" />
               </div>
               <div>
                 <p className="text-xs text-gray-400 mb-0.5">Created At</p>
                 <p className="text-sm font-semibold text-gray-800">
-                  {fmtDate(transactionDetail?.created_at || "")}
+                  {formatDateTimeLong(
+                    transactionDetail?.created_at || "",
+                    locale,
+                  )}
                 </p>
               </div>
             </div>
@@ -210,7 +172,11 @@ export default function TransactionDetailPage() {
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-500">Total Amount</span>
               <span className="text-sm font-semibold text-gray-800">
-                {fmt(transactionDetail?.amount, transactionDetail?.currency)}
+                {formatCurrency(
+                  transactionDetail?.amount || 0,
+                  transactionDetail?.currency,
+                  locale,
+                )}
               </span>
             </div>
             <hr className="border-gray-100" />
@@ -220,7 +186,11 @@ export default function TransactionDetailPage() {
                 className="text-xs font-semibold px-3 py-1 rounded-full"
                 style={{ background: "#dcfce7", color: "#16a34a" }}
               >
-                {fmt(transactionDetail?.organizer_share, transactionDetail?.currency)}
+                {formatCurrency(
+                  transactionDetail?.organizer_share || 0,
+                  transactionDetail?.currency,
+                  locale,
+                )}
               </span>
             </div>
             <div className="flex items-center justify-between">
@@ -234,7 +204,11 @@ export default function TransactionDetailPage() {
                 className="text-xs font-semibold px-3 py-1 rounded-full"
                 style={{ background: "#fff7ed", color: "#ea580c" }}
               >
-                {fmt(transactionDetail?.commission_amount, transactionDetail?.currency)}
+                {formatCurrency(
+                  transactionDetail?.commission_amount || 0,
+                  transactionDetail?.currency,
+                  locale,
+                )}
               </span>
             </div>
           </div>

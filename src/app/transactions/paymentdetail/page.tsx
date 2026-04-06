@@ -1,29 +1,23 @@
 "use client";
 
 import React from "react";
-import { ArrowLeft } from "@phosphor-icons/react";
+import {
+  ArrowLeft,
+  TicketIcon,
+  UserIcon,
+  CreditCardIcon,
+} from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
 import { useSearchParams } from "next/navigation";
 import { TransactionService } from "@/services/transactionService";
+import { formatCurrency } from "@/lib/utils";
+import { formatDateTimeLong } from "@/lib/utils";
 import { queryKeys } from "@/lib/queryKeys";
 import { useQuery } from "@tanstack/react-query";
 import { TransactionPaymentData } from "@/types/paymenttransactiondetail";
-
-// --- Helpers ---
-const fmt = (n: number, currency = "USD") =>
-  new Intl.NumberFormat("en-US", { style: "currency", currency }).format(n);
-
-const fmtDate = (d: string) =>
-  new Date(d).toLocaleString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-  });
+import { TicketTable } from "../components/TicketTable";
 
 const capitalize = (s?: string) =>
   s ? s.charAt(0).toUpperCase() + s.slice(1) : "";
@@ -62,15 +56,6 @@ const txnVariant = (
   return "neutral";
 };
 
-const ticketVariant = (
-  status: string,
-): "success" | "info" | "danger" | "neutral" => {
-  if (status === "active") return "info";
-  if (status === "used") return "success";
-  if (status === "cancelled") return "danger";
-  return "neutral";
-};
-
 const InfoRow = ({
   label,
   value,
@@ -85,7 +70,7 @@ const InfoRow = ({
   <div
     className={`flex items-center justify-between py-3 ${!last ? "border-b border-slate-100" : ""}`}
   >
-    <span className="text-sm text-slate-500">{label}</span>
+    <span className="text-sm text-black">{label}: </span>
     <span
       className={`text-sm font-semibold text-slate-800 text-right ${mono ? "font-mono tracking-tight" : ""}`}
     >
@@ -93,54 +78,6 @@ const InfoRow = ({
     </span>
   </div>
 );
-
-// --- Icons ---
-const Icon = {
-  user: (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-      <circle cx="12" cy="7" r="4" />
-    </svg>
-  ),
-  payment: (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect x="1" y="4" width="22" height="16" rx="2" />
-      <line x1="1" y1="10" x2="23" y2="10" />
-    </svg>
-  ),
-  ticket: (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z" />
-    </svg>
-  ),
-};
 
 const CardHeader = ({
   icon,
@@ -165,7 +102,6 @@ const Skeleton = ({ className }: { className?: string }) => (
   <div className={`animate-pulse bg-slate-200 rounded ${className}`} />
 );
 
-// --- Main Component ---
 export default function PaymentDetail() {
   const router = useRouter();
   const { locale } = useLanguageStore();
@@ -251,7 +187,11 @@ export default function PaymentDetail() {
             {/* Buyer */}
             <div className="bg-white rounded-xl border border-slate-200 p-5">
               <CardHeader
-                icon={<span className="text-violet-500">{Icon.ticket}</span>}
+                icon={
+                  <span className="text-violet-500">
+                    <TicketIcon className="w-4 h-4" />
+                  </span>
+                }
                 title="Event"
                 iconBg="bg-violet-50"
               />
@@ -265,7 +205,11 @@ export default function PaymentDetail() {
             {/* Buyer */}
             <div className="bg-white rounded-xl border border-slate-200 p-5">
               <CardHeader
-                icon={<span className="text-emerald-500">{Icon.user}</span>}
+                icon={
+                  <span className="text-emerald-500">
+                    <UserIcon className="w-4 h-4" />
+                  </span>
+                }
                 title="Buyer"
                 iconBg="bg-emerald-50"
               />
@@ -276,7 +220,11 @@ export default function PaymentDetail() {
             {/* Payment Intent */}
             <div className="bg-white rounded-xl border border-slate-200 p-5">
               <CardHeader
-                icon={<span className="text-amber-500">{Icon.payment}</span>}
+                icon={
+                  <span className="text-amber-500">
+                    <CreditCardIcon className="w-4 h-4" />
+                  </span>
+                }
                 title="Payment"
                 iconBg="bg-amber-50"
               />
@@ -290,15 +238,19 @@ export default function PaymentDetail() {
               />
               <InfoRow
                 label="Created At"
-                value={fmtDate(paymentIntent.created_at)}
+                value={formatDateTimeLong(paymentIntent.created_at, locale)}
               />
 
               {/* Amount breakdown */}
               <div className="mt-4 rounded-lg bg-slate-50 border border-slate-100 p-3 space-y-2">
-                <div className="flex justify-between text-xs text-slate-500">
-                  <span>Total Amount</span>
+                <div className="flex justify-between text-xs text-black">
+                  <span>Total Amount: </span>
                   <span className="font-bold text-slate-800 text-sm">
-                    {fmt(transaction.amount, transaction.currency)}
+                    {formatCurrency(
+                      transaction.amount,
+                      transaction.currency,
+                      locale,
+                    )}
                   </span>
                 </div>
               </div>
@@ -310,93 +262,37 @@ export default function PaymentDetail() {
         {!isLoading && tickets.length > 0 && (
           <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
             {/* Table header */}
-            <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+            <div className="px-2 py-4 border-b border-slate-100 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-lg bg-violet-50 flex items-center justify-center text-violet-500">
-                  {Icon.ticket}
+                  <TicketIcon className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-slate-700">Tickets</h3>
-                  <p className="text-xs text-slate-400">
+                  <h3 className="text-sm font-bold text-black">Tickets</h3>
+                  <p className="text-xs text-black">
                     {tickets.length} ticket{tickets.length !== 1 ? "s" : ""}{" "}
                     issued in this payment
                   </p>
                 </div>
               </div>
-              <Badge
-                label={`${tickets.filter((t) => t.status === "active").length} Active`}
-                variant="info"
-              />
             </div>
 
-            {/* Column labels */}
-            <div className="grid grid-cols-12 px-6 py-2.5 bg-slate-50 border-b border-slate-100">
-              <span className="col-span-1 text-[11px] font-bold uppercase tracking-widest text-slate-400">
-                #
-              </span>
-              <span className="col-span-4 text-[11px] font-bold uppercase tracking-widest text-slate-400">
-                Ticket Number
-              </span>
-              <span className="col-span-2 text-[11px] font-bold uppercase tracking-widest text-slate-400">
-                Tier
-              </span>
-              <span className="col-span-3 text-[11px] font-bold uppercase tracking-widest text-slate-400">
-                Holder
-              </span>
-              <span className="col-span-1 text-[11px] font-bold uppercase tracking-widest text-slate-400 text-right">
-                Amount
-              </span>
-              <span className="col-span-1 text-[11px] font-bold uppercase tracking-widest text-slate-400 text-center">
-                Status
-              </span>
-            </div>
-
-            {/* Rows */}
-            <div className="divide-y divide-slate-50">
-              {tickets.map((ticket, i) => (
-                <div
-                  key={ticket.id}
-                  className="ticket-row grid grid-cols-12 items-center px-6 py-3.5 transition-colors"
-                >
-                  <span className="col-span-1 text-xs text-slate-400 font-medium">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span
-                    className="col-span-4 text-sm font-semibold text-slate-700 tracking-tight"
-                    style={{ fontFamily: "'JetBrains Mono', monospace" }}
-                  >
-                    {ticket.ticket_number}
-                  </span>
-                  <span className="col-span-2 text-sm text-slate-500">
-                    {ticket.tier?.tier_name || "General"}
-                  </span>
-                  <span className="col-span-3 text-sm text-slate-600 truncate">
-                    {ticket.user.name}
-                  </span>
-                  <span className="col-span-1 text-sm font-bold text-slate-800 text-right">
-                    {fmt(ticket.total_amount)}
-                  </span>
-                  <span className="col-span-1 flex justify-center">
-                    <Badge
-                      label={capitalize(ticket.status)}
-                      variant={ticketVariant(ticket.status)}
-                    />
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            {/* Footer total */}
-            {transaction && (
-              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200 flex justify-between items-center">
-                <span className="text-sm text-slate-500 font-medium">
-                  {tickets.length} ticket{tickets.length !== 1 ? "s" : ""}
-                </span>
-                <span className="text-base font-bold text-slate-900">
-                  {fmt(transaction.amount, transaction.currency)}
-                </span>
-              </div>
-            )}
+            {/* Ticket Table  */}
+            <TicketTable
+              billings={tickets}
+              isLoading={isLoading}
+              currentPage={1}
+              totalPages={1}
+              total={tickets.length}
+              limit={0}
+              onLimitChange={() => {}}
+              hasNextPage={false}
+              hasPreviousPage={false}
+              onPageChange={() => {}}
+              sortBy={""}
+              sortOrder={"asc"}
+              onSortChange={() => {}}
+            />
           </div>
         )}
 

@@ -94,7 +94,7 @@ export function TransactionTable({
       {
         id: "event",
         header: t("transactions.table.event"),
-        meta: { sortKey: "event.title" },
+        meta: { sortKey: "event_title" },
         cell: ({ row }) => (
           <span className="max-w-[200px] text-gray-700 truncate inline-block">
             {row.original.event.title || "-"}
