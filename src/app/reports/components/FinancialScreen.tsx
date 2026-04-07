@@ -123,7 +123,7 @@ export default function RevenueReport({ data }: RevenueReportProps) {
 
       {/* ── Revenue split + Event breakdown ── */}
       <div className="grid grid-cols-2 gap-5">
-        <SectionCard title="Revenue split">
+        <SectionCard title="Revenue split" key="Revenue split">
           {/* Gross → Net visual */}
           <div className="mb-5">
             <div className="flex justify-between text-xs text-black mb-1.5">
@@ -193,7 +193,7 @@ export default function RevenueReport({ data }: RevenueReportProps) {
           </div>
         </SectionCard>
 
-        <SectionCard title="Revenue by event">
+        <SectionCard title="Revenue by event" key="Revenue by event">
           {(data?.revenue_breakdown ?? []).length === 0 ? (
             <p className="text-sm text-black">No event data available.</p>
           ) : (
@@ -212,7 +212,7 @@ export default function RevenueReport({ data }: RevenueReportProps) {
       </div>
 
       {/* ── Commission history ── */}
-      <SectionCard title="Commission history">
+      <SectionCard title="Commission history" key="Commission history">
         {(data?.commission_history || []).length === 0 ? (
           <p className="text-sm text-black">No commission records found.</p>
         ) : (
@@ -271,7 +271,7 @@ export default function RevenueReport({ data }: RevenueReportProps) {
 
       {/* ── Currency breakdown ── */}
       {(data?.currency_breakdown || []).length  > 0 && (
-        <SectionCard title="Currency breakdown">
+        <SectionCard title="Currency breakdown" key="Currency breakdown">
           <div className="space-y-4">
             {data?.currency_breakdown.map((c) => (
               <div key={c.currency}>

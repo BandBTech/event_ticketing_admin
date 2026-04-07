@@ -4,9 +4,134 @@ import { useState, useMemo } from "react";
 import { formatCurrency } from "@/lib/utils";
 import { useLanguageStore } from "@/store/languageStore";
 import { DailySale, SalesReportProps, ChartTab } from "@/types/reports";
-import {MetricCard} from "@/app/reports/components/CardComponents"
-import {SectionCard} from "@/app/reports/components/CardComponents"
-import {DailyBarChart} from "@/app/reports/components/CardComponents"
+import { MetricCard } from "@/app/reports/components/CardComponents";
+import { SectionCard } from "@/app/reports/components/CardComponents";
+
+export function DailyBarChart({
+  data,
+  tab,
+}: {
+  data: DailySale[] | undefined;
+  tab: ChartTab;
+}) {
+  const { locale } = useLanguageStore();
+  const cfg = TAB_CONFIG[tab];
+  const values = (data ?? []).map((d) => Number(d[cfg.key]));
+  const max = Math.max(...values, 0);
+
+  const HEIGHT = 200;
+
+  const fmt = (v: number) =>
+    tab === "tickets"
+      ? String(Math.round(v))
+      : formatCurrency(Math.round(v), undefined, locale);
+
+  const yTicks = [1, 0.75, 0.5, 0.25, 0];
+
+  return (
+    <div className="flex gap-3 w-full px-1">
+      {/* Y-axis labels */}
+      <div
+        className="relative shrink-0 text-right"
+        style={{ height: HEIGHT, width: 48 }}
+      >
+        {yTicks.map((t) => (
+          <span
+            key={t}
+            className="absolute text-[10px] font-medium leading-none right-0"
+            style={{
+              bottom: `${t * 100}%`,
+              transform: "translateY(50%)",
+            }}
+          >
+            {fmt(max * t)}
+          </span>
+        ))}
+      </div>
+
+      {/* Chart area */}
+      <div className="flex flex-col flex-1 min-w-0">
+        <div
+          className="relative flex items-end gap-[3px] w-full"
+          style={{ height: HEIGHT }}
+        >
+          {/* Gridlines */}
+          {yTicks.map((t) => (
+            <div
+              key={t}
+              className="absolute w-full"
+              style={{ bottom: `${t * 100}%` }}
+            >
+              <div
+                className={`w-full border-t ${
+                  t === 0 ? "border-muted-foreground/30" : "border-dashed"
+                }`}
+              />
+            </div>
+          ))}
+
+          {/* Bars */}
+          {(data ?? []).map((d) => {
+            const val = Number(d[cfg.key]);
+            const pct = max > 0 ? (val / max) * 100 : 0;
+            const barHeight = Math.max((pct / 100) * HEIGHT, 2);
+            const dateLabel = new Date(d.date).toLocaleDateString(locale, {
+              month: "short",
+              day: "numeric",
+            });
+
+            return (
+              <div
+                key={d.date}
+                className="group relative flex-1 min-w-[28px] h-full flex flex-col justify-end"
+              >
+                {/* Tooltip */}
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-10 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+                  <div className="bg-popover text-popover-foreground text-[11px] font-medium rounded-md shadow-md border border-border px-2 py-1 whitespace-nowrap">
+                    <p className="">{dateLabel}</p>
+                    <p>{fmt(val)}</p>
+                  </div>
+                  {/* Arrow */}
+                  <div className="w-2 h-2 bg-popover border-r border-b border-border rotate-45 mx-auto -mt-1" />
+                </div>
+
+                {/* Bar */}
+                <div
+                  className="w-full rounded-t-md transition-all duration-500 group-hover:opacity-100"
+                  style={{
+                    height: `${barHeight}px`,
+                    background: `linear-gradient(to top, ${cfg.color}cc, ${cfg.color})`,
+                    opacity: 0.75,
+                  }}
+                />
+              </div>
+            );
+          })}
+        </div>
+
+        {/* X-axis date labels — show every nth to avoid crowding */}
+        <div className="relative flex gap-[3px] mt-1" style={{ height: 24 }}>
+          {(data ?? []).map((d) => {
+            const dateLabel = new Date(d.date).toLocaleDateString(locale, {
+              month: "short",
+              day: "numeric",
+            });
+            return (
+              <div
+                key={d.date}
+                className="flex-1 min-w-[28px] flex items-start justify-center"
+              >
+                <span className="text-[9px] whitespace-nowrap rotate-45 origin-left translate-x-2">
+                  {dateLabel}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 const TAB_CONFIG: Record<
   ChartTab,
@@ -26,6 +151,7 @@ const GATEWAY_COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#8b5cf6"];
 export default function SalesReport({ data }: SalesReportProps) {
   const { locale } = useLanguageStore();
   const [activeTab, setActiveTab] = useState<ChartTab>("revenue");
+  console.log("data", data);
 
   const m = data?.summary_metrics;
   const gateways = data?.sales_by_payment_gateway ?? [];
@@ -93,7 +219,7 @@ export default function SalesReport({ data }: SalesReportProps) {
 
         {/* X-axis date labels */}
         <DailyBarChart data={data?.daily_sales} tab={activeTab} />
-        <div className="flex gap-1 mt-2">
+        {/* <div className="flex gap-1 mt-2">
           {(data?.daily_sales ?? []).map((d) => (
             <div
               key={d.date}
@@ -105,7 +231,7 @@ export default function SalesReport({ data }: SalesReportProps) {
         </div>
         <div className="text-[10px] text-black text-center mt-0.5">
           March – April 2026
-        </div>
+        </div> */}
       </SectionCard>
 
       {/* ── Gateway + Top days ── */}

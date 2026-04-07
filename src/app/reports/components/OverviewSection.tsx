@@ -71,7 +71,7 @@ export default function ReportPage({ data }: ReportPageProps) {
 
       {/* ── Row 3: Revenue split + Transactions | Event stats ── */}
       <div className="grid grid-cols-2 gap-5 font-medium">
-        <SectionCard title="Revenue & transactions">
+        <SectionCard title="Revenue & transactions" key="Revenue & transactions">
           <RevenueBar label="Organizer" pct={organizerPct} color="#10b981" />
           <RevenueBar label="Commission" pct={commissionPct} color="#f59e0b" />
 
@@ -97,7 +97,7 @@ export default function ReportPage({ data }: ReportPageProps) {
           </div>
         </SectionCard>
 
-        <SectionCard title="Event statistics">
+        <SectionCard key={"Event statistics"} title="Event statistics">
           <StatRow label="Total events" value={e?.total_events || 0} />
           <StatRow
             label="Completed"
