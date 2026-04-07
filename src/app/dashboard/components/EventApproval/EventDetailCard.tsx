@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import {
   CalendarBlankIcon,
   MapPinIcon,
-  WarningCircleIcon
+  WarningCircleIcon,
 } from "@phosphor-icons/react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -26,10 +26,9 @@ export function EventDetailCard({ eventDetails }: EventDetailCardProps) {
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
 
-  const {
-    data: organizer,
-    isLoading: organizerLoading,
-  } = useOrganizerById(eventDetails.organizer_id);
+  const { data: organizer, isLoading: organizerLoading } = useOrganizerById(
+    eventDetails.organizer_id,
+  );
 
   const categories = useMemo(() => {
     if (!eventDetails.category) return [];
@@ -85,17 +84,12 @@ export function EventDetailCard({ eventDetails }: EventDetailCardProps) {
               className="w-4 h-4 text-primary-500"
             />
             <span>
-              {format(new Date(eventDetails.start_date), "PPpp")}
+              {format(new Date(eventDetails.start_date), "MMM dd, yyyy h:mm a")}
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <MapPinIcon
-              weight="duotone"
-              className="w-4 h-4 text-primary-500"
-            />
-            <span className="truncate">
-              {eventDetails.venue_name}
-            </span>
+            <MapPinIcon weight="duotone" className="w-4 h-4 text-primary-500" />
+            <span className="truncate">{eventDetails.venue_name}</span>
           </div>
         </div>
 
@@ -115,39 +109,38 @@ export function EventDetailCard({ eventDetails }: EventDetailCardProps) {
             </div>
           ) : organizer ? (
             <Link
-                href={`/organizers/detail?id=${organizer?.id}`}
+              href={`/organizers/detail?id=${organizer?.id}`}
               className="flex items-center gap-3 p-2 -mx-2 rounded-lg hover:bg-gray-50 transition-colors group"
             >
               <Avatar className="h-10 w-10 border border-gray-200">
-                  {organizer.logo && (
-                  <AvatarImage
-                      src={organizer.logo}
-                    className="object-cover"
-                  />
+                {organizer.logo && (
+                  <AvatarImage src={organizer.logo} className="object-cover" />
                 )}
                 <AvatarFallback className="bg-primary/10 text-primary font-bold text-xs">
-                    {getInitials(organizer.name)}
+                  {getInitials(organizer.name)}
                 </AvatarFallback>
               </Avatar>
 
               <div className="min-w-0">
                 <div className="text-sm font-bold text-gray-900 truncate group-hover:text-primary transition-colors">
-                    {organizer.name}
+                  {organizer.name}
                 </div>
               </div>
-                {!organizer.is_onboarding_complete && (
+              {!organizer.is_onboarding_complete && (
                 <div className="text-xs text-warning truncate flex items-center gap-1 ml-auto">
                   <WarningCircleIcon size={16} />
-                  {t("dashboard.modal.onboardingIncomplete", "Onboarding Incomplete")}
+                  {t(
+                    "dashboard.modal.onboardingIncomplete",
+                    "Onboarding Incomplete",
+                  )}
                 </div>
               )}
-
             </Link>
           ) : (
             <div className="text-sm text-destructive italic">
               {t(
                 "dashboard.modal.organizerNotFound",
-                "Organizer info not available"
+                "Organizer info not available",
               )}
             </div>
           )}
