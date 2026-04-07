@@ -273,4 +273,5 @@ export type CustomerAnalyticsProps = {
 
 export type EventPerformanceProps = {
   data: ReportResponse | undefined;
+  isEventIdSelected: boolean
 };

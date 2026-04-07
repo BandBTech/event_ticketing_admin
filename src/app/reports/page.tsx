@@ -21,8 +21,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import FinancialScreen from "@/app/reports/components/FinancialScreen"
-import EventPerformanceScreen from "@/app/reports/components//EventPerformanceScreen"
+import FinancialScreen from "@/app/reports/components/FinancialScreen";
+import EventPerformanceScreen from "@/app/reports/components//EventPerformanceScreen";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const REPORT_TYPE = [
   { label: "Admin Overview", value: "overview" },
@@ -34,9 +35,52 @@ const REPORT_TYPE = [
 
 export default function ReportsPage() {
   const [dateRange, setDateRange] = useState("last-30-days");
-  const [reportType, setReportType] = useState("overview");
-  const [eventId, setEventId] = useState("");
-  
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const reportType = searchParams.get("type") ?? "overview";
+  const eventId = searchParams.get("eventId") ?? "";
+
+  const updateParams = useCallback(
+    (updates: Record<string, string | null>) => {
+      const params = new URLSearchParams(searchParams.toString());
+
+      Object.entries(updates).forEach(([key, value]) => {
+        if (!value) {
+          params.delete(key);
+        } else {
+          params.set(key, value);
+        }
+      });
+
+      router.push(`/reports?${params.toString()}`, { scroll: false });
+    },
+    [router, searchParams],
+  );
+
+  const handleReportTypeChange = useCallback(
+    (value: string) => {
+      updateParams({ type: value, eventId: null });
+    },
+    [updateParams],
+  );
+
+  const handleEventIdChange = useCallback(
+    (value: string) => {
+      updateParams({ eventId: value });
+    },
+    [updateParams],
+  );
+
+  const { data: response, isLoading } = useQuery<ReportResponse>({
+    queryKey: ["report", reportType, eventId],
+    queryFn: () =>
+      ReportService.getReport({
+        type: reportType,
+        event_id: eventId,
+      }),
+    enabled: !!reportType && (reportType !== "event-performance" || !!eventId),
+    placeholderData: (previousData) => previousData,
+  });
 
   const fetchEvents = useCallback(
     async (search: string): Promise<AsyncComboboxOption[]> => {
@@ -62,22 +106,7 @@ export default function ReportsPage() {
     [],
   );
 
-const { data: response, isLoading } = useQuery<ReportResponse>({
-  queryKey: ["report", reportType, eventId],
-
-  queryFn: () =>
-    ReportService.getReport({
-      type: reportType,
-      event_id: eventId,
-    }),
-
-  enabled:
-    !!reportType &&
-    (reportType !== "event-performance" || !!eventId),
-
-  placeholderData: (previousData) => previousData,
-});
-
+  const isEventIdSelected = eventId ? true : false;
 
   return (
     <div className="min-h-screen p-8 space-y-6">
@@ -110,7 +139,7 @@ const { data: response, isLoading } = useQuery<ReportResponse>({
 
               {/* Report Type */}
 
-              <Select value={reportType} onValueChange={setReportType}>
+              <Select value={reportType} onValueChange={handleReportTypeChange}>
                 <SelectTrigger className="w-full text-sm h-9 justify-between px-3 bg-white font-medium">
                   <SelectValue placeholder={"Select Type"} />
                 </SelectTrigger>
@@ -129,7 +158,7 @@ const { data: response, isLoading } = useQuery<ReportResponse>({
                 <AsyncCombobox
                   queryKey={["filter", "events"]}
                   value={eventId}
-                  onValueChange={setEventId}
+                  onValueChange={handleEventIdChange}
                   fetchOptions={fetchEvents}
                   placeholder="Select Event"
                   searchPlaceholder="Search Events"
@@ -160,7 +189,10 @@ const { data: response, isLoading } = useQuery<ReportResponse>({
         ) : reportType === "financial" ? (
           <FinancialScreen data={response} />
         ) : reportType === "event-performance" ? (
-          <EventPerformanceScreen data={response} />
+          <EventPerformanceScreen
+            data={response}
+            isEventIdSelected={isEventIdSelected}
+          />
         ) : (
           <CustomerAnalyticsScreen data={response} />
         )}
