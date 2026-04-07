@@ -21,7 +21,7 @@ export default function ReportPage({ data }: ReportPageProps) {
   return (
     <main className="flex-1 overflow-y-auto space-y-5">
       {/* ── Row 1: Revenue KPIs ── */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-4 gap-4 font-medium">
         <MetricCard
           label="Total revenue"
           value={formatCurrency(m?.total_revenue || 0, undefined, locale)}
@@ -48,7 +48,7 @@ export default function ReportPage({ data }: ReportPageProps) {
       </div>
 
       {/* ── Row 2: Secondary metrics ── */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-4 font-medium">
         <MetricCard
           label="Avg. order value"
           value={formatCurrency(
@@ -70,13 +70,13 @@ export default function ReportPage({ data }: ReportPageProps) {
       </div>
 
       {/* ── Row 3: Revenue split + Transactions | Event stats ── */}
-      <div className="grid grid-cols-2 gap-5">
+      <div className="grid grid-cols-2 gap-5 font-medium">
         <SectionCard title="Revenue & transactions">
           <RevenueBar label="Organizer" pct={organizerPct} color="#10b981" />
           <RevenueBar label="Commission" pct={commissionPct} color="#f59e0b" />
 
           <div className="mt-5 pt-4 border-t border-gray-50">
-            <p className="text-xs font-semibold text-gray-700 uppercase mb-3">
+            <p className="text-xs font-semibold text-black uppercase mb-3">
               Transactions
             </p>
             <StatRow
@@ -132,7 +132,7 @@ export default function ReportPage({ data }: ReportPageProps) {
           <StatRow
             label="Draft"
             value={e?.draft_events || 0}
-            badge={{ bg: "bg-gray-100", text: "text-gray-500" }}
+            badge={{ bg: "bg-gray-100", text: "text-black" }}
           />
         </SectionCard>
       </div>
@@ -158,7 +158,7 @@ export default function ReportPage({ data }: ReportPageProps) {
             { label: "Draft", value: e?.draft_events, color: "#9ca3af" },
           ].map((s) => (
             <div key={s.label} className="flex items-center gap-3">
-              <span className="text-sm text-gray-500 w-20 text-right flex-shrink-0">
+              <span className="text-sm text-black w-20 text-right flex-shrink-0">
                 {s.label}
               </span>
               <div className="flex-1 h-3 bg-gray-100 rounded-full overflow-hidden">
@@ -171,7 +171,7 @@ export default function ReportPage({ data }: ReportPageProps) {
                   }}
                 />
               </div>
-              <span className="text-sm font-semibold text-gray-700 w-6 flex-shrink-0">
+              <span className="text-sm font-semibold text-black w-6 flex-shrink-0">
                 {s.value}
               </span>
             </div>

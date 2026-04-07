@@ -1,6 +1,7 @@
 "use client";
 
 import { formatCurrency } from "@/lib/utils";
+import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
 import { EventPerformanceProps } from "@/types/reports";
 import {MetricCard} from "@/app/reports/components/CardComponents"
@@ -20,6 +21,7 @@ const STATUS_STYLES: Record<string, { bg: string; text: string; dot: string }> =
 
 export default function EventPerformance({ data }: EventPerformanceProps) {
   const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
 
   const statusStyle = STATUS_STYLES[(data?.status || "")] ?? STATUS_STYLES["pending"];
   const commissionPct = (data?.revenue || 0) > 0
@@ -57,23 +59,23 @@ export default function EventPerformance({ data }: EventPerformanceProps) {
         )}
         <div className="p-5 flex items-start justify-between gap-4">
           <div>
-            <h1 className="text-xl font-semibold text-gray-800 mb-1">
+            <h1 className="text-xl font-semibold text-black mb-1">
               {data?.event_title}
             </h1>
-            <div className="text-sm text-gray-400">{dateLabel}</div>
-            <div className="text-xs text-gray-400 mt-0.5">{timeLabel}</div>
+            <div className="text-sm text-black">{dateLabel}</div>
+            <div className="text-xs text-black mt-0.5">{timeLabel}</div>
           </div>
           <span
             className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full flex-shrink-0 ${statusStyle.bg} ${statusStyle.text}`}
           >
             <span className={`w-1.5 h-1.5 rounded-full ${statusStyle.dot}`} />
-            {(data?.status ?? "").replace("_", " ")}
+            {t("status." + data?.status)}
           </span>
         </div>
       </div>
 
       {/* ── KPI row ── */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-4 gap-4 font-medium">
         <MetricCard
           label="Revenue"
           value={formatCurrency(data?.revenue || 0, undefined, locale)}
@@ -106,8 +108,8 @@ export default function EventPerformance({ data }: EventPerformanceProps) {
           {/* Capacity bar */}
           <div className="mb-5">
             <div className="flex justify-between items-baseline mb-1.5">
-              <span className="text-sm text-gray-600 font-medium">Capacity fill</span>
-              <span className="text-sm font-semibold text-gray-800">
+              <span className="text-sm text-black font-medium">Capacity fill</span>
+              <span className="text-sm font-semibold text-black">
                 {data?.tickets_sold} / {data?.capacity}
               </span>
             </div>
@@ -117,7 +119,7 @@ export default function EventPerformance({ data }: EventPerformanceProps) {
                 style={{ width: `${Math.min(data?.sold_percentage || 0, 100)}%` }}
               />
             </div>
-            <div className="text-[11px] text-gray-400">
+            <div className="text-[11px] text-black">
               {(data?.sold_percentage ?? 0).toFixed(1)}% sold · {(data?.capacity || 0) - (data?.tickets_sold || 0)} remaining
             </div>
           </div>
@@ -128,7 +130,7 @@ export default function EventPerformance({ data }: EventPerformanceProps) {
             <StatRow
               label="Remaining"
               value={(data?.capacity || 0) - (data?.tickets_sold || 0)}
-              badge={{ bg: "bg-gray-100", text: "text-gray-600" }}
+              badge={{ bg: "bg-gray-100", text: "text-black" }}
             />
             <StatRow label="Transactions" value={(data?.total_transactions || 0)} />
           </div>
@@ -148,11 +150,11 @@ export default function EventPerformance({ data }: EventPerformanceProps) {
               />
             </div>
             <div className="flex gap-4">
-              <span className="flex items-center gap-1.5 text-[11px] text-gray-400">
+              <span className="flex items-center gap-1.5 text-[11px] text-black">
                 <span className="w-2.5 h-2.5 rounded-sm bg-emerald-400 inline-block" />
                 Organizer {organizerPct}%
               </span>
-              <span className="flex items-center gap-1.5 text-[11px] text-gray-400">
+              <span className="flex items-center gap-1.5 text-[11px] text-black">
                 <span className="w-2.5 h-2.5 rounded-sm bg-amber-400 inline-block" />
                 Commission {commissionPct}%
               </span>
@@ -181,7 +183,7 @@ export default function EventPerformance({ data }: EventPerformanceProps) {
       {/* ── Tier performance ── */}
       <SectionCard title="Tier performance">
         {(data?.tier_performance || []).length === 0 ? (
-          <p className="text-sm text-gray-400">No tier data available.</p>
+          <p className="text-sm text-black">No tier data available.</p>
         ) : (
           <div className="space-y-5">
             {(data?.tier_performance || []).map((tier) => {
@@ -192,10 +194,10 @@ export default function EventPerformance({ data }: EventPerformanceProps) {
                   {/* Tier header */}
                   <div className="flex items-center justify-between mb-3">
                     <div>
-                      <span className="text-sm font-semibold text-gray-700">
+                      <span className="text-sm font-semibold text-black">
                         {tier.tier_name}
                       </span>
-                      <span className="ml-2 text-xs text-gray-400">
+                      <span className="ml-2 text-xs text-black">
                         {formatCurrency(tier.ticket_price, undefined, locale)} / ticket
                       </span>
                     </div>
@@ -203,7 +205,7 @@ export default function EventPerformance({ data }: EventPerformanceProps) {
                       className={`text-xs font-semibold px-2.5 py-0.5 rounded-lg ${
                         tier.tickets_sold > 0
                           ? "bg-blue-50 text-blue-700"
-                          : "bg-gray-100 text-gray-400"
+                          : "bg-gray-100 text-black"
                       }`}
                     >
                       {tier.tickets_sold} sold
@@ -212,7 +214,7 @@ export default function EventPerformance({ data }: EventPerformanceProps) {
 
                   {/* Capacity fill */}
                   <div className="mb-1.5">
-                    <div className="flex justify-between text-[11px] text-gray-400 mb-1">
+                    <div className="flex justify-between text-[11px] text-black mb-1">
                       <span>Capacity fill</span>
                       <span>{tier.tickets_sold} / {tier.ticket_capacity}</span>
                     </div>
@@ -226,7 +228,7 @@ export default function EventPerformance({ data }: EventPerformanceProps) {
 
                   {/* Revenue bar */}
                   <div>
-                    <div className="flex justify-between text-[11px] text-gray-400 mb-1">
+                    <div className="flex justify-between text-[11px] text-black mb-1">
                       <span>Revenue</span>
                       <span>{formatCurrency(tier.revenue, undefined, locale)}</span>
                     </div>

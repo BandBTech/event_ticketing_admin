@@ -44,7 +44,7 @@ export default function SalesReport({ data }: SalesReportProps) {
   return (
     <div className="space-y-5">
       {/* ── KPI row ── */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-4 gap-4 font-medium">
         <MetricCard
           label="Total revenue"
           value={formatCurrency(m?.total_revenue || 0, undefined, locale)}
@@ -83,7 +83,7 @@ export default function SalesReport({ data }: SalesReportProps) {
               className={`text-xs px-3 py-1.5 rounded-lg border transition-colors ${
                 activeTab === key
                   ? "bg-blue-50 border-blue-200 text-blue-700 font-medium"
-                  : "border-gray-200 text-gray-500 hover:bg-gray-50"
+                  : "border-gray-200 text-black hover:bg-gray-50"
               }`}
             >
               {TAB_CONFIG[key].label}
@@ -97,13 +97,13 @@ export default function SalesReport({ data }: SalesReportProps) {
           {(data?.daily_sales ?? []).map((d) => (
             <div
               key={d.date}
-              className="flex-1 min-w-[28px] text-center text-[8px] text-gray-300 truncate"
+              className="flex-1 min-w-[28px] text-center text-[8px] text-black truncate"
             >
               {new Date(d.date).getDate()}
             </div>
           ))}
         </div>
-        <div className="text-[10px] text-gray-300 text-center mt-0.5">
+        <div className="text-[10px] text-black text-center mt-0.5">
           March – April 2026
         </div>
       </SectionCard>
@@ -115,14 +115,14 @@ export default function SalesReport({ data }: SalesReportProps) {
             {gateways.map((gw, i) => (
               <div key={gw.gateway_name}>
                 <div className="flex justify-between items-baseline mb-1.5">
-                  <span className="text-sm text-gray-600 capitalize font-medium">
+                  <span className="text-sm text-black capitalize font-medium">
                     {gw.gateway_name}
                   </span>
                   <div className="text-right">
-                    <span className="text-sm font-semibold text-gray-800">
+                    <span className="text-sm font-semibold text-black">
                       {formatCurrency(gw.total_revenue, undefined, locale)}
                     </span>
-                    <span className="text-xs text-gray-700 ml-2">
+                    <span className="text-xs text-black ml-2">
                       {gw.percentage_of_total.toFixed(1)}%
                     </span>
                   </div>
@@ -136,7 +136,7 @@ export default function SalesReport({ data }: SalesReportProps) {
                     }}
                   />
                 </div>
-                <div className="text-[11px] text-gray-700 mt-1">
+                <div className="text-[11px] text-black mt-1">
                   {gw.total_transactions} transactions · {gw.status}
                 </div>
               </div>
@@ -157,7 +157,7 @@ export default function SalesReport({ data }: SalesReportProps) {
                   key={d.date}
                   className="flex items-center gap-3 py-2 border-b border-gray-50 last:border-0"
                 >
-                  <span className="text-xs text-gray-700 w-12 flex-shrink-0">
+                  <span className="text-xs text-black w-12 flex-shrink-0">
                     {dateLabel}
                   </span>
                   <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
@@ -167,10 +167,10 @@ export default function SalesReport({ data }: SalesReportProps) {
                     />
                   </div>
                   <div className="text-right flex-shrink-0 w-28">
-                    <div className="text-sm font-semibold text-gray-700">
+                    <div className="text-sm font-semibold text-black">
                       {formatCurrency(d.revenue, undefined, locale)}
                     </div>
-                    <div className="text-[11px] text-gray-700">
+                    <div className="text-[11px] text-black">
                       {d.tickets_sold} tickets
                     </div>
                   </div>

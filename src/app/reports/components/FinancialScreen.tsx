@@ -24,10 +24,10 @@ function RevenueBar({
   return (
     <div className="mb-4 last:mb-0">
       <div className="flex items-baseline justify-between mb-1.5">
-        <span className="text-sm text-gray-600 font-medium truncate pr-2">
+        <span className="text-sm text-black font-medium truncate pr-2">
           {label}
         </span>
-        <span className="text-sm font-semibold text-gray-800 flex-shrink-0">
+        <span className="text-sm font-semibold text-black flex-shrink-0">
           {formatCurrency(value, undefined, locale)}
         </span>
       </div>
@@ -37,7 +37,7 @@ function RevenueBar({
           style={{ width: `${pct}%`, background: color }}
         />
       </div>
-      {sub && <div className="text-[11px] text-gray-400">{sub}</div>}
+      {sub && <div className="text-[11px] text-black">{sub}</div>}
     </div>
   );
 }
@@ -62,7 +62,7 @@ export default function RevenueReport({ data }: RevenueReportProps) {
   return (
     <div className="space-y-5">
       {/* ── KPI row ── */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-4 gap-4 font-medium">
         <MetricCard
           label="Gross revenue"
           value={formatCurrency(m?.total_gross_revenue || 0, undefined, locale)}
@@ -94,7 +94,7 @@ export default function RevenueReport({ data }: RevenueReportProps) {
       </div>
 
       {/* ── Secondary KPI row ── */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-4 font-medium">
         <MetricCard
           label="Avg. ticket price"
           value={formatCurrency(
@@ -126,7 +126,7 @@ export default function RevenueReport({ data }: RevenueReportProps) {
         <SectionCard title="Revenue split">
           {/* Gross → Net visual */}
           <div className="mb-5">
-            <div className="flex justify-between text-xs text-gray-400 mb-1.5">
+            <div className="flex justify-between text-xs text-black mb-1.5">
               <span>Gross revenue</span>
               <span>
                 {formatCurrency(m?.total_gross_revenue || 0, undefined, locale)}
@@ -145,11 +145,11 @@ export default function RevenueReport({ data }: RevenueReportProps) {
               />
             </div>
             <div className="flex gap-4 mt-2">
-              <span className="flex items-center gap-1.5 text-[11px] text-gray-400">
+              <span className="flex items-center gap-1.5 text-[11px] text-black">
                 <span className="w-2.5 h-2.5 rounded-sm bg-emerald-400 inline-block" />
                 Organizer {organizerPct}%
               </span>
-              <span className="flex items-center gap-1.5 text-[11px] text-gray-400">
+              <span className="flex items-center gap-1.5 text-[11px] text-black">
                 <span className="w-2.5 h-2.5 rounded-sm bg-amber-400 inline-block" />
                 Commission {commissionPct}%
               </span>
@@ -175,14 +175,14 @@ export default function RevenueReport({ data }: RevenueReportProps) {
                 badge:
                   (m?.total_refunds || 0) > 0
                     ? "bg-red-50 text-red-600"
-                    : "bg-gray-100 text-gray-500",
+                    : "bg-gray-100 text-black",
               },
             ].map((row) => (
               <div
                 key={row.label}
                 className="flex items-center justify-between py-2.5 border-b border-gray-50 last:border-0"
               >
-                <span className="text-sm text-gray-500">{row.label}</span>
+                <span className="text-sm text-black">{row.label}</span>
                 <span
                   className={`text-xs font-semibold px-2.5 py-0.5 rounded-lg ${row.badge}`}
                 >
@@ -195,7 +195,7 @@ export default function RevenueReport({ data }: RevenueReportProps) {
 
         <SectionCard title="Revenue by event">
           {(data?.revenue_breakdown ?? []).length === 0 ? (
-            <p className="text-sm text-gray-400">No event data available.</p>
+            <p className="text-sm text-black">No event data available.</p>
           ) : (
             data?.revenue_breakdown.map((ev) => (
               <RevenueBar
@@ -214,7 +214,7 @@ export default function RevenueReport({ data }: RevenueReportProps) {
       {/* ── Commission history ── */}
       <SectionCard title="Commission history">
         {(data?.commission_history || []).length === 0 ? (
-          <p className="text-sm text-gray-400">No commission records found.</p>
+          <p className="text-sm text-black">No commission records found.</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm" style={{ tableLayout: "fixed" }}>
@@ -226,7 +226,7 @@ export default function RevenueReport({ data }: RevenueReportProps) {
                 <col style={{ width: "22%" }} />
               </colgroup>
               <thead>
-                <tr className="text-left text-xs text-gray-400 border-b border-gray-100">
+                <tr className="text-left text-xs text-black border-b border-gray-100">
                   <th className="pb-2 font-medium">Event</th>
                   <th className="pb-2 font-medium text-right">Revenue</th>
                   <th className="pb-2 font-medium text-right">Rate</th>
@@ -240,10 +240,10 @@ export default function RevenueReport({ data }: RevenueReportProps) {
                     key={c.transaction_id}
                     className="border-b border-gray-50 last:border-0"
                   >
-                    <td className="py-2.5 text-gray-700 truncate pr-2">
+                    <td className="py-2.5 text-black truncate pr-2">
                       {c.event_title}
                     </td>
-                    <td className="py-2.5 text-gray-700 text-right">
+                    <td className="py-2.5 text-black text-right">
                       {formatCurrency(c.revenue, undefined, locale)}
                     </td>
                     <td className="py-2.5 text-right">
@@ -254,7 +254,7 @@ export default function RevenueReport({ data }: RevenueReportProps) {
                     <td className="py-2.5 text-amber-600 font-medium text-right">
                       {formatCurrency(c.commission_amount, undefined, locale)}
                     </td>
-                    <td className="py-2.5 text-gray-400 text-right text-xs">
+                    <td className="py-2.5 text-black text-right text-xs">
                       {new Date(c.created_at).toLocaleDateString(locale, {
                         month: "short",
                         day: "numeric",
@@ -277,14 +277,14 @@ export default function RevenueReport({ data }: RevenueReportProps) {
               <div key={c.currency}>
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold text-gray-700">
+                    <span className="text-sm font-semibold text-black">
                       {c.currency}
                     </span>
                     <span className="text-xs px-2 py-0.5 rounded-lg bg-blue-50 text-blue-700 font-medium">
                       {c.percentage_of_total}%
                     </span>
                   </div>
-                  <span className="text-sm font-semibold text-gray-800">
+                  <span className="text-sm font-semibold text-black">
                     {formatCurrency(c.gross_revenue, undefined, locale)}
                   </span>
                 </div>
@@ -294,7 +294,7 @@ export default function RevenueReport({ data }: RevenueReportProps) {
                     style={{ width: `${c.percentage_of_total}%` }}
                   />
                 </div>
-                <div className="flex gap-4 text-[11px] text-gray-400">
+                <div className="flex gap-4 text-[11px] text-black">
                   <span>
                     Commission:{" "}
                     {formatCurrency(c.commission, undefined, locale)}

@@ -31,13 +31,13 @@ export function MetricCard({
 }) {
   return (
     <div className="bg-white rounded-2xl p-4">
-      <div className="text-xs text-gray-700 mb-1.5">{label}</div>
+      <div className="text-xs text-black mb-1.5">{label}</div>
       <div
         className={`text-2xl font-semibold ${valueColor ?? "text-gray-800"}`}
       >
         {value}
       </div>
-      {sub && <div className="text-[11px] text-gray-700 mt-1">{sub}</div>}
+      {sub && <div className="text-[11px] text-black mt-1">{sub}</div>}
     </div>
   );
 }
@@ -52,7 +52,7 @@ export function SectionCard({
   return (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
       <div className="px-5 py-3 border-b border-gray-50">
-        <h2 className="text-sm font-semibold text-gray-500 tracking-wide uppercase">
+        <h2 className="text-sm font-semibold text-black tracking-wide uppercase">
           {title}
         </h2>
       </div>
@@ -72,7 +72,7 @@ export function RevenueBar({
 }) {
   return (
     <div className="flex items-center gap-3 mb-3">
-      <span className="text-sm text-gray-500 w-24 text-right flex-shrink-0">
+      <span className="text-sm text-black w-24 text-right flex-shrink-0">
         {label}
       </span>
       <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
@@ -81,7 +81,7 @@ export function RevenueBar({
           style={{ width: `${pct}%`, background: color }}
         />
       </div>
-      <span className="text-sm font-medium text-gray-700 w-8 flex-shrink-0">
+      <span className="text-sm font-medium text-black w-8 flex-shrink-0">
         {pct}%
       </span>
     </div>
@@ -99,7 +99,7 @@ export function StatRow({
 }) {
   return (
     <div className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
-      <span className="text-sm text-gray-500">{label}</span>
+      <span className="text-sm text-black">{label}</span>
       {badge ? (
         <span
           className={`text-xs font-semibold px-2.5 py-0.5 rounded-lg ${badge.bg} ${badge.text}`}
@@ -107,7 +107,7 @@ export function StatRow({
           {value}
         </span>
       ) : (
-        <span className="text-sm font-semibold text-gray-700">{value}</span>
+        <span className="text-sm font-semibold text-black">{value}</span>
       )}
     </div>
   );
@@ -153,7 +153,7 @@ export function DailyBarChart({
                 opacity: 0.85,
               }}
             />
-            <span className="text-[9px] text-gray-700 leading-none rotate-45 origin-left mt-0.5 hidden group-hover:block absolute -bottom-4 left-1/2 -translate-x-1/2 whitespace-nowrap">
+            <span className="text-[9px] text-black leading-none rotate-45 origin-left mt-0.5 hidden group-hover:block absolute -bottom-4 left-1/2 -translate-x-1/2 whitespace-nowrap">
               {dateLabel}
             </span>
           </div>
@@ -174,7 +174,7 @@ export function StatRowCAS({
 }) {
   return (
     <div className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
-      <span className="text-sm text-gray-500">{label}</span>
+      <span className="text-sm text-black">{label}</span>
       <span
         className={`text-xs font-semibold px-2.5 py-0.5 rounded-lg ${badge.bg} ${badge.text}`}
       >
@@ -226,7 +226,7 @@ export function RetentionDonut({
         fontWeight="500"
         fill="#1f2937"
       >
-        {retention}%
+        {retention.toFixed(2)}%
       </text>
       <text x={cx} y={cy + 13} textAnchor="middle" fontSize="9" fill="#9ca3af">
         retention

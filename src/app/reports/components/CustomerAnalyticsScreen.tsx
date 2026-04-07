@@ -3,10 +3,10 @@
 import { formatCurrency } from "@/lib/utils";
 import { useLanguageStore } from "@/store/languageStore";
 import { CustomerAnalyticsProps } from "@/types/reports";
-import {MetricCard} from "@/app/reports/components/CardComponents"
-import {SectionCard} from "@/app/reports/components/CardComponents"
-import {RetentionDonut} from "@/app/reports/components/CardComponents"
-import {StatRowCAS} from "@/app/reports/components/CardComponents"
+import { MetricCard } from "@/app/reports/components/CardComponents";
+import { SectionCard } from "@/app/reports/components/CardComponents";
+import { RetentionDonut } from "@/app/reports/components/CardComponents";
+import { StatRowCAS } from "@/app/reports/components/CardComponents";
 
 const SEGMENT_COLORS: Record<
   string,
@@ -51,7 +51,7 @@ export default function CustomerAnalytics({ data }: CustomerAnalyticsProps) {
   return (
     <div className="space-y-5">
       {/* ── KPI row ── */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-4 gap-4 font-medium">
         <MetricCard
           label="Total customers"
           value={data?.total_customers || 0}
@@ -72,7 +72,7 @@ export default function CustomerAnalytics({ data }: CustomerAnalyticsProps) {
         <MetricCard
           label="Avg. order value"
           value={formatCurrency(
-            Math.round(data?.average_order_value || 0),
+            data?.average_order_value || 0,
             undefined,
             locale,
           )}
@@ -91,7 +91,7 @@ export default function CustomerAnalytics({ data }: CustomerAnalyticsProps) {
                 <div key={seg.segment_name}>
                   <div className="flex items-baseline justify-between mb-1.5">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-gray-700">
+                      <span className="text-sm font-medium text-black">
                         {seg.segment_name}
                       </span>
                       <span
@@ -101,8 +101,8 @@ export default function CustomerAnalytics({ data }: CustomerAnalyticsProps) {
                         {seg.customer_count === 1 ? "customer" : "customers"}
                       </span>
                     </div>
-                    <span className="text-xs text-gray-700">
-                      {seg.percentage_of_total}%
+                    <span className="text-xs text-black">
+                      {seg.percentage_of_total.toFixed(2)}%
                     </span>
                   </div>
                   <div className="h-2 bg-gray-100 rounded-full overflow-hidden mb-1.5">
@@ -111,7 +111,7 @@ export default function CustomerAnalytics({ data }: CustomerAnalyticsProps) {
                       style={{ width: `${barPct}%`, background: colors.bar }}
                     />
                   </div>
-                  <div className="flex justify-between text-[11px] text-gray-700">
+                  <div className="flex justify-between text-[11px] text-black">
                     <span>
                       Total:{" "}
                       {formatCurrency(seg.total_spent, undefined, locale)}
@@ -146,12 +146,12 @@ export default function CustomerAnalytics({ data }: CustomerAnalyticsProps) {
           />
           <StatRowCAS
             label="Retention rate"
-            value={`${r?.retention_rate}%`}
+            value={`${r?.retention_rate.toFixed(2)}%`}
             badge={{ bg: "bg-emerald-50", text: "text-emerald-700" }}
           />
           <StatRowCAS
             label="Churn rate"
-            value={`${r?.churn_rate}%`}
+            value={`${r?.churn_rate.toFixed(2)}%`}
             badge={{ bg: "bg-red-50", text: "text-red-600" }}
           />
         </SectionCard>
@@ -167,17 +167,17 @@ export default function CustomerAnalytics({ data }: CustomerAnalyticsProps) {
             return (
               <div key={seg.segment_name} className="space-y-1">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-gray-600">
+                  <span className="text-sm font-medium text-black">
                     {seg.segment_name}
                   </span>
-                  <span className="text-xs text-gray-700">
+                  <span className="text-xs text-black">
                     {seg.customer_count}{" "}
                     {seg.customer_count === 1 ? "customer" : "customers"}
                   </span>
                 </div>
                 {/* Total spent bar */}
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] text-gray-700 w-16 text-right flex-shrink-0">
+                  <span className="text-[10px] text-black w-16 text-right flex-shrink-0">
                     total
                   </span>
                   <div className="flex-1 h-2.5 bg-gray-100 rounded-full overflow-hidden">
@@ -190,13 +190,13 @@ export default function CustomerAnalytics({ data }: CustomerAnalyticsProps) {
                       }}
                     />
                   </div>
-                  <span className="text-xs font-medium text-gray-700 w-24 text-right flex-shrink-0">
+                  <span className="text-xs font-medium text-black w-24 text-right flex-shrink-0">
                     {formatCurrency(seg.total_spent, undefined, locale)}
                   </span>
                 </div>
                 {/* Avg spent bar */}
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] text-gray-700 w-16 text-right flex-shrink-0">
+                  <span className="text-[10px] text-black w-16 text-right flex-shrink-0">
                     avg
                   </span>
                   <div className="flex-1 h-2.5 bg-gray-100 rounded-full overflow-hidden">
@@ -209,7 +209,7 @@ export default function CustomerAnalytics({ data }: CustomerAnalyticsProps) {
                       }}
                     />
                   </div>
-                  <span className="text-xs text-gray-700 w-24 text-right flex-shrink-0">
+                  <span className="text-xs text-black w-24 text-right flex-shrink-0">
                     {formatCurrency(seg.average_spent, undefined, locale)}
                   </span>
                 </div>

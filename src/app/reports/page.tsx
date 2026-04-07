@@ -111,7 +111,7 @@ const { data: response, isLoading } = useQuery<ReportResponse>({
               {/* Report Type */}
 
               <Select value={reportType} onValueChange={setReportType}>
-                <SelectTrigger className="w-full text-sm h-9 justify-between px-3 bg-white">
+                <SelectTrigger className="w-full text-sm h-9 justify-between px-3 bg-white font-medium">
                   <SelectValue placeholder={"Select Type"} />
                 </SelectTrigger>
                 <SelectContent>
@@ -125,7 +125,7 @@ const { data: response, isLoading } = useQuery<ReportResponse>({
             </div>
             {/* Event ID */}
             {reportType === "event-performance" && (
-              <div className="space-y-2 w-[250px]">
+              <div className="space-y-2 w-[250px] font-medium">
                 <AsyncCombobox
                   queryKey={["filter", "events"]}
                   value={eventId}
@@ -134,7 +134,7 @@ const { data: response, isLoading } = useQuery<ReportResponse>({
                   placeholder="Select Event"
                   searchPlaceholder="Search Events"
                   emptyText="No events found."
-                  className="w-full text-sm h-9 justify-between px-3!"
+                  className="w-full text-sm h-9 justify-between px-3! font-medium"
                   debounceMs={300}
                 />
               </div>
