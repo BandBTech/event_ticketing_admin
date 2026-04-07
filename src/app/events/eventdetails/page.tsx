@@ -286,12 +286,13 @@ export default function EventDetailsPage() {
               {event.title}
             </h1>
             <div className="flex items-center gap-3 text-sm text-gray-600 flex-wrap">
-              {event.sales_status === "stopped" &&
+              {/* {event.sales_status === "stopped" &&
               !["completed", "cancelled"].includes(event.status) ? (
                 <SalesStatusBadge status={event.sales_status} />
               ) : (
                 <EventStatusBadge status={event.status} />
-              )}
+              )} */}
+              <EventStatusBadge status={event.status} />
               <div className="flex gap-4 flex-wrap ml-2">
                 <div className="flex items-center gap-1.5 text-gray-600">
                   <CalendarBlankIcon size={16} weight="duotone" />

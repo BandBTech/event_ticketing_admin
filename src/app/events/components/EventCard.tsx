@@ -70,13 +70,14 @@ export function EventCard({ event }: { event: Event }) {
         />
         {/* Status Badge */}
         <div className="absolute top-3 left-3">
-          {event.status &&
+          {/* {event.status &&
           event.sales_status === "stopped" &&
           !["completed", "cancelled"].includes(event.status) ? (
             <SalesStatusBadge status={event.sales_status} />
           ) : (
             event.status && <EventStatusBadge status={event.status} />
-          )}
+          )} */}
+          {event.status && <EventStatusBadge status={event.status} />}
         </div>
         {/* Featured Badge */}
         {event.is_featured && (
