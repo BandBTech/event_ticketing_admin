@@ -139,13 +139,9 @@ export function EventCard({ event }: { event: Event }) {
               className="w-4 h-4 text-muted-foreground/70 shrink-0"
             />
             <span className="truncate">
-              {(/^-?\d+(\.\d+)?,-?\d+(\.\d+)?$/.test(
-                event.address?.trim() || "",
-              ) && !event.location
+              {/^-?\d+(\.\d+)?,-?\d+(\.\d+)?$/.test(event.address?.trim())
                 ? event.venue_name
-                : event.address) ||
-                event.venue_name ||
-                "Location TBA"}
+                : [event.venue_name, event.address].filter(Boolean).join(", ")}
             </span>
           </div>
         </div>
