@@ -17,6 +17,7 @@ export interface ReportResponse {
   revenue_breakdown: RevenueBreakdownItem[];
   currency_breakdown: CurrencyBreakdownItem[];
   commission_history: CommissionHistoryItem[];
+  bill_history: BillHistoryItem[];
   repeat_customers: number;
   total_customers: number;
   registered_users: number;
@@ -199,13 +200,22 @@ type RevenueBreakdownItem = {
   transaction_count: number;
 };
 
-type CommissionHistoryItem = {
+export type CommissionHistoryItem = {
   transaction_id: string;
   event_id: string;
   event_title: string;
   revenue: number;
   commission_rate: number;
   commission_amount: number;
+  created_at: string;
+};
+
+export type BillHistoryItem = {
+  id: string;
+  bill_number: string;
+  amount: number;
+  status: string;
+  processed_at: string;
   created_at: string;
 };
 
@@ -273,5 +283,5 @@ export type CustomerAnalyticsProps = {
 
 export type EventPerformanceProps = {
   data: ReportResponse | undefined;
-  isEventIdSelected: boolean
+  isEventIdSelected: boolean;
 };
