@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useLanguageStore } from '@/store/languageStore';
 
 type Locale = 'en' | 'ja' | 'it';
 
@@ -14,7 +15,9 @@ const translations: Record<Locale, () => Promise<TranslationMessages>> = {
   it: () => import('../../messages/it.json').then(m => m.default),
 };
 
-export function useTranslation(locale: Locale = 'en') {
+export function useTranslation(localeOverride?: Locale) {
+  const { locale: storeLocale } = useLanguageStore();
+  const locale = localeOverride || storeLocale || 'en';
   const [messages, setMessages] = useState<TranslationMessages>({});
   const [isLoading, setIsLoading] = useState(true);
 
@@ -36,10 +39,10 @@ export function useTranslation(locale: Locale = 'en') {
     loadMessages();
   }, [locale]);
 
-  const t = (key: string, fallback?: string, variables?: Record<string, string | number>): string => {
+  const t = useCallback((key: string, fallback?: string, variables?: Record<string, string | number>): string => {
     const keys = key.split('.');
     let value: string | TranslationMessages = messages;
-    
+
     for (const k of keys) {
       if (value && typeof value === 'object' && k in value) {
         value = value[k];
@@ -48,7 +51,7 @@ export function useTranslation(locale: Locale = 'en') {
         break;
       }
     }
-    
+
     let result = typeof value === 'string' ? value : fallback || key;
 
     if (variables) {
@@ -58,7 +61,7 @@ export function useTranslation(locale: Locale = 'en') {
     }
 
     return result;
-  };
+  }, [messages]);
 
   return { t, isLoading, locale };
 }

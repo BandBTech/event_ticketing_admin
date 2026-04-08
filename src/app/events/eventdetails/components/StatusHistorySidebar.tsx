@@ -1,6 +1,5 @@
 import { useState, useMemo } from "react";
 import { useTranslation } from "@/hooks/useTranslation";
-import { useLanguageStore } from "@/store/languageStore";
 import { EventStatusHistory } from "@/types/event";
 import { formatDateTime } from "@/lib/utils";
 import {
@@ -28,8 +27,7 @@ export default function StatusHistorySidebar({
   history,
   isLoading,
 }: StatusHistorySidebarProps) {
-  const { locale } = useLanguageStore();
-  const { t } = useTranslation(locale);
+  const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
 
   // Ensure history is an array. If it's an object, check for common list properties.
@@ -132,7 +130,7 @@ export default function StatusHistorySidebar({
     return (
       <div className="rounded-2xl glass-card-lower p-6 space-y-4 max-h-[600px] overflow-hidden">
         <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2 sticky top-0 bg-white pb-2 z-20">
-          {t("events.sections.statusHistory", "Status History")}
+          {t("event.section.statusHistory", "Status History")}
         </h3>
         <div className="relative space-y-6 before:absolute before:inset-0 before:ml-4 before:-translate-x-px before:h-full before:w-0.5 before:bg-slate-100">
           {[1, 2, 3].map((i) => (
@@ -162,11 +160,11 @@ export default function StatusHistorySidebar({
     return (
       <div className="rounded-2xl glass-card-lower p-6 space-y-4">
         <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-          {t("events.sections.statusHistory", "Status History")}
+          {t("event.section.statusHistory", "Status History")}
         </h3>
         <p className="text-gray-500 text-sm">
           {t(
-            "events.messages.noStatusHistory",
+            "event.text.noStatusHistory",
             "No status changes recorded for this event.",
           )}
         </p>
@@ -177,7 +175,7 @@ export default function StatusHistorySidebar({
   return (
     <div className="rounded-2xl glass-card-lower p-6 space-y-4 @container">
       <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2 pb-2 z-20">
-        {t("events.sections.statusHistory", "Status History")}
+        {t("event.section.statusHistory", "Status History")}
       </h3>
 
       <div className="relative space-y-6 before:absolute before:inset-0 before:ml-4 before:-translate-x-px before:h-full before:w-0.5 before:bg-linear-to-b before:from-transparent before:via-slate-200 before:to-transparent max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
@@ -192,7 +190,7 @@ export default function StatusHistorySidebar({
                   className="h-6 -ml-10 mt-8 mb-10 bg-white hover:bg-slate-50 border border-slate-200 rounded-full text-xs text-slate-500 px-3 flex gap-1 items-center shadow-sm w-fit"
                 >
                   <CaretDown size={12} />
-                  {t("common.viewCountMore", "View {count} more").replace(
+                  {t("common.button.viewMore", "View {count} more").replace(
                     "{count}",
                     (historyList.length - 4).toString(),
                   )}
@@ -232,26 +230,26 @@ export default function StatusHistorySidebar({
                   {historyItem.status_type === "approval"
                     ? historyItem.old_status
                       ? t(
-                          "events.history.statusChanged",
+                          "event.history.statusChanged",
                           "Status updated from {old} to {new}",
-                          {
-                            old: historyItem.old_status,
-                            new: historyItem.new_status,
-                          },
                         )
-                      : t("events.history.statusSet", "Status set to {new}", {
-                          new: historyItem.new_status,
-                        })
-                    : t("events.history.salesChanged", "Sales {new}", {
-                        new: historyItem.new_status,
-                      })}
+                          .replace("{old}", historyItem.old_status)
+                          .replace("{new}", historyItem.new_status)
+                      : t("event.history.statusSet", "Status set to {new}").replace(
+                          "{new}",
+                          historyItem.new_status,
+                        )
+                    : t("event.history.salesChanged", "Sales {new}").replace(
+                        "{new}",
+                        historyItem.new_status,
+                      )}
                 </div>
 
                 <div className="flex items-center gap-1 mt-1 text-[10px] text-gray-400">
                   <User size={10} />
                   <span>
                     {historyItem.changed_by_name ||
-                      t("common.system", "System")}
+                      t("common.text.system", "System")}
                   </span>
                 </div>
               </div>
@@ -269,7 +267,7 @@ export default function StatusHistorySidebar({
             className="text-xs text-slate-400 hover:text-slate-600 flex gap-1 h-auto py-1"
           >
             <CaretUp size={12} />
-            {t("common.showLess", "Show Less")}
+            {t("common.button.showLess", "Show Less")}
           </Button>
         </div>
       )}
