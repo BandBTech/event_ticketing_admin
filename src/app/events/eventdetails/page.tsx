@@ -298,15 +298,11 @@ export default function EventDetailsPage() {
                   <CalendarBlankIcon size={16} weight="duotone" />
                   <span suppressHydrationWarning>
                     {isValid(new Date(event.start_date))
-                      ? format(new Date(event.start_date), "MMM dd, yyyy")
+                      ? format(
+                          new Date(event.start_date),
+                          "MMM dd, yyyy h:mm a",
+                        )
                       : "TBD"}
-                  </span>
-                  <span className="text-gray-300">|</span>
-                  <ClockIcon size={16} weight="duotone" />
-                  <span suppressHydrationWarning>
-                    {isValid(new Date(event.start_date))
-                      ? format(new Date(event.start_date), "h:mm a")
-                      : "--:--"}
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5 text-gray-600">
@@ -510,7 +506,10 @@ export default function EventDetailsPage() {
                       suppressHydrationWarning
                     >
                       {isValid(new Date(event.start_date))
-                        ? format(new Date(event.start_date), "PPpp")
+                        ? format(
+                            new Date(event.start_date),
+                            "MMM dd, yyyy h:mm a",
+                          )
                         : "TBD"}
                     </p>
                   </div>
@@ -523,7 +522,10 @@ export default function EventDetailsPage() {
                       suppressHydrationWarning
                     >
                       {isValid(new Date(event.end_date))
-                        ? format(new Date(event.end_date), "PPpp")
+                        ? format(
+                            new Date(event.end_date),
+                            "MMM dd, yyyy h:mm a",
+                          )
                         : "TBD"}
                     </p>
                   </div>

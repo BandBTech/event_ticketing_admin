@@ -1144,6 +1144,27 @@
   "event": {
     "fields": {
       "eventDescription": "Event Description"
+    },
+    "badge": {
+      "approved": "Approved",
+      "pending": "Pending",
+      "cancelled": "Cancelled",
+      "draft": "Draft",
+      "live": "Live",
+      "rejected": "Rejected",
+      "active": "On Sale",
+      "paused": "Sales Paused",
+      "stopped": "Sales Stopped",
+      "sold_out": "Sold Out",
+      "sales_end": "Sales Ended",
+      "on_sale": "On Sale",
+      "hold": "On Hold",
+      "featured": "Featured",
+      "completed": "Completed",
+      "scheduled": "Scheduled"
+    },
+    "section": {
+      "statusHistory": "Status History"
     }
   },
   "imageUploader": {

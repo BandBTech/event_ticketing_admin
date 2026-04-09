@@ -152,12 +152,14 @@ export default function EventsPage() {
   } = useQuery({
     queryKey: queryKeys.events.all({
       limit: itemsPerPage,
+      search: debouncedSearch || undefined,
       status: statusFilter !== "all" ? statusFilter : undefined,
       organizerId: organizerId || undefined,
       page: currentPage,
     }),
     queryFn: () =>
       EventService.getAdminEvents({
+        search: debouncedSearch || undefined,
         status:
           statusFilter && statusFilter !== "all" ? statusFilter : undefined,
         organizer_id: organizerId || undefined,

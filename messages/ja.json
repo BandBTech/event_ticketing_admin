@@ -1097,6 +1097,27 @@
   "event": {
     "fields": {
       "eventDescription": "イベントの説明"
+    },
+    "badge": {
+      "approved": "承認された",
+      "pending": "保留中",
+      "cancelled": "キャンセル",
+      "draft": "下書き",
+      "live": "ライブ",
+      "rejected": "拒否されました",
+      "active": "セールスライブ",
+      "paused": "販売一時停止",
+      "stopped": "販売停止",
+      "sold_out": "完売",
+      "sales_end": "販売終了",
+      "on_sale": "セールスライブ",
+      "hold": "販売保留",
+      "featured": "注目の",
+      "completed": "完了",
+      "scheduled": "スケジュール"
+    },
+    "section": {
+      "statusHistory": "ステータス履歴"
     }
   },
   "imageUploader": {

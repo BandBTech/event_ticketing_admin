@@ -94,7 +94,7 @@ export function EventStatusBadge({ status, className }: EventStatusBadgeProps) {
           <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
         </span>
       )}
-      {t(`events.badge.${status}`, status)}
+      {t(`event.badge.${status}`, status)}
     </Badge>
   );
 }

@@ -1081,6 +1081,29 @@
     "organizers": "organizzatori",
     "events": "eventi"
   },
+  "event": {
+    "badge": {
+      "approved": "Approvato",
+      "pending": "In attesa di",
+      "cancelled": "Annullato",
+      "draft": "Bozza",
+      "live": "Vivere",
+      "rejected": "Respinto",
+      "active": "Vendite in diretta",
+      "paused": "Vendite sospese",
+      "stopped": "Le vendite si sono fermate",
+      "sold_out": "Esaurito",
+      "sales_end": "Vendite terminate",
+      "on_sale": "Vendite in diretta",
+      "hold": "In attesa",
+      "featured": "In primo piano",
+      "completed": "Completato",
+      "scheduled": "Scheduled"
+    },
+    "section": {
+      "statusHistory": "Cronologia Stato"
+    }
+  },
   "imageUploader": {
     "uploadScreenshot": "Carica screenshot o trascina e rilascia",
     "recommendedSize": "Consigliato: file PNG/JPG di 1920x1200px con dimensioni fino a 5MB",
