@@ -13,6 +13,7 @@ import {
   PauseCircle,
   PlayCircle,
   StopCircle,
+  ArrowsClockwise,
 } from "@phosphor-icons/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -21,11 +22,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 interface StatusHistorySidebarProps {
   history: EventStatusHistory[];
   isLoading?: boolean;
+  onRefresh?: () => void;
 }
 
 export default function StatusHistorySidebar({
   history,
   isLoading,
+  onRefresh,
 }: StatusHistorySidebarProps) {
   const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
@@ -180,6 +183,20 @@ export default function StatusHistorySidebar({
     <div className="rounded-2xl glass-card-lower p-6 space-y-4 @container">
       <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2 pb-2 z-20">
         {t("event.section.statusHistory", "Status History")}
+        {onRefresh && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onRefresh}
+            disabled={isLoading}
+            className="h-7 w-7 ml-auto text-gray-400 hover:text-gray-600"
+          >
+            <ArrowsClockwise
+              size={14}
+              className={isLoading ? "animate-spin" : ""}
+            />
+          </Button>
+        )}
       </h3>
 
       <div className="relative space-y-6 before:absolute before:inset-0 before:ml-4 before:-translate-x-px before:h-full before:w-0.5 before:bg-linear-to-b before:from-transparent before:via-slate-200 before:to-transparent max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">

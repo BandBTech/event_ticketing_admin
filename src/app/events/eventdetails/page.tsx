@@ -76,8 +76,11 @@ export default function EventDetailsPage() {
     enabled: !!eventId,
   });
 
-  const { data: statusHistory, isLoading: isLoadingHistory } =
-    useEventStatusHistory(eventId || "");
+  const {
+    data: statusHistory,
+    isLoading: isLoadingHistory,
+    refetch: refetchStatusHistory,
+  } = useEventStatusHistory(eventId || "");
   const { data: analytics } = useEventAnalyticsById(eventId || "");
   // Note: useEventAnalytics fetches list, not single event details usually, but assuming user request context.
   // If analytics endpoint is global, we might not get per-event stats here unless filtered.
@@ -816,6 +819,7 @@ export default function EventDetailsPage() {
             <StatusHistorySidebar
               history={mappedStatusHistory}
               isLoading={isLoadingHistory}
+              onRefresh={() => refetchStatusHistory()}
             />
           </div>
         </div>
