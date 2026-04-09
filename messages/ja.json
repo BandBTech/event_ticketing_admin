@@ -1115,7 +1115,8 @@
       "hold": "販売保留",
       "featured": "注目の",
       "completed": "完了",
-      "scheduled": "スケジュール"
+      "scheduled": "スケジュール",
+      "resumed": "販売再開"
     },
     "section": {
       "statusHistory": "ステータス履歴"

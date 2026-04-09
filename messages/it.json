@@ -1099,7 +1099,8 @@
       "hold": "In attesa",
       "featured": "In primo piano",
       "completed": "Completato",
-      "scheduled": "Scheduled"
+      "scheduled": "Scheduled",
+      "resumed": "Vendite riprimate"
     },
     "section": {
       "statusHistory": "Cronologia Stato"

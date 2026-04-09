@@ -1162,7 +1162,8 @@
       "hold": "On Hold",
       "featured": "Featured",
       "completed": "Completed",
-      "scheduled": "Scheduled"
+      "scheduled": "Scheduled",
+      "resumed": "Sales Resumed"
     },
     "section": {
       "statusHistory": "Status History"
