@@ -1,10 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { DashboardStats } from "./components/DashboardStats";
 import UpcomingEventsList from "./components/UpcomingEvents";
 import { DashboardService } from "@/services/dashboardService";
 import { useQuery } from "@tanstack/react-query";
+import { useEventStore } from "@/store/eventStore";
+import { usePendingOrganizers } from "@/hooks/useDashboard";
+import { useOrganizerStore } from "@/store/organizerStore";
+import { usePendingEvents } from "@/hooks/useDashboard";
 import { DashboardSkeleton } from "./components/DashboardSkeleton";
 import {
   WarningIcon,
@@ -17,6 +21,30 @@ const AdminDashboard: React.FC = () => {
     queryKey: ["dashboard"],
     queryFn: () => DashboardService.getDashboard({}),
   });
+
+  const { data: pendingEventsData, isLoading: isLoadingEvents } =
+    usePendingEvents();
+
+  const setTotalPendingEvents = useEventStore(
+    (state) => state.setTotalPendingEvents,
+  );
+
+  useEffect(() => {
+    const total = pendingEventsData?.events?.length || 0;
+    setTotalPendingEvents(total);
+  }, [pendingEventsData, setTotalPendingEvents]);
+
+  const { data: pendingOrganizersData, isLoading: isLoadingOrganizers } =
+    usePendingOrganizers();
+
+  const setTotalPendingOrganizers = useOrganizerStore(
+    (state) => state.setTotalPendingOrganizers,
+  );
+
+  useEffect(() => {
+    const total = pendingOrganizersData?.organizers?.length || 0;
+    setTotalPendingOrganizers(total);
+  }, [pendingOrganizersData, setTotalPendingOrganizers]);
 
   if (isLoading) {
     return (
