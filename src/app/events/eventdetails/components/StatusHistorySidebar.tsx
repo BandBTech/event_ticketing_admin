@@ -32,6 +32,14 @@ export default function StatusHistorySidebar({
 }: StatusHistorySidebarProps) {
   const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    if (!onRefresh) return;
+    setIsRefreshing(true);
+    await onRefresh();
+    setIsRefreshing(false);
+  };
 
   // Ensure history is an array. If it's an object, check for common list properties.
   const historyList = useMemo(() => {
@@ -75,6 +83,8 @@ export default function StatusHistorySidebar({
         return <PlayCircle size={16} className="text-green-500" />;
       if (status === "stopped")
         return <StopCircle size={16} className="text-destructive" />;
+      if (status === "sales_upcoming")
+        return <PlayCircle size={16} className="text-blue-500" />;
     }
 
     switch (status) {
@@ -120,6 +130,8 @@ export default function StatusHistorySidebar({
         return "border-red-600 bg-red-700 text-red-100";
       case "sales_end":
         return "border-red-300 bg-red-200 text-red-800";
+      case "sales_upcoming":
+        return "border-blue-300 bg-blue-200 text-blue-800";
       default:
         return "border-amber-200 bg-amber-50 text-amber-700";
     }
@@ -186,15 +198,16 @@ export default function StatusHistorySidebar({
         {onRefresh && (
           <Button
             variant="ghost"
-            size="icon"
-            onClick={onRefresh}
-            disabled={isLoading}
-            className="h-7 w-7 ml-auto text-gray-400 hover:text-gray-600"
+            size="sm"
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            className="ml-auto text-xs text-gray-400 hover:text-gray-600 h-auto py-0.5 px-1.5 flex items-center gap-1"
           >
             <ArrowsClockwise
-              size={14}
-              className={isLoading ? "animate-spin" : ""}
+              size={12}
+              className={isRefreshing ? "animate-spin" : ""}
             />
+            {t("common.button.refresh", "Refresh")}
           </Button>
         )}
       </h3>
