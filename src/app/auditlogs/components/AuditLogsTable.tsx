@@ -61,7 +61,7 @@ export function AuditLogsTable({
         header: "Initiator",
         cell: ({ row }) => (
           <div className="max-w-[200px] text-gray-700 truncate inline-block">
-            {row.original.actor.name || "-"}
+            {row.original.actor?.name || "-"}
           </div>
         ),
       },
