@@ -28,7 +28,7 @@ export const EVENT_STATUS_OPTIONS = [
   { value: "on_sale", label: "On Sale" },
   { value: "pending", label: "Pending" },
   { value: "rejected", label: "Rejected" },
-  { value: "sales_upcoming", label: "Sales Upcoming" },
+  { value: "sales_upcoming", label: "Upcoming Sales" },
   { value: "scheduled", label: "Scheduled" },
 ] as const;
 
