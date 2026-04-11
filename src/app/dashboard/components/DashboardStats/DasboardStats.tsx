@@ -12,6 +12,7 @@ import {
   CurrencyDollarIcon,
 } from "@phosphor-icons/react";
 import { useLanguageStore } from "@/store/languageStore";
+import { EventsDonutChart } from "../EventDoughnutChart";
 
 type DashboardPageProps = {
   data: AdminDashboardData;
@@ -41,10 +42,10 @@ function TopStatCard({
         </span>
       </div>
       <div>
-        <div className="text-2xl font-bold text-gray-800 tracking-tight leading-none">
+        <div className="text-2xl font-bold text-black tracking-tight leading-none">
           {value}
         </div>
-        <div className="text-sm text-gray-400 mt-2 font-medium">{label}</div>
+        <div className="text-sm text-black mt-2 font-medium">{label}</div>
       </div>
     </div>
   );
@@ -63,7 +64,7 @@ function SectionCard({
   return (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
       <div className="flex items-center justify-between px-4 py-2 border-b border-gray-50">
-        <h2 className="text-base font-semibold text-gray-700">{title}</h2>
+        <h2 className="text-base font-semibold text-black">{title}</h2>
         {badge}
       </div>
       <div>{children}</div>
@@ -86,14 +87,14 @@ function RevenueRow({
   const { locale } = useLanguageStore();
   return (
     <div className="flex items-center gap-4 py-2">
-      <span className="text-sm text-gray-500 w-44 flex-shrink-0">{label}</span>
+      <span className="text-sm text-black w-44 flex-shrink-0">{label}</span>
       <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
         <div
           className="h-full rounded-full transition-all duration-700"
           style={{ width: `${pct}%`, background: color }}
         />
       </div>
-      <span className="text-sm font-semibold text-gray-700 w-24 text-right flex-shrink-0">
+      <span className="text-sm font-semibold text-black w-24 text-right flex-shrink-0">
         {formatCurrency(value, undefined, locale)}
       </span>
     </div>
@@ -151,19 +152,19 @@ export default function DashboardPage({ data }: DashboardPageProps) {
               label: "Total Users",
               value: data?.users.total,
               bg: "bg-gray-100",
-              text: "text-gray-700",
+              text: "text-black",
             },
             {
               label: "Active Users",
               value: data?.users.active,
-              bg: "bg-green-50",
-              text: "text-green-700",
+              bg: "bg-gray-100",
+              text: "text-black",
             },
             {
               label: "Inactive Users",
               value: data?.users.inactive,
-              bg: "bg-yellow-50",
-              text: "text-yellow-700",
+              bg: "bg-gray-100",
+              text: "text-black",
             },
             // {
             //   label: "Suspended Users",
@@ -221,65 +222,66 @@ export default function DashboardPage({ data }: DashboardPageProps) {
 
         {/* Event Status Overview */}
         <SectionCard title="Event Status Overview">
-          <StatusGrid
+          {/* <StatusGrid
           classname="grid grid-cols-2 sm:grid-cols-3"
             items={[
               {
                 label: "Total",
                 value: data?.events.total,
                 bg: "bg-gray-100",
-                text: "text-gray-700",
+                text: "text-black",
               },
               {
                 label: "Completed",
                 value: data?.events.completed,
-                bg: "bg-green-50",
-                text: "text-green-700",
+                bg: "bg-gray-100",
+                text: "text-black",
               },
               {
                 label: "Scheduled",
                 value: data?.events.scheduled,
-                bg: "bg-teal-50",
-                text: "text-teal-700",
+                bg: "bg-gray-100",
+                text: "text-black",
               },
               {
                 label: "On Sale",
                 value: data?.events.on_sale,
-                bg: "bg-blue-50",
-                text: "text-blue-700",
+                bg: "bg-gray-100",
+                text: "text-black",
               },
               {
                 label: "Upcoming",
                 value: data?.events.upcoming,
-                bg: "bg-violet-50",
-                text: "text-violet-700",
+                bg: "bg-gray-100",
+                text: "text-black",
               },
               {
                 label: "Pending",
                 value: data?.events.pending,
-                bg: "bg-yellow-50",
-                text: "text-yellow-700",
+                bg: "bg-gray-100",
+                text: "text-black",
               },
               {
                 label: "Cancelled",
                 value: data?.events.cancelled,
-                bg: "bg-red-50",
-                text: "text-red-600",
+                bg: "bg-gray-100",
+                text: "text-black",
               },
               {
                 label: "Live",
                 value: data?.events.live,
-                bg: "bg-emerald-50",
-                text: "text-emerald-700",
+                bg: "bg-gray-100",
+                text: "text-black",
               },
               {
                 label: "Rejected",
                 value: data?.events.rejected,
-                bg: "bg-red-50",
-                text: "text-red-700",
+                bg: "bg-gray-100",
+                text: "text-black",
               },
             ]}
-          />
+          /> */}
+          <EventsDonutChart data={data?.events} />
         </SectionCard>
       </div>
 
@@ -294,25 +296,25 @@ export default function DashboardPage({ data }: DashboardPageProps) {
                 label: "Total",
                 value: data?.organizers.total,
                 bg: "bg-gray-100",
-                text: "text-gray-700",
+                text: "text-black",
               },
               {
                 label: "Approved",
                 value: data?.organizers.approved,
-                bg: "bg-green-50",
-                text: "text-green-700",
+                bg: "bg-gray-100",
+                text: "text-black",
               },
               {
                 label: "Pending",
                 value: data?.organizers.pending,
-                bg: "bg-yellow-50",
-                text: "text-yellow-700",
+                bg: "bg-gray-100",
+                text: "text-black",
               },
               {
                 label: "Rejected",
                 value: data?.organizers.rejected,
-                bg: "bg-red-50",
-                text: "text-red-700",
+                bg: "bg-gray-100",
+                text: "text-black",
               },
             ]}
           />
@@ -326,26 +328,26 @@ export default function DashboardPage({ data }: DashboardPageProps) {
               {
                 label: "Total Sold",
                 value: data?.tickets.total_sold,
-                bg: "bg-violet-50",
-                text: "text-violet-700",
+                bg: "bg-gray-100",
+                text: "text-black",
               },
               {
                 label: "Active",
                 value: data?.tickets.active,
-                bg: "bg-blue-50",
-                text: "text-blue-700",
+                bg: "bg-gray-100",
+                text: "text-black",
               },
               {
                 label: "Cancelled",
                 value: data?.tickets.cancelled,
-                bg: "bg-red-50",
-                text: "text-red-600",
+                bg: "bg-gray-100",
+                text: "text-black",
               },
               {
                 label: "Used",
                 value: data?.tickets.used,
                 bg: "bg-gray-100",
-                text: "text-gray-600",
+                text: "text-black",
               },
             ]}
           />
@@ -360,25 +362,25 @@ export default function DashboardPage({ data }: DashboardPageProps) {
                 label: "Total",
                 value: data?.transactions.total,
                 bg: "bg-gray-100",
-                text: "text-gray-700",
+                text: "text-black",
               },
               {
                 label: "Completed",
                 value: data?.transactions.completed,
-                bg: "bg-emerald-50",
-                text: "text-emerald-700",
+                bg: "bg-gray-100",
+                text: "text-black",
               },
               {
                 label: "Pending",
                 value: data?.transactions.pending,
-                bg: "bg-yellow-50",
-                text: "text-yellow-700",
+                bg: "bg-gray-100",
+                text: "text-black",
               },
               {
                 label: "Failed",
                 value: data?.transactions.failed,
-                bg: "bg-red-50",
-                text: "text-red-600",
+                bg: "bg-gray-100",
+                text: "text-black",
               },
             ]}
           />
@@ -391,7 +393,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
         <SectionCard
           title="Payout Requests"
           badge={
-            <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+            <span className="text-xs font-semibold text-black bg-gray-100 px-2 py-0.5 rounded-full">
               {formatCurrency(
                 data?.payout_requests.total_amount ?? 0,
                 undefined,
@@ -407,37 +409,37 @@ export default function DashboardPage({ data }: DashboardPageProps) {
                 label: "Total",
                 value: data?.payout_requests.total,
                 bg: "bg-gray-100",
-                text: "text-gray-700",
+                text: "text-black",
               },
               {
                 label: "Approved",
                 value: data?.payout_requests.approved,
-                bg: "bg-green-50",
-                text: "text-green-700",
+                bg: "bg-gray-100",
+                text: "text-black",
               },
               {
                 label: "Pending",
                 value: data?.payout_requests.pending,
-                bg: "bg-yellow-50",
-                text: "text-yellow-700",
+                bg: "bg-gray-100",
+                text: "text-black",
               },
               {
                 label: "Paid",
                 value: data?.payout_requests.paid,
-                bg: "bg-blue-50",
-                text: "text-blue-700",
+                bg: "bg-gray-100",
+                text: "text-black",
               },
               {
                 label: "Rejected",
                 value: data?.payout_requests.rejected,
-                bg: "bg-red-50",
-                text: "text-red-600",
+                bg: "bg-gray-100",
+                text: "text-black",
               },
               {
                 label: "Cancelled",
                 value: data?.payout_requests.cancelled,
-                bg: "bg-gray-50",
-                text: "text-gray-500",
+                bg: "bg-gray-100",
+                text: "text-black",
               },
             ]}
           />
@@ -453,19 +455,19 @@ export default function DashboardPage({ data }: DashboardPageProps) {
                   label: "Total Bills",
                   value: data?.payment_bills.total,
                   bg: "bg-gray-100",
-                  text: "text-gray-700",
+                  text: "text-black",
                 },
                 {
                   label: "Paid",
                   value: data?.payment_bills.paid,
-                  bg: "bg-green-50",
-                  text: "text-green-700",
+                  bg: "bg-gray-100",
+                  text: "text-black",
                 },
                 {
                   label: "Pending",
                   value: data?.payment_bills.pending,
-                  bg: "bg-yellow-50",
-                  text: "text-yellow-700",
+                  bg: "bg-gray-100",
+                  text: "text-black",
                 },
               ].map((s) => (
                 <div
@@ -489,14 +491,14 @@ export default function DashboardPage({ data }: DashboardPageProps) {
                 {
                   label: "Amount Due",
                   value: data?.payment_bills.total_due,
-                  color: "text-red-500",
-                  bg: "bg-red-50",
+                  color: "text-black",
+                  bg: "bg-gray-100",
                 },
                 {
                   label: "Paid Out",
                   value: data?.payment_bills.total_paid_out,
-                  color: "text-blue-500",
-                  bg: "bg-blue-50",
+                  color: "text-black",
+                  bg: "bg-gray-100",
                 },
               ].map((b) => (
                 <div
@@ -506,7 +508,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
                   <div className={`text-base font-bold ${b.color}`}>
                     {formatCurrency(b.value ?? 0, undefined, locale)}
                   </div>
-                  <div className="text-[11px] text-gray-400 mt-0.5">
+                  <div className="text-[11px] text-black mt-0.5">
                     {b.label}
                   </div>
                 </div>
@@ -523,42 +525,42 @@ export default function DashboardPage({ data }: DashboardPageProps) {
               {
                 label: "Completed",
                 value: data?.refunds.completed,
-                bg: "bg-green-50",
-                text: "text-green-700",
+                bg: "bg-gray-100",
+                text: "text-black",
               },
               {
                 label: "Pending",
                 value: data?.refunds.pending,
-                bg: "bg-yellow-50",
-                text: "text-yellow-700",
+                bg: "bg-gray-100",
+                text: "text-black",
               },
             ]}
           />
 
           {/* Refunds */}
-          <div className="mx-6 mb-3 grid sm:grid-cols-2 md:grid-cols-3 grid-cols-1 gap-3 bg-red-50 rounded-xl p-4">
+          <div className="mx-6 mb-3 grid sm:grid-cols-2 md:grid-cols-3 grid-cols-1 gap-3 bg-gray-100 rounded-xl p-4">
             {[
               {
                 label: "Total Refunds",
                 value: data?.revenue.total_refunds ?? 0,
-                color: "text-red-500",
+                color: "text-black",
               },
               {
                 label: "Organizer Refunds",
                 value: data?.revenue.organizer_refunds ?? 0,
-                color: "text-orange-500",
+                color: "text-black",
               },
               {
                 label: "Commission Refunds",
                 value: data?.revenue.commission_refunds ?? 0,
-                color: "text-amber-500",
+                color: "text-black",
               },
             ].map((b) => (
               <div key={b.label} className="text-center">
                 <div className={`text-lg font-bold ${b.color}`}>
                   {formatCurrency(b.value, undefined, locale)}
                 </div>
-                <div className="text-[11px] text-gray-400 mt-0.5">
+                <div className="text-[11px] text-black mt-0.5">
                   {b.label}
                 </div>
               </div>
