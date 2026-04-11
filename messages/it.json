@@ -840,6 +840,15 @@
       "event_payout": "pagamento dell'evento"
     }
   },
+  "reports": {
+    "tabs": {
+      "overview": "Panoramica",
+      "sales": "Vendite",
+      "customerAnalytics": "Analisi Clienti",
+      "financial": "Finanziario",
+      "eventPerformance": "Prestazioni Eventi"
+    }
+  },
   "settings": {
     "security": {
       "title": "Impostazioni di sicurezza",

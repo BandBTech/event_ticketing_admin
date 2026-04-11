@@ -1,29 +1,22 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
-import { ArrowsClockwise } from "@phosphor-icons/react";
 import OverviewScreen from "./components/OverviewSection";
 import SalesScreen from "./components/SalesScreen";
 import CustomerAnalyticsScreen from "./components/CustomerAnalyticsScreen";
 import { ReportService } from "@/services/reportService";
 import { useQuery } from "@tanstack/react-query";
 import { ReportResponse } from "@/types/reports";
-import { Button } from "@/components/ui/button";
 import { adminService } from "@/services/adminService";
+import { ReportFilters } from "./components/ReportFilters";
+import { ReportTabNav } from "./components/ReportTabNav";
+import { useTranslation } from "@/hooks/useTranslation";
+import { useLanguageStore } from "@/store/languageStore";
 import {
-  AsyncCombobox,
   AsyncComboboxOption,
 } from "@/components/ui/async-combobox";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import FinancialScreen from "@/app/reports/components/FinancialScreen";
 import EventPerformanceScreen from "@/app/reports/components//EventPerformanceScreen";
-import { useRouter, useSearchParams } from "next/navigation";
 
 const REPORT_TYPE = [
   { label: "Admin Overview", value: "overview" },
@@ -32,53 +25,107 @@ const REPORT_TYPE = [
   { label: "Financial", value: "financial" },
   { label: "Sales Report", value: "sales" },
 ];
+export type ReportType =
+  | "overview"
+  | "sales"
+  | "customer-analytics"
+  | "financial"
+  | "event-performance";
+
+type DateRangePreset =
+  | "today"
+  | "yesterday"
+  | "last-7-days"
+  | "last-month"
+  | "last-3-months"
+  | "last-6-months"
+  | "last-year";
+
+function getDateRangeFromPreset(preset: DateRangePreset): {
+  startDate: string;
+  endDate: string;
+} {
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  switch (preset) {
+    case "today":
+      return {
+        startDate: today.toISOString().split("T")[0],
+        endDate: today.toISOString().split("T")[0],
+      };
+    case "yesterday":
+      return {
+        startDate: yesterday.toISOString().split("T")[0],
+        endDate: yesterday.toISOString().split("T")[0],
+      };
+    case "last-7-days": {
+      const sevenDaysAgo = new Date(today);
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+      return {
+        startDate: sevenDaysAgo.toISOString().split("T")[0],
+        endDate: today.toISOString().split("T")[0],
+      };
+    }
+    case "last-month": {
+      const oneMonthAgo = new Date(today);
+      oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+      return {
+        startDate: oneMonthAgo.toISOString().split("T")[0],
+        endDate: today.toISOString().split("T")[0],
+      };
+    }
+    case "last-3-months": {
+      const threeMonthsAgo = new Date(today);
+      threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+      return {
+        startDate: threeMonthsAgo.toISOString().split("T")[0],
+        endDate: today.toISOString().split("T")[0],
+      };
+    }
+    case "last-6-months": {
+      const sixMonthsAgo = new Date(today);
+      sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+      return {
+        startDate: sixMonthsAgo.toISOString().split("T")[0],
+        endDate: today.toISOString().split("T")[0],
+      };
+    }
+    case "last-year": {
+      const oneYearAgo = new Date(today);
+      oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+      return {
+        startDate: oneYearAgo.toISOString().split("T")[0],
+        endDate: today.toISOString().split("T")[0],
+      };
+    }
+    default:
+      return {
+        startDate: "",
+        endDate: "",
+      };
+  }
+}
 
 export default function ReportsPage() {
-  const [dateRange, setDateRange] = useState("last-30-days");
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const reportType = searchParams.get("type") ?? "overview";
-  const eventId = searchParams.get("eventId") ?? "";
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
+  const [activeTab, setActiveTab] = useState<ReportType>("overview");
+  const [dateRangePreset, setDateRangePreset] =
+    useState<DateRangePreset>("last-7-days");
+  const [selectedEventId, setSelectedEventId] = useState("");
 
-  const updateParams = useCallback(
-    (updates: Record<string, string | null>) => {
-      const params = new URLSearchParams(searchParams.toString());
-
-      Object.entries(updates).forEach(([key, value]) => {
-        if (!value) {
-          params.delete(key);
-        } else {
-          params.set(key, value);
-        }
-      });
-
-      router.push(`/reports?${params.toString()}`, { scroll: false });
-    },
-    [router, searchParams],
-  );
-
-  const handleReportTypeChange = useCallback(
-    (value: string) => {
-      updateParams({ type: value, eventId: null });
-    },
-    [updateParams],
-  );
-
-  const handleEventIdChange = useCallback(
-    (value: string) => {
-      updateParams({ eventId: value });
-    },
-    [updateParams],
-  );
+  
 
   const { data: response, isLoading } = useQuery<ReportResponse>({
-    queryKey: ["report", reportType, eventId],
+    queryKey: ["report", activeTab, selectedEventId],
     queryFn: () =>
       ReportService.getReport({
-        type: reportType,
-        event_id: eventId,
+        type: activeTab,
+        event_id: selectedEventId,
       }),
-    enabled: !!reportType && (reportType !== "event-performance" || !!eventId),
+    enabled: !!activeTab && (activeTab !== "event-performance" || !!selectedEventId),
     placeholderData: (previousData) => previousData,
   });
 
@@ -106,89 +153,44 @@ export default function ReportsPage() {
     [],
   );
 
-  const isEventIdSelected = eventId ? true : false;
+  const isEventIdSelected = selectedEventId ? true : false;
 
   return (
     <div className="min-h-screen p-8 space-y-6">
       <div className=" rounded-2xl flex-1 flex flex-col">
-        {/* Header with Filters */}
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 py-4">
-          <div className="flex gap-4">
-            {" "}
-            <div className="">
-              {/* Date Range */}
-              {/* <div className="relative">
-              <select
-                value={dateRange}
-                onChange={(e) => setDateRange(e.target.value)}
-                className="appearance-none bg-white border border-gray-200 rounded-lg px-4 py-2.5 pr-10 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
-              >
-                <option value="today">Today</option>
-                <option value="yesterday">Yesterday</option>
-                <option value="last-7-days">Last 7 days</option>
-                <option value="last-30-days">Last 30 days</option>
-                <option value="last-3-months">Last 3 months</option>
-                <option value="last-6-months">Last 6 months</option>
-                <option value="last-year">Last year</option>
-              </select>
-              <CaretDown
-                weight="bold"
-                className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
-              />
-            </div> */}
-
-              {/* Report Type */}
-
-              <Select value={reportType} onValueChange={handleReportTypeChange}>
-                <SelectTrigger className="w-full text-sm h-9 justify-between px-3 bg-white font-medium">
-                  <SelectValue placeholder={"Select Type"} />
-                </SelectTrigger>
-                <SelectContent>
-                  {REPORT_TYPE.map((method) => (
-                    <SelectItem key={method.value} value={method.value}>
-                      {method.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+        {/* Header  */}
+        <div className="flex-1 space-y-6 p-4 md:p-6">
+          <div className="flex max-md:flex-col gap-4 md:items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">
+                {t("reports.title", "Reports")}
+              </h1>
+              <p className="text-sm text-gray-500 mt-1">
+                {t(
+                  "reports.subtitle",
+                  "Analyze your event performance, sales, and financials",
+                )}
+              </p>
             </div>
-            {/* Event ID */}
-            {reportType === "event-performance" && (
-              <div className="space-y-2 w-[250px] font-medium">
-                <AsyncCombobox
-                  queryKey={["filter", "events"]}
-                  value={eventId}
-                  onValueChange={handleEventIdChange}
-                  fetchOptions={fetchEvents}
-                  placeholder="Select Event"
-                  searchPlaceholder="Search Events"
-                  emptyText="No events found."
-                  className="w-full text-sm h-9 justify-between px-3! font-medium"
-                  debounceMs={300}
-                />
-              </div>
-            )}
+            <ReportFilters
+              dateRangePreset={dateRangePreset}
+              onDateRangePresetChange={setDateRangePreset}
+              activeTab={activeTab}
+              selectedEventId={selectedEventId}
+              onEventChange={setSelectedEventId}
+              fetchEvents={fetchEvents}
+            />
           </div>
-
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              onClick={() => window.location.reload()}
-              className="gap-2 bg-background/80 backdrop-blur-sm"
-            >
-              <ArrowsClockwise weight="duotone" className="w-4 h-4" />
-              Refresh
-            </Button>
-          </div>
+          <ReportTabNav activeTab={activeTab} onTabChange={setActiveTab} />
         </div>
 
-        {reportType === "overview" ? (
+        {activeTab === "overview" ? (
           <OverviewScreen data={response} />
-        ) : reportType === "sales" ? (
+        ) : activeTab === "sales" ? (
           <SalesScreen data={response} />
-        ) : reportType === "financial" ? (
+        ) : activeTab === "financial" ? (
           <FinancialScreen data={response} />
-        ) : reportType === "event-performance" ? (
+        ) : activeTab === "event-performance" ? (
           <EventPerformanceScreen
             data={response}
             isEventIdSelected={isEventIdSelected}

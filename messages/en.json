@@ -898,6 +898,15 @@
       "event_payout": "Event Payout"
     }
   },
+  "reports": {
+    "tabs": {
+      "overview": "Overview",
+      "sales": "Sales",
+      "customerAnalytics": "Customer Analytics",
+      "financial": "Financial",
+      "eventPerformance": "Event Performance"
+    }
+  },
   "settings": {
     "security": {
       "title": "Security Settings",

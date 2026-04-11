@@ -852,6 +852,15 @@
       "event_payout": "イベントの支払い"
     }
   },
+  "reports": {
+    "tabs": {
+      "overview": "概要",
+      "sales": "売上",
+      "customerAnalytics": "顧客分析",
+      "financial": "財務",
+      "eventPerformance": "イベントパフォーマンス"
+    }
+  },
   "settings": {
     "security": {
       "title": "セキュリティ設定",
