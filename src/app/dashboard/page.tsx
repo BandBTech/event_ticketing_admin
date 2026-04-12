@@ -10,6 +10,8 @@ import { usePendingOrganizers } from "@/hooks/useDashboard";
 import { useOrganizerStore } from "@/store/organizerStore";
 import { usePendingEvents } from "@/hooks/useDashboard";
 import { DashboardSkeleton } from "./components/DashboardSkeleton";
+import { useLanguageStore } from "@/store/languageStore";
+import { useTranslation } from "@/hooks/useTranslation";
 import {
   WarningIcon,
   ArrowsClockwiseIcon,
@@ -17,6 +19,8 @@ import {
 } from "@phosphor-icons/react";
 
 const AdminDashboard: React.FC = () => {
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
   const { data, isLoading, isError } = useQuery({
     queryKey: ["dashboard"],
     queryFn: () => DashboardService.getDashboard({}),
@@ -66,11 +70,10 @@ const AdminDashboard: React.FC = () => {
           {/* Text */}
           <div className="grid gap-1">
             <h2 className="text-lg font-semibold text-gray-800">
-              Something went wrong
+              {t("dashboard.dataDisplay.errorTitle")}
             </h2>
             <p className="text-sm text-gray-500 leading-relaxed">
-              Failed to load dashboard data. Please try again later or contact
-              support if the issue persists.
+              {t("dashboard.dataDisplay.errorSubtitle")}
             </p>
           </div>
 
@@ -80,7 +83,7 @@ const AdminDashboard: React.FC = () => {
             className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors"
           >
             <ArrowsClockwiseIcon size={18} />
-            Try again
+            {t("dashboard.dataDisplay.tryAgain")}
           </button>
         </div>
       </div>
@@ -99,11 +102,10 @@ const AdminDashboard: React.FC = () => {
           {/* Text */}
           <div className="grid gap-1">
             <h2 className="text-lg font-semibold text-gray-800">
-              No data available
+              {t("dashboard.dataDisplay.noDataTitle")}
             </h2>
             <p className="text-sm text-gray-500 leading-relaxed">
-              There&apos;s nothing to display here yet. Data will appear once it
-              becomes available.
+              {t("dashboard.dataDisplay.noDataSubtitle")}
             </p>
           </div>
 
@@ -113,7 +115,7 @@ const AdminDashboard: React.FC = () => {
             className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
           >
             <ArrowsClockwiseIcon size={18} />
-            Refresh
+            {t("dashboard.dataDisplay.refresh")}
           </button>
         </div>
       </div>

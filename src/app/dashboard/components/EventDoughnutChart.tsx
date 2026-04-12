@@ -8,6 +8,8 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { useLanguageStore } from "@/store/languageStore";
+import { useTranslation } from "@/hooks/useTranslation";
 
 Chart.register(ArcElement, DoughnutController, Tooltip, Legend);
 
@@ -24,19 +26,21 @@ type EventStats = {
 };
 
 const EVENT_SLICES = [
-  { key: "completed", label: "Completed", color: "#16a34a" },
-  { key: "live", label: "Live", color: "#0d9488" },
-  { key: "on_sale", label: "On Sale", color: "#2563eb" },
-  { key: "scheduled", label: "Scheduled", color: "#7c3aed" },
-  { key: "upcoming", label: "Upcoming", color: "#6366f1" },
-  { key: "pending", label: "Pending", color: "#d97706" },
-  { key: "cancelled", label: "Cancelled", color: "#dc2626" },
-  { key: "rejected", label: "Rejected", color: "#9f1239" },
+  { key: "completed", label: "completed", color: "#16a34a" },
+  { key: "live", label: "live", color: "#0d9488" },
+  { key: "on_sale", label: "on_sale", color: "#2563eb" },
+  { key: "scheduled", label: "scheduled", color: "#7c3aed" },
+  { key: "upcoming", label: "upcoming", color: "#6366f1" },
+  { key: "pending", label: "pending", color: "#d97706" },
+  { key: "cancelled", label: "cancelled", color: "#dc2626" },
+  { key: "rejected", label: "rejected", color: "#9f1239" },
 ] as const;
 
 export function EventsDonutChart({ data }: { data?: EventStats }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const chartRef = useRef<Chart | null>(null);
+      const { locale } = useLanguageStore();
+      const { t } = useTranslation(locale);
 
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -46,7 +50,7 @@ export function EventsDonutChart({ data }: { data?: EventStats }) {
     chartRef.current = new Chart(canvasRef.current, {
       type: "doughnut",
       data: {
-        labels: EVENT_SLICES.map((s) => s.label),
+        labels: EVENT_SLICES.map((s) => t(s.label)),
         datasets: [
           {
             data: EVENT_SLICES.map((s) => data?.[s.key] ?? 0),
@@ -87,7 +91,7 @@ export function EventsDonutChart({ data }: { data?: EventStats }) {
           <span className="text-2xl font-semibold text-black leading-none">
             {total}
           </span>
-          <span className="text-[11px] text-black mt-1">Total</span>
+          <span className="text-[11px] text-black mt-1">{t("dashboard.dataDisplay.total")}</span>
         </div>
       </div>
 
@@ -103,7 +107,7 @@ export function EventsDonutChart({ data }: { data?: EventStats }) {
                 style={{ background: s.color }}
               />
               <span className="text-xs text-black flex-1 truncate">
-                {s.label}
+                {t(`status.${s.label}`)}
               </span>
               <span className="text-xs font-medium text-black tabular-nums">
                 {value}

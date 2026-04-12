@@ -395,7 +395,7 @@ function RejectionModal({
                 disabled={isLoading}
                 className="h-11 px-6 border-gray-200 hover:bg-gray-50 transition-colors"
               >
-                {t("common.cancel", "Cancel")}
+                {t("common.cancelButton", "Cancel")}
               </Button>
               <Button
                 type="submit"

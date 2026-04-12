@@ -12,6 +12,7 @@ import {
   CurrencyDollarIcon,
 } from "@phosphor-icons/react";
 import { useLanguageStore } from "@/store/languageStore";
+import { useTranslation } from "@/hooks/useTranslation";
 import { EventsDonutChart } from "../EventDoughnutChart";
 
 type DashboardPageProps = {
@@ -139,29 +140,30 @@ function StatusGrid({
 
 // ── Main Page ─────────────────────────────────────────────────────────────────
 export default function DashboardPage({ data }: DashboardPageProps) {
-  const { locale } = useLanguageStore();
+    const { locale } = useLanguageStore();
+    const { t } = useTranslation(locale);
 
   return (
     <main className="flex-1 overflow-y-auto space-y-5">
       {/* ── Row 1: Users ── */}
-      <SectionCard title="Users">
+      <SectionCard title={t("dashboard.dataDisplay.users")}>
         <StatusGrid
           classname="grid grid-cols-3"
           items={[
             {
-              label: "Total Users",
+              label: t("dashboard.dataDisplay.totalUsers"),
               value: data?.users.total,
               bg: "bg-gray-100",
               text: "text-black",
             },
             {
-              label: "Active Users",
+              label: t("dashboard.dataDisplay.activeUsers"),
               value: data?.users.active,
               bg: "bg-gray-100",
               text: "text-black",
             },
             {
-              label: "Inactive Users",
+              label: t("dashboard.dataDisplay.inactiveUsers"),
               value: data?.users.inactive,
               bg: "bg-gray-100",
               text: "text-black",
@@ -179,16 +181,16 @@ export default function DashboardPage({ data }: DashboardPageProps) {
       {/* ── Row 2: Revenue + Events ── */}
       <div className="grid grid-cols-2 gap-5">
         {/* Revenue Overview */}
-        <SectionCard title="Revenue Overview">
+        <SectionCard title={t("dashboard.dataDisplay.revenueOverview")}>
           <div className="px-6 pt-2 pb-4 divide-y divide-gray-50">
             <RevenueRow
-              label="Gross Revenue"
+              label={t("dashboard.dataDisplay.grossRevenue")}
               value={data?.revenue.gross_revenue ?? 0}
               pct={100}
               color="#3b82f6"
             />
             <RevenueRow
-              label="Net Revenue"
+              label={t("dashboard.dataDisplay.netRevenue")}
               value={data?.revenue.net_revenue ?? 0}
               pct={Math.round(
                 ((data?.revenue.net_revenue ?? 0) /
@@ -198,7 +200,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
               color="#6366f1"
             />
             <RevenueRow
-              label="Organizer Earnings"
+              label={t("dashboard.dataDisplay.organizerEarnings")}
               value={data?.revenue.gross_organizer_earnings ?? 0}
               pct={Math.round(
                 ((data?.revenue.gross_organizer_earnings ?? 0) /
@@ -208,7 +210,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
               color="#10b981"
             />
             <RevenueRow
-              label="Platform Commission"
+              label={t("dashboard.dataDisplay.platformCommission")}
               value={data?.revenue.gross_commission ?? 0}
               pct={Math.round(
                 ((data?.revenue.gross_commission ?? 0) /
@@ -221,66 +223,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
         </SectionCard>
 
         {/* Event Status Overview */}
-        <SectionCard title="Event Status Overview">
-          {/* <StatusGrid
-          classname="grid grid-cols-2 sm:grid-cols-3"
-            items={[
-              {
-                label: "Total",
-                value: data?.events.total,
-                bg: "bg-gray-100",
-                text: "text-black",
-              },
-              {
-                label: "Completed",
-                value: data?.events.completed,
-                bg: "bg-gray-100",
-                text: "text-black",
-              },
-              {
-                label: "Scheduled",
-                value: data?.events.scheduled,
-                bg: "bg-gray-100",
-                text: "text-black",
-              },
-              {
-                label: "On Sale",
-                value: data?.events.on_sale,
-                bg: "bg-gray-100",
-                text: "text-black",
-              },
-              {
-                label: "Upcoming",
-                value: data?.events.upcoming,
-                bg: "bg-gray-100",
-                text: "text-black",
-              },
-              {
-                label: "Pending",
-                value: data?.events.pending,
-                bg: "bg-gray-100",
-                text: "text-black",
-              },
-              {
-                label: "Cancelled",
-                value: data?.events.cancelled,
-                bg: "bg-gray-100",
-                text: "text-black",
-              },
-              {
-                label: "Live",
-                value: data?.events.live,
-                bg: "bg-gray-100",
-                text: "text-black",
-              },
-              {
-                label: "Rejected",
-                value: data?.events.rejected,
-                bg: "bg-gray-100",
-                text: "text-black",
-              },
-            ]}
-          /> */}
+        <SectionCard title={t("dashboard.dataDisplay.eventStatusOverview")}>
           <EventsDonutChart data={data?.events} />
         </SectionCard>
       </div>
@@ -288,30 +231,30 @@ export default function DashboardPage({ data }: DashboardPageProps) {
       {/* ── Row 3: Organizers + Tickets + Transactions ── */}
       <div className="grid grid-cols-3 gap-5">
         {/* Organizers */}
-        <SectionCard title="Organizers">
+        <SectionCard title={t("dashboard.dataDisplay.organizers")}>
           <StatusGrid
             classname="grid grid-cols-2 md:grid-cols-4"
             items={[
               {
-                label: "Total",
+                label: t("dashboard.dataDisplay.total"),
                 value: data?.organizers.total,
                 bg: "bg-gray-100",
                 text: "text-black",
               },
               {
-                label: "Approved",
+                label: t("dashboard.dataDisplay.approved"),
                 value: data?.organizers.approved,
                 bg: "bg-gray-100",
                 text: "text-black",
               },
               {
-                label: "Pending",
+                label: t("dashboard.dataDisplay.pending"),
                 value: data?.organizers.pending,
                 bg: "bg-gray-100",
                 text: "text-black",
               },
               {
-                label: "Rejected",
+                label: t("dashboard.dataDisplay.rejected"),
                 value: data?.organizers.rejected,
                 bg: "bg-gray-100",
                 text: "text-black",
@@ -321,30 +264,30 @@ export default function DashboardPage({ data }: DashboardPageProps) {
         </SectionCard>
 
         {/* Tickets */}
-        <SectionCard title="Tickets">
+        <SectionCard title={t("dashboard.dataDisplay.tickets")}>
           <StatusGrid
             classname="grid grid-cols-2 md:grid-cols-4"
             items={[
               {
-                label: "Total Sold",
+                label: t("dashboard.dataDisplay.totalSold"),
                 value: data?.tickets.total_sold,
                 bg: "bg-gray-100",
                 text: "text-black",
               },
               {
-                label: "Active",
+                label: t("dashboard.dataDisplay.active"),
                 value: data?.tickets.active,
                 bg: "bg-gray-100",
                 text: "text-black",
               },
               {
-                label: "Cancelled",
+                label: t("dashboard.dataDisplay.cancelled"),
                 value: data?.tickets.cancelled,
                 bg: "bg-gray-100",
                 text: "text-black",
               },
               {
-                label: "Used",
+                label: t("dashboard.dataDisplay.used"),
                 value: data?.tickets.used,
                 bg: "bg-gray-100",
                 text: "text-black",
@@ -354,30 +297,30 @@ export default function DashboardPage({ data }: DashboardPageProps) {
         </SectionCard>
 
         {/* Transactions */}
-        <SectionCard title="Transactions">
+        <SectionCard title={t("dashboard.dataDisplay.transactions")}>
           <StatusGrid
             classname="grid grid-cols-2 md:grid-cols-4"
             items={[
               {
-                label: "Total",
+                label: t("dashboard.dataDisplay.total"),
                 value: data?.transactions.total,
                 bg: "bg-gray-100",
                 text: "text-black",
               },
               {
-                label: "Completed",
+                label: t("dashboard.dataDisplay.completed"),
                 value: data?.transactions.completed,
                 bg: "bg-gray-100",
                 text: "text-black",
               },
               {
-                label: "Pending",
+                label: t("dashboard.dataDisplay.pending"),
                 value: data?.transactions.pending,
                 bg: "bg-gray-100",
                 text: "text-black",
               },
               {
-                label: "Failed",
+                label: t("dashboard.dataDisplay.failed"),
                 value: data?.transactions.failed,
                 bg: "bg-gray-100",
                 text: "text-black",
@@ -391,7 +334,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
       <div className="grid grid-cols-3 gap-5">
         {/* Payout Requests */}
         <SectionCard
-          title="Payout Requests"
+          title={t("dashboard.dataDisplay.payoutRequest")}
           badge={
             <span className="text-xs font-semibold text-black bg-gray-100 px-2 py-0.5 rounded-full">
               {formatCurrency(
@@ -406,37 +349,37 @@ export default function DashboardPage({ data }: DashboardPageProps) {
             classname="grid grid-cols-2 sm:grid-cols-3"
             items={[
               {
-                label: "Total",
+                label: t("dashboard.dataDisplay.total"),
                 value: data?.payout_requests.total,
                 bg: "bg-gray-100",
                 text: "text-black",
               },
               {
-                label: "Approved",
+                label: t("dashboard.dataDisplay.approved"),
                 value: data?.payout_requests.approved,
                 bg: "bg-gray-100",
                 text: "text-black",
               },
               {
-                label: "Pending",
+                label: t("dashboard.dataDisplay.pending"),
                 value: data?.payout_requests.pending,
                 bg: "bg-gray-100",
                 text: "text-black",
               },
               {
-                label: "Paid",
+                label: t("dashboard.dataDisplay.paid"),
                 value: data?.payout_requests.paid,
                 bg: "bg-gray-100",
                 text: "text-black",
               },
               {
-                label: "Rejected",
+                label: t("dashboard.dataDisplay.rejected"),
                 value: data?.payout_requests.rejected,
                 bg: "bg-gray-100",
                 text: "text-black",
               },
               {
-                label: "Cancelled",
+                label: t("dashboard.dataDisplay.cancelled"),
                 value: data?.payout_requests.cancelled,
                 bg: "bg-gray-100",
                 text: "text-black",
@@ -446,25 +389,25 @@ export default function DashboardPage({ data }: DashboardPageProps) {
         </SectionCard>
 
         {/* Payment Bills */}
-        <SectionCard title="Payment Bills">
+        <SectionCard title={t("dashboard.dataDisplay.paymentBills")}>
           <div className="px-6 py-5 space-y-3">
             {/* Bills status counts */}
             <div className="grid gap-3 grid-cols-2 sm:grid-cols-3">
               {[
                 {
-                  label: "Total Bills",
+                  label: t("dashboard.dataDisplay.totalBills"),
                   value: data?.payment_bills.total,
                   bg: "bg-gray-100",
                   text: "text-black",
                 },
                 {
-                  label: "Paid",
+                  label: t("dashboard.dataDisplay.paid"),
                   value: data?.payment_bills.paid,
                   bg: "bg-gray-100",
                   text: "text-black",
                 },
                 {
-                  label: "Pending",
+                  label: t("dashboard.dataDisplay.pending"),
                   value: data?.payment_bills.pending,
                   bg: "bg-gray-100",
                   text: "text-black",
@@ -489,13 +432,13 @@ export default function DashboardPage({ data }: DashboardPageProps) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {[
                 {
-                  label: "Amount Due",
+                  label: t("dashboard.dataDisplay.amountDue"),
                   value: data?.payment_bills.total_due,
                   color: "text-black",
                   bg: "bg-gray-100",
                 },
                 {
-                  label: "Paid Out",
+                  label: t("dashboard.dataDisplay.paidOut"),
                   value: data?.payment_bills.total_paid_out,
                   color: "text-black",
                   bg: "bg-gray-100",
@@ -518,18 +461,18 @@ export default function DashboardPage({ data }: DashboardPageProps) {
         </SectionCard>
 
         {/* Refunds */}
-        <SectionCard title="Refunds">
+        <SectionCard title={t("dashboard.dataDisplay.refunds")}>
           <StatusGrid
             classname="grid grid-cols-2"
             items={[
               {
-                label: "Completed",
+                label: t("dashboard.dataDisplay.completed"),
                 value: data?.refunds.completed,
                 bg: "bg-gray-100",
                 text: "text-black",
               },
               {
-                label: "Pending",
+                label: t("dashboard.dataDisplay.pending"),
                 value: data?.refunds.pending,
                 bg: "bg-gray-100",
                 text: "text-black",
@@ -541,17 +484,17 @@ export default function DashboardPage({ data }: DashboardPageProps) {
           <div className="mx-6 mb-3 grid sm:grid-cols-2 md:grid-cols-3 grid-cols-1 gap-3 bg-gray-100 rounded-xl p-4">
             {[
               {
-                label: "Total Refunds",
+                label: t("dashboard.dataDisplay.totalRefunds"),
                 value: data?.revenue.total_refunds ?? 0,
                 color: "text-black",
               },
               {
-                label: "Organizer Refunds",
+                label: t("dashboard.dataDisplay.organizerRefunds"),
                 value: data?.revenue.organizer_refunds ?? 0,
                 color: "text-black",
               },
               {
-                label: "Commission Refunds",
+                label: t("dashboard.dataDisplay.commissionRefunds"),
                 value: data?.revenue.commission_refunds ?? 0,
                 color: "text-black",
               },

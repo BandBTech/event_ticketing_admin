@@ -183,13 +183,10 @@ const OrganizerApprovalList = ({
               <AlertDialogContent className="rounded-3xl shadow-2xl border-none bg-white/95 backdrop-blur-xl data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 duration-300">
                 <AlertDialogHeader>
                   <AlertDialogTitle className="text-xl font-bold text-gray-900">
-                    {t("", "Approve Organizer")}
+                    {t("organizer.management.modals.approveTitle", "")}
                   </AlertDialogTitle>
                   <AlertDialogDescription className="text-gray-500 text-base">
-                    {t(
-                      "",
-                      "Are you sure you want to approve this organizer? This action cannot be undone immediately.",
-                    )}
+                    {t("organizer.management.modals.approveDesc", "")}
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter className="pt-6">
@@ -197,7 +194,7 @@ const OrganizerApprovalList = ({
                     onClick={() => setApproveOrganizerModal({ open: false })}
                     className="h-11 px-6 border-gray-200 hover:bg-gray-50 transition-colors"
                   >
-                    {t("common.cancel", "Cancel")}
+                    {t("common.cancelButton", "Cancel")}
                   </AlertDialogCancel>
                   <AlertDialogAction
                     onClick={() =>
