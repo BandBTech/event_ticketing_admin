@@ -164,7 +164,7 @@ export function EventCard({ event }: { event: Event }) {
                   className="w-4 h-4 text-muted-foreground/70"
                 />
                 <span className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-bold leading-none">
-                  Tickets Sold
+                  {t("events.ticketsSold")}
                 </span>
               </div>
               <span className="font-medium">
@@ -177,7 +177,7 @@ export function EventCard({ event }: { event: Event }) {
               <div className="flex items-center gap-3 ml-auto">
                 <div className="flex flex-col items-end">
                   <span className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-bold leading-none mb-1">
-                    Commission
+                    {t("events.commission")}
                   </span>
                   <div className="flex items-center gap-0.5 text-emerald-600 font-bold">
                     <span>{event.commission_rate || 0}%</span>

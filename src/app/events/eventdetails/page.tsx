@@ -518,7 +518,7 @@ export default function EventDetailsPage() {
                   </div>
                   <div>
                     <h4 className="text-sm font-medium text-gray-500 mb-1">
-                      {t("events.fields.eventEndsOn", "Event Ends On")}
+                      {t("events.fields.eventEndsOn", "")}
                     </h4>
                     <p
                       className="font-medium text-gray-900"
@@ -538,10 +538,7 @@ export default function EventDetailsPage() {
               {event.tiers && event.tiers.length > 0 && (
                 <div className="pt-6 border-t border-gray-100">
                   <h4 className="text-sm font-medium text-gray-500 mb-1">
-                    {t(
-                      "event.section.ticketSalesDuration",
-                      "Ticket Sales Duration",
-                    )}
+                    {t("events.sections.ticketSalesDuration", "Ticket Sales Duration")}
                   </h4>
                   <div className="gap-6">
                     {event.tiers.map((tier) => (
@@ -645,7 +642,7 @@ export default function EventDetailsPage() {
                 <div className="grid @xs:grid-cols-2 gap-4">
                   <div className="p-3 bg-blue-50 rounded-lg">
                     <p className="text-xs text-blue-600 mb-1">
-                      {t("event.label.totalSold", "Total Sold")}
+                      {t("dashboard.dataDisplay.totalSold", "Total Sold")}
                     </p>
                     <p className="text-lg font-bold text-blue-700">
                       {totalTicketsSold} / {analytics?.total_seats}
@@ -653,7 +650,7 @@ export default function EventDetailsPage() {
                   </div>
                   <div className="p-3 bg-emerald-50 rounded-lg">
                     <p className="text-xs text-emerald-600 mb-1">
-                      {t("event.label.totalRevenue", "Revenue")}
+                      {t("events.analytics.revenue", "Revenue")}
                     </p>
                     <p className="text-lg font-bold text-emerald-700">
                       {event.tiers?.[0]?.currency || "NPR"}{" "}
@@ -665,7 +662,7 @@ export default function EventDetailsPage() {
                 {/* Tiers List */}
                 <div className="space-y-3 pt-4 border-t border-gray-100">
                   <h3 className="text-sm font-medium text-gray-900">
-                    {t("event.section.ticketTiers", "Ticket Tiers")}
+                    {t("events.eventDetails.ticketTiers", "Ticket Tiers")}
                   </h3>
                   {analytics?.tiers
                     ? analytics.tiers.map((tier: EventTierAnalytics) => {
@@ -704,13 +701,13 @@ export default function EventDetailsPage() {
                               <div className="flex justify-between items-center text-xs text-gray-600">
                                 <span>
                                   {tier.sold_seats} / {tier.total_seats}{" "}
-                                  {t("common.sold", "sold")}
+                                  {t("events.analytics.sold", "sold")}
                                 </span>
 
                                 <p className="text-xs text-gray-500">
                                   {tier.currency || "NPR"}{" "}
                                   {tier.price.toLocaleString()} /{" "}
-                                  {t("common.ticket", "ticket")}
+                                  {t("transactions.table.ticket", "ticket")}
                                 </p>
                               </div>
                             </div>

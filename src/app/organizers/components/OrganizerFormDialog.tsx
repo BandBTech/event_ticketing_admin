@@ -478,7 +478,7 @@ export default function OrganizerFormDialog({
               onClick={() => handleOpenChange(false)}
               disabled={isPending}
             >
-              {t("common.cancel", "Cancel")}
+              {t("common.cancelButton", "Cancel")}
             </Button>
             <Button
               type="submit"
@@ -486,7 +486,7 @@ export default function OrganizerFormDialog({
               className="bg-blue-600 hover:bg-blue-700 text-white"
             >
               {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {t("common.create", "Create Organizer")}
+              {t("organizer.create.createOrganizer", "Create Organizer")}
             </Button>
           </DialogFooter>
         </form>

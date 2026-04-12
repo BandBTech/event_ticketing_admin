@@ -207,7 +207,7 @@ export default function StatusHistorySidebar({
               size={12}
               className={isRefreshing ? "animate-spin" : ""}
             />
-            {t("common.button.refresh", "Refresh")}
+            {t("dashboard.dataDisplay.refresh", "Refresh")}
           </Button>
         )}
       </h3>
@@ -224,7 +224,7 @@ export default function StatusHistorySidebar({
                   className="h-6 -ml-10 mt-8 mb-10 bg-white hover:bg-slate-50 border border-slate-200 rounded-full text-xs text-slate-500 px-3 flex gap-1 items-center shadow-sm w-fit"
                 >
                   <CaretDown size={12} />
-                  {t("common.button.viewMore", "View {count} more").replace(
+                  {t("common.viewCountMore", "View {count} more").replace(
                     "{count}",
                     (historyList.length - 4).toString(),
                   )}
@@ -304,7 +304,7 @@ export default function StatusHistorySidebar({
             className="text-xs text-slate-400 hover:text-slate-600 flex gap-1 h-auto py-1"
           >
             <CaretUp size={12} />
-            {t("common.button.showLess", "Show Less")}
+            {t("common.showLess", "Show Less")}
           </Button>
         </div>
       )}

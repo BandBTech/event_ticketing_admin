@@ -128,6 +128,8 @@
   "events": {
     "from": "Dal",
     "ticketsLeft": "biglietti rimasti",
+    "ticketsSold": "Biglietti venduti",
+    "commission": "commissione",
     "soldOut": "Esaurito",
     "priceTBA": "Prezzo da definire",
     "title": "Eventi",
@@ -195,6 +197,7 @@
       "timeline": "Cronologia",
       "ticketStats": "Statistiche Biglietti",
       "ticketAnalytics": "Analisi Biglietti",
+      "ticketSalesDuration": "Durata della vendita dei biglietti",
       "quickActions": "Azioni Rapide",
       "statusSummary": "Riepilogo Stato",
       "statusHistory": "Cronologia Stato",
@@ -260,7 +263,8 @@
       "lastUpdated": "Ultimo Aggiornamento",
       "organizerId": "ID Organizzatore",
       "viewOrganizer": "Vedi Organizzatore",
-      "featured": "IN PRIMO PIANO"
+      "featured": "IN PRIMO PIANO",
+      "ticketTiers": "categorie di biglietti"
     },
     "history": {
       "statusChanged": "Stato aggiornato da {old} a {new}",
@@ -641,7 +645,14 @@
     "addOrganizer": "Aggiungi organizzatore",
     "create": {
       "title": "Aggiungi nuovo organizzatore",
-      "description": "Crea un nuovo account organizzatore con stato pre-approvato."
+      "description": "Crea un nuovo account organizzatore con stato pre-approvato.",
+      "createOrganizer": "creare organizzatore"
+    },
+    "organizerDetails": {
+      "emailAddress": "Indirizzo email",
+      "phoneNumber": "Numero di telefono",
+      "joined": "Data di registrazione",
+      "lastUpdated": "Ultimo aggiornamento"
     }
   },
   "users": {

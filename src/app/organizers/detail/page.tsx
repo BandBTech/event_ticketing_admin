@@ -32,6 +32,7 @@ import { toast } from "sonner";
 import { queryKeys } from "@/lib/queryKeys";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
+import {formatDateTimeLong} from "@/lib/utils"
 import Image from "next/image";
 
 // UI Components
@@ -602,13 +603,13 @@ export default function OrganizerDetailPage() {
   );
   const StatusIcon = statusConfig.icon;
 
-  const formattedCreatedDate = organizer?.created_at
-    ? format(new Date(organizer.created_at), "MMMM dd, yyyy 'at' hh:mm a")
-    : "N/A";
+  const formattedCreatedDate = formatDateTimeLong(organizer?.created_at, locale)
+    // ? format(new Date(organizer.created_at), "MMMM dd, yyyy 'at' hh:mm a")
+    ?? "N/A";
 
-  const formattedUpdatedDate = organizer?.updated_at
-    ? format(new Date(organizer.updated_at), "MMMM dd, yyyy 'at' hh:mm a")
-    : "N/A";
+  const formattedUpdatedDate = formatDateTimeLong(organizer?.updated_at, locale)
+    // ? format(new Date(organizer.updated_at), "MMMM dd, yyyy 'at' hh:mm a")
+    ?? "N/A";
 
   const isPending = organizer?.organizer_status?.toLowerCase() === "pending";
   const isApproved = organizer?.organizer_status?.toLowerCase() === "approved";
@@ -821,7 +822,7 @@ export default function OrganizerDetailPage() {
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">
-                      {t("profile.email", "Email Address")}
+                      {t("organizer.organizerDetails.emailAddress", "Email Address")}
                     </p>
                     <p className="font-medium text-gray-900">
                       {organizer?.email}
@@ -839,7 +840,8 @@ export default function OrganizerDetailPage() {
                     </div>
                     <div>
                       <p className="text-sm text-gray-500">
-                        {t("profile.phone", "Phone Number")}
+                        {/* {t("profile.phone", "Phone Number")} */}
+                         {t("organizer.organizerDetails.phoneNumber", "Phone Number")}
                       </p>
                       <p className="font-medium text-gray-900">
                         {formatPhoneNumber(
@@ -859,7 +861,7 @@ export default function OrganizerDetailPage() {
                     />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Joined</p>
+                    <p className="text-sm text-gray-500">{t("organizer.organizerDetails.joined", "Joined")}</p>
                     <p className="font-medium text-gray-900">
                       {formattedCreatedDate}
                     </p>
@@ -874,7 +876,7 @@ export default function OrganizerDetailPage() {
                     />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Last Updated</p>
+                    <p className="text-sm text-gray-500"> {t("organizer.organizerDetails.lastUpdated", "Last Updated")}</p>
                     <p className="font-medium text-gray-900">
                       {formattedUpdatedDate}
                     </p>

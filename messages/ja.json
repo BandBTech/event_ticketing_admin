@@ -128,6 +128,8 @@
   "events": {
     "from": "開始日",
     "ticketsLeft": "枚残り",
+    "ticketsSold": "チケット販売済み",
+    "commission": "手数料",
     "soldOut": "完売",
     "priceTBA": "価格未定",
     "title": "イベント",
@@ -206,6 +208,7 @@
       "timeline": "タイムライン",
       "ticketStats": "チケット統計",
       "ticketAnalytics": "チケット分析",
+      "ticketSalesDuration": "チケット販売期間",
       "quickActions": "クイックアクション",
       "statusSummary": "ステータス概要",
       "statusHistory": "ステータス履歴",
@@ -226,6 +229,7 @@
       "featured": "注目の",
       "adminRemark": "管理者メモ",
       "eventStartsOn": "イベント開始日",
+      "eventEndsOn": "イベント終了日",
       "venueName": "会場名",
       "tags": "タグ",
       "markFeatured": "注目としてマークする",
@@ -272,7 +276,8 @@
       "lastUpdated": "最終更新日",
       "organizerId": "主催者ID",
       "viewOrganizer": "主催者を表示",
-      "featured": "注目の"
+      "featured": "注目の",
+      "ticketTiers": "チケットの種類"
     },
     "history": {
       "statusChanged": "ステータスが {old} から {new} に更新されました",
@@ -653,7 +658,14 @@
     "addOrganizer": "オーガナイザーの追加",
     "create": {
       "title": "新しいオーガナイザーを追加",
-      "description": "事前承認ステータスの新しい主催者アカウントを作成します。"
+      "description": "事前承認ステータスの新しい主催者アカウントを作成します。",
+      "createOrganizer": "オーガナイザーを作成する"
+    },
+    "organizerDetails": {
+      "emailAddress": "メールアドレス",
+      "phoneNumber": "電話番号",
+      "joined": "登録日",
+      "lastUpdated": "最終更新日"
     }
   },
   "users": {

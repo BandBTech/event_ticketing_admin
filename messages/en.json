@@ -151,6 +151,8 @@
   "events": {
     "from": "From",
     "ticketsLeft": "tickets left",
+    "ticketsSold": "Tickets Sold",
+    "commission": "Commission",
     "soldOut": "Sold out",
     "priceTBA": "Price TBA",
     "title": "Events",
@@ -230,6 +232,7 @@
       "timeline": "Timeline",
       "ticketStats": "Ticket Stats",
       "ticketAnalytics": "Ticket Analytics",
+      "ticketSalesDuration": "Ticket Sales Duration",
       "quickActions": "Quick Actions",
       "statusSummary": "Status Summary",
       "statusHistory": "Status History",
@@ -271,7 +274,8 @@
       "lastUpdated": "Last Updated",
       "organizerId": "Organizer ID",
       "viewOrganizer": "View Organizer",
-      "featured": "FEATURED"
+      "featured": "FEATURED",
+      "ticketTiers": "Ticket Tiers"
     },
     "badge": {
       "approved": "Approved",
@@ -674,7 +678,14 @@
       "title": "Add New Organizer",
       "description": "Create a new organizer account with pre-approved status.",
       "success": "Organizer created successfully",
-      "error": "Failed to create organizer"
+      "error": "Failed to create organizer",
+      "createOrganizer": "Create Organizer"
+    },
+    "organizerDetails": {
+      "emailAddress": "Email Address",
+      "phoneNumber": "Phone Number",
+      "joined": "Joined",
+      "lastUpdated": "Last Updated"
     },
     "title": "Organizers",
     "searchOrganizers": "Search Organizers",
