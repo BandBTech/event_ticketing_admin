@@ -145,7 +145,10 @@ function AddPaymentForm({
                     )}
                   </p>
                   <p className="text-xs font-normal text-left text-muted-foreground">
-                    {field.value?.length || 0} /100 characters
+                    {field.value?.length || 0} /100 {t(
+                            "common.characters",
+                            "characters",
+                          )}
                   </p>
                 </div>
               </Field>
@@ -176,7 +179,10 @@ function AddPaymentForm({
                     )}
                   </p>
                   <p className="text-xs font-normal text-left text-muted-foreground">
-                    {field.value?.length || 0} /100 characters
+                    {field.value?.length || 0} /100 {t(
+                            "common.characters",
+                            "characters",
+                          )}
                   </p>
                 </div>
               </Field>
@@ -214,7 +220,10 @@ function AddPaymentForm({
                     )}
                   </p>
                   <p className="text-xs font-normal text-left text-muted-foreground">
-                    {field.value?.length || 0} /100 characters
+                    {field.value?.length || 0} /100 {t(
+                            "common.characters",
+                            "characters",
+                          )}
                   </p>
                 </div>
               </Field>
@@ -241,7 +250,10 @@ function AddPaymentForm({
                     )}
                   </p>
                   <p className="text-xs font-normal text-left text-muted-foreground">
-                    {field.value?.length || 0} /100 characters
+                    {field.value?.length || 0} /100 {t(
+                            "common.characters",
+                            "characters",
+                          )}
                   </p>
                 </div>
               </Field>
@@ -268,7 +280,10 @@ function AddPaymentForm({
                     )}
                   </p>
                   <p className="text-xs font-normal text-left text-muted-foreground">
-                    {field.value?.length || 0} /100 characters
+                    {field.value?.length || 0} /100 {t(
+                            "common.characters",
+                            "characters",
+                          )}
                   </p>
                 </div>
               </Field>

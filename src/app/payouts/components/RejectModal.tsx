@@ -140,7 +140,10 @@ export default function RejectModal({
                         <TranslatedFormMessage t={t} />
                       </p>
                       <p className="text-xs font-normal text-left text-muted-foreground">
-                        {field.value?.toString().length || 0} /100 characters
+                        {field.value?.toString().length || 0} /100 {t(
+                            "common.characters",
+                            "characters",
+                          )}
                       </p>
                     </div>
                   </div>

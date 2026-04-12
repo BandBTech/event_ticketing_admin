@@ -257,7 +257,10 @@ export default function ProfileSettingsPage() {
                             <TranslatedFormMessage t={t} />
                           </p>
                           <p className="text-xs font-normal text-left text-muted-foreground">
-                            {field.value?.toString().length || 0} /50 characters
+                            {field.value?.toString().length || 0} /50 {t(
+                            "common.characters",
+                            "characters",
+                          )}
                           </p>
                         </div>
                       )}
@@ -303,7 +306,10 @@ export default function ProfileSettingsPage() {
                             <TranslatedFormMessage t={t} />
                           </p>
                           <p className="text-xs font-normal text-left text-muted-foreground">
-                            {field.value?.toString().length || 0} /50 characters
+                            {field.value?.toString().length || 0} /50 {t(
+                            "common.characters",
+                            "characters",
+                          )}
                           </p>
                         </div>
                       )}

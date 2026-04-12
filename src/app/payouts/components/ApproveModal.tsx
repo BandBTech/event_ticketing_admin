@@ -209,7 +209,10 @@ export default function ApproveModal({
                       <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
                         <p><TranslatedFormMessage t={t} /></p>
                         <p className="text-xs font-normal text-left text-muted-foreground">
-                          {field.value?.toString().length || 0} /100 characters
+                          {field.value?.toString().length || 0} /100 {t(
+                            "common.characters",
+                            "characters",
+                          )}
                         </p>
                       </div>
                     </div>

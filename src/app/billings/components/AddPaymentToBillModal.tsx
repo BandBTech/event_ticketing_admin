@@ -449,7 +449,10 @@ export default function AddBillPopupModal({
                     <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
                       <p> </p>
                       <p className="text-xs font-normal text-left text-muted-foreground">
-                        {field.value?.toString().length || 0} /10 characters
+                        {field.value?.toString().length || 0} /10 {t(
+                            "common.characters",
+                            "characters",
+                          )}
                       </p>
                     </div>
                   </div>
@@ -546,7 +549,10 @@ export default function AddBillPopupModal({
                       )}
                     </p>
                     <p className="text-xs font-normal text-left text-muted-foreground">
-                      {field.value?.length || 0} /100 characters
+                      {field.value?.length || 0} /100 {t(
+                            "common.characters",
+                            "characters",
+                          )}
                     </p>
                   </div>
                   <TranslatedFormMessage t={t} />
@@ -585,7 +591,10 @@ export default function AddBillPopupModal({
                       )}
                     </p>
                     <p className="text-xs font-normal text-left text-muted-foreground">
-                      {field.value?.length || 0} /200 characters
+                      {field.value?.length || 0} /200 {t(
+                            "common.characters",
+                            "characters",
+                          )}
                     </p>
                   </div>
                   <TranslatedFormMessage t={t} />
