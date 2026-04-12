@@ -28,7 +28,10 @@
     "viewMore": "もっと見る",
     "viewCountMore": "{count} 個以上見る",
     "system": "システム",
-    "showLess": "表示を減らす"
+    "showLess": "表示を減らす",
+    "rowsPerPage": "1ページあたりの行数",
+    "startItemToEndItemOfTotal": "{startItem}-{endItem}/{total}",
+    "results": "結果"
   },
   "navigation": {
     "events": "イベント",
@@ -669,6 +672,8 @@
     }
   },
   "users": {
+    "title": "ユーザー管理",
+    "subTitle": "組織のユーザーを管理します。",
     "searchUsers": "ユーザーを検索",
     "filter": "フィルター",
     "filterByAccountStatus": "アカウントステータスでフィルター",
@@ -723,6 +728,10 @@
       "accountDetails": "アカウント詳細",
       "createdOn": "作成日",
       "updatedOn": "更新日"
+    },
+    "modals": {
+      "areYouSure": "本当によろしいですか",
+      "this": "これ"
     }
   },
   "billings": {

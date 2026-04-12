@@ -170,10 +170,10 @@ export default function TransactionsPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
-            {t("", "User Management")}
+            {t("users.title", "User Management")}
           </h1>
           <p className="text-gray-500">
-            {t("", "Manage your organization's users.")}
+            {t("users.subTitle", "Manage your organization's users.")}
           </p>
         </div>
       </div>
@@ -183,7 +183,7 @@ export default function TransactionsPage() {
           <div className="relative w-full sm:w-80">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
             <Input
-              placeholder={t("", "Search Users")}
+              placeholder={t("users.searchUsers", "Search Users")}
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               className="pl-9 shadow-sm"
@@ -305,23 +305,27 @@ export default function TransactionsPage() {
               <AlertDialogTitle className="text-xl font-bold text-gray-900">
                 {/* {t("", "Confirm Activate User")} */}
                 <span>
-                  Confirm{" "}
+                  {t("common.confirm")}{" "}
                   {selectedUser?.account_status == "active"
-                    ? "Deactivate"
-                    : "Activate"}{" "}
-                  User
+                    ? t("organizer.management.actions.deactivate")
+                    : t("organizer.management.actions.activate")}{" "}
+                  {t("users.userRoles.user")}
                 </span>
               </AlertDialogTitle>
               <AlertDialogDescription className="text-gray-500 text-base">
                 <span>
-                  Are you sure you want to{" "}
+                  {t("users.modals.areYouSure")}{" "}
                   <strong>
                     {" "}
                     {selectedUser?.account_status == "active"
-                      ? "deactivate"
-                      : "activate"}
+                      ? t(
+                          "organizer.management.actions.deactivate",
+                        ).toLowerCase()
+                      : t(
+                          "organizer.management.actions.activate",
+                        ).toLowerCase()}{" "}
                   </strong>{" "}
-                  this{" "}
+                  {t("users.modals.this")}{" "}
                   <strong>
                     {selectedUser?.first_name} {selectedUser?.last_name}
                   </strong>
@@ -336,7 +340,7 @@ export default function TransactionsPage() {
                 }
                 className="h-11 px-6 border-gray-200 hover:bg-gray-50 transition-colors"
               >
-                {t("common.cancel", "Cancel")}
+                {t("common.cancelButton", "Cancel")}
               </AlertDialogCancel>
               <AlertDialogAction
                 onClick={() => {

@@ -37,7 +37,10 @@
     "viewAll": "View All",
     "viewCountMore": "View {count} More",
     "system": "System",
-    "showLess": "Show Less"
+    "showLess": "Show Less",
+    "rowsPerPage": "Rows per page",
+    "startItemToEndItemOfTotal": "{startItem}-{endItem} of {total}",
+    "results": "Results"
   },
   "navigation": {
     "events": "Events",
@@ -708,6 +711,8 @@
     "pleaseTryAgainLater": "Please try again later"
   },
   "users": {
+    "title": "User Management",
+    "subTitle": "Manage your organization's users.",
     "searchUsers": "Search Users",
     "generatePassword": {
       "success": "Password generated successfully",
@@ -769,6 +774,10 @@
       "accountDetails": "Account Details",
       "createdOn": "Created On",
       "updatedOn": "Updated On"
+    },
+    "modals": {
+      "areYouSure": "Are you sure you want to",
+      "this": "this"
     }
   },
   "billings": {

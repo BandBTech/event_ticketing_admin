@@ -120,7 +120,7 @@ export default function TablePagination({
           <span className="ml-4 text-sm font-medium text-gray-600">
             {t(
               "common.startItemToEndItemOfTotal",
-              `${startItem}-${endItem} of ${total}`,
+              `${startItem}-${endItem} ${total}`,
               {
                 startItem,
                 endItem,

@@ -21,6 +21,7 @@ import { queryKeys } from "@/lib/queryKeys";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
 import { useSearchParams } from "next/navigation";
+import { formatDateTimeLong } from "@/lib/utils";
 
 function getInitials(firstName?: string, lastName?: string) {
   return `${firstName?.[0] ?? ""}${lastName?.[0] ?? ""}`.toUpperCase();
@@ -79,7 +80,7 @@ export default function OrganizerProfilePage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="flex flex-col items-center gap-2">
           <Loader2 className="h-8 w-8 animate-spin text-black" />
-          <p className="text-sm text-black">Loading user details...</p>
+          <p className="text-sm text-black">{t("users.loadingUsers")}</p>
         </div>
       </div>
     );
@@ -154,7 +155,7 @@ export default function OrganizerProfilePage() {
               </div>
               <div>
                 <p className="text-xs text-black mb-0.5">
-                  {t("users.userDetail.email", "Email")}
+                  {t("organizer.organizerDetails.emailAddress", "Email Address")}
                 </p>
                 <p className="text-sm font-semibold text-gray-800">
                   {data?.email || "—"}
@@ -172,7 +173,7 @@ export default function OrganizerProfilePage() {
               </div>
               <div>
                 <p className="text-xs text-black mb-0.5">
-                  {t("users.userDetail.phone", "Phone")}
+                  {t("organizer.organizerDetails.phoneNumber", "Phone Number")}
                 </p>
                 <p className="text-sm font-semibold text-gray-800">
                   {data?.country_code && data?.phone
@@ -195,9 +196,7 @@ export default function OrganizerProfilePage() {
                   {t("users.userDetail.createdOn", "Created On")}
                 </p>
                 <p className="text-sm font-semibold text-gray-800">
-                  {data?.created_at
-                    ? format(new Date(data.created_at), "PPp")
-                    : "—"}
+                  {formatDateTimeLong(data?.created_at, locale) ?? "—"}
                 </p>
               </div>
             </div>
@@ -207,11 +206,12 @@ export default function OrganizerProfilePage() {
         {/* Status Summary */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
           <h2 className="text-base font-semibold text-gray-900 mb-5">
-            Status Summary
+            {/* Status Summary */}
+            {t("events.sections.statusSummary")}
           </h2>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-black">Organizer Status</span>
+              <span className="text-sm text-black">{t("organizer.management.status.organizer")}</span>
               {data?.organizer_status && (
                 <span
                   className="text-xs font-semibold px-3 py-1 rounded-full capitalize"
@@ -224,7 +224,7 @@ export default function OrganizerProfilePage() {
               )}
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-black">Account Status</span>
+              <span className="text-sm text-black">{t("organizer.management.status.account")}</span>
               {data?.account_status && (
                 <span
                   className="text-xs font-semibold px-3 py-1 rounded-full capitalize"
@@ -237,7 +237,7 @@ export default function OrganizerProfilePage() {
               )}
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-black">Verified</span>
+              <span className="text-sm text-black">{t("organizer.management.status.verified")}</span>
               <span
                 className="text-xs font-semibold px-3 py-1 rounded-full"
                 style={

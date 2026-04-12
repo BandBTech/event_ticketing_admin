@@ -28,7 +28,10 @@
     "viewMore": "Visualizza altro",
     "viewCountMore": "Visualizza {count} altro",
     "system": "Sistema",
-    "showLess": "Mostra meno"
+    "showLess": "Mostra meno",
+    "rowsPerPage": "Righe per pagina",
+    "startItemToEndItemOfTotal": "{startItem}-{endItem} di {total}",
+    "results": "Risultati"
   },
   "navigation": {
     "events": "Eventi",
@@ -656,6 +659,8 @@
     }
   },
   "users": {
+    "title": "Gestione utenti",
+    "subTitle": "Gestisci gli utenti della tua organizzazione.",
     "searchUsers": "Cerca Utenti",
     "filter": "Filtra",
     "filterByAccountStatus": "Filtra per Stato Account",
@@ -710,6 +715,10 @@
       "accountDetails": "Dettagli Account",
       "createdOn": "Creato il",
       "updatedOn": "Aggiornato il"
+    },
+    "modals": {
+      "areYouSure": "Sei sicuro di volerlo fare",
+      "this": "questa"
     }
   },
   "billings": {
