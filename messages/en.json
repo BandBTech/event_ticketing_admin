@@ -781,6 +781,8 @@
     }
   },
   "billings": {
+    "title": "Billings Management",
+    "subtitle": "Manage your organization's billings.",
     "searchBillings": "Search Billings",
     "priority": "Priority",
     "viewDetails": "View Details",
@@ -788,6 +790,10 @@
     "updateBill": "Update Bill",
     "filters": "Filters",
     "addBill": "Add Bill",
+    "modals": {
+      "confirmCancel": "Confirm Cancel Bill",
+      "cancelMessage": "Are you sure you want to cancel this bill? This action cannot be undone immediately."
+    },
     "filter": {
       "clear": "Clear",
       "applyFilters": "Apply Filters",
@@ -825,7 +831,9 @@
       "bank_transfer": "Bank Transfer",
       "cheque": "Cheque",
       "check": "Cheque",
-      "mobile_payment": "Mobile Payment"
+      "mobile_payment": "Mobile Payment",
+      "stripe": "Stripe",
+      "other": "Other"
     },
     "billType": {
       "auto_calculated": "Auto Calculated",
@@ -842,9 +850,12 @@
       "organizerName": "Organizer Name",
       "billedAmount": "Billed Amount",
       "paymentMethod": "Payment Method",
-      "status": "Status"
+      "status": "Status",
+      "cancelBill": "Cancel Bill",
+      "viewPaymentHistory": "View Payment History"
     },
     "billHistory": {
+      "billingHistory": "Billing History",
       "noPaymentHistoryFound": "No payment history found",
       "reference": "Reference",
       "amount": "Amount",

@@ -1,5 +1,11 @@
 import React from "react";
-import { Banknote, Building2, Receipt } from "lucide-react";
+import {
+  DeviceMobileCameraIcon,
+  BankIcon,
+  ReceiptIcon,
+  StripeLogoIcon,
+  MoneyIcon,
+} from "@phosphor-icons/react";
 import {
   Sheet,
   SheetContent,
@@ -34,21 +40,22 @@ const ListItemSkeleton = () => {
 };
 
 function PaymentMethodBadge({ method }: { method: string }) {
-  const isBankTransfer = method === "bank_transfer";
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
   return (
-    <span
-      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${
-        isBankTransfer
-          ? "bg-blue-100 text-blue-700"
-          : "bg-green-100 text-green-700"
-      }`}
-    >
-      {isBankTransfer ? (
-        <Building2 className="h-3 w-3" />
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
+      {method === "bank_transfer" ? (
+        <BankIcon className="h-3 w-3" />
+      ) : method === "mobile_payment" ? (
+        <DeviceMobileCameraIcon className="h-3 w-3" />
+      ) : method === "cheque" || method === "check" ? (
+        <ReceiptIcon className="h-3 w-3" />
+      ) : method === "stripe" ? (
+        <StripeLogoIcon className="h-3 w-3" />
       ) : (
-        <Banknote className="h-3 w-3" />
+        <MoneyIcon className="h-3 w-3" />
       )}
-      {isBankTransfer ? "Bank Transfer" : "Cash"}
+      {t("billings.method." + method)}
     </span>
   );
 }
@@ -89,7 +96,7 @@ export function BillingHistorySheet({
       >
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
-            Billing History
+            {t("billings.billHistory.billingHistory")}
           </SheetTitle>
         </SheetHeader>
 
@@ -114,11 +121,13 @@ export function BillingHistorySheet({
           <div className="flex-1 overflow-y-auto space-y-2 py-2 px-1">
             <div className="mx-1 mt-3 mb-1 rounded-xl bg-white border border-gray-100 px-4 py-3 flex items-center justify-between shadow-sm">
               <div className="flex items-center gap-2 text-sm text-black">
-                <Receipt className="h-4 w-4" />
-                <span>{totalTransactions} transactions</span>
+                <ReceiptIcon className="h-4 w-4" />
+                <span>
+                  {totalTransactions} {t("dashboard.dataDisplay.transactions")}
+                </span>
               </div>
               <div className="text-sm font-semibold text-gray-800">
-                Total:{" "}
+                {t("dashboard.dataDisplay.total")}:{" "}
                 <span className="text-indigo-600">
                   {formatCurrency(totalAmount, undefined, locale)}
                 </span>
@@ -129,8 +138,8 @@ export function BillingHistorySheet({
             <div className="flex-1 overflow-y-auto space-y-2 py-2 px-1">
               {!Array.isArray(historyData) || historyData.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-40 text-gray-400 text-sm">
-                  <Receipt className="h-8 w-8 mb-2 opacity-40" />
-                  No payment history found.
+                  <ReceiptIcon className="h-8 w-8 mb-2 opacity-40" />
+                  {t("billings.billHistory.noPaymentHistoryFound")}
                 </div>
               ) : (
                 Array.isArray(historyData) &&
@@ -142,7 +151,6 @@ export function BillingHistorySheet({
                     {/* Top row: amount + method */}
                     <div className="flex items-center justify-between">
                       <span className="text-lg font-bold text-gray-800">
-                        {/* ${item.amount?.toLocaleString()} */}
                         {formatCurrency(item.amount, undefined, locale)}
                       </span>
                       <PaymentMethodBadge method={item.payment_method} />
@@ -151,7 +159,7 @@ export function BillingHistorySheet({
                     {/* Middle: dates */}
                     <div className="flex items-center justify-between text-xs text-black">
                       <span>
-                        Payment date:{" "}
+                        {t("billings.addPaymentToBill.paymentDate")}:{" "}
                         <span className="font-semibold text-black">
                           {formatDate(item.payment_date)}
                         </span>
@@ -164,7 +172,7 @@ export function BillingHistorySheet({
                             rel="noopener noreferrer"
                             className="text-xs text-indigo-600 hover:underline"
                           >
-                            View Screenshot
+                            {t("billings.billHistory.viewScreenshot")}
                           </a>
                         )}
                       </span>
@@ -172,7 +180,7 @@ export function BillingHistorySheet({
 
                     {/* Bottom: processed by */}
                     <div className="text-xs text-black">
-                      Processed by:{" "}
+                      {t("billings.billHistory.processedBy")}:{" "}
                       <span className="font-semibold text-black">
                         {item.processed_by}
                       </span>
@@ -181,7 +189,7 @@ export function BillingHistorySheet({
                     {/* Notes */}
                     {item.notes && (
                       <div className="text-xs text-black overflow-hidden text-ellipsis whitespace-nowrap">
-                        Notes:{" "}
+                        {t("billings.billUpdate.notes")}:{" "}
                         <span className="font-semibold text-black">
                           {item.notes}
                         </span>

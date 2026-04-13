@@ -315,7 +315,7 @@ export default function BillDetail() {
         {/* Money Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <MoneyCard
-            label={t("billings.detailPage.totalRevesnue", "Total Revsenue")}
+            label={t("billings.detailPage.totalRevenue", "Total Revsenue")}
             value={billData?.total_revenue ?? 0}
           />
           <MoneyCard

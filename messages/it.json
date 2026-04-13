@@ -722,6 +722,8 @@
     }
   },
   "billings": {
+    "title": "gestione della fatturazione",
+    "subtitle": "Gestisci la fatturazione della tua organizzazione.",
     "searchBillings": "Cerca Fatturazione",
     "filterByStatus": "Filtra per stato",
     "priority": "Priorità",
@@ -730,6 +732,10 @@
     "updateBill": "Aggiorna fattura",
     "filters": "Filtri",
     "addBill": "Aggiungi Fattura",
+    "modals": {
+      "confirmCancel": "Conferma Annullamento Fattura",
+      "cancelMessage": "Sei sicuro di voler annullare questa fattura? Questa azione non può essere annullata immediatamente."
+    },
     "filter": {
       "clear": "Cancella",
       "applyFilters": "Applica filtri",
@@ -767,7 +773,9 @@
       "bank_transfer": "Bonifico bancario",
       "cheque": "Assegno",
       "check": "Assegno",
-      "mobile_payment": "Pagamento mobile"
+      "mobile_payment": "Pagamento mobile",
+      "stripe": "Banda",
+      "other": "Altra"
     },
     "billType": {
       "auto_calculated": "Calcolato automaticamente",
@@ -784,9 +792,12 @@
       "organizerName": "Nome dell'organizzatore",
       "billedAmount": "Importo fatturato",
       "paymentMethod": "Metodo di pagamento",
-      "status": "Stato"
+      "status": "Stato",
+      "cancelBill": "annullare la fattura",
+      "viewPaymentHistory": "visualizza la cronologia dei pagamenti"
     },
     "billHistory": {
+      "billingHistory": "Cronologia di fatturazione",
       "noPaymentHistoryFound": "Nessuno storico pagamenti trovato",
       "reference": "Riferimento",
       "amount": "Importo",

@@ -735,6 +735,8 @@
     }
   },
   "billings": {
+    "title": "請求管理",
+    "subtitle": "組織の請求業務を管理しましょう。",
     "searchBillings": "請求情報の検索",
     "filterByStatus": "ステータスでフィルター",
     "priority": "優先度",
@@ -743,6 +745,10 @@
     "updateBill": "請求書を更新",
     "filters": "フィルター",
     "addBill": "請求書を追加",
+    "modals": {
+      "confirmCancel": "請求書のキャンセル確認",
+      "cancelMessage": "この請求書をキャンセルしてもよろしいですか？この操作はすぐには元に戻せません。"
+    },
     "filter": {
       "clear": "クリア",
       "applyFilters": "フィルターを適用",
@@ -780,7 +786,9 @@
       "bank_transfer": "銀行振込",
       "cheque": "小切手",
       "check": "小切手",
-      "mobile_payment": "モバイル決済"
+      "mobile_payment": "モバイル決済",
+      "stripe": "ストライプ",
+      "other": "他の"
     },
     "billType": {
       "auto_calculated": "自動計算",
@@ -797,9 +805,12 @@
       "organizerName": "主催者名",
       "billedAmount": "請求金額",
       "paymentMethod": "支払い方法",
-      "status": "ステータス"
+      "status": "ステータス",
+      "cancelBill": "請求書をキャンセルする",
+      "viewPaymentHistory": "支払い履歴を表示する"
     },
     "billHistory": {
+      "billingHistory": "請求履歴",
       "noPaymentHistoryFound": "支払い履歴が見つかりません",
       "reference": "参照番号",
       "amount": "金額",

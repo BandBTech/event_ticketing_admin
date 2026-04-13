@@ -112,7 +112,7 @@ export function BillingTable({
     () => [
       {
         id: "date",
-        header: "Date",
+        header: t("transactions.table.date"),
         title: "Created Date",
         meta: { sortKey: "created_at" },
         cell: ({ row }) => {
@@ -266,7 +266,7 @@ export function BillingTable({
                           weight="duotone"
                           className="mr-2 h-4 w-4"
                         />
-                        View Payment History
+                        {t("billings.table.viewPaymentHistory")}
                       </div>
                     </DropdownMenuItem>
                   )}
@@ -279,7 +279,7 @@ export function BillingTable({
                   >
                     <div className="flex justify-start items-center bg-gray-50 text-red-700">
                       <XCircleIcon weight="duotone" className="mr-2 h-4 w-4" />
-                      Cancel Bill
+                      {t("billings.table.cancelBill")}
                     </div>
                   </DropdownMenuItem>
                 )}
@@ -343,12 +343,12 @@ export function BillingTable({
         <AlertDialogContent className="rounded-3xl shadow-2xl border-none bg-white/95 backdrop-blur-xl data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 duration-300">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-xl font-bold text-gray-900">
-              {t("", "Confirm Cancel Bill")}
+              {t("billings.modals.confirmCancel", "Confirm Cancel Bill")}
             </AlertDialogTitle>
             <AlertDialogDescription className="text-gray-500 text-base">
               {t(
-                "",
-                "Are you sure you want to cancel this bill? This action cannot be undone immediately.",
+                "billings.modals.cancelMessage",
+                "Are you sure you want to cancel this bill? This action cannot be undone immediately."
               )}
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -357,7 +357,7 @@ export function BillingTable({
               onClick={() => setIsCancelBillDialogOpen(false)}
               className="h-11 px-6 border-gray-200 hover:bg-gray-50 transition-colors"
             >
-              {t("common.cancel", "Cancel")}
+              {t("common.cancelButton", "Cancel")}
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={() =>

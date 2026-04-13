@@ -138,10 +138,10 @@ export default function BillingsPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
-            {t("", "Billings Management")}
+            {t("billings.title", "Billings Management")}
           </h1>
           <p className="text-gray-500">
-            {t("", "Manage your organization's billings.")}
+            {t("billings.subtitle", "Manage your organization's billings.")}
           </p>
         </div>
       </div>
@@ -151,7 +151,7 @@ export default function BillingsPage() {
           <div className="relative w-full sm:w-80">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
             <Input
-              placeholder={t("", "Search Billings")}
+              placeholder={t("billings.searchBillings", "Search Billings")}
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               className="pl-9 shadow-sm"
