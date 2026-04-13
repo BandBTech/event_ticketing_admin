@@ -19,9 +19,6 @@ import { useQuery } from "@tanstack/react-query";
 import { TransactionPaymentData } from "@/types/paymenttransactiondetail";
 import { TicketTable } from "../components/TicketTable";
 
-const capitalize = (s?: string) =>
-  s ? s.charAt(0).toUpperCase() + s.slice(1) : "";
-
 // --- Primitives ---
 const Badge = ({
   label,
@@ -143,24 +140,29 @@ export default function PaymentDetail() {
             weight="duotone"
             className="w-5 h-5 group-hover:-translate-x-1 transition-transform"
           />
-          <span className="font-medium">{t("", "Back to Transaction")}</span>
+          <span className="font-medium">
+            {t("transactions.backToTransactions", "Back to Transactions")}
+          </span>
         </button>
 
         {/* Page header */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex items-start justify-between">
           <div>
             <h1 className="text-2xl font-bold text-slate-900">
-              Payment Detail
+              {t("transactions.paymentDetails.paymentDetail", "Payment Detail")}
             </h1>
           </div>
           {transaction && (
             <div className="flex items-center gap-2 mt-1">
               <Badge
-                label={capitalize(transaction.status)}
+                label={t("status." + transaction.status)}
                 variant={txnVariant(transaction.status)}
               />
               <Badge
-                label={capitalize(transaction.payment_gateway)}
+                label={t(
+                  "billings.method." + transaction.payment_gateway,
+                  transaction.payment_gateway || "—",
+                )}
                 variant="indigo"
               />
             </div>
@@ -192,13 +194,19 @@ export default function PaymentDetail() {
                     <TicketIcon className="w-4 h-4" />
                   </span>
                 }
-                title="Event"
+                title={t("transactions.paymentDetails.event", "Event")}
                 iconBg="bg-violet-50"
               />
-              <InfoRow label="Event Name" value={transaction.event.name} />
               <InfoRow
-                label="Ticket Quantity"
-                value={`${transaction.quantity} ticket${transaction.quantity !== 1 ? "s" : ""}`}
+                label={t("transactions.paymentDetails.eventName", "Event Name")}
+                value={transaction.event.name}
+              />
+              <InfoRow
+                label={t(
+                  "transactions.paymentDetails.ticketQty",
+                  "Ticket Quantity",
+                )}
+                value={`${transaction.quantity} ${" "} ${t("transactions.paymentDetails.tickets")}`}
               />
             </div>
 
@@ -210,11 +218,17 @@ export default function PaymentDetail() {
                     <UserIcon className="w-4 h-4" />
                   </span>
                 }
-                title="Buyer"
+                title={t("transactions.paymentDetails.buyer", "Buyer")}
                 iconBg="bg-emerald-50"
               />
-              <InfoRow label="User Name" value={transaction.user.name} />
-              <InfoRow label="Email" value={transaction.user.email} />
+              <InfoRow
+                label={t("transactions.paymentDetails.userName", "User Name")}
+                value={transaction.user.name}
+              />
+              <InfoRow
+                label={t("transactions.paymentDetails.email", "Email")}
+                value={transaction.user.email}
+              />
             </div>
 
             {/* Payment Intent */}
@@ -225,26 +239,35 @@ export default function PaymentDetail() {
                     <CreditCardIcon className="w-4 h-4" />
                   </span>
                 }
-                title="Payment"
+                title={t("transactions.paymentDetails.payment", "Payment")}
                 iconBg="bg-amber-50"
               />
               <InfoRow
-                label="Gateway"
+                label={t("transactions.paymentDetails.gateway", "Gateway")}
                 value={
                   <span className="capitalize">
-                    {paymentIntent.payment_gateway}
+                    {t(
+                      "billings.method." + paymentIntent.payment_gateway,
+                      paymentIntent.payment_gateway || "—",
+                    )}
                   </span>
                 }
               />
               <InfoRow
-                label="Created At"
+                label={t("transactions.paymentDetails.createdAt", "Created At")}
                 value={formatDateTimeLong(paymentIntent.created_at, locale)}
               />
 
               {/* Amount breakdown */}
               <div className="mt-4 rounded-lg bg-slate-50 border border-slate-100 p-3 space-y-2">
                 <div className="flex justify-between text-xs text-black">
-                  <span>Total Amount: </span>
+                  <span>
+                    {t(
+                      "transactions.paymentDetails.totalAmount",
+                      "Total Amount",
+                    )}
+                    :{" "}
+                  </span>
                   <span className="font-bold text-slate-800 text-sm">
                     {formatCurrency(
                       transaction.amount,
@@ -268,10 +291,15 @@ export default function PaymentDetail() {
                   <TicketIcon className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-black">Tickets</h3>
+                  <h3 className="text-sm font-bold text-black">
+                    {t("transactions.paymentDetails.tickets", "Tickets")}
+                  </h3>
                   <p className="text-xs text-black">
-                    {tickets.length} ticket{tickets.length !== 1 ? "s" : ""}{" "}
-                    issued in this payment
+                    {tickets.length}{" "}
+                    {t(
+                      "transactions.paymentDetails.ticketsIssued",
+                      "tickets issued in this payment",
+                    )}
                   </p>
                 </div>
               </div>

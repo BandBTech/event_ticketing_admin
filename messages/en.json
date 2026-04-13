@@ -536,6 +536,7 @@
       "rejectEvent": "Reject Event",
       "approveEvent": "Approve Event",
       "commissionRate": "Commission Rate",
+      "commissionAmount": "Commission Amount",
       "commissionHint": "Commission rate is always in percentage",
       "commissionError": "Commission rate must be between 0 and 100",
       "reasonForRejection": "Reason for Rejection",
@@ -727,6 +728,8 @@
     "clearFilters": "Clear Filters",
     "loadingUsers": "Loading users...",
     "noUsersFound": "No users found",
+    "selectUser": "Select User",
+    "searchUser": "Search User",
     "noRole": "No role",
     "more": "more",
     "viewDetails": "View Details",
@@ -914,7 +917,10 @@
     }
   },
   "transactions": {
+    "title": "Transaction Management",
+    "subtitle": "Manage your organization's transactions.",
     "searchTransactions": "Search Transactions",
+    "backToTransactions": "Back to Transactions",
     "searchRefunds": "Search Refunds",
     "searchAuditLogs": "Search Audit Logs",
     "searchCheckoutSessions": "Search Checkout Sessions",
@@ -933,9 +939,11 @@
       "organizer_share": "Organizer Share",
       "gateway": "Gateway",
       "status": "Status",
-      "date": "Date"
+      "date": "Date",
+      "viewPayment": "View Payment"
     },
     "paymentGateway": "Payment Gateway",
+    "selectPaymentGateway": "Select Payment Gateway",
     "status": "Status",
     "gateway": {
       "cash": "Cash",
@@ -951,6 +959,38 @@
       "cancelled": "Cancelled",
       "refunded": "Refunded",
       "awaiting_webhook": "Awaiting Webhook"
+    },
+    "transactionDetails": {
+      "transactionInformation1": "Transaction Information",
+      "ticketPurchased": "Ticket Purchased",
+      "paymentGateway": "Payment Gateway",
+      "createdAt": "Created At",
+      "financialSummary": "Financial Summary",
+      "totalAmount": "Total Amount",
+      "organizerShare": "Organizer Share",
+      "commission": "Commission",
+      "gateway": "Gateway"
+    },
+    "paymentDetails": {
+      "paymentDetail": "Payment Detail",
+      "event": "Event",
+      "buyer": "Buyer",
+      "payment": "Payment",
+      "eventName": "Event Name",
+      "ticketQty": "Ticket Quantity",
+      "userName": "User Name",
+      "email": "Email",
+      "gateway": "Gateway",
+      "createdAt": "Created At",
+      "totalAmount": "Total Amount",
+      "tickets": "Tickets",
+      "ticketsIssued": "tickets issued in this payment",
+      "ticketNumber": "Ticket Number",
+      "tier": "Tier",
+      "holder": "Holder"
+    },
+    "transactionFilter": {
+      "filterTransaction": "Filter Transaction"
     }
   },
   "payouts": {

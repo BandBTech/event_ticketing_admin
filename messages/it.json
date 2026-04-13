@@ -487,6 +487,7 @@
       "rejectEvent": "Rifiuta Evento",
       "approveEvent": "Approva Evento",
       "commissionRate": "Tasso di Commissione",
+      "commissionAmount": "importo della commissione",
       "commissionHint": "Il tasso di commissione è sempre in percentuale",
       "commissionError": "Il tasso di commissione deve essere compreso tra 0 e 100",
       "reasonForRejection": "Motivo del Rifiuto",
@@ -668,6 +669,8 @@
     "clearFilters": "Cancella filtri",
     "loadingUsers": "Caricamento utenti...",
     "noUsersFound": "Nessun utente trovato",
+    "selectUser": "seleziona utente",
+    "searchUser": "utente di ricerca",
     "noRole": "Nessun ruolo",
     "more": "altro",
     "viewDetails": "Visualizza Dettagli",
@@ -856,7 +859,10 @@
     }
   },
   "transactions": {
+    "title": "Gestione delle Transazioni",
+    "subtitle": "Gestisci le transazioni della tua organizzazione.",
     "searchTransactions": "Cerca Transazioni",
+    "backToTransactions": "Torna alle transazioni",
     "searchRefunds": "Cerca Rimborsi",
     "searchAuditLogs": "Ricerca nei registri di controllo",
     "searchCheckoutSessions": "Ricerca nei sessioni di checkout",
@@ -875,9 +881,11 @@
       "organizer_share": "Quota organizzatore",
       "gateway": "Gateway",
       "status": "Stato",
-      "date": "Data"
+      "date": "Data",
+      "viewPayment": "visualizza il pagamento"
     },
     "paymentGateway": "Gateway di pagamento",
+    "selectPaymentGateway": "Seleziona il metodo di pagamento",
     "status": "Stato",
     "gateway": {
       "cash": "Contanti",
@@ -893,6 +901,38 @@
       "cancelled": "cancellare",
       "refunded": "Rimborsato",
       "awaiting_webhook": "in attesa del webhook"
+    },
+    "transactionDetails": {
+      "transactionInformation1": "Informazioni sulla Transazione",
+      "ticketPurchased": "Biglietto Acquistato",
+      "paymentGateway": "Gateway di Pagamento",
+      "createdAt": "Data di Creazione",
+      "financialSummary": "Riepilogo Finanziario",
+      "totalAmount": "Importo Totale",
+      "organizerShare": "Quota Organizzatore",
+      "commission": "Commissione",
+      "gateway": "Gateway"
+    },
+    "paymentDetails": {
+      "paymentDetail": "Dettaglio Pagamento",
+      "event": "Evento",
+      "buyer": "Acquirente",
+      "payment": "Pagamento",
+      "eventName": "Nome Evento",
+      "ticketQty": "Quantità Biglietti",
+      "userName": "Nome Utente",
+      "email": "Email",
+      "gateway": "Gateway",
+      "createdAt": "Data di Creazione",
+      "totalAmount": "Importo Totale",
+      "tickets": "Biglietti",
+      "ticketsIssued": "biglietti emessi per questo pagamento",
+      "ticketNumber": "Numero Biglietto",
+      "tier": "Livello",
+      "holder": "Intestatario"
+    },
+    "transactionFilter": {
+      "filterTransaction": "Filtra transazione"
     }
   },
   "payouts": {

@@ -18,15 +18,27 @@ export function TransactionScreenTabs() {
   const tabs: PayoutTab[] = [
     {
       value: "transactions",
-      label: t("", "Transactions"),
+      label: t("pages.transactions", "Transactions"),
       link: "/transactions",
     },
-    { value: "refunds", label: t("", "Refunds"), link: "/refunds" },
-    { value: "payouts", label: t("", "Payouts"), link: "/payouts" },
-    { value: "audit-logs", label: t("", "Audit Logs"), link: "/auditlogs" },
+    {
+      value: "refunds",
+      label: t("pages.refunds", "Refunds"),
+      link: "/refunds",
+    },
+    {
+      value: "payouts",
+      label: t("pages.payouts", "Payouts"),
+      link: "/payouts",
+    },
+    {
+      value: "audit-logs",
+      label: t("pages.auditlogs", "Audit Logs"),
+      link: "/auditlogs",
+    },
     {
       value: "checkout-sessions",
-      label: t("", "Checkout Sessions"),
+      label: t("pages.checkoutsessions", "Checkout Sessions"),
       link: "/checkoutsessions",
     },
   ];

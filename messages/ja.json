@@ -500,6 +500,7 @@
       "rejectEvent": "イベントを却下",
       "approveEvent": "イベントを承認",
       "commissionRate": "手数料率",
+      "commissionAmount": "手数料額",
       "commissionHint": "手数料率は常にパーセンテージで表示されます",
       "commissionError": "手数料率は0から100の間である必要があります",
       "reasonForRejection": "却下の理由",
@@ -681,6 +682,8 @@
     "clearFilters": "フィルターをクリア",
     "loadingUsers": "ユーザーを読み込み中...",
     "noUsersFound": "ユーザーが見つかりません",
+    "selectUser": "ユーザーを選択",
+    "searchUser": "検索ユーザー",
     "noRole": "役割なし",
     "more": "詳細",
     "viewDetails": "詳細を表示",
@@ -869,7 +872,10 @@
     }
   },
   "transactions": {
+    "title": "トランザクション管理",
+    "subtitle": "組織の取引を管理します。",
     "searchTransactions": "取引を検索",
+    "backToTransactions": "取引履歴に戻る",
     "searchRefunds": "返金を検索",
     "searchAuditLogs": "監査ログを検索",
     "searchCheckoutSessions": "検索チェックアウトセッション",
@@ -888,9 +894,11 @@
       "organizer_share": "主催者取り分",
       "gateway": "決済ゲートウェイ",
       "status": "ステータス",
-      "date": "日付"
+      "date": "日付",
+      "viewPayment": "支払い状況を確認する"
     },
     "paymentGateway": "決済ゲートウェイ",
+    "selectPaymentGateway": "決済ゲートウェイを選択",
     "status": "ステータス",
     "gateway": {
       "cash": "現金",
@@ -906,6 +914,38 @@
       "cancelled": "キャンセル",
       "refunded": "返金済み",
       "awaiting_webhook": "ウェブフックを待機中"
+    },
+    "transactionDetails": {
+      "transactionInformation1": "取引情報",
+      "ticketPurchased": "購入されたチケット",
+      "paymentGateway": "決済ゲートウェイ",
+      "createdAt": "作成日時",
+      "financialSummary": "財務概要",
+      "totalAmount": "合計金額",
+      "organizerShare": "主催者取り分",
+      "commission": "手数料",
+      "gateway": "ゲートウェイ"
+    },
+    "paymentDetails": {
+      "paymentDetail": "支払い詳細",
+      "event": "イベント",
+      "buyer": "購入者",
+      "payment": "支払い",
+      "eventName": "イベント名",
+      "ticketQty": "チケット枚数",
+      "userName": "ユーザー名",
+      "email": "メールアドレス",
+      "gateway": "決済ゲートウェイ",
+      "createdAt": "作成日時",
+      "totalAmount": "合計金額",
+      "tickets": "チケット",
+      "ticketsIssued": "この支払いで発行されたチケット",
+      "ticketNumber": "チケット番号",
+      "tier": "チケット種別",
+      "holder": "保持者"
+    },
+    "transactionFilter": {
+      "filterTransaction": "トランザクションをフィルタリング"
     }
   },
   "payouts": {

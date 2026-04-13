@@ -22,6 +22,8 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { useTranslation } from "@/hooks/useTranslation";
+import { useLanguageStore } from "@/store/languageStore";
 import {
   AsyncCombobox,
   AsyncComboboxOption,
@@ -50,6 +52,8 @@ export function TransactionFilterSheet({
   const [localFilters, setLocalFilters] =
     React.useState<TransactionFilters>(filters);
   const [dateError, setDateError] = React.useState<string | null>(null);
+    const { locale } = useLanguageStore();
+    const { t } = useTranslation(locale);
 
   React.useEffect(() => {
     if (open) {
@@ -161,7 +165,7 @@ export function TransactionFilterSheet({
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
             <Filter className="h-5 w-5" />
-            Filter Transaction
+            {t("transactions.transactionFilter.filterTransaction")}
           </SheetTitle>
         </SheetHeader>
 
@@ -170,7 +174,7 @@ export function TransactionFilterSheet({
           <div className="space-y-2">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Start Date</Label>
+                <Label>{t("billings.filter.startDate")}</Label>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button
@@ -184,7 +188,7 @@ export function TransactionFilterSheet({
                       {localFilters.start_date ? (
                         format(localFilters.start_date, "LLL dd, y")
                       ) : (
-                        <span>Pick a date</span>
+                        <span>{t("billings.filter.pickDate")}</span>
                       )}
                     </Button>
                   </PopoverTrigger>
@@ -214,7 +218,7 @@ export function TransactionFilterSheet({
               </div>
 
               <div className="space-y-2">
-                <Label>End Date</Label>
+               <Label>{t("billings.filter.endDate")}</Label>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button
@@ -229,7 +233,7 @@ export function TransactionFilterSheet({
                       {localFilters.end_date ? (
                         format(localFilters.end_date, "LLL dd, y")
                       ) : (
-                        <span>Pick a date</span>
+                       <span>{t("billings.filter.pickDate")}</span>
                       )}
                     </Button>
                   </PopoverTrigger>
@@ -265,7 +269,7 @@ export function TransactionFilterSheet({
 
           {/* Gateway */}
           <div className="space-y-2">
-            <Label>Payment Gateway</Label>
+            <Label>{t("transactions.paymentGateway")}</Label>
             <Select
               value={localFilters.payment_gateway}
               onValueChange={(value) =>
@@ -274,20 +278,20 @@ export function TransactionFilterSheet({
             >
               <SelectTrigger className="w-full text-sm h-9 justify-between px-3! bg-white">
                 <SelectValue
-                  placeholder="Select Payment Gateway"
+                  placeholder={t("transactions.selectPaymentGateway")}
                   className="text-black data-[placeholder]:text-black"
                 />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="cash">Cash</SelectItem>
-                <SelectItem value="stripe">Stripe</SelectItem>
+                <SelectItem value="cash">{t("billings.method.cash")}</SelectItem>
+                <SelectItem value="stripe">{t("billings.method.stripe")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           {/* Event ID */}
           <div className="space-y-2">
-            <Label>Event</Label>
+            <Label>{t("navigation.events")}</Label>
             <AsyncCombobox
               queryKey={["filter", "events"]}
               value={localFilters.event_id ?? ""}
@@ -295,9 +299,9 @@ export function TransactionFilterSheet({
                 setLocalFilters((prev) => ({ ...prev, event_id: val }))
               }
               fetchOptions={fetchEvents}
-              placeholder="Select Event"
-              searchPlaceholder="Search Events"
-              emptyText="No events found."
+              placeholder={t("billings.addBillModal.selectEvent")}
+              searchPlaceholder={t("billings.addBillModal.searchEvent")}
+              emptyText={t("common.noResults")}
               className="w-full text-sm h-9 justify-between px-3!"
               debounceMs={300}
             />
@@ -305,7 +309,7 @@ export function TransactionFilterSheet({
 
           {/* User */}
           <div className="space-y-2">
-            <Label>User</Label>
+            <Label>{t("users.userRoles.user")}</Label>
             <AsyncCombobox
               queryKey={["filter", "users"]}
               value={localFilters.user_id ?? ""}
@@ -313,9 +317,9 @@ export function TransactionFilterSheet({
                 setLocalFilters((prev) => ({ ...prev, user_id: val }))
               }
               fetchOptions={fetchUser}
-              placeholder="Select User"
-              searchPlaceholder="Search Users"
-              emptyText="No users found."
+              placeholder={t("users.selectUser")}
+              searchPlaceholder={t("users.searchUser")}
+              emptyText={t("users.noUsersFound")}
               className="w-full text-sm h-9 justify-between px-3!"
               debounceMs={300}
             />
@@ -323,7 +327,7 @@ export function TransactionFilterSheet({
 
           {/* Status */}
           <div className="space-y-2">
-            <Label>Status</Label>
+            <Label>{t("organizer.status")}</Label>
             <Select
               value={localFilters.status}
               onValueChange={(value) =>
@@ -332,14 +336,14 @@ export function TransactionFilterSheet({
             >
               <SelectTrigger className="w-full text-sm h-9 justify-between px-3! bg-white">
                 <SelectValue
-                  placeholder="Select status"
+                  placeholder={t("billings.filter.selectStatus")}
                   className="text-black data-[placeholder]:text-black"
                 />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="paid">Paid</SelectItem>
-                <SelectItem value="completed">Completed</SelectItem>
+                <SelectItem value="pending">{t("status.pending")}</SelectItem>
+                <SelectItem value="paid">{t("dashboard.dataDisplay.paid")}</SelectItem>
+                <SelectItem value="completed">{t("status.completed")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -348,7 +352,7 @@ export function TransactionFilterSheet({
         <SheetFooter className="flex-row gap-2">
           <Button variant="outline" onClick={handleClear} className="flex-1">
             <X className="mr-2 h-4 w-4" />
-            Clear
+            {t("common.clear")}
           </Button>
           <Button
             onClick={handleApply}
@@ -356,7 +360,7 @@ export function TransactionFilterSheet({
             className="flex-1 w-full sm:w-auto gap-2 bg-primary hover:bg-primary/80 text-primary-foreground shadow-sm transition-all ease-out duration-300 active:scale-95"
           >
             <Filter className="mr-2 h-4 w-4" />
-            Apply Filters
+            {t("billings.filter.applyFilters")}
             {activeFilterCount > 0 && (
               <span className="ml-2 bg-amber-700 text-white text-xs px-1.5 py-0.5 rounded-full">
                 {activeFilterCount}

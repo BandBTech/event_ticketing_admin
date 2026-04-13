@@ -40,7 +40,9 @@ export default function TransactionDetailPage() {
           weight="duotone"
           className="w-5 h-5 group-hover:-translate-x-1 transition-transform"
         />
-        <span className="font-medium">{t("", "Back to Transaction")}</span>
+        <span className="font-medium">
+          {t("transactions.backToTransactions", "Back to Transactions")}
+        </span>
       </button>
 
       {/* Profile Card */}
@@ -58,7 +60,7 @@ export default function TransactionDetailPage() {
           <div>
             <div className="flex items-center gap-3 mb-1">
               <h1 className="text-xl font-bold text-gray-900">
-                {transactionDetail?.user.name}
+                {transactionDetail?.user?.name}
               </h1>
               <span
                 className="text-xs font-semibold px-3 py-1 rounded-full capitalize"
@@ -73,11 +75,13 @@ export default function TransactionDetailPage() {
                       : "#a16207",
                 }}
               >
-                {transactionDetail?.status}
+                {t(
+                  "transactions.transactionStatus." + transactionDetail?.status,
+                )}
               </span>
             </div>
             <p className="text-sm text-gray-500 mb-3">
-              {transactionDetail?.event.title || "—"}
+              {transactionDetail?.event?.title || "—"}
             </p>
             <div className="flex flex-wrap gap-2">
               <span
@@ -88,7 +92,10 @@ export default function TransactionDetailPage() {
                   border: "1px solid #fde68a",
                 }}
               >
-                Gateway: {transactionDetail?.payment_gateway || "—"}
+                {t(
+                  "billings.method." + transactionDetail?.payment_gateway,
+                  transactionDetail?.payment_gateway || "—",
+                )}
               </span>
             </div>
           </div>
@@ -103,7 +110,10 @@ export default function TransactionDetailPage() {
         {/* Transaction Info */}
         <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
           <h2 className="text-base font-semibold text-gray-900 mb-5">
-            Transaction Information
+            {t(
+              "transactions.transactionDetails.transactionInformation1",
+              "Transaction Information",
+            )}
           </h2>
           <div className="space-y-5">
             <div className="flex items-start gap-4">
@@ -115,10 +125,14 @@ export default function TransactionDetailPage() {
               </div>
               <div>
                 <p className="text-xs text-gray-400 mb-0.5">
-                  Tickets Purchased
+                  {t(
+                    "transactions.transactionDetails.ticketPurchased",
+                    "Tickets Purchased",
+                  )}
                 </p>
                 <p className="text-sm font-semibold text-gray-800">
-                  {transactionDetail?.ticket_count} tickets
+                  {transactionDetail?.ticket_count}{" "}
+                  {t("dashboard.dataDisplay.tickets", "Tickets")}
                 </p>
               </div>
             </div>
@@ -131,14 +145,17 @@ export default function TransactionDetailPage() {
                 <CreditCard size={16} color="#f97316" />
               </div>
               <div>
-                <p className="text-xs text-gray-400 mb-0.5">Payment Gateway</p>
+                <p className="text-xs text-gray-400 mb-0.5">
+                  {t(
+                    "transactions.transactionDetails.paymentGateway",
+                    "Payment Gateway",
+                  )}
+                </p>
                 <p className="text-sm font-semibold text-gray-800">
-                  {transactionDetail?.payment_gateway
-                    ? transactionDetail.payment_gateway
-                        .charAt(0)
-                        .toUpperCase() +
-                      transactionDetail.payment_gateway.slice(1)
-                    : "—"}
+                  {t(
+                    "billings.method." + transactionDetail?.payment_gateway,
+                    transactionDetail?.payment_gateway || "—",
+                  )}
                 </p>
               </div>
             </div>
@@ -151,7 +168,9 @@ export default function TransactionDetailPage() {
                 <CalendarPlusIcon size={16} color="#a855f7" />
               </div>
               <div>
-                <p className="text-xs text-gray-400 mb-0.5">Created At</p>
+                <p className="text-xs text-gray-400 mb-0.5">
+                  {t("transactions.transactionDetails.createdAt", "Created At")}
+                </p>
                 <p className="text-sm font-semibold text-gray-800">
                   {formatDateTimeLong(
                     transactionDetail?.created_at || "",
@@ -166,11 +185,19 @@ export default function TransactionDetailPage() {
         {/* Financial Summary */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
           <h2 className="text-base font-semibold text-gray-900 mb-5">
-            Financial Summary
+            {t(
+              "transactions.transactionDetails.financialSummary",
+              "Financial Summary",
+            )}
           </h2>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-500">Total Amount</span>
+              <span className="text-sm text-gray-500">
+                {t(
+                  "transactions.transactionDetails.totalAmount",
+                  "Total Amount",
+                )}
+              </span>
               <span className="text-sm font-semibold text-gray-800">
                 {formatCurrency(
                   transactionDetail?.amount || 0,
@@ -181,7 +208,12 @@ export default function TransactionDetailPage() {
             </div>
             <hr className="border-gray-100" />
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-500">Organizer Share</span>
+              <span className="text-sm text-gray-500">
+                {t(
+                  "transactions.transactionDetails.organizerShare",
+                  "Organizer Share",
+                )}
+              </span>
               <span
                 className="text-xs font-semibold px-3 py-1 rounded-full"
                 style={{ background: "#dcfce7", color: "#16a34a" }}
@@ -195,7 +227,7 @@ export default function TransactionDetailPage() {
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-500">
-                Commission{" "}
+                {t("transactions.transactionDetails.commission", "Commission")}{" "}
                 <span className="text-xs text-gray-400">
                   ({transactionDetail?.commission_rate}%)
                 </span>

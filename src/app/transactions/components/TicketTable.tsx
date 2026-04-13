@@ -52,7 +52,7 @@ export function TicketTable({
     () => [
       {
         id: "ticket_number",
-        header: t("Ticket Number"),
+        header: t("transactions.paymentDetails.ticketNumber","Ticket Number"),
         cell: ({ row }) => (
           <span className="max-w-[200px] text-gray-700 truncate inline-block">
             {row.original.ticket_number || "-"}
@@ -61,17 +61,17 @@ export function TicketTable({
       },
       {
         id: "tier",
-        header: t("Tier"),
+        header: t("transactions.paymentDetails.tier","Tier"),
         accessorKey: "tier.tier_name",
       },
       {
         id: "holder",
-        header: t("Holder"),
+        header: t("transactions.paymentDetails.holder","Holder"),
         accessorKey: "user.name",
       },
       {
         id: "amount",
-        header: t("transactions.table.amount"),
+        header: t("transactions.table.amount", "Amount"),
         title: "Amount",
         cell: ({ row }) => (
           <span className="px-2 py-1 text-xs font-medium rounded-full flex items-center gap-2">
@@ -81,7 +81,7 @@ export function TicketTable({
       },
       {
         id: "status",
-        header: t("transactions.table.status"),
+        header: t("transactions.table.status", "Status"),
         cell: ({ row }) => {
           const status = row.original.status;
 
@@ -99,7 +99,7 @@ export function TicketTable({
                 "bg-gray-100 text-gray-700"
               }`}
             >
-              {status ? status.charAt(0).toUpperCase() + status.slice(1) : "—"}
+               {t("status." + status)}
             </span>
           );
         },

@@ -5,7 +5,7 @@ import {
   Eye as EyeIcon,
   DotsThreeVertical as DotsThreeVerticalIcon,
   InfoIcon,
-  CoinsIcon
+  CoinsIcon,
 } from "@phosphor-icons/react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useRouter } from "next/navigation";
@@ -16,7 +16,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { ReusableTable } from "@/components/ReusableTable";
 import { formatCurrency } from "@/lib/utils";
 import { useLanguageStore } from "@/store/languageStore";
-import {formatDateTimeLong} from "@/lib/utils";
+import { formatDateTimeLong } from "@/lib/utils";
 import {
   Tooltip,
   TooltipTrigger,
@@ -89,7 +89,7 @@ export function TransactionTable({
               <span className="text-xs text-gray-500">At {formattedTime}</span>
             </div>
           );
-        }
+        },
       },
       {
         id: "event",
@@ -143,23 +143,24 @@ export function TransactionTable({
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>
-                    Total Amount:{" "}
+                    {t("transactions.transactionDetails.totalAmount")}:{" "}
                     {formatCurrency(
                       row.original.amount,
                       row.original.currency,
                       locale,
                     )}
                     <br />
-                    Commission Rate: {row.original.commission_rate}%
+                    {t("events.modals.commissionRate")}:{" "}
+                    {row.original.commission_rate}%
                     <br />
-                    Commission Amount:{" "}
+                    {t("dashboard.modal.commissionAmount")}:{" "}
                     {formatCurrency(
                       row.original.commission_amount,
                       row.original.currency,
                       locale,
                     )}
                     <br />
-                    Organizer Share:{" "}
+                    {t("transactions.table.organizer_share")}:{" "}
                     {formatCurrency(
                       row.original.organizer_share,
                       row.original.currency,
@@ -191,7 +192,7 @@ export function TransactionTable({
                 colors[gateway?.toLowerCase()] || "bg-gray-100 text-gray-700"
               }`}
             >
-              {t("transactions.gateway." + gateway)}
+              {t("billings.method." + gateway)}
             </span>
           );
         },
@@ -266,7 +267,7 @@ export function TransactionTable({
                 >
                   <div className="flex justify-start items-center bg-gray-50 text-gray-700">
                     <CoinsIcon weight="duotone" className="mr-2 h-4 w-4" />
-                    View Payment
+                    {t("transactions.table.viewPayment")}
                   </div>
                 </DropdownMenuItem>
                 {/* <DropdownMenuItem
