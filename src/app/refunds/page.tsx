@@ -137,10 +137,10 @@ export default function TransactionsPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
-            {t("", "Refund Management")}
+            {t("refunds.title", "Refund Management")}
           </h1>
           <p className="text-gray-500">
-            {t("", "Manage your organization's refunds.")}
+            {t("refunds.subtitle", "Manage your organization's refunds.")}
           </p>
         </div>
       </div>
@@ -150,7 +150,7 @@ export default function TransactionsPage() {
           <div className="relative w-full sm:w-80">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
             <Input
-              placeholder={t("", "Search Refunds")}
+              placeholder={t("refunds.searchRefunds", "Search Refunds")}
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               className="pl-9 shadow-sm"
@@ -164,13 +164,21 @@ export default function TransactionsPage() {
                   weight="duotone"
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4"
                 />
-                <SelectValue placeholder={t("", "Filter")} />
+                <SelectValue placeholder={t("transactions.filter", "Filter")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="canceled">{t("", "Canceled")}</SelectItem>
-                <SelectItem value="failed">{t("", "Failed")}</SelectItem>
-                <SelectItem value="pending">{t("", "Pending")}</SelectItem>
-                <SelectItem value="succeeded">{t("", "Succeeded")}</SelectItem>
+                <SelectItem value="canceled">
+                  {t("events.status.cancelled", "Canceled")}
+                </SelectItem>
+                <SelectItem value="failed">
+                  {t("dashboard.dataDisplay.failed", "Failed")}
+                </SelectItem>
+                <SelectItem value="pending">
+                  {t("events.status.pending", "Pending")}
+                </SelectItem>
+                <SelectItem value="succeeded">
+                  {t("dashboard.dataDisplay.succeeded", "Succeeded")}
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -214,11 +222,11 @@ export default function TransactionsPage() {
           <AlertDialogContent className="rounded-3xl shadow-2xl border-none bg-white/95 backdrop-blur-xl data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 duration-300">
             <AlertDialogHeader>
               <AlertDialogTitle className="text-xl font-bold text-gray-900">
-                {t("", "Confirm Refund Approval")}
+                {t("refunds.modal.confirmRefund", "Confirm Refund Approval")}
               </AlertDialogTitle>
               <AlertDialogDescription className="text-gray-500 text-base">
                 {t(
-                  "",
+                  "refunds.modal.areYouSure",
                   "Are you sure you want to approve this refund? This action cannot be undone immediately.",
                 )}
               </AlertDialogDescription>
@@ -230,7 +238,7 @@ export default function TransactionsPage() {
                 }
                 className="h-11 px-6 border-gray-200 hover:bg-gray-50 transition-colors"
               >
-                {t("common.cancel", "Cancel")}
+                {t("common.cancelButton", "Cancel")}
               </AlertDialogCancel>
               <AlertDialogAction
                 onClick={() => {
@@ -251,11 +259,11 @@ export default function TransactionsPage() {
           <AlertDialogContent className="rounded-3xl shadow-2xl border-none bg-white/95 backdrop-blur-xl data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 duration-300">
             <AlertDialogHeader>
               <AlertDialogTitle className="text-xl font-bold text-gray-900">
-                {t("", "Confirm Refund Retry")}
+                {t("refunds.modal.confirmRefundRetry", "Confirm Refund Retry")}
               </AlertDialogTitle>
               <AlertDialogDescription className="text-gray-500 text-base">
                 {t(
-                  "",
+                  "refunds.modal.areYouSureYou",
                   "Are you sure you want to retry this refund? This action cannot be undone immediately.",
                 )}
               </AlertDialogDescription>
@@ -265,7 +273,7 @@ export default function TransactionsPage() {
                 onClick={() => setOpenRetryDialog && setOpenRetryDialog(false)}
                 className="h-11 px-6 border-gray-200 hover:bg-gray-50 transition-colors"
               >
-                {t("common.cancel", "Cancel")}
+                {t("common.cancelButton", "Cancel")}
               </AlertDialogCancel>
               <AlertDialogAction
                 onClick={() => {
@@ -275,7 +283,7 @@ export default function TransactionsPage() {
                 }}
                 className="h-11 px-8 active:scale-95 bg-primary text-white hover:bg-primary/90 focus:bg-primary/90 transition-colors"
               >
-                {t("", "Retry")}
+                {t("refunds.modal.retry", "Retry")}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

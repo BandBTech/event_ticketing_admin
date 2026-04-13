@@ -187,6 +187,7 @@
     "actions": {
       "approve": "Approve",
       "reject": "Reject",
+      "retry": "Retry",
       "cancelEvent": "Cancel Event",
       "deleteEvent": "Delete Event",
       "markFeatured": "Mark as Featured",
@@ -591,6 +592,7 @@
       "transactions": "Transactions",
       "completed": "Completed",
       "failed": "Failed",
+      "succeeded": "Succeeded",
       "payoutRequest": "Payout Request",
       "paid": "Paid",
       "paymentBills": "Payout Bills",
@@ -991,6 +993,43 @@
     },
     "transactionFilter": {
       "filterTransaction": "Filter Transaction"
+    }
+  },
+  "refunds": {
+    "title": "Refund Management",
+    "subtitle": "Manage your organization's refunds.",
+    "searchRefunds": "Search Refunds",
+    "table": {
+      "refundNumber": "Refund Number",
+      "initiatedBy": "Initiated By",
+      "refundType": "Refund Type"
+    },
+    "refundDetail": {
+      "refundDetail": "Refund Detail",
+      "initiatedBy": "Initiated By",
+      "name": "Name",
+      "email": "Email",
+      "refundInfo": "Refund Info",
+      "refundNumber": "Refund Number",
+      "amount": "Amount",
+      "reason": "Reason",
+      "requestedAt": "Requested At",
+      "transaction": "Transaction",
+      "transactionAmount": "Transaction Amount",
+      "gateway": "Gateway",
+      "date": "Date",
+      "close": "Close"
+    },
+    "modal": {
+      "confirmRefund": "Confirm Refund Approval",
+      "areYouSure": "Are you sure you want to approve this refund? This action cannot be undone immediately.",
+      "rejectRefund": "Reject Refund",
+      "adminNotes": "Admin Notes",
+      "enterReason": "Enter reason for rejection",
+      "confirmRefundRetry": "Confirm Refund Retry",
+      "areYouSureYou": "Are you sure you want to retry this refund? This action cannot be undone immediately.",
+      "retry": "Retry",
+      "reject": "Reject"
     }
   },
   "payouts": {

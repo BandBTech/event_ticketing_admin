@@ -154,6 +154,7 @@
     "actions": {
       "approve": "Approva",
       "reject": "Rifiuta",
+      "retry": "riprova",
       "cancelEvent": "Cancella Evento",
       "deleteEvent": "Elimina Evento",
       "markFeatured": "Imposta in primo piano",
@@ -541,6 +542,7 @@
       "transactions": "Transazioni",
       "completed": "Completate",
       "failed": "Fallite",
+      "succeeded": "Riuscita",
       "payoutRequest": "Richiesta di Pagamento",
       "paid": "Pagato",
       "paymentBills": "Fatture di Pagamento",
@@ -933,6 +935,43 @@
     },
     "transactionFilter": {
       "filterTransaction": "Filtra transazione"
+    }
+  },
+  "refunds": {
+    "title": "Gestione Rimborsi",
+    "subtitle": "Gestisci i rimborsi della tua organizzazione.",
+    "searchRefunds": "Cerca Rimborsi",
+    "table": {
+      "refundNumber": "Numero Rimborso",
+      "initiatedBy": "Iniziato Da",
+      "refundType": "Tipo di rimborso"
+    },
+    "refundDetail": {
+      "refundDetail": "Dettaglio Rimborso",
+      "initiatedBy": "Iniziato Da",
+      "name": "Nome",
+      "email": "Email",
+      "refundInfo": "Info Rimborso",
+      "refundNumber": "Numero Rimborso",
+      "amount": "Importo",
+      "reason": "Motivo",
+      "requestedAt": "Richiesto Il",
+      "transaction": "Transazione",
+      "transactionAmount": "Importo Transazione",
+      "gateway": "Gateway",
+      "date": "Data",
+      "close": "Chiudi"
+    },
+    "modal": {
+      "confirmRefund": "Conferma Approvazione Rimborso",
+      "areYouSure": "Sei sicuro di voler approvare questo rimborso? Questa azione non può essere annullata immediatamente.",
+      "rejectRefund": "Rifiuta Rimborso",
+      "adminNotes": "Note Amministratore",
+      "enterReason": "Inserisci il motivo del rifiuto",
+      "confirmRefundRetry": "Conferma Nuovo Tentativo di Rimborso",
+      "areYouSureYou": "Sei sicuro di voler riprovare questo rimborso? Questa azione non può essere annullata immediatamente.",
+      "retry": "Riprova",
+      "reject": "Rifiuta"
     }
   },
   "payouts": {

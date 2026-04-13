@@ -84,7 +84,7 @@ export function RefundTable({
     () => [
       {
         id: "refund_number",
-        header: t("", "Refund Number"),
+        header: t("refunds.table.refundNumber", "Refund Number"),
         accessorKey: "refund_number",
         meta: { sortKey: "refund_number" },
       },
@@ -101,13 +101,13 @@ export function RefundTable({
       },
       {
         id: "initiated_by",
-        header: t("", "Initiated By"),
+        header: t("refunds.table.initiatedBy", "Initiated By"),
         accessorKey: "initiated_by.name",
         meta: { sortKey: "initiated_by" },
       },
       {
         id: "refund_type",
-        header: t("", "Refund Type"),
+        header: t("refunds.table.refundType", "Refund Type"),
         meta: { sortKey: "refund_type" },
         cell: ({ row }) => {
           const type = row.original.refund_type;
@@ -201,7 +201,7 @@ export function RefundTable({
                   }}
                 >
                   <CheckCircleIcon weight="duotone" className="mr-2 h-4 w-4" />
-                  Approve
+                  {t(`events.actions.approve`)}
                 </DropdownMenuItem>
 
                 <DropdownMenuItem
@@ -212,7 +212,7 @@ export function RefundTable({
                   className="text-red-600"
                 >
                   <XCircleIcon weight="duotone" className="mr-2 h-4 w-4" />
-                  Reject
+                  {t(`events.actions.reject`)}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => {
@@ -225,7 +225,7 @@ export function RefundTable({
                     weight="duotone"
                     className="mr-2 h-4 w-4"
                   />
-                  Retry
+                  {t(`events.actions.retry`)}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

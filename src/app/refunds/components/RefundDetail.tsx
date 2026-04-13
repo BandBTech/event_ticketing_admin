@@ -66,7 +66,7 @@ export function RefundDetail({
       <DialogContent className="sm:max-w-lg text-gray-900">
         <DialogHeader>
           <DialogTitle>
-            {t("payouts.create.title", "Refund Detail")}
+            {t("refunds.refundDetail.refundDetail", "Refund Detail")}
           </DialogTitle>
         </DialogHeader>
 
@@ -87,13 +87,17 @@ export function RefundDetail({
             {/* Initiated By */}
             <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 space-y-3">
               <h3 className="font-semibold text-gray-700 text-xs uppercase tracking-wide">
-                Initiated By
+                {t("refunds.table.initiatedBy", "Initiated By")}
               </h3>
               <div className="grid grid-cols-2 gap-y-2 gap-x-4">
-                <div className="text-gray-500">Name</div>
+                <div className="text-gray-500">
+                  {t("refunds.refundDetail.name", "Name")}
+                </div>
                 <div>{data?.initiated_by.name}</div>
 
-                <div className="text-gray-500">Email</div>
+                <div className="text-gray-500">
+                  {t("refunds.refundDetail.email", "Email")}
+                </div>
                 <div className="text-blue-600">{data?.initiated_by.email}</div>
               </div>
             </div>
@@ -102,7 +106,7 @@ export function RefundDetail({
             <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 space-y-3">
               <div className="flex items-center gap-4">
                 <h3 className="font-semibold text-gray-700 text-xs uppercase tracking-wide">
-                  Refund Info
+                  {t("refunds.refundDetail.refundInfo", "Refund Info")}
                 </h3>
                 <div>
                   <span
@@ -114,30 +118,39 @@ export function RefundDetail({
                           : "bg-red-100 text-red-800"
                     }`}
                   >
-                    {data?.status}
+                    {t("status." + data?.status)}
                   </span>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-y-2 gap-x-4">
-                <div className="text-gray-500">Refund Number</div>
+                <div className="text-gray-500">
+                  {t("refunds.refundDetail.refundNumber", "Refund Number")}
+                </div>
                 <div className="font-medium break-all">
                   {data?.refund_number}
                 </div>
 
-                <div className="text-gray-500">Amount</div>
+                <div className="text-gray-500">
+                  {t("refunds.refundDetail.amount", "Amount")}
+                </div>
                 <div className="flex items-center gap-4">
                   <div className="font-semibold text-green-600">
                     {formatCurrency(data?.amount || 0, data?.currency, locale)}
                   </div>
                   <div className="font-semibold">
-                    ( {data?.ticket_count} ticket(s) )
+                    ( {data?.ticket_count}{" "}
+                    {t("dashboard.dataDisplay.tickets", "Tickets")} )
                   </div>
                 </div>
 
-                <div className="text-gray-500">Reason</div>
+                <div className="text-gray-500">
+                  {t("refunds.refundDetail.reason", "Reason")}
+                </div>
                 <div className="italic text-gray-700">{data?.reason}</div>
 
-                <div className="text-gray-500">Requested At</div>
+                <div className="text-gray-500">
+                  {t("refunds.refundDetail.requestedAt", "Requested At")}
+                </div>
                 <div>{formatDateTimeLong(data?.requested_at, locale)}</div>
               </div>
             </div>
@@ -146,16 +159,21 @@ export function RefundDetail({
             <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 space-y-3">
               <div className="flex items-center gap-4">
                 <h3 className="font-semibold text-gray-700 text-xs uppercase tracking-wide">
-                  Transaction
+                  {t("refunds.refundDetail.transaction", "Transaction")}
                 </h3>
                 <div>
                   <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 capitalize">
-                    {data?.transaction.status}
+                    {t("status." + data?.transaction.status)}
                   </span>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-y-2 gap-x-4">
-                <div className="text-gray-500">Transaction Amount</div>
+                <div className="text-gray-500">
+                  {t(
+                    "refunds.refundDetail.transactionAmount",
+                    "Transaction Amount",
+                  )}
+                </div>
                 <div className="font-semibold">
                   {formatCurrency(
                     data?.transaction.amount || 0,
@@ -164,10 +182,16 @@ export function RefundDetail({
                   )}
                 </div>
 
-                <div className="text-gray-500">Gateway</div>
-                <div className="capitalize">{data?.transaction.gateway}</div>
+                <div className="text-gray-500">
+                  {t("refunds.refundDetail.gateway", "Gateway")}
+                </div>
+                <div className="capitalize">
+                  {t("billings.method." + data?.transaction.gateway)}
+                </div>
 
-                <div className="text-gray-500">Date</div>
+                <div className="text-gray-500">
+                  {t("refunds.refundDetail.date", "Date")}
+                </div>
                 <div>
                   {formatDateTimeLong(data?.transaction?.created_at, locale)}
                 </div>
@@ -182,7 +206,7 @@ export function RefundDetail({
             variant="outline"
             onClick={() => onOpenChange(false)}
           >
-            {t("", "Close")}
+            {t("refunds.refundDetail.close", "Close")}
           </Button>
         </DialogFooter>
       </DialogContent>

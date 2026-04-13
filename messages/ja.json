@@ -165,6 +165,7 @@
     "actions": {
       "approve": "承認",
       "reject": "却下",
+      "retry": "リトライ",
       "cancelEvent": "イベントをキャンセル",
       "deleteEvent": "イベントを削除",
       "markFeatured": "注目に設定",
@@ -554,6 +555,7 @@
       "transactions": "取引",
       "completed": "完了",
       "failed": "失敗",
+      "succeeded": "成功した",
       "payoutRequest": "支払いリクエスト",
       "paid": "支払い済み",
       "paymentBills": "支払い請求書",
@@ -946,6 +948,43 @@
     },
     "transactionFilter": {
       "filterTransaction": "トランザクションをフィルタリング"
+    }
+  },
+  "refunds": {
+    "title": "返金管理",
+    "subtitle": "組織の返金を管理します。",
+    "searchRefunds": "返金を検索",
+    "table": {
+      "refundNumber": "返金番号",
+      "initiatedBy": "申請者",
+      "refundType": "返金の種類"
+    },
+    "refundDetail": {
+      "refundDetail": "返金詳細",
+      "initiatedBy": "申請者",
+      "name": "名前",
+      "email": "メールアドレス",
+      "refundInfo": "返金情報",
+      "refundNumber": "返金番号",
+      "amount": "金額",
+      "reason": "理由",
+      "requestedAt": "申請日時",
+      "transaction": "取引",
+      "transactionAmount": "取引金額",
+      "gateway": "決済ゲートウェイ",
+      "date": "日付",
+      "close": "閉じる"
+    },
+    "modal": {
+      "confirmRefund": "返金承認の確認",
+      "areYouSure": "この返金を承認してもよろしいですか？この操作はすぐには元に戻せません。",
+      "rejectRefund": "返金の拒否",
+      "adminNotes": "管理者メモ",
+      "enterReason": "拒否理由を入力してください",
+      "confirmRefundRetry": "返金再試行の確認",
+      "areYouSureYou": "この返金を再試行してもよろしいですか？この操作はすぐには元に戻せません。",
+      "retry": "再試行",
+      "reject": "拒否"
     }
   },
   "payouts": {
