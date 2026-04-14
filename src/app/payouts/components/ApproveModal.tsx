@@ -74,11 +74,11 @@ function ViewBillsDialog({
             />
           </div>
           <DialogTitle className="text-xl font-bold">
-            {t("", "Payout Approved!")}
+            {t("payouts.modals.payoutApproved", "Payout Approved!")}
           </DialogTitle>
           <DialogDescription className="text-sm text-gray-500">
             {t(
-              "",
+              "payouts.modals.wannaViewBills",
               "Would you like to view the bills associated with this payout?",
             )}
           </DialogDescription>
@@ -87,14 +87,14 @@ function ViewBillsDialog({
         <DialogFooter className="flex-col gap-2 pt-4 sm:flex-col">
           <Button onClick={onViewBills} className="w-full gap-2">
             <ReceiptIcon size={18} />
-            {t("", "View Bills")}
+            {t("payouts.modals.viewBills", "View Bills")}
           </Button>
           <Button
             variant="outline"
             onClick={onSkip}
             className="w-full border-gray-200 hover:bg-gray-50"
           >
-            {t("", "No, thanks")}
+            {t("payouts.modals.noThanks", "No, thanks")}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -174,7 +174,7 @@ export default function ApproveModal({
         <DialogContent className="sm:max-w-[520px] overflow-y-scroll max-h-[90vh] shadow-2xl border-none bg-white/90 backdrop-blur-xl data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 duration-300">
           <DialogHeader className="space-y-3">
             <DialogTitle className="text-xl font-bold bg-primary bg-clip-text text-transparent">
-              {t("", "Approve Payout")}
+              {t("payouts.modals.approvePayout", "Approve Payout")}
             </DialogTitle>
           </DialogHeader>
           <Form {...form}>
@@ -191,12 +191,12 @@ export default function ApproveModal({
                       required
                       className="text-sm font-semibold text-gray-700"
                     >
-                      {t("", "Admin Notes")}
+                      {t("payouts.modals.adminNotes", "Admin Notes")}
                     </FormLabel>
                     <div className="relative group">
                       <FormControl>
                         <Textarea
-                          placeholder={t("", "Enter reason for approval")}
+                          placeholder={t("payouts.modals.approvalReason", "Enter reason for approval")}
                           {...field}
                           maxLength={100}
                           className={cn(
@@ -228,13 +228,13 @@ export default function ApproveModal({
                   disabled={isPending}
                   className="h-11 px-6 border-gray-200 hover:bg-gray-50 transition-colors"
                 >
-                  {t("common.cancel", "Cancel")}
+                  {t("common.cancelButton", "Cancel")}
                 </Button>
                 <Button type="submit" disabled={isPending}>
                   {isPending && (
                     <SpinnerIcon className="mr-2 h-4 w-4 animate-spin" />
                   )}
-                  {t("", "Approve")}
+                  {t("common.approve", "Approve")}
                 </Button>
               </DialogFooter>
             </form>

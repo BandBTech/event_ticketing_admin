@@ -353,11 +353,11 @@ export function UsersTable({
               </svg>
             </div>
             <h3 className="text-lg font-medium text-gray-900">
-              {t("", "No user data found")}
+              {t("users.userTable.noUserData", "No user data found")}
             </h3>
             <p className="text-gray-500 mt-1 max-w-sm">
               {t(
-                "refunds.empty.description",
+                "users.userTable.noUserDataSubtitle",
                 "You haven't made any users yet.",
               )}
             </p>

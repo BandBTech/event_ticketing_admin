@@ -269,11 +269,11 @@ export function RefundTable({
               </svg>
             </div>
             <h3 className="text-lg font-medium text-gray-900">
-              {t("", "No refund data found")}
+              {t("refunds.table.noRefundData", "No refund data found")}
             </h3>
             <p className="text-gray-500 mt-1 max-w-sm">
               {t(
-                "refunds.empty.description",
+                "refunds.table.noRefundDataSubtitle",
                 "You haven't made any refunds yet.",
               )}
             </p>

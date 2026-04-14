@@ -100,10 +100,10 @@ export default function TransactionsPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
-            {t("", "Payout Management")}
+            {t("payouts.title", "Payout Management")}
           </h1>
           <p className="text-gray-500">
-            {t("", "Manage your organization's payouts.")}
+            {t("payouts.subtitle", "Manage your organization's payouts.")}
           </p>
         </div>
       </div>
@@ -113,7 +113,7 @@ export default function TransactionsPage() {
           <div className="relative w-full sm:w-80">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
             <Input
-              placeholder={t("", "Search Payouts")}
+              placeholder={t("payouts.searchPayout", "Search Payouts")}
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               className="pl-9 shadow-sm"
@@ -127,13 +127,13 @@ export default function TransactionsPage() {
                   weight="duotone"
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4"
                 />
-                <SelectValue placeholder={t("", "Filter")} />
+                <SelectValue placeholder={t("common.filter", "Filter")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="approved">{t("", "Approved")}</SelectItem>
-                <SelectItem value="paid">{t("", "Paid")}</SelectItem>
-                <SelectItem value="pending">{t("", "Pending")}</SelectItem>
-                <SelectItem value="rejected">{t("", "Rejected")}</SelectItem>
+                <SelectItem value="approved">{t("status.approved", "Approved")}</SelectItem>
+                <SelectItem value="paid">{t("dashboard.dataDisplay.paid", "Paid")}</SelectItem>
+                <SelectItem value="pending">{t("events.status.pending", "Pending")}</SelectItem>
+                <SelectItem value="rejected">{t("events.status.rejected", "Rejected")}</SelectItem>
               </SelectContent>
             </Select>
           </div>

@@ -699,7 +699,9 @@
       "accountStatus": "アカウントステータス",
       "verified": "認証済み",
       "joinedDate": "参加日",
-      "actions": "操作"
+      "actions": "操作",
+      "noUserData": "ユーザーデータが見つかりませんでした",
+      "noUserDataSubtitle": "まだユーザーを作成していません。"
     },
     "userRoles": {
       "staff": "スタッフ",
@@ -812,7 +814,9 @@
       "paymentMethod": "支払い方法",
       "status": "ステータス",
       "cancelBill": "請求書をキャンセルする",
-      "viewPaymentHistory": "支払い履歴を表示する"
+      "viewPaymentHistory": "支払い履歴を表示する",
+      "noBillingData": "請求データが見つかりませんでした",
+      "noBillingDataSubtitle": "まだ請求書を作成していません。"
     },
     "billHistory": {
       "billingHistory": "請求履歴",
@@ -897,7 +901,9 @@
       "gateway": "決済ゲートウェイ",
       "status": "ステータス",
       "date": "日付",
-      "viewPayment": "支払い状況を確認する"
+      "viewPayment": "支払い状況を確認する",
+      "noTransactionData": "取引データが見つかりませんでした",
+      "noTransactionDataSubtitle": "あなたはまだ取引を行っていません。"
     },
     "paymentGateway": "決済ゲートウェイ",
     "selectPaymentGateway": "決済ゲートウェイを選択",
@@ -957,7 +963,9 @@
     "table": {
       "refundNumber": "返金番号",
       "initiatedBy": "申請者",
-      "refundType": "返金の種類"
+      "refundType": "返金の種類",
+      "noRefundData": "返金データが見つかりませんでした",
+      "noRefundDataSubtitle": "まだ払い戻しは行われていません。"
     },
     "refundDetail": {
       "refundDetail": "返金詳細",
@@ -988,12 +996,29 @@
     }
   },
   "payouts": {
+    "title": "ペイアウト管理",
+    "subtitle": "組織のペイアウトを管理します。",
+    "searchPayout": "ペイアウトを検索",
+    "noPayoutData": "支払いデータが見つかりませんでした",
+    "noPayoutDataSubtitle": "あなたはまだ支払いを行っていません。",
+    "modals": {
+      "approvePayout": "ペイアウトを承認",
+      "adminNotes": "管理者メモ",
+      "approvalReason": "承認理由を入力",
+      "rejectPayout": "ペイアウトを拒否",
+      "rejectReason": "拒否理由を入力",
+      "payoutApproved": "ペイアウトが承認されました！",
+      "wannaViewBills": "このペイアウトに関連する請求書を表示しますか？",
+      "viewBills": "請求書を表示",
+      "noThanks": "いいえ、結構です"
+    },
     "table": {
       "eventTitle": "イベントタイトル",
       "amount": "金額",
       "eventStatus": "イベントステータス",
       "status": "ステータス",
-      "requestType": "リクエストタイプ"
+      "requestType": "リクエストタイプ",
+      "requestNumber": "リクエスト番号"
     },
     "eventStatus": {
       "completed": "完了",

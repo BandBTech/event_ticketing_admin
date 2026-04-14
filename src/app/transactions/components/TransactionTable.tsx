@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 interface PayoutTableProps {
-  billings: Transaction[];
+  transactions: Transaction[];
   isLoading: boolean;
   currentPage: number;
   totalPages: number;
@@ -49,7 +49,7 @@ interface PayoutTableProps {
 }
 
 export function TransactionTable({
-  billings,
+  transactions,
   isLoading,
   currentPage,
   totalPages,
@@ -305,7 +305,7 @@ export function TransactionTable({
     <>
       <ReusableTable
         columns={columns}
-        data={billings}
+        data={transactions}
         isLoading={isLoading}
         currentPage={currentPage}
         totalPages={totalPages}
@@ -334,11 +334,11 @@ export function TransactionTable({
               </svg>
             </div>
             <h3 className="text-lg font-medium text-gray-900">
-              {t("", "No transaction data found")}
+              {t("transactions.table.noTransactionData", "No transaction data found")}
             </h3>
             <p className="text-gray-500 mt-1 max-w-sm">
               {t(
-                "payouts.empty.description",
+                "transactions.table.noTransactionDataSubtitle",
                 "You haven't made any transactions yet.",
               )}
             </p>

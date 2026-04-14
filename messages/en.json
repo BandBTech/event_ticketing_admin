@@ -745,7 +745,9 @@
       "accountStatus": "Account Status",
       "verified": "Verified",
       "joinedDate": "Joined Date",
-      "actions": "Actions"
+      "actions": "Actions",
+      "noUserData": "No user data found",
+      "noUserDataSubtitle": "You haven't made any users yet."
     },
     "userRoles": {
       "staff": "Staff",
@@ -857,7 +859,9 @@
       "paymentMethod": "Payment Method",
       "status": "Status",
       "cancelBill": "Cancel Bill",
-      "viewPaymentHistory": "View Payment History"
+      "viewPaymentHistory": "View Payment History",
+      "noBillingData": "No billing data found",
+      "noBillingDataSubtitle": "You haven't made any billings yet."
     },
     "billHistory": {
       "billingHistory": "Billing History",
@@ -942,7 +946,9 @@
       "gateway": "Gateway",
       "status": "Status",
       "date": "Date",
-      "viewPayment": "View Payment"
+      "viewPayment": "View Payment",
+      "noTransactionData": "No transaction data found",
+      "noTransactionDataSubtitle": "You haven't made any transactions yet."
     },
     "paymentGateway": "Payment Gateway",
     "selectPaymentGateway": "Select Payment Gateway",
@@ -1002,7 +1008,9 @@
     "table": {
       "refundNumber": "Refund Number",
       "initiatedBy": "Initiated By",
-      "refundType": "Refund Type"
+      "refundType": "Refund Type",
+      "noRefundData": "No refund data found",
+      "noRefundDataSubtitle": "You haven't made any refunds yet."
     },
     "refundDetail": {
       "refundDetail": "Refund Detail",
@@ -1033,12 +1041,29 @@
     }
   },
   "payouts": {
+    "title": "Payout Management",
+    "subtitle": "Manage your organization's payouts.",
+    "searchPayout": "Search Payouts",
+    "noPayoutData": "No payout data found",
+    "noPayoutDataSubtitle": "You haven't made any payouts yet.",
+    "modals": {
+      "approvePayout": "Approve Payout",
+      "adminNotes": "Admin Notes",
+      "approvalReason": "Enter reason for approval",
+      "rejectPayout": "Reject Payout",
+      "rejectReason": "Enter reason for rejection",
+      "payoutApproved": "Payout Approved!",
+      "wannaViewBills": "Would you like to view the bills associated with this payout?",
+      "viewBills": "View Bills",
+      "noThanks": "No, thanks"
+    },
     "table": {
       "eventTitle": "Event Title",
       "amount": "Amount",
       "eventStatus": "Event Status",
       "status": "Status",
-      "requestType": "Request Type"
+      "requestType": "Request Type",
+      "requestNumber": "Request Number"
     },
     "eventStatus": {
       "completed": "Completed",

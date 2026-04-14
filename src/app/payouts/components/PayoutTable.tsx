@@ -76,7 +76,7 @@ export function PayoutTable({
     () => [
             {
         id: "request_number",
-        header: t("", "Request Number"),
+        header: t("payouts.table.requestNumber", "Request Number"),
         accessorKey: "request_number",
         meta: { sortKey: "request_number" },
       },
@@ -173,7 +173,7 @@ export function PayoutTable({
                   }}
                 >
                   <CheckCircleIcon weight="duotone" className="mr-2 h-4 w-4" />
-                  Approve
+                  {t("events.actions.approve")}
                 </DropdownMenuItem>
 
                 <DropdownMenuItem
@@ -184,7 +184,7 @@ export function PayoutTable({
                   className="text-red-600"
                 >
                   <XCircleIcon weight="duotone" className="mr-2 h-4 w-4" />
-                  Reject
+                  {t("events.actions.reject")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -228,11 +228,11 @@ export function PayoutTable({
               </svg>
             </div>
             <h3 className="text-lg font-medium text-gray-900">
-              {t("", "No payout data found")}
+              {t("payouts.noPayoutData", "No payout data found")}
             </h3>
             <p className="text-gray-500 mt-1 max-w-sm">
               {t(
-                "payouts.empty.description",
+                "payouts.noPayoutDataSubtitle",
                 "You haven't made any payouts yet.",
               )}
             </p>

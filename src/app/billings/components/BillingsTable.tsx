@@ -324,11 +324,11 @@ export function BillingTable({
               </svg>
             </div>
             <h3 className="text-lg font-medium text-gray-900">
-              {t("", "No billing data found")}
+              {t("billings.table.noBillingData", "No billing data found")}
             </h3>
             <p className="text-gray-500 mt-1 max-w-sm">
               {t(
-                "payouts.empty.description",
+                "billings.table.noBillingDataSubtitle",
                 "You haven't made any billings yet.",
               )}
             </p>

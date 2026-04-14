@@ -154,7 +154,7 @@ export default function TransactionsPage() {
         <TransactionScreenTabs />
 
         <TransactionTable
-          billings={response?.transactions || []}
+          transactions={response?.transactions || []}
           isLoading={isLoading}
           currentPage={currentPage}
           totalPages={totalPages}

@@ -96,7 +96,7 @@ export default function RejectModal({
       <DialogContent className="sm:max-w-[520px] overflow-y-scroll max-h-[90vh] shadow-2xl border-none bg-white/90 backdrop-blur-xl data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 duration-300">
         <DialogHeader className="space-y-3">
           <DialogTitle className="text-xl font-bold bg-red-500 bg-clip-text text-transparent">
-            {t("", "Reject Payout")}
+            {t("payouts.modals.rejectPayout", "Reject Payout")}
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
@@ -113,7 +113,7 @@ export default function RejectModal({
                     required
                     className="text-sm font-semibold text-gray-700"
                   >
-                    {t("", "Admin Notes")}
+                    {t("payouts.modals.adminNotes", "Admin Notes")}
                   </FormLabel>
                   <div className="relative group">
                     {/* <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none transition-colors group-focus-within:text-blue-600">
@@ -125,7 +125,10 @@ export default function RejectModal({
                     </div> */}
                     <FormControl>
                       <Textarea
-                        placeholder={t("", "Enter reason for rejection")}
+                        placeholder={t(
+                          "payouts.modals.rejectReason",
+                          "Enter reason for rejection",
+                        )}
                         {...field}
                         maxLength={100}
                         className={cn(
@@ -140,10 +143,8 @@ export default function RejectModal({
                         <TranslatedFormMessage t={t} />
                       </p>
                       <p className="text-xs font-normal text-left text-muted-foreground">
-                        {field.value?.toString().length || 0} /100 {t(
-                            "common.characters",
-                            "characters",
-                          )}
+                        {field.value?.toString().length || 0} /100{" "}
+                        {t("common.characters", "characters")}
                       </p>
                     </div>
                   </div>
@@ -159,7 +160,7 @@ export default function RejectModal({
                 disabled={isPending}
                 className="h-11 px-6 border-gray-200 hover:bg-gray-50 transition-colors"
               >
-                {t("common.cancel", "Cancel")}
+                {t("common.cancelButton", "Cancel")}
               </Button>
               <Button
                 variant={"destructive"}
@@ -169,7 +170,7 @@ export default function RejectModal({
                 {isPending && (
                   <SpinnerIcon className="mr-2 h-4 w-4 animate-spin" />
                 )}
-                {t("", "Reject")}
+                {t("events.actions.reject", "Reject")}
               </Button>
             </DialogFooter>
           </form>

@@ -686,7 +686,9 @@
       "accountStatus": "Stato account",
       "verified": "Verificato",
       "joinedDate": "Data di iscrizione",
-      "actions": "Azioni"
+      "actions": "Azioni",
+      "noUserData": "Nessun dato utente trovato",
+      "noUserDataSubtitle": "Non hai ancora creato alcun utente."
     },
     "userRoles": {
       "staff": "Staff",
@@ -799,7 +801,9 @@
       "paymentMethod": "Metodo di pagamento",
       "status": "Stato",
       "cancelBill": "annullare la fattura",
-      "viewPaymentHistory": "visualizza la cronologia dei pagamenti"
+      "viewPaymentHistory": "visualizza la cronologia dei pagamenti",
+      "noBillingData": "Nessun dato di fatturazione trovato",
+      "noBillingDataSubtitle": "Non hai ancora emesso alcuna fattura."
     },
     "billHistory": {
       "billingHistory": "Cronologia di fatturazione",
@@ -884,7 +888,9 @@
       "gateway": "Gateway",
       "status": "Stato",
       "date": "Data",
-      "viewPayment": "visualizza il pagamento"
+      "viewPayment": "visualizza il pagamento",
+      "noTransactionData": "Nessun dato di transazione trovato",
+      "noTransactionDataSubtitle": "Non hai ancora effettuato alcuna transazione."
     },
     "paymentGateway": "Gateway di pagamento",
     "selectPaymentGateway": "Seleziona il metodo di pagamento",
@@ -944,7 +950,9 @@
     "table": {
       "refundNumber": "Numero Rimborso",
       "initiatedBy": "Iniziato Da",
-      "refundType": "Tipo di rimborso"
+      "refundType": "Tipo di rimborso",
+      "noRefundData": "Nessun dato di rimborso trovato",
+      "noRefundDataSubtitle": "Non hai ancora effettuato alcun rimborso."
     },
     "refundDetail": {
       "refundDetail": "Dettaglio Rimborso",
@@ -975,12 +983,29 @@
     }
   },
   "payouts": {
+    "title": "Gestione dei Pagamenti",
+    "subtitle": "Gestisci i pagamenti della tua organizzazione.",
+    "searchPayout": "Cerca Pagamenti",
+    "noPayoutData": "Nessun dato sui pagamenti trovato",
+    "noPayoutDataSubtitle": "Non hai ancora effettuato alcun pagamento.",
+    "modals": {
+      "approvePayout": "Approva Pagamento",
+      "adminNotes": "Note Amministratore",
+      "approvalReason": "Inserisci il motivo dell'approvazione",
+      "rejectPayout": "Rifiuta Pagamento",
+      "rejectReason": "Inserisci il motivo del rifiuto",
+      "payoutApproved": "Pagamento Approvato!",
+      "wannaViewBills": "Vuoi visualizzare le fatture associate a questo pagamento?",
+      "viewBills": "Visualizza Fatture",
+      "noThanks": "No, grazie"
+    },
     "table": {
       "eventTitle": "Titolo Evento",
       "amount": "Importo",
       "eventStatus": "Stato Evento",
       "status": "Stato",
-      "requestType": "Tipo Richiesta"
+      "requestType": "Tipo Richiesta",
+      "requestNumber": "Numero di Richiesta"
     },
     "eventStatus": {
       "completed": "Completato",
