@@ -48,7 +48,7 @@ export function AuditLogsTable({
     () => [
       {
         id: "action",
-        header: "Action",
+        header: t("auditLogs.table.action"),
         cell: ({ row }) => {
           const action = row.original.action;
           return (
@@ -58,7 +58,7 @@ export function AuditLogsTable({
       },
       {
         id: "initiator",
-        header: "Initiator",
+        header: t("auditLogs.table.initiator"),
         cell: ({ row }) => (
           <div className="max-w-[200px] text-gray-700 truncate inline-block">
             {row.original.actor?.name || "-"}
@@ -67,7 +67,7 @@ export function AuditLogsTable({
       },
       {
         id: "entity",
-        header: "Entity",
+        header: t("auditLogs.table.entity"),
         cell: ({ row }) => {
           const entity = row.original.entity_type;
           return (
@@ -80,7 +80,7 @@ export function AuditLogsTable({
       },
       {
         id: "actor",
-        header: "Event",
+        header: t("auditLogs.table.event"),
         cell: ({ row }) => (
           <div className="max-w-[200px] text-gray-700 truncate inline-block">
             {row.original.event.title || "-"}
@@ -89,7 +89,7 @@ export function AuditLogsTable({
       },
       {
         id: "date",
-        header: "Created",
+        header: t("auditLogs.table.created"),
         cell: ({ row }) => (
           <span className="text-sm text-gray-600">
             {formatDistanceToNow(new Date(row.original.timestamp), {
@@ -135,12 +135,12 @@ export function AuditLogsTable({
               </svg>
             </div>
             <h3 className="text-lg font-medium text-gray-900">
-              {t("", "No refund data found")}
+              {t("auditLogs.noAuditlogsData", "No audit log data found")}
             </h3>
             <p className="text-gray-500 mt-1 max-w-sm">
               {t(
-                "refunds.empty.description",
-                "You haven't made any refunds yet.",
+                "auditLogs.noAuditlogsDataSubtitle",
+                "You haven't made any audit logs yet.",
               )}
             </p>
           </div>

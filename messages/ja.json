@@ -1029,6 +1029,27 @@
       "event_payout": "イベントの支払い"
     }
   },
+  "auditLogs": {
+    "title": "監査ログ管理",
+    "subtitle": "組織の監査ログを管理します。",
+    "searchAuditLogs": "監査ログを検索",
+    "noAuditlogsData": "監査ログデータが見つかりませんでした",
+    "noAuditlogsDataSubtitle": "まだ監査ログを作成していません。",
+    "filterAuditLogs": {
+      "filterAuditLogs": "監査ログをフィルタ",
+      "initiator": "実行元",
+      "selectInitiator": "実行元を選択",
+      "searchInitiator": "実行元を検索",
+      "noInitiator": "実行元が見つかりません"
+    },
+    "table": {
+      "action": "アクション",
+      "initiator": "実行元",
+      "entity": "エンティティ",
+      "event": "イベント",
+      "created": "作成日時"
+    }
+  },
   "reports": {
     "tabs": {
       "overview": "概要",

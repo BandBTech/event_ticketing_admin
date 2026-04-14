@@ -1074,6 +1074,27 @@
       "event_payout": "Event Payout"
     }
   },
+  "auditLogs": {
+    "title": "Audit Logs Management",
+    "subtitle": "Manage your organization's audit log.",
+    "searchAuditLogs": "Search Audit Logs",
+    "noAuditlogsData": "No audit log data found",
+    "noAuditlogsDataSubtitle": "You haven't made any audit logs yet.",
+    "filterAuditLogs": {
+      "filterAuditLogs": "Filter Audit Logs",
+      "initiator": "Initiator",
+      "selectInitiator": "Select Initiator",
+      "searchInitiator": "Search Initiator",
+      "noInitiator": "No Initiator Found"
+    },
+    "table": {
+      "action": "Action",
+      "initiator": "Initiator",
+      "entity": "Entity",
+      "event": "Event",
+      "created": "Created"
+    }
+  },
   "reports": {
     "tabs": {
       "overview": "Overview",

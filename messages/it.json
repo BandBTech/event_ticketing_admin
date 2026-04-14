@@ -1016,6 +1016,27 @@
       "event_payout": "pagamento dell'evento"
     }
   },
+  "auditLogs": {
+    "title": "Gestione dei Log di Audit",
+    "subtitle": "Gestisci i log di audit della tua organizzazione.",
+    "searchAuditLogs": "Cerca nei Log di Audit",
+    "noAuditlogsData": "Nessun dato di registro di controllo trovato",
+    "noAuditlogsDataSubtitle": "Non hai ancora creato alcun registro di controllo.",
+    "filterAuditLogs": {
+      "filterAuditLogs": "Filtra i Log di Audit",
+      "initiator": "Iniziatore",
+      "selectInitiator": "Seleziona Iniziatore",
+      "searchInitiator": "Cerca Iniziatore",
+      "noInitiator": "Nessun Iniziatore Trovato"
+    },
+    "table": {
+      "action": "Azione",
+      "initiator": "Iniziatore",
+      "entity": "Entità",
+      "event": "Evento",
+      "created": "Creato il"
+    }
+  },
   "reports": {
     "tabs": {
       "overview": "Panoramica",

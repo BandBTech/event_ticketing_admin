@@ -9,6 +9,8 @@ import {
   SheetTitle,
   SheetFooter,
 } from "@/components/ui/sheet";
+import { useTranslation } from "@/hooks/useTranslation";
+import { useLanguageStore } from "@/store/languageStore";
 import { format } from "date-fns";
 import {
   Popover,
@@ -43,6 +45,8 @@ export function AuditLogsFilterSheet({
   const [localFilters, setLocalFilters] =
     React.useState<BillingFilters>(filters);
   const [dateError, setDateError] = React.useState<string | null>(null);
+      const { locale } = useLanguageStore();
+      const { t } = useTranslation(locale);
 
   React.useEffect(() => {
     if (open) {
@@ -149,7 +153,7 @@ export function AuditLogsFilterSheet({
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
             <Filter className="h-5 w-5" />
-            Filter Audit Logs
+             {t("auditLogs.filterAuditLogs.filterAuditLogs")}
           </SheetTitle>
         </SheetHeader>
 
@@ -158,7 +162,7 @@ export function AuditLogsFilterSheet({
           <div className="space-y-2">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Start Date</Label>
+                 <Label>{t("billings.filter.startDate")}</Label>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button
@@ -172,7 +176,7 @@ export function AuditLogsFilterSheet({
                       {localFilters.start_date ? (
                         format(localFilters.start_date, "LLL dd, y")
                       ) : (
-                        <span>Pick a date</span>
+                       <span>{t("billings.filter.pickDate")}</span>
                       )}
                     </Button>
                   </PopoverTrigger>
@@ -202,7 +206,7 @@ export function AuditLogsFilterSheet({
               </div>
 
               <div className="space-y-2">
-                <Label>End Date</Label>
+                 <Label>{t("billings.filter.endDate")}</Label>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button
@@ -217,7 +221,7 @@ export function AuditLogsFilterSheet({
                       {localFilters.end_date ? (
                         format(localFilters.end_date, "LLL dd, y")
                       ) : (
-                        <span>Pick a date</span>
+                        <span>{t("billings.filter.pickDate")}</span>
                       )}
                     </Button>
                   </PopoverTrigger>
@@ -256,7 +260,7 @@ export function AuditLogsFilterSheet({
 
           {/* Organizer */}
           <div className="space-y-2">
-            <Label>Initiator</Label>
+            <Label>{t("auditLogs.filterAuditLogs.initiator")}</Label>
             <AsyncCombobox
               queryKey={["filter", "initiator"]}
               value={localFilters.user_id ?? ""}
@@ -264,16 +268,16 @@ export function AuditLogsFilterSheet({
                 setLocalFilters((prev) => ({ ...prev, user_id: val }))
               }
               fetchOptions={fetchUsers}
-              placeholder="Select Initiator"
-              searchPlaceholder="Search Initiator"
-              emptyText="No initiator found."
+              placeholder={t("auditLogs.filterAuditLogs.selectInitiator")}
+              searchPlaceholder={t("auditLogs.filterAuditLogs.searchInitiator")}
+              emptyText={t("auditLogs.filterAuditLogs.noInitiator")}
               className="w-full text-sm h-9 justify-between px-3!"
               debounceMs={300}
             />
           </div>
           {/* Event ID */}
           <div className="space-y-2">
-            <Label>Event</Label>
+           <Label>{t("navigation.events")}</Label>
             <AsyncCombobox
               queryKey={["filter", "events"]}
               value={localFilters.event_id ?? ""}
@@ -281,9 +285,9 @@ export function AuditLogsFilterSheet({
                 setLocalFilters((prev) => ({ ...prev, event_id: val }))
               }
               fetchOptions={fetchEvents}
-              placeholder="Select Event"
-              searchPlaceholder="Search Events"
-              emptyText="No events found."
+              placeholder={t("billings.addBillModal.selectEvent")}
+              searchPlaceholder={t("billings.addBillModal.searchEvent")}
+              emptyText={t("common.noResults")}
               className="w-full text-sm h-9 justify-between px-3!"
               debounceMs={300}
             />
@@ -293,7 +297,7 @@ export function AuditLogsFilterSheet({
         <SheetFooter className="flex-row gap-2">
           <Button variant="outline" onClick={handleClear} className="flex-1">
             <X className="mr-2 h-4 w-4" />
-            Clear
+            {t("common.clear")}
           </Button>
           <Button
             onClick={handleApply}
@@ -301,7 +305,7 @@ export function AuditLogsFilterSheet({
             className="flex-1 w-full sm:w-auto gap-2 bg-primary hover:bg-primary/80 text-primary-foreground shadow-sm transition-all ease-out duration-300 active:scale-95"
           >
             <Filter className="mr-2 h-4 w-4" />
-            Apply Filters
+             {t("billings.filter.applyFilters")}
             {activeFilterCount > 0 && (
               <span className="ml-2 bg-amber-700 text-white text-xs px-1.5 py-0.5 rounded-full">
                 {activeFilterCount}
