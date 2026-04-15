@@ -2,6 +2,7 @@
 
 import { formatCurrency } from "@/lib/utils";
 import { useLanguageStore } from "@/store/languageStore";
+import { useTranslation } from "@/hooks/useTranslation";
 import { RevenueReportProps } from "@/types/reports";
 import { MetricCard } from "@/app/reports/components/CardComponents";
 import { SectionCard } from "@/app/reports/components/CardComponents";
@@ -46,6 +47,7 @@ function RevenueBar({
 
 export default function RevenueReport({ data }: RevenueReportProps) {
   const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
   const m = data?.summary_metrics;
 
   const commissionPct =
@@ -66,68 +68,69 @@ export default function RevenueReport({ data }: RevenueReportProps) {
       {/* ── KPI row ── */}
       <div className="grid grid-cols-4 gap-4 font-medium">
         <MetricCard
-          label="Gross revenue"
+          label={t("reports.financial.grossRevenue")}
           value={formatCurrency(m?.total_gross_revenue || 0, undefined, locale)}
-          sub="Before deductions"
-          valueColor="text-blue-600"
+          sub={t("reports.financial.beforeDeductions")}
+          // valueColor="text-blue-600"
         />
         <MetricCard
-          label="Net revenue"
+          label={t("reports.financial.netRevenue")}
           value={formatCurrency(m?.net_revenue || 0, undefined, locale)}
-          sub={`${(m?.total_refunds || 0) > 0 ? `$${m?.total_refunds} refunded` : "No refunds"}`}
-          valueColor="text-emerald-600"
+          sub={`${(m?.total_refunds || 0) > 0 ? `$${m?.total_refunds} refunded` : t("reports.financial.noRefunds")}`}
+          // valueColor="text-emerald-600"
         />
         <MetricCard
-          label="Platform commission"
+          label={t("reports.financial.platformCommission")}
           value={formatCurrency(m?.total_commission || 0, undefined, locale)}
-          sub={`${commissionPct}% of gross`}
-          valueColor="text-amber-500"
+          sub={`${commissionPct}% ${t("reports.financial.ofGross")}`}
+          // valueColor="text-amber-500"
         />
         <MetricCard
-          label="Organizer share"
+          label={t("reports.financial.organizerShare")}
           value={formatCurrency(
             m?.total_organizer_share || 0,
             undefined,
             locale,
           )}
-          sub={`${organizerPct}% of gross`}
-          valueColor="text-violet-600"
+          sub={`${organizerPct}% ${t("reports.financial.ofGross")}`}
+          // valueColor="text-violet-600"
         />
       </div>
 
       {/* ── Secondary KPI row ── */}
       <div className="grid grid-cols-3 gap-4 font-medium">
         <MetricCard
-          label="Avg. ticket price"
+          label={t("reports.financial.avgTicketPrice")}
           value={formatCurrency(
             Math.round(m?.average_ticket_price || 0),
             undefined,
             locale,
           )}
-          sub="Per ticket sold"
+          sub={t("reports.financial.perTicketSold")}
         />
         <MetricCard
-          label="Completed payouts"
+          label={t("reports.financial.completedPayouts")}
           value={formatCurrency(m?.completed_payouts || 0, undefined, locale)}
           sub={
             (m?.pending_payouts || 0) > 0
               ? `${formatCurrency(m?.pending_payouts || 0, undefined, locale)} pending`
-              : "None pending"
+              : t("reports.financial.nonePending")
           }
-          valueColor="text-emerald-600"
+          // valueColor="text-emerald-600"
         />
         <MetricCard
-          label="Total transactions"
+          label={t("reports.financial.totalTransactions")}
           value={m?.total_transactions || 0}
-          sub="All completed"
+          sub={t("reports.financial.allCompleted")}
         />
       </div>
 
       {/* ── Revenue split + Event breakdown ── */}
       <div className="grid grid-cols-1 gap-5">
-
-
-        <SectionCard title="Revenue by event" key="Revenue by event">
+        <SectionCard
+          title={t("reports.financial.revenueByEvent")}
+          key={t("reports.financial.revenueByEvent")}
+        >
           {(data?.revenue_breakdown ?? []).length === 0 ? (
             <p className="text-sm text-black">No event data available.</p>
           ) : (
@@ -138,7 +141,7 @@ export default function RevenueReport({ data }: RevenueReportProps) {
                 value={ev.gross_revenue}
                 maxValue={maxEventRevenue}
                 color="#3b82f6"
-                sub={`Gross Revenue ${formatCurrency(ev.commission, undefined, locale)} · Commission ${formatCurrency(ev.commission, undefined, locale)} · Organizer Share ${formatCurrency(ev.organizer_share, undefined, locale)} · ${ev.refunds} Refunds · Net Revenue ${formatCurrency(ev.commission, undefined, locale)}`}
+                sub={`${t("reports.financial.grossRevenue")} ${formatCurrency(ev.commission, undefined, locale)} · ${t("reports.financial.commission")} ${formatCurrency(ev.commission, undefined, locale)} · ${t("reports.financial.organizerShare")} ${formatCurrency(ev.organizer_share, undefined, locale)} · ${ev.refunds} ${t("reports.financial.refunds")} · ${t("reports.financial.netRevenue")} ${formatCurrency(ev.commission, undefined, locale)}`}
               />
             ))
           )}
@@ -146,41 +149,47 @@ export default function RevenueReport({ data }: RevenueReportProps) {
       </div>
 
       {/* ── Commission history ── */}
-      <SectionCard title="Commission history" key="Commission history">
-      <CommissionHistoryTable
-        refunds={data?.commission_history || []}
-        isLoading={false}
-        currentPage={1}
-        totalPages={1}
-        total={(data?.commission_history || []).length}
-        limit={(data?.commission_history || []).length}
-        onLimitChange={() => {}}
-        hasNextPage={false}
-        hasPreviousPage={false}
-        onPageChange={() => {}}
-        sortBy={""}
-        sortOrder={"asc"}
-        onSortChange={() => {}}
-      />
+      <SectionCard
+        title={t("reports.financial.commissionHistory")}
+        key={t("reports.financial.commissionHistory")}
+      >
+        <CommissionHistoryTable
+          refunds={data?.commission_history || []}
+          isLoading={false}
+          currentPage={1}
+          totalPages={1}
+          total={(data?.commission_history || []).length}
+          limit={(data?.commission_history || []).length}
+          onLimitChange={() => {}}
+          hasNextPage={false}
+          hasPreviousPage={false}
+          onPageChange={() => {}}
+          sortBy={""}
+          sortOrder={"asc"}
+          onSortChange={() => {}}
+        />
       </SectionCard>
 
       {/* ── Bill history ── */}
-      <SectionCard title="Bill history" key="Bill history">
-      <BillHistoryTable
-        refunds={data?.bill_history || []}
-        isLoading={false}
-        currentPage={1}
-        totalPages={1}
-        total={(data?.bill_history || []).length}
-        limit={(data?.bill_history || []).length}
-        onLimitChange={() => {}}
-        hasNextPage={false}
-        hasPreviousPage={false}
-        onPageChange={() => {}}
-        sortBy={""}
-        sortOrder={"asc"}
-        onSortChange={() => {}}
-      />
+      <SectionCard
+        title={t("reports.financial.billHistory")}
+        key={t("reports.financial.billHistory")}
+      >
+        <BillHistoryTable
+          refunds={data?.bill_history || []}
+          isLoading={false}
+          currentPage={1}
+          totalPages={1}
+          total={(data?.bill_history || []).length}
+          limit={(data?.bill_history || []).length}
+          onLimitChange={() => {}}
+          hasNextPage={false}
+          hasPreviousPage={false}
+          onPageChange={() => {}}
+          sortBy={""}
+          sortOrder={"asc"}
+          onSortChange={() => {}}
+        />
       </SectionCard>
 
       {/* ── Currency breakdown ── */}

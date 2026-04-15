@@ -41,7 +41,6 @@ export function BillHistoryTable({
   sortBy,
   sortOrder,
   onSortChange,
-
 }: BillHistoryTableProps) {
   const { t } = useTranslation();
   const { locale } = useLanguageStore();
@@ -51,7 +50,7 @@ export function BillHistoryTable({
     () => [
       {
         id: "bill_number",
-        header: t("", "Bill Nnumber"),
+        header: t("reports.financial.billNumber", "Bill Number"),
         cell: ({ row }) => {
           const eventTitle = row.original.bill_number;
           return <div className="max-w-[200px] truncate">{eventTitle}</div>;
@@ -59,7 +58,7 @@ export function BillHistoryTable({
       },
       {
         id: "date",
-        header: t("transactions.table.date"),
+        header: t("reports.financial.date", "Date"),
         accessorKey: "created_at",
         cell: ({ row }) => {
           const date = new Date(row.original.created_at);
@@ -69,7 +68,7 @@ export function BillHistoryTable({
       },
       {
         id: "commission_amount",
-        header: t("Amount"),
+        header: t("reports.financial.amount", "Amount"),
         accessorKey: "amount",
         cell: ({ row }) => (
           <span className="px-2 py-1 text-xs font-medium rounded-full">
@@ -79,7 +78,7 @@ export function BillHistoryTable({
       },
       {
         id: "status",
-        header: t("transactions.table.status"),
+        header: t("reports.financial.status", "Status"),
         accessorKey: "status",
         cell: ({ row }) => {
           const status = row.original.status;
@@ -140,13 +139,10 @@ export function BillHistoryTable({
               </svg>
             </div>
             <h3 className="text-lg font-medium text-gray-900">
-              {t("", "No refund data found")}
+              {t("", "No bill history data found")}
             </h3>
             <p className="text-gray-500 mt-1 max-w-sm">
-              {t(
-                "refunds.empty.description",
-                "You haven't made any refunds yet.",
-              )}
+              {t("", "You haven't made any bills yet.")}
             </p>
           </div>
         }

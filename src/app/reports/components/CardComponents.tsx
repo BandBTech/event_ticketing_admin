@@ -1,9 +1,7 @@
 import { formatCurrency } from "@/lib/utils";
 import { useLanguageStore } from "@/store/languageStore";
-import {
-  DailySale,
-  ChartTab,
-} from "@/types/reports";
+import { DailySale, ChartTab } from "@/types/reports";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const TAB_CONFIG: Record<
   ChartTab,
@@ -196,6 +194,8 @@ export function RetentionDonut({
   const cy = 56;
   const circ = 2 * Math.PI * r;
   const retDash = (retention / 100) * circ;
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
 
   return (
     <svg viewBox="0 0 112 112" className="w-32 h-32">
@@ -229,7 +229,7 @@ export function RetentionDonut({
         {retention.toFixed(2)}%
       </text>
       <text x={cx} y={cy + 13} textAnchor="middle" fontSize="9" fill="#9ca3af">
-        retention
+        {t("reports.customerAnalytics.retention")}
       </text>
     </svg>
   );

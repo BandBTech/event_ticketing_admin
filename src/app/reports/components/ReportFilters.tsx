@@ -38,8 +38,7 @@ interface ReportFiltersProps {
   activeTab: ReportType;
   selectedEventId: string;
   onEventChange: (eventId: string) => void;
-fetchEvents: (search: string) => Promise<AsyncComboboxOption[]>;
-  
+  fetchEvents: (search: string) => Promise<AsyncComboboxOption[]>;
 }
 
 export function ReportFilters({
@@ -57,7 +56,7 @@ export function ReportFilters({
     <div className="flex flex-wrap gap-4 items-end">
       <div className="flex flex-col gap-1">
         <Label className="text-xs text-gray-500">
-          {t("reports.dateRange.label", "Date Range")}
+          {t("reports.dateRange.title", "Date Range")}
         </Label>
         <div className="relative">
           <CalendarIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
@@ -103,7 +102,7 @@ export function ReportFilters({
       {activeTab === "event-performance" && (
         <div className="flex flex-col gap-1">
           <Label className="text-xs text-gray-500">
-            {t("reports.selectEvent.label", "Select Event")}
+            {t("reports.eventPerformance.selectEvent", "Select Event")}
           </Label>
 
           <AsyncCombobox
@@ -111,9 +110,9 @@ export function ReportFilters({
             value={selectedEventId}
             onValueChange={onEventChange}
             fetchOptions={fetchEvents}
-            placeholder="Select Event"
-            searchPlaceholder="Search Events"
-            emptyText="No events found."
+            placeholder={t("billings.addBillModal.selectEvent")}
+            searchPlaceholder={t("billings.addBillModal.searchEvent")}
+            emptyText={t("common.noResults")}
             className="w-[250px] text-sm h-9 justify-between px-3!"
             debounceMs={300}
           />

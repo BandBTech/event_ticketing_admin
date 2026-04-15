@@ -50,7 +50,7 @@ export function CommissionHistoryTable({
     () => [
       {
         id: "date",
-        header: t("transactions.table.date"),
+        header: t("reports.financial.date", "Date"),
         accessorKey: "created_at",
         cell: ({ row }) => {
           const date = new Date(row.original.created_at);
@@ -60,7 +60,7 @@ export function CommissionHistoryTable({
       },
       {
         id: "event_title",
-        header: t("", "Event"),
+        header: t("reports.financial.event", "Event"),
         cell: ({ row }) => {
           const eventTitle = row.original.event_title;
           return <div className="max-w-[200px] truncate">{eventTitle}</div>;
@@ -68,7 +68,7 @@ export function CommissionHistoryTable({
       },
       {
         id: "revenue",
-        header: t("", "Revenue"),
+        header: t("reports.financial.revenue", "Revenue"),
         accessorKey: "revenue",
         cell: ({ row }) => (
           <span className="px-2 py-1 text-xs font-medium rounded-full">
@@ -78,7 +78,7 @@ export function CommissionHistoryTable({
       },
       {
         id: "commission_rate",
-        header: t("", "Rate"),
+        header: t("reports.financial.rate", "Rate"),
         accessorKey: "commission_rate",
         cell: ({ row }) => (
           <span className="px-2 py-1 text-xs font-medium rounded-full">
@@ -88,7 +88,7 @@ export function CommissionHistoryTable({
       },
       {
         id: "commission_amount",
-        header: t("Commission"),
+        header: t("reports.financial.commission", "Commission"),
         accessorKey: "commission_amount",
         cell: ({ row }) => (
           <span className="px-2 py-1 text-xs font-medium rounded-full">
@@ -133,13 +133,10 @@ export function CommissionHistoryTable({
               </svg>
             </div>
             <h3 className="text-lg font-medium text-gray-900">
-              {t("", "No refund data found")}
+              {t("", "No commission history data found")}
             </h3>
             <p className="text-gray-500 mt-1 max-w-sm">
-              {t(
-                "refunds.empty.description",
-                "You haven't made any refunds yet.",
-              )}
+              {t("", "You haven't made any commissions yet.")}
             </p>
           </div>
         }

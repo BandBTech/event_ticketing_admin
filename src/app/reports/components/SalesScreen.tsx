@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { formatCurrency } from "@/lib/utils";
+import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
 import { DailySale, SalesReportProps, ChartTab } from "@/types/reports";
 import { MetricCard } from "@/app/reports/components/CardComponents";
@@ -15,6 +16,7 @@ export function DailyBarChart({
   tab: ChartTab;
 }) {
   const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
   const cfg = TAB_CONFIG[tab];
   const values = (data ?? []).map((d) => Number(d[cfg.key]));
   const max = Math.max(...values, 0);
@@ -137,10 +139,10 @@ const TAB_CONFIG: Record<
   ChartTab,
   { label: string; key: keyof DailySale; color: string }
 > = {
-  revenue: { label: "Revenue", key: "revenue", color: "#3b82f6" },
-  tickets: { label: "Tickets sold", key: "tickets_sold", color: "#10b981" },
+  revenue: { label: "revenue", key: "revenue", color: "#3b82f6" },
+  tickets: { label: "ticketsSold", key: "tickets_sold", color: "#10b981" },
   aov: {
-    label: "Avg. order value",
+    label: "avgOrderValue",
     key: "average_order_value",
     color: "#f59e0b",
   },
@@ -150,8 +152,8 @@ const GATEWAY_COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#8b5cf6"];
 
 export default function SalesReport({ data }: SalesReportProps) {
   const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
   const [activeTab, setActiveTab] = useState<ChartTab>("revenue");
-  console.log("data", data);
 
   const m = data?.summary_metrics;
   const gateways = data?.sales_by_payment_gateway ?? [];
@@ -172,34 +174,34 @@ export default function SalesReport({ data }: SalesReportProps) {
       {/* ── KPI row ── */}
       <div className="grid grid-cols-4 gap-4 font-medium">
         <MetricCard
-          label="Total revenue"
+          label={t("reports.sales.totalRevenue")}
           value={formatCurrency(m?.total_revenue || 0, undefined, locale)}
-          sub={`${activeDays} active days`}
-          valueColor="text-blue-600"
+          sub={`${activeDays} ${t("reports.sales.activeDays")}`}
+          // valueColor="text-blue-600"
         />
         <MetricCard
-          label="Tickets sold"
+          label={t("reports.sales.ticketsSold")}
           value={m?.total_tickets_sold || 0}
-          sub="Across all days"
+          sub={t("reports.sales.acrossAllDays")}
         />
         <MetricCard
-          label="Transactions"
+          label={t("reports.sales.transactions")}
           value={m?.total_transactions || 0}
-          sub="All completed"
+          sub={t("reports.sales.allCompleted")}
         />
         <MetricCard
-          label="Avg. order value"
+          label={t("reports.sales.avgOrderValue")}
           value={formatCurrency(
             Math.round(m?.average_order_value || 0),
             undefined,
             locale,
           )}
-          sub="Per transaction"
+          sub={t("reports.sales.perTransaction")}
         />
       </div>
 
       {/* ── Daily chart ── */}
-      <SectionCard title="Daily sales trend">
+      <SectionCard title={t("reports.sales.dailySalesTrend")}>
         {/* Tab switcher */}
         <div className="flex gap-2 mb-5">
           {(Object.keys(TAB_CONFIG) as ChartTab[]).map((key) => (
@@ -212,7 +214,7 @@ export default function SalesReport({ data }: SalesReportProps) {
                   : "border-gray-200 text-black hover:bg-gray-50"
               }`}
             >
-              {TAB_CONFIG[key].label}
+              {t("reports.sales." + TAB_CONFIG[key].label)}
             </button>
           ))}
         </div>
@@ -236,13 +238,14 @@ export default function SalesReport({ data }: SalesReportProps) {
 
       {/* ── Gateway + Top days ── */}
       <div className="grid grid-cols-2 gap-5">
-        <SectionCard title="Payment gateway breakdown">
+        <SectionCard title={t("reports.sales.paymentGatewayBreakdown")}>
           <div className="space-y-4">
             {gateways.map((gw, i) => (
               <div key={gw.gateway_name}>
                 <div className="flex justify-between items-baseline mb-1.5">
                   <span className="text-sm text-black capitalize font-medium">
-                    {gw.gateway_name}
+                    {/* {gw.gateway_name} */}
+                    {t("billings.method." + gw.gateway_name)}
                   </span>
                   <div className="text-right">
                     <span className="text-sm font-semibold text-black">
@@ -263,14 +266,15 @@ export default function SalesReport({ data }: SalesReportProps) {
                   />
                 </div>
                 <div className="text-[11px] text-black mt-1">
-                  {gw.total_transactions} transactions · {gw.status}
+                  {gw.total_transactions} {t("reports.sales.transactions")} ·{" "}
+                  {t("status." + gw.status)}
                 </div>
               </div>
             ))}
           </div>
         </SectionCard>
 
-        <SectionCard title="Top days by revenue">
+        <SectionCard title={t("reports.sales.topDaysByRevenue")}>
           <div className="space-y-1">
             {topDays.map((d) => {
               const pct = Math.round((d.revenue / maxTopRevenue) * 100);
@@ -297,7 +301,7 @@ export default function SalesReport({ data }: SalesReportProps) {
                       {formatCurrency(d.revenue, undefined, locale)}
                     </div>
                     <div className="text-[11px] text-black">
-                      {d.tickets_sold} tickets
+                      {d.tickets_sold} {t("reports.sales.tickets")}
                     </div>
                   </div>
                 </div>

@@ -2,6 +2,7 @@
 
 import { formatCurrency } from "@/lib/utils";
 import { useLanguageStore } from "@/store/languageStore";
+import { useTranslation } from "@/hooks/useTranslation";
 import { CustomerAnalyticsProps } from "@/types/reports";
 import { MetricCard } from "@/app/reports/components/CardComponents";
 import { SectionCard } from "@/app/reports/components/CardComponents";
@@ -36,6 +37,7 @@ function getSegmentColor(name: string, idx: number) {
 // ── Main Component ────────────────────────────────────────────────────────────
 export default function CustomerAnalytics({ data }: CustomerAnalyticsProps) {
   const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
   const r = data?.customer_retention;
 
   // Sort segments by total_spent descending so highest value is always on top
@@ -53,36 +55,36 @@ export default function CustomerAnalytics({ data }: CustomerAnalyticsProps) {
       {/* ── KPI row ── */}
       <div className="grid grid-cols-4 gap-4 font-medium">
         <MetricCard
-          label="Total customers"
+          label={t("reports.sales.transactions")}
           value={data?.total_customers || 0}
-          sub="All time"
+          sub={t("reports.customerAnalytics.allTime")}
         />
         <MetricCard
-          label="Registered users"
+          label={t("reports.customerAnalytics.registeredUsers")}
           value={data?.registered_users || 0}
-          sub={`${data?.guest_purchases} guest purchases`}
-          valueColor="text-blue-600"
+          sub={`${data?.guest_purchases} ${t("reports.customerAnalytics.guestPurchases")}`}
+          valueColor="text-black"
         />
         <MetricCard
-          label="Repeat customers"
+          label={t("reports.customerAnalytics.repeatCustomers")}
           value={data?.repeat_customers || 0}
-          sub={`${repeatPct}% of total`}
-          valueColor="text-emerald-600"
+          sub={`${repeatPct}% ${t("reports.customerAnalytics.ofTotal")}`}
+          valueColor="text-black"
         />
         <MetricCard
-          label="Avg. order value"
+          label={t("reports.customerAnalytics.avgOrderValue")}
           value={formatCurrency(
             data?.average_order_value || 0,
             undefined,
             locale,
           )}
-          sub="Per transaction"
+          sub={t("reports.customerAnalytics.perTransaction")}
         />
       </div>
 
       {/* ── Segments + Retention ── */}
       <div className="grid grid-cols-2 gap-5">
-        <SectionCard title="Customer segments">
+        <SectionCard title={t("reports.customerAnalytics.customerSegments")}>
           <div className="space-y-5">
             {sortedSegments.map((seg, i) => {
               const colors = getSegmentColor(seg.segment_name, i);
@@ -92,13 +94,13 @@ export default function CustomerAnalytics({ data }: CustomerAnalyticsProps) {
                   <div className="flex items-baseline justify-between mb-1.5">
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium text-black">
-                        {seg.segment_name}
+                        {t("reports.customerAnalytics." + seg.segment_name)}
                       </span>
                       <span
                         className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${colors.badge} ${colors.text}`}
                       >
                         {seg.customer_count}{" "}
-                        {seg.customer_count === 1 ? "customer" : "customers"}
+                        {t("reports.customerAnalytics.customers")}
                       </span>
                     </div>
                     <span className="text-xs text-black">
@@ -113,11 +115,11 @@ export default function CustomerAnalytics({ data }: CustomerAnalyticsProps) {
                   </div>
                   <div className="flex justify-between text-[11px] text-black">
                     <span>
-                      Total:{" "}
+                      {t("reports.customerAnalytics.total")}:{" "}
                       {formatCurrency(seg.total_spent, undefined, locale)}
                     </span>
                     <span>
-                      Avg:{" "}
+                      {t("reports.customerAnalytics.avg")}:{" "}
                       {formatCurrency(seg.average_spent, undefined, locale)}
                     </span>
                   </div>
@@ -127,7 +129,7 @@ export default function CustomerAnalytics({ data }: CustomerAnalyticsProps) {
           </div>
         </SectionCard>
 
-        <SectionCard title="Retention overview">
+        <SectionCard title={t("reports.customerAnalytics.retentionOverview")}>
           <div className="flex justify-center py-2 mb-2">
             <RetentionDonut
               retention={r?.retention_rate || 0}
@@ -135,30 +137,32 @@ export default function CustomerAnalytics({ data }: CustomerAnalyticsProps) {
             />
           </div>
           <StatRowCAS
-            label="New customers"
+            label={t("reports.customerAnalytics.newCustomers")}
             value={r?.new_customers || 0}
-            badge={{ bg: "bg-blue-50", text: "text-blue-700" }}
+            badge={{ bg: "bg-gray-100", text: "text-black" }}
           />
           <StatRowCAS
-            label="Returning customers"
+            label={t("reports.customerAnalytics.returningCustomers")}
             value={r?.returning_customers || 0}
-            badge={{ bg: "bg-emerald-50", text: "text-emerald-700" }}
+            badge={{ bg: "bg-gray-100", text: "text-black" }}
           />
           <StatRowCAS
-            label="Retention rate"
+            label={t("reports.customerAnalytics.retentionRate")}
             value={`${r?.retention_rate.toFixed(2)}%`}
-            badge={{ bg: "bg-emerald-50", text: "text-emerald-700" }}
+            badge={{ bg: "bg-gray-100", text: "text-black" }}
           />
           <StatRowCAS
-            label="Churn rate"
+            label={t("reports.customerAnalytics.churnRate")}
             value={`${r?.churn_rate.toFixed(2)}%`}
-            badge={{ bg: "bg-red-50", text: "text-red-600" }}
+            badge={{ bg: "bg-gray-100", text: "text-black" }}
           />
         </SectionCard>
       </div>
 
       {/* ── Segment spend comparison ── */}
-      <SectionCard title="Segment spend comparison">
+      <SectionCard
+        title={t("reports.customerAnalytics.segmentSpendComparison")}
+      >
         <div className="space-y-4">
           {sortedSegments.map((seg, i) => {
             const colors = getSegmentColor(seg.segment_name, i);
@@ -168,17 +172,18 @@ export default function CustomerAnalytics({ data }: CustomerAnalyticsProps) {
               <div key={seg.segment_name} className="space-y-1">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium text-black">
+                    {/* {t("reports.customerAnalytics." + seg.segment_name)} */}
                     {seg.segment_name}
                   </span>
                   <span className="text-xs text-black">
                     {seg.customer_count}{" "}
-                    {seg.customer_count === 1 ? "customer" : "customers"}
+                    {t("reports.customerAnalytics.customers")}
                   </span>
                 </div>
                 {/* Total spent bar */}
                 <div className="flex items-center gap-2">
                   <span className="text-[10px] text-black w-16 text-right flex-shrink-0">
-                    total
+                    {t("reports.customerAnalytics.total")}
                   </span>
                   <div className="flex-1 h-2.5 bg-gray-100 rounded-full overflow-hidden">
                     <div
@@ -197,7 +202,7 @@ export default function CustomerAnalytics({ data }: CustomerAnalyticsProps) {
                 {/* Avg spent bar */}
                 <div className="flex items-center gap-2">
                   <span className="text-[10px] text-black w-16 text-right flex-shrink-0">
-                    avg
+                    {t("reports.customerAnalytics.avg")}
                   </span>
                   <div className="flex-1 h-2.5 bg-gray-100 rounded-full overflow-hidden">
                     <div
