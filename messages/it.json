@@ -31,7 +31,10 @@
     "showLess": "Mostra meno",
     "rowsPerPage": "Righe per pagina",
     "startItemToEndItemOfTotal": "{startItem}-{endItem} di {total}",
-    "results": "Risultati"
+    "results": "Risultati",
+    "successfully": "con successo",
+    "activated": "attivato",
+    "deactivated": "disattivata"
   },
   "navigation": {
     "events": "Eventi",
@@ -803,7 +806,12 @@
       "cancelBill": "annullare la fattura",
       "viewPaymentHistory": "visualizza la cronologia dei pagamenti",
       "noBillingData": "Nessun dato di fatturazione trovato",
-      "noBillingDataSubtitle": "Non hai ancora emesso alcuna fattura."
+      "noBillingDataSubtitle": "Non hai ancora emesso alcuna fattura.",
+      "modals": {
+        "totalAmount": "Importo totale",
+        "paidAmount": "Importo pagato",
+        "remainingAmount": "Importo residuo"
+      }
     },
     "billHistory": {
       "billingHistory": "Cronologia di fatturazione",
@@ -953,6 +961,9 @@
       "refundType": "Tipo di rimborso",
       "noRefundData": "Nessun dato di rimborso trovato",
       "noRefundDataSubtitle": "Non hai ancora effettuato alcun rimborso."
+    },
+    "refundType": {
+      "customer_request": "Richiesta del cliente"
     },
     "refundDetail": {
       "refundDetail": "Dettaglio Rimborso",

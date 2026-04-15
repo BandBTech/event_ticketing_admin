@@ -232,12 +232,12 @@ export default function AddBillPopupModal({
   );
 
   const PAYMENT_METHODS = [
-    { label: "Bank Transfer", value: "bank_transfer" },
-    { label: "Cash", value: "cash" },
-    { label: "Cheque", value: "cheque" },
-    { label: "Mobile Payment", value: "mobile_payment" },
-    { label: "Stripe", value: "stripe" },
-    { label: "Other", value: "other" },
+    { label: "bank_transfer", value: "bank_transfer" },
+    { label: "cash", value: "cash" },
+    { label: "cheque", value: "cheque" },
+    { label: "mobile_payment", value: "mobile_payment" },
+    { label: "stripe", value: "stripe" },
+    { label: "other", value: "other" },
   ];
 
   const onSubmit = (data: AddPaymentToBillFormValues) => {
@@ -381,7 +381,7 @@ export default function AddBillPopupModal({
                       <SelectContent>
                         {PAYMENT_METHODS.map((method) => (
                           <SelectItem key={method.value} value={method.value}>
-                            {method.label}
+                            {t("billings.method." + method.label)}
                           </SelectItem>
                         ))}
                       </SelectContent>

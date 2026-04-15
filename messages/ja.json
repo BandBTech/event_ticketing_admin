@@ -31,7 +31,10 @@
     "showLess": "表示を減らす",
     "rowsPerPage": "1ページあたりの行数",
     "startItemToEndItemOfTotal": "{startItem}-{endItem}/{total}",
-    "results": "結果"
+    "results": "結果",
+    "successfully": "成功",
+    "activated": "起動済み",
+    "deactivated": "無効化"
   },
   "navigation": {
     "events": "イベント",
@@ -816,7 +819,12 @@
       "cancelBill": "請求書をキャンセルする",
       "viewPaymentHistory": "支払い履歴を表示する",
       "noBillingData": "請求データが見つかりませんでした",
-      "noBillingDataSubtitle": "まだ請求書を作成していません。"
+      "noBillingDataSubtitle": "まだ請求書を作成していません。",
+      "modals": {
+        "totalAmount": "合計金額",
+        "paidAmount": "支払済み金額",
+        "remainingAmount": "残額"
+      }
     },
     "billHistory": {
       "billingHistory": "請求履歴",
@@ -966,6 +974,9 @@
       "refundType": "返金の種類",
       "noRefundData": "返金データが見つかりませんでした",
       "noRefundDataSubtitle": "まだ払い戻しは行われていません。"
+    },
+    "refundType": {
+      "customer_request": "お客様からのご要望"
     },
     "refundDetail": {
       "refundDetail": "返金詳細",

@@ -40,7 +40,10 @@
     "showLess": "Show Less",
     "rowsPerPage": "Rows per page",
     "startItemToEndItemOfTotal": "{startItem}-{endItem} of {total}",
-    "results": "Results"
+    "results": "Results",
+    "successfully": "successfully",
+    "activated": "activated",
+    "deactivated": "deactivated"
   },
   "navigation": {
     "events": "Events",
@@ -861,7 +864,12 @@
       "cancelBill": "Cancel Bill",
       "viewPaymentHistory": "View Payment History",
       "noBillingData": "No billing data found",
-      "noBillingDataSubtitle": "You haven't made any billings yet."
+      "noBillingDataSubtitle": "You haven't made any billings yet.",
+      "modals" : {
+        "totalAmount": "Total Amount",
+        "paidAmount": "Paid Amount",
+        "remainingAmount": "Remaining Amount"
+      }
     },
     "billHistory": {
       "billingHistory": "Billing History",
@@ -1011,6 +1019,9 @@
       "refundType": "Refund Type",
       "noRefundData": "No refund data found",
       "noRefundDataSubtitle": "You haven't made any refunds yet."
+    },
+    "refundType": {
+      "customer_request": "Customer Request"
     },
     "refundDetail": {
       "refundDetail": "Refund Detail",

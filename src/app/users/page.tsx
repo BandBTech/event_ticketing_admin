@@ -106,9 +106,9 @@ export default function TransactionsPage() {
     onSuccess: (_, employeeId) => {
       const employee = mockUserData.find((c) => c.id === employeeId);
       toast.success(
-        `User ${
-          employee?.account_status === "active" ? "deactivated" : "activated"
-        } successfully`,
+        `${t("users.userRoles.user")} ${
+          employee?.account_status === "active" ? t("common.deactivated") : t("common.activated")
+        } ${t("common.successfully")}`,
       );
       queryClient.invalidateQueries({
         queryKey: ["users"],

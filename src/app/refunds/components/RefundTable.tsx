@@ -112,14 +112,9 @@ export function RefundTable({
         cell: ({ row }) => {
           const type = row.original.refund_type;
 
-          const formatted = type
-            .replace(/_/g, " ")
-            .toLowerCase()
-            .replace(/\b\w/g, (char) => char.toUpperCase());
-
           return (
             <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-700">
-              {formatted}
+              {t("refunds.refundType." + type)}
             </span>
           );
         },

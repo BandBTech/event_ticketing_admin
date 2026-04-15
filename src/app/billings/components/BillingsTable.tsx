@@ -155,21 +155,21 @@ export function BillingTable({
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>
-                    Total Amount:{" "}
+                    {t("billings.table.modals.totalAmount")}:{" "}
                     {formatCurrency(
                       row.original.billed_amount,
                       undefined,
                       locale,
                     )}
                     <br />
-                    Paid Amount:{" "}
+                    {t("billings.table.modals.paidAmount")}:{" "}
                     {formatCurrency(
                       row.original.paid_amount,
                       undefined,
                       locale,
                     )}
                     <br />
-                    Remaining Amount:{" "}
+                    {t("billings.table.modals.remainingAmount")}:{" "}
                     {formatCurrency(
                       row.original.remaining_amount,
                       undefined,
