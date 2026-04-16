@@ -1522,7 +1522,8 @@
       "featured": "Featured",
       "completed": "Completed",
       "scheduled": "Scheduled",
-      "resumed": "Sales Resumed"
+      "resumed": "Sales Resumed",
+      "sales_upcoming": "Sales Upcoming"
     },
     "section": {
       "statusHistory": "Status History"
