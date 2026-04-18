@@ -1335,7 +1335,17 @@
       "errorLoadingSettings": "Error loading settings",
       "loading": "Loading",
       "companyInfoUpdated": "Company information updated successfully",
-      "pleaseUploadImageFile": "Please Upload an Image File"
+      "pleaseUploadImageFile": "Please Upload an Image File",
+      "validation":{
+        "nameRequired": "Name is required.",
+        "nameAtLeast2Chars": "Name must be at least 2 characters.",
+        "nameAtMost100Chars": "Name must be at most 100 characters.",
+        "nameCanContain": "Name can only contain letters, spaces, hyphens, and apostrophes.",
+        "enterValidURL": "Please enter a valid URL.",
+        "emailRequired": "Email is required.",
+        "validEmailAddress": "Please enter a valid email address.",
+        "validPhoneNumber": "Please enter a valid phone number."
+      }
     },
     "tickets": {
       "title": "Ticket Settings",

@@ -15,72 +15,20 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import type { Country } from "react-phone-number-input";
-import { isValidPhoneNumber } from "libphonenumber-js";
 import { toast } from "@/lib/toast";
 import LoadingSkeleton from "./components/LoadingSkeleton";
-
-export const nameValidationRegex = /^[A-Za-z\s'-]+$/;
-
-/**
- * Creates a firstName Zod schema with proper validation.
- * - Required, min 2 characters
- * - Only allows letters, spaces, hyphens, and apostrophes
- */
-export const createNameSchema = () =>
-  z
-    .string()
-    .min(1, "Name is required.")
-    .min(2, "Name must be at least 2 characters.")
-    .max(100, "Name must be at most 100 characters.")
-    .regex(
-      nameValidationRegex,
-      "Name can only contain letters, spaces, hyphens, and apostrophes.",
-    );
-
-export const optionalUrl = z
-  .string()
-  .trim()
-  .optional()
-  .or(z.literal(""))
-  .refine((val) => !val || z.string().url().safeParse(val).success, {
-    message: "Please enter a valid URL.",
-  });
-
-// Zod validation schema
-const companyInfoFormSchema = z.object({
-  name: createNameSchema(),
-  email: z
-    .string()
-    .min(1, "Email is required.")
-    .email("Please enter a valid email address."),
-  description: z.string().optional(),
-  phone: z
-    .string()
-    .refine(
-      (val) => !val || isValidPhoneNumber(val, { defaultCountry: "DK" }),
-      {
-        message: "Please enter a valid phone number.",
-      },
-    )
-    .optional(),
-  address: z.string().optional(),
-  logo_url: optionalUrl,
-  facebook_url: optionalUrl,
-  instagram_url: optionalUrl,
-  linkedin_url: optionalUrl,
-  twitter_url: optionalUrl,
-  website_url: optionalUrl,
-  youtube_url: optionalUrl,
-});
-
-type CompanyInfoFormValues = z.infer<typeof companyInfoFormSchema>;
+import { createCompanyInfoFormSchema } from "@/lib/validation";
 
 export default function GeneralSettingsPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [country, setCountry] = useState<Country>("NP");
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
+  const schema = createCompanyInfoFormSchema(t);
 
+  type CompanyInfoFormValues = z.infer<typeof schema>;
   const form = useForm<CompanyInfoFormValues>({
-    resolver: zodResolver(companyInfoFormSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       name: "",
       address: "",
@@ -103,8 +51,6 @@ export default function GeneralSettingsPage() {
   const [uploadError, setUploadError] = useState("");
 
   const queryClient = useQueryClient();
-  const { locale } = useLanguageStore();
-  const { t } = useTranslation(locale);
 
   const {
     data: response,
@@ -194,18 +140,17 @@ export default function GeneralSettingsPage() {
     saveMutation.mutate(values);
   };
 
-if (isLoading) {
-  return (
-    <LoadingSkeleton />
-  );
-}
-
+  if (isLoading) {
+    return <LoadingSkeleton />;
+  }
 
   if (isError) {
     return (
       <div className="max-w-4xl mx-auto p-6">
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <p className="text-red-500">{t("settings.general.errorLoadingSettings")}</p>
+          <p className="text-red-500">
+            {t("settings.general.errorLoadingSettings")}
+          </p>
         </div>
       </div>
     );
@@ -239,13 +184,16 @@ if (isLoading) {
                   />
                   {selectedFile && (
                     <div className="absolute bottom-0 left-0 right-0 bg-blue-500 text-white text-xs px-2 py-1 rounded-b-lg">
-                       {t("settings.general.newImageSelected")}
+                      {t("settings.general.newImageSelected")}
                     </div>
                   )}
                 </div>
               ) : (
                 <div className="w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center bg-gray-50">
-                  <span className="text-gray-400 text-sm"> {t("settings.general.noLogo")}</span>
+                  <span className="text-gray-400 text-sm">
+                    {" "}
+                    {t("settings.general.noLogo")}
+                  </span>
                 </div>
               )}
 
@@ -267,7 +215,9 @@ if (isLoading) {
                   }`}
                 >
                   <UploadSimple size={20} />
-                  {selectedFile ? "Change Logo" : t("settings.general.uploadLogo")}
+                  {selectedFile
+                    ? "Change Logo"
+                    : t("settings.general.uploadLogo")}
                 </label>
                 <p className="text-sm text-gray-500 mt-2">
                   {t("settings.general.imageDimension")}
@@ -292,7 +242,9 @@ if (isLoading) {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="name">{t("settings.general.name")}</FieldLabel>
+                  <FieldLabel htmlFor="name">
+                    {t("settings.general.name")}
+                  </FieldLabel>
                   <Input
                     {...field}
                     id="name"
@@ -308,10 +260,8 @@ if (isLoading) {
                       )}
                     </p>
                     <p className="text-xs font-normal text-left text-muted-foreground">
-                      {field.value?.length || 0} /100 {t(
-                            "common.characters",
-                            "characters",
-                          )}
+                      {field.value?.length || 0} /100{" "}
+                      {t("common.characters", "characters")}
                     </p>
                   </div>
                 </Field>
@@ -345,10 +295,8 @@ if (isLoading) {
                       )}
                     </p>
                     <p className="text-xs font-normal text-left text-muted-foreground">
-                      {field.value?.length || 0} /100 {t(
-                            "common.characters",
-                            "characters",
-                          )}
+                      {field.value?.length || 0} /100{" "}
+                      {t("common.characters", "characters")}
                     </p>
                   </div>
                 </Field>
@@ -361,7 +309,9 @@ if (isLoading) {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="email">{t("settings.general.email")}</FieldLabel>
+                  <FieldLabel htmlFor="email">
+                    {t("settings.general.email")}
+                  </FieldLabel>
                   <Input
                     {...field}
                     id="email"
@@ -448,10 +398,8 @@ if (isLoading) {
                         )}
                       </p>
                       <p className="text-xs font-normal text-left text-muted-foreground">
-                        {field.value?.length || 0} /500 {t(
-                            "common.characters",
-                            "characters",
-                          )}
+                        {field.value?.length || 0} /500{" "}
+                        {t("common.characters", "characters")}
                       </p>
                     </div>
                   </Field>
@@ -486,10 +434,8 @@ if (isLoading) {
                       )}
                     </p>
                     <p className="text-xs font-normal text-left text-muted-foreground">
-                      {field.value?.length || 0} /100 {t(
-                            "common.characters",
-                            "characters",
-                          )}
+                      {field.value?.length || 0} /100{" "}
+                      {t("common.characters", "characters")}
                     </p>
                   </div>
                 </Field>
@@ -523,10 +469,8 @@ if (isLoading) {
                       )}
                     </p>
                     <p className="text-xs font-normal text-left text-muted-foreground">
-                      {field.value?.length || 0} /100 {t(
-                            "common.characters",
-                            "characters",
-                          )}
+                      {field.value?.length || 0} /100{" "}
+                      {t("common.characters", "characters")}
                     </p>
                   </div>
                 </Field>
@@ -560,10 +504,8 @@ if (isLoading) {
                       )}
                     </p>
                     <p className="text-xs font-normal text-left text-muted-foreground">
-                      {field.value?.length || 0} /100 {t(
-                            "common.characters",
-                            "characters",
-                          )}
+                      {field.value?.length || 0} /100{" "}
+                      {t("common.characters", "characters")}
                     </p>
                   </div>
                 </Field>
@@ -597,10 +539,8 @@ if (isLoading) {
                       )}
                     </p>
                     <p className="text-xs font-normal text-left text-muted-foreground">
-                      {field.value?.length || 0} /100 {t(
-                            "common.characters",
-                            "characters",
-                          )}
+                      {field.value?.length || 0} /100{" "}
+                      {t("common.characters", "characters")}
                     </p>
                   </div>
                 </Field>
@@ -634,10 +574,8 @@ if (isLoading) {
                       )}
                     </p>
                     <p className="text-xs font-normal text-left text-muted-foreground">
-                      {field.value?.length || 0} /100 {t(
-                            "common.characters",
-                            "characters",
-                          )}
+                      {field.value?.length || 0} /100{" "}
+                      {t("common.characters", "characters")}
                     </p>
                   </div>
                 </Field>
@@ -671,10 +609,8 @@ if (isLoading) {
                       )}
                     </p>
                     <p className="text-xs font-normal text-left text-muted-foreground">
-                      {field.value?.length || 0} /100 {t(
-                            "common.characters",
-                            "characters",
-                          )}
+                      {field.value?.length || 0} /100{" "}
+                      {t("common.characters", "characters")}
                     </p>
                   </div>
                 </Field>

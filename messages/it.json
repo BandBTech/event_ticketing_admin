@@ -20,6 +20,15 @@
     "of": "di",
     "joined": "Iscritto il",
     "tryAgainLater": "Riprova più tardi",
+    "validation": {
+      "required": "{field} è obbligatorio.",
+      "invalid": "{field} non è valido.",
+      "minLength": "{field} deve essere lungo almeno {length} caratteri.",
+      "maxLength": "{field} non può superare i {length} caratteri.",
+      "min": "{field} deve essere almeno {value}.",
+      "max": "{field} non può superare {value}.",
+      "pattern": "Il formato di {field} non è valido."
+    },
     "noResultsTryAgain": "Prova a modificare i termini di ricerca o i filtri",
     "back": "Indietro",
     "confirm": "Confermare",
@@ -1275,7 +1284,17 @@
       "errorLoadingSettings": "Errore nel caricamento delle impostazioni",
       "loading": "Caricamento in corso",
       "companyInfoUpdated": "Informazioni aziendali aggiornate con successo",
-      "pleaseUploadImageFile": "Si prega di caricare un file immagine"
+      "pleaseUploadImageFile": "Si prega di caricare un file immagine",
+      "validation": {
+        "nameRequired": "Il nome è obbligatorio.",
+        "nameAtLeast2Chars": "Il nome deve essere di almeno 2 caratteri.",
+        "nameAtMost100Chars": "Il nome non può superare i 100 caratteri.",
+        "nameCanContain": "Il nome può contenere solo lettere, spazi, trattini e apostrofi.",
+        "enterValidURL": "Inserisci un URL valido.",
+        "emailRequired": "L'email è obbligatoria.",
+        "validEmailAddress": "Inserisci un indirizzo email valido.",
+        "validPhoneNumber": "Inserisci un numero di telefono valido."
+      }
     },
     "tickets": {
       "title": "Impostazioni Biglietti",

@@ -933,22 +933,22 @@ export const addPaymentToBillSchema = (
 ) => {
   const v = createValidationHelpers(t);
   return z.object({
-    event_id: z.string().min(1, v.required(t("", "Event ID"))),
+    event_id: z.string().min(1, v.required(t("billings.addPaymentToBill.event", "Event ID"))),
     bill_id: z.string().optional(),
-    organizer_id: z.string().min(1, v.required(t("", "Organizer ID"))),
+    organizer_id: z.string().min(1, v.required(t("billings.addPaymentToBill.organizer", "Organizer ID"))),
     payment_ref: z
       .string()
-      .max(200, v.maxLength(t("", "Payment Reference"), 200)),
-    notes: z.string().max(200, v.maxLength(t("", "Notes"), 200)),
-    payment_date: z.date({ message: v.required(t("", "Payment Date")) }),
-    amount: z.number().min(1, v.required(t("", "Amount"))),
+      .max(200, v.maxLength(t("billings.addPaymentToBill.paymentReference", "Payment Reference"), 200)),
+    notes: z.string().max(200, v.maxLength(t("billings.addPaymentToBill.notes", "Notes"), 200)),
+    payment_date: z.date({ message: v.required(t("billings.addPaymentToBill.paymentDate", "Payment Date")) }),
+    amount: z.number().min(1, v.required(t("billings.addPaymentToBill.amount", "Amount"))),
     payment_method: z
       .string()
-      .min(1, v.required(t("", "Payment Method")))
-      .min(2, v.minLength(t("", "Payment Method"), 2))
-      .max(50, v.maxLength(t("", "Payment Method"), 50)),
+      .min(1, v.required(t("billings.addPaymentToBill.paymentMethod", "Payment Method")))
+      .min(2, v.minLength(t("billings.addPaymentToBill.paymentMethod", "Payment Method"), 2))
+      .max(50, v.maxLength(t("billings.addPaymentToBill.paymentMethod", "Payment Method"), 50)),
     screenshot: z.instanceof(File, {
-      message: v.required(t("", "Screenshot")),
+      message: v.required(t("billings.billHistory.screenshot", "")),
     }),
   });
 };
@@ -1122,3 +1122,142 @@ export const createPaymentSchema = (
 export type CreatePaymentFormValues = z.infer<
   ReturnType<typeof createPaymentSchema>
 >;
+
+export const nameValidationRegex = /^[A-Za-z\s'-]+$/;
+
+// Zod validation schema
+export const createCompanyInfoFormSchema = (
+  t: (key: string, fallback?: string) => string,
+) =>
+  z.object({
+    name: z
+      .string()
+      .min(
+        1,
+        t("settings.general.validation.nameRequired", "Name is required."),
+      )
+      .min(
+        2,
+        t(
+          "settings.general.validation.nameAtLeast2Chars",
+          "Name must be at least 2 characters.",
+        ),
+      )
+      .max(
+        100,
+        t(
+          "settings.general.validation.nameAtMost100Chars",
+          "Name must be at most 100 characters.",
+        ),
+      )
+      .regex(
+        nameValidationRegex,
+        t(
+          "settings.general.validation.nameCanContain",
+          "Name can only contain letters, spaces, hyphens, and apostrophes.",
+        ),
+      ),
+    email: z
+      .string()
+      .min(
+        1,
+        t("settings.general.validation.emailRequired", "Email is required."),
+      )
+      .email(
+        t(
+          "settings.general.validation.validEmailAddress",
+          "Please enter a valid email address.",
+        ),
+      ),
+    description: z.string().optional(),
+    phone: z
+      .string()
+      .refine(
+        (val) => !val || isValidPhoneNumber(val, { defaultCountry: "DK" }),
+        {
+          message: t(
+            "settings.general.validation.validPhoneNumber",
+            "Please enter a valid phone number.",
+          ),
+        },
+      )
+      .optional(),
+    address: z.string().optional(),
+    logo_url: z
+      .string()
+      .trim()
+      .optional()
+      .or(z.literal(""))
+      .refine((val) => !val || z.string().url().safeParse(val).success, {
+        message: t(
+          "settings.general.validation.enterValidURL",
+          "Please enter a valid URL.",
+        ),
+      }),
+    facebook_url: z
+      .string()
+      .trim()
+      .optional()
+      .or(z.literal(""))
+      .refine((val) => !val || z.string().url().safeParse(val).success, {
+        message: t(
+          "settings.general.validation.enterValidURL",
+          "Please enter a valid URL.",
+        ),
+      }),
+    instagram_url: z
+      .string()
+      .trim()
+      .optional()
+      .or(z.literal(""))
+      .refine((val) => !val || z.string().url().safeParse(val).success, {
+        message: t(
+          "settings.general.validation.enterValidURL",
+          "Please enter a valid URL.",
+        ),
+      }),
+    linkedin_url: z
+      .string()
+      .trim()
+      .optional()
+      .or(z.literal(""))
+      .refine((val) => !val || z.string().url().safeParse(val).success, {
+        message: t(
+          "settings.general.validation.enterValidURL",
+          "Please enter a valid URL.",
+        ),
+      }),
+    twitter_url: z
+      .string()
+      .trim()
+      .optional()
+      .or(z.literal(""))
+      .refine((val) => !val || z.string().url().safeParse(val).success, {
+        message: t(
+          "settings.general.validation.enterValidURL",
+          "Please enter a valid URL.",
+        ),
+      }),
+    website_url: z
+      .string()
+      .trim()
+      .optional()
+      .or(z.literal(""))
+      .refine((val) => !val || z.string().url().safeParse(val).success, {
+        message: t(
+          "settings.general.validation.enterValidURL",
+          "Please enter a valid URL.",
+        ),
+      }),
+    youtube_url: z
+      .string()
+      .trim()
+      .optional()
+      .or(z.literal(""))
+      .refine((val) => !val || z.string().url().safeParse(val).success, {
+        message: t(
+          "settings.general.validation.enterValidURL",
+          "Please enter a valid URL.",
+        ),
+      }),
+  });
