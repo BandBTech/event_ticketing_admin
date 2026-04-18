@@ -933,20 +933,61 @@ export const addPaymentToBillSchema = (
 ) => {
   const v = createValidationHelpers(t);
   return z.object({
-    event_id: z.string().min(1, v.required(t("billings.addPaymentToBill.event", "Event ID"))),
+    event_id: z
+      .string()
+      .min(1, v.required(t("billings.addPaymentToBill.event", "Event ID"))),
     bill_id: z.string().optional(),
-    organizer_id: z.string().min(1, v.required(t("billings.addPaymentToBill.organizer", "Organizer ID"))),
+    organizer_id: z
+      .string()
+      .min(
+        1,
+        v.required(t("billings.addPaymentToBill.organizer", "Organizer ID")),
+      ),
     payment_ref: z
       .string()
-      .max(200, v.maxLength(t("billings.addPaymentToBill.paymentReference", "Payment Reference"), 200)),
-    notes: z.string().max(200, v.maxLength(t("billings.addPaymentToBill.notes", "Notes"), 200)),
-    payment_date: z.date({ message: v.required(t("billings.addPaymentToBill.paymentDate", "Payment Date")) }),
-    amount: z.number().min(1, v.required(t("billings.addPaymentToBill.amount", "Amount"))),
+      .max(
+        200,
+        v.maxLength(
+          t("billings.addPaymentToBill.paymentReference", "Payment Reference"),
+          200,
+        ),
+      ),
+    notes: z
+      .string()
+      .max(
+        200,
+        v.maxLength(t("billings.addPaymentToBill.notes", "Notes"), 200),
+      ),
+    payment_date: z.date({
+      message: v.required(
+        t("billings.addPaymentToBill.paymentDate", "Payment Date"),
+      ),
+    }),
+    amount: z
+      .number()
+      .min(1, v.required(t("billings.addPaymentToBill.amount", "Amount"))),
     payment_method: z
       .string()
-      .min(1, v.required(t("billings.addPaymentToBill.paymentMethod", "Payment Method")))
-      .min(2, v.minLength(t("billings.addPaymentToBill.paymentMethod", "Payment Method"), 2))
-      .max(50, v.maxLength(t("billings.addPaymentToBill.paymentMethod", "Payment Method"), 50)),
+      .min(
+        1,
+        v.required(
+          t("billings.addPaymentToBill.paymentMethod", "Payment Method"),
+        ),
+      )
+      .min(
+        2,
+        v.minLength(
+          t("billings.addPaymentToBill.paymentMethod", "Payment Method"),
+          2,
+        ),
+      )
+      .max(
+        50,
+        v.maxLength(
+          t("billings.addPaymentToBill.paymentMethod", "Payment Method"),
+          50,
+        ),
+      ),
     screenshot: z.instanceof(File, {
       message: v.required(t("billings.billHistory.screenshot", "")),
     }),
@@ -1132,53 +1173,21 @@ export const createCompanyInfoFormSchema = (
   z.object({
     name: z
       .string()
-      .min(
-        1,
-        t("settings.general.validation.nameRequired", "Name is required."),
-      )
-      .min(
-        2,
-        t(
-          "settings.general.validation.nameAtLeast2Chars",
-          "Name must be at least 2 characters.",
-        ),
-      )
-      .max(
-        100,
-        t(
-          "settings.general.validation.nameAtMost100Chars",
-          "Name must be at most 100 characters.",
-        ),
-      )
-      .regex(
-        nameValidationRegex,
-        t(
-          "settings.general.validation.nameCanContain",
-          "Name can only contain letters, spaces, hyphens, and apostrophes.",
-        ),
-      ),
+      .min(1, "settings.general.validation.nameRequired")
+      .min(2, "settings.general.validation.nameAtLeast2Chars")
+      .max(100, "settings.general.validation.nameAtMost100Chars")
+      .regex(nameValidationRegex, "settings.general.validation.nameCanContain"),
     email: z
       .string()
-      .min(
-        1,
-        t("settings.general.validation.emailRequired", "Email is required."),
-      )
-      .email(
-        t(
-          "settings.general.validation.validEmailAddress",
-          "Please enter a valid email address.",
-        ),
-      ),
+      .min(1, "settings.general.validation.emailRequired")
+      .email("settings.general.validation.validEmailAddress"),
     description: z.string().optional(),
     phone: z
       .string()
       .refine(
         (val) => !val || isValidPhoneNumber(val, { defaultCountry: "DK" }),
         {
-          message: t(
-            "settings.general.validation.validPhoneNumber",
-            "Please enter a valid phone number.",
-          ),
+          message: "settings.general.validation.validPhoneNumber",
         },
       )
       .optional(),
@@ -1189,10 +1198,7 @@ export const createCompanyInfoFormSchema = (
       .optional()
       .or(z.literal(""))
       .refine((val) => !val || z.string().url().safeParse(val).success, {
-        message: t(
-          "settings.general.validation.enterValidURL",
-          "Please enter a valid URL.",
-        ),
+        message: "settings.general.validation.enterValidURL",
       }),
     facebook_url: z
       .string()
@@ -1200,10 +1206,7 @@ export const createCompanyInfoFormSchema = (
       .optional()
       .or(z.literal(""))
       .refine((val) => !val || z.string().url().safeParse(val).success, {
-        message: t(
-          "settings.general.validation.enterValidURL",
-          "Please enter a valid URL.",
-        ),
+        message: "settings.general.validation.enterValidURL",
       }),
     instagram_url: z
       .string()
@@ -1211,10 +1214,7 @@ export const createCompanyInfoFormSchema = (
       .optional()
       .or(z.literal(""))
       .refine((val) => !val || z.string().url().safeParse(val).success, {
-        message: t(
-          "settings.general.validation.enterValidURL",
-          "Please enter a valid URL.",
-        ),
+        message: "settings.general.validation.enterValidURL",
       }),
     linkedin_url: z
       .string()
@@ -1222,10 +1222,7 @@ export const createCompanyInfoFormSchema = (
       .optional()
       .or(z.literal(""))
       .refine((val) => !val || z.string().url().safeParse(val).success, {
-        message: t(
-          "settings.general.validation.enterValidURL",
-          "Please enter a valid URL.",
-        ),
+        message: "settings.general.validation.enterValidURL",
       }),
     twitter_url: z
       .string()
@@ -1233,10 +1230,7 @@ export const createCompanyInfoFormSchema = (
       .optional()
       .or(z.literal(""))
       .refine((val) => !val || z.string().url().safeParse(val).success, {
-        message: t(
-          "settings.general.validation.enterValidURL",
-          "Please enter a valid URL.",
-        ),
+        message: "settings.general.validation.enterValidURL",
       }),
     website_url: z
       .string()
@@ -1244,10 +1238,7 @@ export const createCompanyInfoFormSchema = (
       .optional()
       .or(z.literal(""))
       .refine((val) => !val || z.string().url().safeParse(val).success, {
-        message: t(
-          "settings.general.validation.enterValidURL",
-          "Please enter a valid URL.",
-        ),
+        message: "settings.general.validation.enterValidURL",
       }),
     youtube_url: z
       .string()
@@ -1255,9 +1246,6 @@ export const createCompanyInfoFormSchema = (
       .optional()
       .or(z.literal(""))
       .refine((val) => !val || z.string().url().safeParse(val).success, {
-        message: t(
-          "settings.general.validation.enterValidURL",
-          "Please enter a valid URL.",
-        ),
+        message: "settings.general.validation.enterValidURL",
       }),
   });
