@@ -1257,7 +1257,8 @@
       "confirmPassword": "Confirm New Password",
       "confirmPasswordPlaceholder": "Enter new password again",
       "updating": "Updating...",
-      "updateButton": "Update Password"
+      "updateButton": "Update Password",
+      "passwordChangedSuccessfully": "Password changed successfully"
     },
     "title": "Settings",
     "headers": {

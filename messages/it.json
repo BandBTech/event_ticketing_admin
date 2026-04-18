@@ -1206,7 +1206,8 @@
       "confirmPassword": "Conferma nuova password",
       "confirmPasswordPlaceholder": "Immettere nuovamente la nuova password",
       "updating": "Aggiornamento...",
-      "updateButton": "Aggiorna password"
+      "updateButton": "Aggiorna password",
+      "passwordChangedSuccessfully": "password modificata correttamente"
     },
     "title": "Impostazioni",
     "headers": {

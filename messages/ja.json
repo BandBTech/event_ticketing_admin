@@ -1220,7 +1220,8 @@
       "confirmPassword": "新しいパスワードを確認する",
       "confirmPasswordPlaceholder": "新しいパスワードをもう一度入力してください",
       "updating": "更新中...",
-      "updateButton": "パスワードを更新する"
+      "updateButton": "パスワードを更新する",
+      "passwordChangedSuccessfully": "パスワードが正常に変更されました"
     },
     "title": "設定",
     "headers": {
