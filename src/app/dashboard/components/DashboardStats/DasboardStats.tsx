@@ -22,13 +22,13 @@ function KPICard({
 }) {
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-3">
-      <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
+      <div className="text-xs font-semibold text-black uppercase tracking-wide mb-1">
         {label}
       </div>
-      <div className="text-xl font-semibold text-gray-900 leading-tight">
+      <div className="text-xl font-semibold text-black leading-tight">
         {value}
       </div>
-      <div className="text-xs text-gray-600 mt-1">{subtitle}</div>
+      <div className="text-xs text-black mt-1">{subtitle}</div>
     </div>
   );
 }
@@ -51,12 +51,12 @@ function StatRow({
         className="w-2 h-2 rounded-full flex-shrink-0"
         style={{ backgroundColor: dotColor }}
       />
-      <span className="text-xs text-gray-600 flex-1">{label}</span>
-      <span className="text-xs font-semibold text-gray-900 min-w-12 text-right">
+      <span className="text-xs text-black flex-1">{label}</span>
+      <span className="text-xs font-semibold text-black min-w-12 text-right">
         {count}
       </span>
       {percentage !== undefined && (
-        <span className="text-xs text-gray-500 min-w-10 text-right">
+        <span className="text-xs text-black min-w-10 text-right">
           {percentage}%
         </span>
       )}
@@ -80,8 +80,8 @@ function RevenueRow({
   return (
     <div className="py-2 border-b border-gray-100 last:border-b-0">
       <div className="flex items-center justify-between mb-1">
-        <span className="text-xs text-gray-600">{label}</span>
-        <span className="text-xs font-semibold text-gray-900">
+        <span className="text-xs text-black">{label}</span>
+        <span className="text-xs font-semibold text-black">
           {formatCurrency(value, undefined, locale)}
         </span>
       </div>
@@ -108,7 +108,7 @@ function Card({
   return (
     <div className="bg-white rounded-lg border border-gray-200">
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
-        <h3 className="text-sm font-semibold text-gray-900">{title}</h3>
+        <h3 className="text-sm font-semibold text-black">{title}</h3>
         {badge}
       </div>
       <div className="p-4">{children}</div>
@@ -141,7 +141,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
         <KPICard
           label={t("dashboard.dataDisplay.users")}
           value={data?.users.total ?? 0}
-          subtitle={`${data?.users.active ?? 0} active · ${data?.users.inactive ?? 0} inactive`}
+          subtitle={`${data?.users.active ?? 0} ${t("status.active")} · ${data?.users.inactive ?? 0} ${t("status.inactive")}`}
         />
         <KPICard
           label={t("dashboard.dataDisplay.grossRevenue")}
@@ -150,27 +150,26 @@ export default function DashboardPage({ data }: DashboardPageProps) {
               data?.revenue.gross_revenue ?? 0,
               undefined,
               locale,
-            ).substring(0, 8) +
-            ((data?.revenue.gross_revenue ?? 0 > 0) ? "..." : "")
+            )
           }
           subtitle={`Net ${formatCurrency(data?.revenue.net_revenue ?? 0, undefined, locale).substring(0, 8)}`}
         />
         <KPICard
           label={t("dashboard.dataDisplay.totalSold")}
           value={totalTickets}
-          subtitle={`${activeTickets} active · ${cancelledTickets} cancelled`}
+          subtitle={`${activeTickets} ${t("status.active")} · ${cancelledTickets} ${t("status.cancelled")}`}
         />
         <KPICard
           label={t("dashboard.dataDisplay.transactions")}
           value={totalTransactions}
-          subtitle={`${data?.transactions.completed ?? 0} completed · ${data?.transactions.pending ?? 0} pending`}
+          subtitle={`${data?.transactions.completed ?? 0} ${t("status.completed")} · ${data?.transactions.pending ?? 0} ${t("status.pending")}`}
         />
       </div>
 
       {/* ── Revenue Split + Event Status ── */}
       <div className="grid grid-cols-2 gap-4">
         {/* Revenue Split */}
-        <Card title={t("dashboard.dataDisplay.revenueSplit")}>
+        <Card title={t("reports.eventPerformance.revenueSplt")}>
           <RevenueRow
             label={t("dashboard.dataDisplay.grossRevenue")}
             value={data?.revenue.gross_revenue ?? 0}
@@ -232,7 +231,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
         <Card
           title={t("dashboard.dataDisplay.payoutRequest")}
           badge={
-            <span className="text-xs text-gray-600 font-semibold">
+            <span className="text-xs text-black font-semibold">
               {formatCurrency(
                 data?.payout_requests.total_amount ?? 0,
                 undefined,
@@ -276,20 +275,20 @@ export default function DashboardPage({ data }: DashboardPageProps) {
             dotColor="#ef9f27"
           />
           <div className="mt-2 pt-2 border-t border-gray-100">
-            <div className="text-xs text-gray-600 mb-1">
+            <div className="text-xs text-black mb-1">
               {t("dashboard.dataDisplay.amountDue")}
             </div>
-            <div className="text-sm font-semibold text-gray-900">
+            <div className="text-sm font-semibold text-black">
               {formatCurrency(
                 data?.payment_bills.total_due ?? 0,
                 undefined,
                 locale,
               )}
             </div>
-            <div className="text-xs text-gray-600 mt-2">
+            <div className="text-xs text-black mt-2">
               {t("dashboard.dataDisplay.paidOut")}
             </div>
-            <div className="text-sm font-semibold text-gray-900">
+            <div className="text-sm font-semibold text-black">
               {formatCurrency(
                 data?.payment_bills.total_paid_out ?? 0,
                 undefined,
@@ -316,10 +315,10 @@ export default function DashboardPage({ data }: DashboardPageProps) {
           />
           <div className="mt-2 pt-2 border-t border-gray-100 space-y-1">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-gray-600">
+              <span className="text-xs text-black">
                 {t("dashboard.dataDisplay.totalRefunds")}
               </span>
-              <span className="text-xs font-semibold text-gray-900">
+              <span className="text-xs font-semibold text-black">
                 {formatCurrency(
                   data?.revenue.total_refunds ?? 0,
                   undefined,
@@ -328,10 +327,10 @@ export default function DashboardPage({ data }: DashboardPageProps) {
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-xs text-gray-600">
+              <span className="text-xs text-black">
                 {t("dashboard.dataDisplay.organizerRefunds")}
               </span>
-              <span className="text-xs font-semibold text-gray-900">
+              <span className="text-xs font-semibold text-black">
                 {formatCurrency(
                   data?.revenue.organizer_refunds ?? 0,
                   undefined,
@@ -340,10 +339,10 @@ export default function DashboardPage({ data }: DashboardPageProps) {
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-xs text-gray-600">
+              <span className="text-xs text-black">
                 {t("dashboard.dataDisplay.commissionRefunds")}
               </span>
-              <span className="text-xs font-semibold text-gray-900">
+              <span className="text-xs font-semibold text-black">
                 {formatCurrency(
                   data?.revenue.commission_refunds ?? 0,
                   undefined,
