@@ -86,7 +86,10 @@ export default function AddBillPopupModal({
     initialPreview: "",
   });
 
-  const schema = addPaymentToBillSchema(t);
+  const maxAmount = billData?.remaining_amount
+  const maxAmountLength = maxAmount?.toString().length;
+
+  const schema = addPaymentToBillSchema(t, maxAmount as number);
 
   // Inside your component:
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -392,7 +395,7 @@ export default function AddBillPopupModal({
               )}
             />
 
-            {/* Amount */}
+            {/* Amount
             <FormField
               control={form.control}
               name="amount"
@@ -460,6 +463,98 @@ export default function AddBillPopupModal({
                   <TranslatedFormMessage t={t} />
                 </FormItem>
               )}
+            /> */}
+
+            {/* Amount */}
+            <FormField
+              control={form.control}
+              name="amount"
+              render={({ field, fieldState }) => (
+                <FormItem data-field="amount">
+                  <FormLabel
+                    required
+                    className="text-sm font-semibold text-gray-700"
+                  >
+                    {t("billings.addPaymentToBill.amount", "Amount")}
+
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <InfoIcon className="text-yellow-800 cursor-pointer" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>
+                            {t(
+                              "billings.addPaymentToBill.remainingAmountInfo",
+                              "The amount displayed is the remaining balance amount.",
+                            )}
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </FormLabel>
+
+                  <div className="relative group">
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder={`${billData?.remaining_amount}` ? `${billData?.remaining_amount}` : "e.g Rs. 100"}
+                        max={`${billData?.remaining_amount}` ? `${billData?.remaining_amount}` : 1000000}
+                        inputMode="decimal"
+                        step="0.01"
+                        {...field}
+                        onKeyDown={(e) => {
+                          // Allow decimal point for price
+                          if (
+                            e.key === "e" ||
+                            e.key === "E" ||
+                            e.key === "-" ||
+                            e.key === "+"
+                          ) {
+                            e.preventDefault();
+                          }
+                        }}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (val.length > (maxAmountLength ?? 7)) {
+                            return;
+                          }
+                          if (val === "") {
+                            field.onChange("");
+                            return;
+                          }
+                          // Allow trailing decimal point (e.g., "100.")
+                          if (val.endsWith(".")) {
+                            field.onChange(val);
+                            return;
+                          }
+                          // Allow only one decimal point
+                          const parts = val.split(".");
+                          if (parts.length > 2) {
+                            return;
+                          }
+                          // Allow only 2 decimal places
+                          if (parts[1] && parts[1].length > 2) {
+                            return;
+                          }
+                          const num = Number(val);
+                          if (isNaN(num)) return;
+                          field.onChange(num);
+                        }}
+                        onWheel={(e) => e.currentTarget.blur()}
+                      />
+                    </FormControl>
+                    <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
+                      <p> </p>
+                      <p className="text-xs font-normal text-left text-muted-foreground">
+                        {t("common.max", "Max")} {`${billData?.remaining_amount}` ? `${billData?.remaining_amount}` : "e.g Rs. 100"}
+                      </p>
+                    </div>
+                  </div>
+
+                  <TranslatedFormMessage t={t} />
+                </FormItem>
+              )}
             />
 
             {/* Payment Date */}
@@ -468,9 +563,10 @@ export default function AddBillPopupModal({
               name="payment_date"
               render={({ field }) => (
                 <FormItem data-field="payment_date">
-                  <FormLabel 
-                  required
-                  className="text-sm font-semibold text-gray-700">
+                  <FormLabel
+                    required
+                    className="text-sm font-semibold text-gray-700"
+                  >
                     {t("billings.addPaymentToBill.paymentDate", "Payment Date")}
                   </FormLabel>
                   <Popover>
@@ -591,10 +687,8 @@ export default function AddBillPopupModal({
                       )}
                     </p>
                     <p className="text-xs font-normal text-left text-muted-foreground">
-                      {field.value?.length || 0} /200 {t(
-                            "common.characters",
-                            "characters",
-                          )}
+                      {field.value?.length || 0} /200{" "}
+                      {t("common.characters", "characters")}
                     </p>
                   </div>
                   <TranslatedFormMessage t={t} />

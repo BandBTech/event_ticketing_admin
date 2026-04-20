@@ -930,6 +930,7 @@ export const addPaymentToBillSchema = (
     fallback?: string,
     params?: Record<string, string | number>,
   ) => string,
+  maxAmount:number
 ) => {
   const v = createValidationHelpers(t);
   return z.object({
@@ -964,8 +965,14 @@ export const addPaymentToBillSchema = (
       ),
     }),
     amount: z
-      .number()
-      .min(1, v.required(t("billings.addPaymentToBill.amount", "Amount"))),
+      .number({
+        message: v.required(t("billings.addPaymentToBill.amount", "Amount")),
+      })
+      .min(1, v.min(t("billings.addPaymentToBill.amount", "Amount"), 1))
+      .max(
+        maxAmount,
+        v.max(t("billings.addPaymentToBill.amount", "Amount"), maxAmount ? maxAmount : 1000000),
+      ),
     payment_method: z
       .string()
       .min(
