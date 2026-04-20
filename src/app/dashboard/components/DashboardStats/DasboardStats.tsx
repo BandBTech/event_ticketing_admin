@@ -1,79 +1,70 @@
 "use client";
 
-import { ElementType } from "react";
-import { formatCurrency } from "@/lib/utils";
-import { AdminDashboardData } from "@/types/dashboard";
-import {
-  ClockIcon,
-  CalendarCheckIcon,
-  UsersIcon,
-  TicketIcon,
-  ArrowsClockwiseIcon,
-  CurrencyDollarIcon,
-} from "@phosphor-icons/react";
-import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
+import { formatCurrency } from "@/lib/utils";
+import { useLanguageStore } from "@/store/languageStore";
+import { AdminDashboardData } from "@/types/dashboard";
 import { EventsDonutChart } from "../EventDoughnutChart";
 
 type DashboardPageProps = {
   data: AdminDashboardData;
 };
 
-// ── Top Stat Card ─────────────────────────────────────────────────────────────
-function TopStatCard({
-  icon: Icon,
-  value,
+// ── KPI Card ──────────────────────────────────────────────────────────────────
+function KPICard({
   label,
-  iconBg,
-  iconColor,
+  value,
+  subtitle,
 }: {
-  icon: ElementType;
-  value: number | string;
   label: string;
-  iconBg: string;
-  iconColor: string;
+  value: string | number;
+  subtitle: string;
 }) {
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-4 flex items-center gap-5 shadow-sm hover:shadow-md transition-shadow duration-200">
-      <div
-        className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 ${iconBg}`}
-      >
-        <span className={iconColor}>
-          <Icon size={24} />
-        </span>
+    <div className="bg-white rounded-lg border border-gray-200 p-3">
+      <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
+        {label}
       </div>
-      <div>
-        <div className="text-2xl font-bold text-black tracking-tight leading-none">
-          {value}
-        </div>
-        <div className="text-sm text-black mt-2 font-medium">{label}</div>
+      <div className="text-xl font-semibold text-gray-900 leading-tight">
+        {value}
       </div>
+      <div className="text-xs text-gray-600 mt-1">{subtitle}</div>
     </div>
   );
 }
 
-// ── Section wrapper ───────────────────────────────────────────────────────────
-function SectionCard({
-  title,
-  children,
-  badge,
+// ── Stat Row with Colored Dot ─────────────────────────────────────────────────
+function StatRow({
+  label,
+  count,
+  percentage,
+  dotColor,
 }: {
-  title: string;
-  children: React.ReactNode;
-  badge?: React.ReactNode;
+  label: string;
+  count: number;
+  percentage?: number;
+  dotColor: string;
 }) {
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-      <div className="flex items-center justify-between px-4 py-2 border-b border-gray-50">
-        <h2 className="text-base font-semibold text-black">{title}</h2>
-        {badge}
-      </div>
-      <div>{children}</div>
+    <div className="flex items-center gap-2 py-1.5 border-b border-gray-100 last:border-b-0">
+      <div
+        className="w-2 h-2 rounded-full flex-shrink-0"
+        style={{ backgroundColor: dotColor }}
+      />
+      <span className="text-xs text-gray-600 flex-1">{label}</span>
+      <span className="text-xs font-semibold text-gray-900 min-w-12 text-right">
+        {count}
+      </span>
+      {percentage !== undefined && (
+        <span className="text-xs text-gray-500 min-w-10 text-right">
+          {percentage}%
+        </span>
+      )}
     </div>
   );
 }
 
-// ── Revenue Progress Row ──────────────────────────────────────────────────────
+// ── Revenue Row with Progress ─────────────────────────────────────────────────
 function RevenueRow({
   label,
   value,
@@ -87,256 +78,161 @@ function RevenueRow({
 }) {
   const { locale } = useLanguageStore();
   return (
-    <div className="flex items-center gap-4 py-2">
-      <span className="text-sm text-black w-44 flex-shrink-0">{label}</span>
-      <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+    <div className="py-2 border-b border-gray-100 last:border-b-0">
+      <div className="flex items-center justify-between mb-1">
+        <span className="text-xs text-gray-600">{label}</span>
+        <span className="text-xs font-semibold text-gray-900">
+          {formatCurrency(value, undefined, locale)}
+        </span>
+      </div>
+      <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
         <div
-          className="h-full rounded-full transition-all duration-700"
-          style={{ width: `${pct}%`, background: color }}
+          className="h-full rounded-full"
+          style={{ width: `${pct}%`, backgroundColor: color }}
         />
       </div>
-      <span className="text-sm font-semibold text-black w-24 text-right flex-shrink-0">
-        {formatCurrency(value, undefined, locale)}
-      </span>
     </div>
   );
 }
 
-// ── Status Grid (reusable) ────────────────────────────────────────────────────
-function StatusGrid({
-  items,
-  classname,
+// ── Card Container ────────────────────────────────────────────────────────────
+function Card({
+  title,
+  badge,
+  children,
 }: {
-  classname?: string;
-  items: {
-    label: string;
-    value: number | undefined;
-    bg: string;
-    text: string;
-  }[];
+  title: string;
+  badge?: React.ReactNode;
+  children: React.ReactNode;
 }) {
   return (
-    <div
-      className={`px-6 py-5 gap-3 ${classname ? `${classname}` : "grid grid-cols-2 sm:grid-cols-4"}`}
-    >
-      {items.map((s) => (
-        <div
-          key={s.label}
-          className={`rounded-xl px-2 py-3 text-center ${s.bg}`}
-        >
-          <div className={`text-2xl font-bold leading-none ${s.text}`}>
-            {s.value ?? 0}
-          </div>
-          <div
-            className={`text-[11px] font-semibold mt-1.5 ${s.text} opacity-75`}
-          >
-            {s.label}
-          </div>
-        </div>
-      ))}
+    <div className="bg-white rounded-lg border border-gray-200">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+        <h3 className="text-sm font-semibold text-gray-900">{title}</h3>
+        {badge}
+      </div>
+      <div className="p-4">{children}</div>
     </div>
   );
 }
 
 // ── Main Page ─────────────────────────────────────────────────────────────────
 export default function DashboardPage({ data }: DashboardPageProps) {
-    const { locale } = useLanguageStore();
-    const { t } = useTranslation(locale);
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
+
+  // Calculate totals and percentages
+  const totalEvents = data?.events?.total ?? 0;
+  const totalOrganizers = data?.organizers?.total ?? 0;
+  const totalTickets = data?.tickets?.total_sold ?? 0;
+  const totalTransactions = data?.transactions?.total ?? 0;
+
+  const completedTickets = data?.tickets?.used ?? 0;
+  const activeTickets = data?.tickets?.active ?? 0;
+  const cancelledTickets = data?.tickets?.cancelled ?? 0;
+
+  const completedRefunds = data?.refunds?.completed ?? 0;
+  const pendingRefunds = data?.refunds?.pending ?? 0;
 
   return (
-    <main className="flex-1 overflow-y-auto space-y-5">
-      {/* ── Row 1: Users ── */}
-      <SectionCard title={t("dashboard.dataDisplay.users")}>
-        <StatusGrid
-          classname="grid grid-cols-3"
-          items={[
-            {
-              label: t("dashboard.dataDisplay.totalUsers"),
-              value: data?.users.total,
-              bg: "bg-gray-100",
-              text: "text-black",
-            },
-            {
-              label: t("dashboard.dataDisplay.activeUsers"),
-              value: data?.users.active,
-              bg: "bg-gray-100",
-              text: "text-black",
-            },
-            {
-              label: t("dashboard.dataDisplay.inactiveUsers"),
-              value: data?.users.inactive,
-              bg: "bg-gray-100",
-              text: "text-black",
-            },
-            // {
-            //   label: "Suspended Users",
-            //   value: data?.users.suspended,
-            //   bg: "bg-red-50",
-            //   text: "text-red-600",
-            // },
-          ]}
+    <main className="flex-1 overflow-y-auto space-y-4 p-0">
+      {/* ── Top KPI Cards ── */}
+      <div className="grid grid-cols-4 gap-4">
+        <KPICard
+          label={t("dashboard.dataDisplay.users")}
+          value={data?.users.total ?? 0}
+          subtitle={`${data?.users.active ?? 0} active · ${data?.users.inactive ?? 0} inactive`}
         />
-      </SectionCard>
+        <KPICard
+          label={t("dashboard.dataDisplay.grossRevenue")}
+          value={
+            formatCurrency(
+              data?.revenue.gross_revenue ?? 0,
+              undefined,
+              locale,
+            ).substring(0, 8) +
+            ((data?.revenue.gross_revenue ?? 0 > 0) ? "..." : "")
+          }
+          subtitle={`Net ${formatCurrency(data?.revenue.net_revenue ?? 0, undefined, locale).substring(0, 8)}`}
+        />
+        <KPICard
+          label={t("dashboard.dataDisplay.totalSold")}
+          value={totalTickets}
+          subtitle={`${activeTickets} active · ${cancelledTickets} cancelled`}
+        />
+        <KPICard
+          label={t("dashboard.dataDisplay.transactions")}
+          value={totalTransactions}
+          subtitle={`${data?.transactions.completed ?? 0} completed · ${data?.transactions.pending ?? 0} pending`}
+        />
+      </div>
 
-      {/* ── Row 2: Revenue + Events ── */}
-      <div className="grid grid-cols-2 gap-5">
-        {/* Revenue Overview */}
-        <SectionCard title={t("dashboard.dataDisplay.revenueOverview")}>
-          <div className="px-6 pt-2 pb-4 divide-y divide-gray-50">
-            <RevenueRow
-              label={t("dashboard.dataDisplay.grossRevenue")}
-              value={data?.revenue.gross_revenue ?? 0}
-              pct={100}
-              color="#3b82f6"
-            />
-            <RevenueRow
-              label={t("dashboard.dataDisplay.netRevenue")}
-              value={data?.revenue.net_revenue ?? 0}
-              pct={Math.round(
-                ((data?.revenue.net_revenue ?? 0) /
-                  (data?.revenue.gross_revenue ?? 1)) *
-                  100,
-              )}
-              color="#6366f1"
-            />
-            <RevenueRow
-              label={t("dashboard.dataDisplay.organizerEarnings")}
-              value={data?.revenue.gross_organizer_earnings ?? 0}
-              pct={Math.round(
-                ((data?.revenue.gross_organizer_earnings ?? 0) /
-                  (data?.revenue.gross_revenue ?? 1)) *
-                  100,
-              )}
-              color="#10b981"
-            />
-            <RevenueRow
-              label={t("dashboard.dataDisplay.platformCommission")}
-              value={data?.revenue.gross_commission ?? 0}
-              pct={Math.round(
-                ((data?.revenue.gross_commission ?? 0) /
-                  (data?.revenue.gross_revenue ?? 1)) *
-                  100,
-              )}
-              color="#f59e0b"
-            />
+      {/* ── Revenue Split + Event Status ── */}
+      <div className="grid grid-cols-2 gap-4">
+        {/* Revenue Split */}
+        <Card title={t("dashboard.dataDisplay.revenueSplit")}>
+          <RevenueRow
+            label={t("dashboard.dataDisplay.grossRevenue")}
+            value={data?.revenue.gross_revenue ?? 0}
+            pct={100}
+            color="#1d9e75"
+          />
+          <RevenueRow
+            label={t("dashboard.dataDisplay.organizerEarnings")}
+            value={data?.revenue.gross_organizer_earnings ?? 0}
+            pct={Math.round(
+              ((data?.revenue.gross_organizer_earnings ?? 0) /
+                (data?.revenue.gross_revenue ?? 1)) *
+                100,
+            )}
+            color="#1d9e75"
+          />
+          <RevenueRow
+            label={t("dashboard.dataDisplay.platformCommission")}
+            value={data?.revenue.gross_commission ?? 0}
+            pct={Math.round(
+              ((data?.revenue.gross_commission ?? 0) /
+                (data?.revenue.gross_revenue ?? 1)) *
+                100,
+            )}
+            color="#378add"
+          />
+        </Card>
+
+        {/* Event Status */}
+        <Card title={t("dashboard.dataDisplay.eventStatusOverview")}>
+          <div className="flex justify-center">
+            <EventsDonutChart data={data?.events} />
           </div>
-        </SectionCard>
-
-        {/* Event Status Overview */}
-        <SectionCard title={t("dashboard.dataDisplay.eventStatusOverview")}>
-          <EventsDonutChart data={data?.events} />
-        </SectionCard>
+        </Card>
       </div>
 
-      {/* ── Row 3: Organizers + Tickets + Transactions ── */}
-      <div className="grid grid-cols-3 gap-5">
+      {/* ── Organizers + Payout Requests + Payout Bills ── */}
+      <div className="grid grid-cols-3 gap-4">
         {/* Organizers */}
-        <SectionCard title={t("dashboard.dataDisplay.organizers")}>
-          <StatusGrid
-            classname="grid grid-cols-2 md:grid-cols-4"
-            items={[
-              {
-                label: t("dashboard.dataDisplay.total"),
-                value: data?.organizers.total,
-                bg: "bg-gray-100",
-                text: "text-black",
-              },
-              {
-                label: t("dashboard.dataDisplay.approved"),
-                value: data?.organizers.approved,
-                bg: "bg-gray-100",
-                text: "text-black",
-              },
-              {
-                label: t("dashboard.dataDisplay.pending"),
-                value: data?.organizers.pending,
-                bg: "bg-gray-100",
-                text: "text-black",
-              },
-              {
-                label: t("dashboard.dataDisplay.rejected"),
-                value: data?.organizers.rejected,
-                bg: "bg-gray-100",
-                text: "text-black",
-              },
-            ]}
+        <Card title={t("dashboard.dataDisplay.organizers")}>
+          <StatRow
+            label={t("dashboard.dataDisplay.approved")}
+            count={data?.organizers.approved ?? 0}
+            dotColor="#1d9e75"
           />
-        </SectionCard>
-
-        {/* Tickets */}
-        <SectionCard title={t("dashboard.dataDisplay.tickets")}>
-          <StatusGrid
-            classname="grid grid-cols-2 md:grid-cols-4"
-            items={[
-              {
-                label: t("dashboard.dataDisplay.totalSold"),
-                value: data?.tickets.total_sold,
-                bg: "bg-gray-100",
-                text: "text-black",
-              },
-              {
-                label: t("dashboard.dataDisplay.active"),
-                value: data?.tickets.active,
-                bg: "bg-gray-100",
-                text: "text-black",
-              },
-              {
-                label: t("dashboard.dataDisplay.cancelled"),
-                value: data?.tickets.cancelled,
-                bg: "bg-gray-100",
-                text: "text-black",
-              },
-              {
-                label: t("dashboard.dataDisplay.used"),
-                value: data?.tickets.used,
-                bg: "bg-gray-100",
-                text: "text-black",
-              },
-            ]}
+          <StatRow
+            label={t("dashboard.dataDisplay.pending")}
+            count={data?.organizers.pending ?? 0}
+            dotColor="#ef9f27"
           />
-        </SectionCard>
-
-        {/* Transactions */}
-        <SectionCard title={t("dashboard.dataDisplay.transactions")}>
-          <StatusGrid
-            classname="grid grid-cols-2 md:grid-cols-4"
-            items={[
-              {
-                label: t("dashboard.dataDisplay.total"),
-                value: data?.transactions.total,
-                bg: "bg-gray-100",
-                text: "text-black",
-              },
-              {
-                label: t("dashboard.dataDisplay.completed"),
-                value: data?.transactions.completed,
-                bg: "bg-gray-100",
-                text: "text-black",
-              },
-              {
-                label: t("dashboard.dataDisplay.pending"),
-                value: data?.transactions.pending,
-                bg: "bg-gray-100",
-                text: "text-black",
-              },
-              {
-                label: t("dashboard.dataDisplay.failed"),
-                value: data?.transactions.failed,
-                bg: "bg-gray-100",
-                text: "text-black",
-              },
-            ]}
+          <StatRow
+            label={t("dashboard.dataDisplay.rejected")}
+            count={data?.organizers.rejected ?? 0}
+            dotColor="#e24b4a"
           />
-        </SectionCard>
-      </div>
+        </Card>
 
-      {/* ── Row 4: Payout Requests + Payment Bills + Refunds ── */}
-      <div className="grid grid-cols-3 gap-5">
         {/* Payout Requests */}
-        <SectionCard
+        <Card
           title={t("dashboard.dataDisplay.payoutRequest")}
           badge={
-            <span className="text-xs font-semibold text-black bg-gray-100 px-2 py-0.5 rounded-full">
+            <span className="text-xs text-gray-600 font-semibold">
               {formatCurrency(
                 data?.payout_requests.total_amount ?? 0,
                 undefined,
@@ -345,171 +241,137 @@ export default function DashboardPage({ data }: DashboardPageProps) {
             </span>
           }
         >
-          <StatusGrid
-            classname="grid grid-cols-2 sm:grid-cols-3"
-            items={[
-              {
-                label: t("dashboard.dataDisplay.total"),
-                value: data?.payout_requests.total,
-                bg: "bg-gray-100",
-                text: "text-black",
-              },
-              {
-                label: t("dashboard.dataDisplay.approved"),
-                value: data?.payout_requests.approved,
-                bg: "bg-gray-100",
-                text: "text-black",
-              },
-              {
-                label: t("dashboard.dataDisplay.pending"),
-                value: data?.payout_requests.pending,
-                bg: "bg-gray-100",
-                text: "text-black",
-              },
-              {
-                label: t("dashboard.dataDisplay.paid"),
-                value: data?.payout_requests.paid,
-                bg: "bg-gray-100",
-                text: "text-black",
-              },
-              {
-                label: t("dashboard.dataDisplay.rejected"),
-                value: data?.payout_requests.rejected,
-                bg: "bg-gray-100",
-                text: "text-black",
-              },
-              {
-                label: t("dashboard.dataDisplay.cancelled"),
-                value: data?.payout_requests.cancelled,
-                bg: "bg-gray-100",
-                text: "text-black",
-              },
-            ]}
+          <StatRow
+            label={t("dashboard.dataDisplay.approved")}
+            count={data?.payout_requests.approved ?? 0}
+            dotColor="#1d9e75"
           />
-        </SectionCard>
+          <StatRow
+            label={t("dashboard.dataDisplay.pending")}
+            count={data?.payout_requests.pending ?? 0}
+            dotColor="#ef9f27"
+          />
+          <StatRow
+            label={t("dashboard.dataDisplay.rejected")}
+            count={data?.payout_requests.rejected ?? 0}
+            dotColor="#e24b4a"
+          />
+          <StatRow
+            label={t("dashboard.dataDisplay.paid")}
+            count={data?.payout_requests.paid ?? 0}
+            dotColor="#888780"
+          />
+        </Card>
 
-        {/* Payment Bills */}
-        <SectionCard title={t("dashboard.dataDisplay.paymentBills")}>
-          <div className="px-6 py-5 space-y-3">
-            {/* Bills status counts */}
-            <div className="grid gap-3 grid-cols-2 sm:grid-cols-3">
-              {[
-                {
-                  label: t("dashboard.dataDisplay.totalBills"),
-                  value: data?.payment_bills.total,
-                  bg: "bg-gray-100",
-                  text: "text-black",
-                },
-                {
-                  label: t("dashboard.dataDisplay.paid"),
-                  value: data?.payment_bills.paid,
-                  bg: "bg-gray-100",
-                  text: "text-black",
-                },
-                {
-                  label: t("dashboard.dataDisplay.pending"),
-                  value: data?.payment_bills.pending,
-                  bg: "bg-gray-100",
-                  text: "text-black",
-                },
-              ].map((s) => (
-                <div
-                  key={s.label}
-                  className={`rounded-xl px-2 py-3 text-center ${s.bg}`}
-                >
-                  <div className={`text-2xl font-bold leading-none ${s.text}`}>
-                    {s.value ?? 0}
-                  </div>
-                  <div
-                    className={`text-[11px] font-semibold mt-1.5 ${s.text} opacity-75`}
-                  >
-                    {s.label}
-                  </div>
-                </div>
-              ))}
+        {/* Payout Bills */}
+        <Card title={t("dashboard.dataDisplay.paymentBills")}>
+          <StatRow
+            label={t("dashboard.dataDisplay.paid")}
+            count={data?.payment_bills.paid ?? 0}
+            dotColor="#1d9e75"
+          />
+          <StatRow
+            label={t("dashboard.dataDisplay.pending")}
+            count={data?.payment_bills.pending ?? 0}
+            dotColor="#ef9f27"
+          />
+          <div className="mt-2 pt-2 border-t border-gray-100">
+            <div className="text-xs text-gray-600 mb-1">
+              {t("dashboard.dataDisplay.amountDue")}
             </div>
-            {/* Amount breakdown */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {[
-                {
-                  label: t("dashboard.dataDisplay.amountDue"),
-                  value: data?.payment_bills.total_due,
-                  color: "text-black",
-                  bg: "bg-gray-100",
-                },
-                {
-                  label: t("dashboard.dataDisplay.paidOut"),
-                  value: data?.payment_bills.total_paid_out,
-                  color: "text-black",
-                  bg: "bg-gray-100",
-                },
-              ].map((b) => (
-                <div
-                  key={b.label}
-                  className={`rounded-xl p-3 text-center ${b.bg}`}
-                >
-                  <div className={`text-base font-bold ${b.color}`}>
-                    {formatCurrency(b.value ?? 0, undefined, locale)}
-                  </div>
-                  <div className="text-[11px] text-black mt-0.5">
-                    {b.label}
-                  </div>
-                </div>
-              ))}
+            <div className="text-sm font-semibold text-gray-900">
+              {formatCurrency(
+                data?.payment_bills.total_due ?? 0,
+                undefined,
+                locale,
+              )}
+            </div>
+            <div className="text-xs text-gray-600 mt-2">
+              {t("dashboard.dataDisplay.paidOut")}
+            </div>
+            <div className="text-sm font-semibold text-gray-900">
+              {formatCurrency(
+                data?.payment_bills.total_paid_out ?? 0,
+                undefined,
+                locale,
+              )}
             </div>
           </div>
-        </SectionCard>
+        </Card>
+      </div>
 
+      {/* ── Refunds + Tickets ── */}
+      <div className="grid grid-cols-2 gap-4 pb-4">
         {/* Refunds */}
-        <SectionCard title={t("dashboard.dataDisplay.refunds")}>
-          <StatusGrid
-            classname="grid grid-cols-2"
-            items={[
-              {
-                label: t("dashboard.dataDisplay.completed"),
-                value: data?.refunds.completed,
-                bg: "bg-gray-100",
-                text: "text-black",
-              },
-              {
-                label: t("dashboard.dataDisplay.pending"),
-                value: data?.refunds.pending,
-                bg: "bg-gray-100",
-                text: "text-black",
-              },
-            ]}
+        <Card title={t("dashboard.dataDisplay.refunds")}>
+          <StatRow
+            label={t("dashboard.dataDisplay.completed")}
+            count={completedRefunds}
+            dotColor="#1d9e75"
           />
-
-          {/* Refunds */}
-          <div className="mx-6 mb-3 grid sm:grid-cols-2 md:grid-cols-3 grid-cols-1 gap-3 bg-gray-100 rounded-xl p-4">
-            {[
-              {
-                label: t("dashboard.dataDisplay.totalRefunds"),
-                value: data?.revenue.total_refunds ?? 0,
-                color: "text-black",
-              },
-              {
-                label: t("dashboard.dataDisplay.organizerRefunds"),
-                value: data?.revenue.organizer_refunds ?? 0,
-                color: "text-black",
-              },
-              {
-                label: t("dashboard.dataDisplay.commissionRefunds"),
-                value: data?.revenue.commission_refunds ?? 0,
-                color: "text-black",
-              },
-            ].map((b) => (
-              <div key={b.label} className="text-center">
-                <div className={`text-lg font-bold ${b.color}`}>
-                  {formatCurrency(b.value, undefined, locale)}
-                </div>
-                <div className="text-[11px] text-black mt-0.5">
-                  {b.label}
-                </div>
-              </div>
-            ))}
+          <StatRow
+            label={t("dashboard.dataDisplay.pending")}
+            count={pendingRefunds}
+            dotColor="#ef9f27"
+          />
+          <div className="mt-2 pt-2 border-t border-gray-100 space-y-1">
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-gray-600">
+                {t("dashboard.dataDisplay.totalRefunds")}
+              </span>
+              <span className="text-xs font-semibold text-gray-900">
+                {formatCurrency(
+                  data?.revenue.total_refunds ?? 0,
+                  undefined,
+                  locale,
+                )}
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-gray-600">
+                {t("dashboard.dataDisplay.organizerRefunds")}
+              </span>
+              <span className="text-xs font-semibold text-gray-900">
+                {formatCurrency(
+                  data?.revenue.organizer_refunds ?? 0,
+                  undefined,
+                  locale,
+                )}
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-gray-600">
+                {t("dashboard.dataDisplay.commissionRefunds")}
+              </span>
+              <span className="text-xs font-semibold text-gray-900">
+                {formatCurrency(
+                  data?.revenue.commission_refunds ?? 0,
+                  undefined,
+                  locale,
+                )}
+              </span>
+            </div>
           </div>
-        </SectionCard>
+        </Card>
+
+        {/* Tickets */}
+        <Card title={t("dashboard.dataDisplay.tickets")}>
+          <StatRow
+            label={t("dashboard.dataDisplay.active")}
+            count={activeTickets}
+            dotColor="#1d9e75"
+          />
+          <StatRow
+            label={t("dashboard.dataDisplay.cancelled")}
+            count={cancelledTickets}
+            dotColor="#e24b4a"
+          />
+          <StatRow
+            label={t("dashboard.dataDisplay.used")}
+            count={completedTickets}
+            dotColor="#d3d1c7"
+          />
+        </Card>
       </div>
     </main>
   );

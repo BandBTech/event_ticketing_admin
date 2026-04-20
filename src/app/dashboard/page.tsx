@@ -1,22 +1,21 @@
 "use client";
 
+import { usePendingEvents, usePendingOrganizers } from "@/hooks/useDashboard";
+import { useTranslation } from "@/hooks/useTranslation";
+import { DashboardService } from "@/services/dashboardService";
+import { useEventStore } from "@/store/eventStore";
+import { useLanguageStore } from "@/store/languageStore";
+import { useOrganizerStore } from "@/store/organizerStore";
+import {
+  ArchiveIcon,
+  ArrowsClockwiseIcon,
+  WarningIcon,
+} from "@phosphor-icons/react";
+import { useQuery } from "@tanstack/react-query";
 import React, { useEffect } from "react";
+import { DashboardSkeleton } from "./components/DashboardSkeleton";
 import { DashboardStats } from "./components/DashboardStats";
 import UpcomingEventsList from "./components/UpcomingEvents";
-import { DashboardService } from "@/services/dashboardService";
-import { useQuery } from "@tanstack/react-query";
-import { useEventStore } from "@/store/eventStore";
-import { usePendingOrganizers } from "@/hooks/useDashboard";
-import { useOrganizerStore } from "@/store/organizerStore";
-import { usePendingEvents } from "@/hooks/useDashboard";
-import { DashboardSkeleton } from "./components/DashboardSkeleton";
-import { useLanguageStore } from "@/store/languageStore";
-import { useTranslation } from "@/hooks/useTranslation";
-import {
-  WarningIcon,
-  ArrowsClockwiseIcon,
-  ArchiveIcon,
-} from "@phosphor-icons/react";
 
 const AdminDashboard: React.FC = () => {
   const { locale } = useLanguageStore();
@@ -124,7 +123,7 @@ const AdminDashboard: React.FC = () => {
 
   return (
     <div className="min-h-[80vh] bg-linear-to-br from-gray-50 via-blue-50 to-purple-50">
-      <div className="p-6 rounded-lg shadow-sm grid gap-6">
+      <div className="p-4">
         <DashboardStats data={data} />
         {data.upcoming_events_list.length > 0 && (
           <UpcomingEventsList data={data.upcoming_events_list} />
