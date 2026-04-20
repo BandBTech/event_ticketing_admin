@@ -115,6 +115,7 @@ export function TransactionFilterSheet({
   ) => {
     const updated = { ...localFilters, [field]: date };
     setDateError(null);
+    setLocalFilters(updated);
 
     if (updated.start_date && updated.end_date) {
       if (

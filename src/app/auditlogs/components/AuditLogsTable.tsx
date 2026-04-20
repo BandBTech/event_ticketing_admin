@@ -83,7 +83,7 @@ export function AuditLogsTable({
         header: t("auditLogs.table.event"),
         cell: ({ row }) => (
           <div className="max-w-[200px] text-gray-700 truncate inline-block">
-            {row.original.event.title || "-"}
+            {row.original?.event?.title || "-"}
           </div>
         ),
       },
