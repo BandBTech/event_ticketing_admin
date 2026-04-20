@@ -42,37 +42,21 @@ const createChangePasswordSchema = (
     .object({
       currentPassword: z
         .string()
-        .min(
-          1,
-          v.required(
-            t("settings.security.currentPassword", "Current Password"),
-          ),
-        ),
+        .min(1, "settings.security.validation.currentPasswordRequired"),
       newPassword: z
         .string()
-        .min(1, v.required(t("settings.security.newPassword", "New Password")))
-        .min(
-          8,
-          v.minLength(t("settings.security.newPassword", "New Password"), 8),
-        )
-        .max(
-          100,
-          v.maxLength(t("settings.security.newPassword", "New Password"), 100),
-        )
+        .min(1, "settings.security.validation.newPasswordRequired")
+        .min(8, "settings.security.validation.newPasswordTooShort")
+        .max(50, "settings.security.validation.newPasswordTooLong")
         .regex(/(?=.*[a-z])(?=.*[A-Z])/)
         .regex(/[^A-Za-z0-9]/)
         .regex(/[0-9]/),
       confirmPassword: z
         .string()
-        .min(
-          1,
-          v.required(
-            t("settings.security.confirmPassword", "Confirm Password"),
-          ),
-        ),
+        .min(1, "settings.security.validation.confirmPasswordRequired"),
     })
     .refine((data) => data.newPassword === data.confirmPassword, {
-      message: v.passwordMatch(),
+      message: "settings.security.validation.passwordMismatch",
       path: ["confirmPassword"],
     });
 };
@@ -213,6 +197,7 @@ export default function SecuritySettingsPage() {
                             "settings.security.currentPasswordPlaceholder",
                             "Enter current password",
                           )}
+                          maxLength={50}
                           className={cn(
                             "h-11 pl-11 pr-12",
                             errors.currentPassword && "border-destructive",
@@ -286,6 +271,7 @@ export default function SecuritySettingsPage() {
                             "settings.security.newPasswordPlaceholder",
                             "Enter new password",
                           )}
+                          maxLength={50}
                           className={cn(
                             "h-11 pl-11 pr-12",
                             errors.newPassword && "border-destructive",
@@ -361,6 +347,7 @@ export default function SecuritySettingsPage() {
                             "settings.security.confirmPasswordPlaceholder",
                             "Enter new password again",
                           )}
+                          maxLength={50}
                           className={cn(
                             "h-11 pl-11 pr-12",
                             errors.confirmPassword && "border-destructive",

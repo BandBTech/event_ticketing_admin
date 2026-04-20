@@ -1258,7 +1258,15 @@
       "confirmPasswordPlaceholder": "Enter new password again",
       "updating": "Updating...",
       "updateButton": "Update Password",
-      "passwordChangedSuccessfully": "Password changed successfully"
+      "passwordChangedSuccessfully": "Password changed successfully",
+      "validation": {
+        "currentPasswordRequired": "Current Password is required.",
+        "newPasswordRequired": "New Password is required.",
+        "confirmPasswordRequired": "Confirm New Password is required.",
+        "newPasswordTooShort": "New Password must be at least 8 characters",
+        "newPasswordTooLong": "New Password must be at most 50 characters.",
+        "passwordMismatch": "Passwords do not match."
+      }
     },
     "title": "Settings",
     "headers": {

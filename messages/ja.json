@@ -1221,7 +1221,15 @@
       "confirmPasswordPlaceholder": "新しいパスワードをもう一度入力してください",
       "updating": "更新中...",
       "updateButton": "パスワードを更新する",
-      "passwordChangedSuccessfully": "パスワードが正常に変更されました"
+      "passwordChangedSuccessfully": "パスワードが正常に変更されました",
+      "validation": {
+        "currentPasswordRequired": "現在のパスワードは必須です。",
+        "newPasswordRequired": "新しいパスワードは必須です。",
+        "confirmPasswordRequired": "新しいパスワード（確認）は必須です。",
+        "newPasswordTooShort": "新しいパスワードは8文字以上で入力してください。",
+        "newPasswordTooLong": "新しいパスワードは50文字以内で入力してください。",
+        "passwordMismatch": "パスワードが一致しません。"
+      }
     },
     "title": "設定",
     "headers": {

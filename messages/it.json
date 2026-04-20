@@ -1207,7 +1207,15 @@
       "confirmPasswordPlaceholder": "Immettere nuovamente la nuova password",
       "updating": "Aggiornamento...",
       "updateButton": "Aggiorna password",
-      "passwordChangedSuccessfully": "password modificata correttamente"
+      "passwordChangedSuccessfully": "password modificata correttamente",
+      "validation": {
+        "currentPasswordRequired": "La password corrente è obbligatoria.",
+        "newPasswordRequired": "La nuova password è obbligatoria.",
+        "confirmPasswordRequired": "La conferma della nuova password è obbligatoria.",
+        "newPasswordTooShort": "La nuova password deve contenere almeno 8 caratteri.",
+        "newPasswordTooLong": "La nuova password deve contenere al massimo 50 caratteri.",
+        "passwordMismatch": "Le password non corrispondono."
+      }
     },
     "title": "Impostazioni",
     "headers": {
