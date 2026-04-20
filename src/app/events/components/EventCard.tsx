@@ -36,13 +36,9 @@ export function EventCard({ event }: { event: Event }) {
     : "";
 
   // Parse categories
-  const categories: string[] = Array.isArray(event.category)
-    ? event.category
-    : typeof event.category === "string"
-      ? (event.category as string)
-          .split(",")
-          .map((tag: string) => tag.trim().replace(/[\[\]"'{}]/g, ""))
-      : [];
+  const categories: string[] = event.category
+    ? event.category.split(",").map((tag) => tag.trim().replace(/[\[\]"'{}]/g, "")).filter(Boolean)
+    : [];
 
   const handleViewDetail = () => {
     setSelectedEvent(event);
@@ -168,7 +164,7 @@ export function EventCard({ event }: { event: Event }) {
                 </span>
               </div>
               <span className="font-medium">
-                {event.capacity - event.available} / {event.capacity}
+                {event.sold_seats} / {event.total_seats}
               </span>
             </div>
             {(event.status === "on_sale" ||
