@@ -75,7 +75,7 @@ export function getEventFormDefaults(
     image: initialData.banner_image || "",
     venue: initialData.venue_name || "",
     venueAddress: initialData.address || "",
-    capacity: initialData.capacity || 0,
+    capacity: initialData.total_seats ?? 0,
     timezone: initialData.timezone || "",
     startDate: initialData.start_date || "",
     endDate: initialData.end_date || "",
@@ -140,7 +140,7 @@ export function getChangedFields(
   if (currentData.venueAddress !== initialData.address) {
     changedFields.address = currentData.venueAddress;
   }
-  if (currentData.capacity !== initialData.capacity) {
+  if (currentData.capacity !== initialData.total_seats) {
     changedFields.capacity = currentData.capacity;
   }
   if (currentData.timezone !== initialData.timezone) {

@@ -46,7 +46,7 @@ export const queryKeys = {
     /** Key for all organizers (used for invalidation) */
     list: ["organizers"] as const,
     /** Key for fetching a single organizer by ID */
-    detail: (id: string) => ["organizer", id] as const,
+    detail: (id: string | undefined) => ["organizer", id] as const,
   },
 
   /**
