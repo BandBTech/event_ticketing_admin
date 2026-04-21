@@ -57,7 +57,10 @@ export function useImageUpload({
       if (!file.type.startsWith("image/")) {
         clearImageState();
         setImageError(
-          t("imageUploader.invalidFileType", "Invalid file type. Please upload an image (PNG/JPG).")
+          t(
+            "imageUploader.invalidFileType",
+            "Invalid file type. Please upload an image (PNG/JPG).",
+          ),
         );
         return;
       }
@@ -66,7 +69,7 @@ export function useImageUpload({
       if (file.size > maxSizeBytes) {
         clearImageState();
         setImageError(
-          `File size exceeds ${Math.round(maxSizeBytes / 1024 / 1024)}MB. Please upload a smaller image.`
+          `File size exceeds ${Math.round(maxSizeBytes / 1024 / 1024)}MB. Please upload a smaller image.`,
         );
         return;
       }
@@ -85,9 +88,11 @@ export function useImageUpload({
           clearImageState();
           setImageError(
             t(
-              "event.error.invalidImageSize",
-              `Image dimensions exceed the maximum allowed (${maxWidth}x${maxHeight}px).`
+              "imageUploader.imageDimensionExceed",
+              `Image dimensions exceed the maximum allowed {maxWidth} x {maxHeight}px.`,
             )
+              .replace("{maxWidth}", `${maxWidth}`)
+              .replace("{maxHeight}", `${maxHeight}`),
           );
           return;
         }
@@ -112,7 +117,7 @@ export function useImageUpload({
 
       img.src = objectUrl;
     },
-    [t, maxSizeBytes, maxWidth, maxHeight, clearImageState]
+    [t, maxSizeBytes, maxWidth, maxHeight, clearImageState],
   );
 
   const handleRemoveImage = useCallback(() => {

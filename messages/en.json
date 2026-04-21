@@ -1545,12 +1545,13 @@
     "uploadScreenshot": "Upload screenshot image or drag & drop",
     "recommendedSize": "Recommended: PNG/JPG file of 1920x1200px with size up to 5MB",
     "browseFile": "Browse File",
-    "changeImage": "Chnage Image",
+    "changeImage": "Change Image",
     "clicktoReplace": "Click to replace",
     "invalidFileType": "Invalid file type. Please upload an image (PNG/JPG).",
     "fileSizeExceeds": "File size exceeds",
     "uploadSmallerFile": "Please upload a smaller image.",
-    "imageDimensionExceed": "Image dimensions exceed the maximum allowed",
+    "imageDimensionExceed": "Image dimensions exceed the maximum allowed {maxWidth} x {maxHeight}px.",
+    "imageSizeExceed": "File size exceeds the maximum limit of {maxSizeMB}MB.",
     "failToLoad": "Failed to load image. Please try another file."
   }
 }

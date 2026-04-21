@@ -1495,7 +1495,8 @@
     "invalidFileType": "Tipo di file non valido. Carica un'immagine (PNG/JPG).",
     "fileSizeExceeds": "Dimensione del file superata",
     "uploadSmallerFile": "Carica un'immagine più piccola.",
-    "imageDimensionExceed": "Le dimensioni dell'immagine superano il massimo consentito",
+    "imageDimensionExceed": "Le dimensioni dell'immagine superano i valori massimi consentiti di {maxWidth} x {maxHeight}px.",
+    "imageSizeExceed": "La dimensione del file supera il limite massimo di {maxSizeMB} MB.",
     "failToLoad": "Caricamento dell'immagine fallito. Prova con un altro file."
   }
 }

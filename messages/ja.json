@@ -1512,7 +1512,8 @@
     "invalidFileType": "無効なファイルタイプです。画像（PNG/JPG）をアップロードしてください。",
     "fileSizeExceeds": "ファイルサイズが制限を超えています",
     "uploadSmallerFile": "より小さい画像をアップロードしてください。",
-    "imageDimensionExceed": "画像の寸法が最大許容値を超えています",
+    "imageDimensionExceed": "画像サイズが最大許容値である{maxWidth} x {maxHeight}ピクセルを超えています。",
+    "imageSizeExceed": "ファイルサイズが最大制限値{maxSizeMB}MBを超えています。",
     "failToLoad": "画像の読み込みに失敗しました。別のファイルをお試しください。"
   }
 }
