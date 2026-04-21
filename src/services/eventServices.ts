@@ -129,11 +129,11 @@ export class EventService {
   /**
    * Get pending event
    */
-  static async getPendingtEvent(): Promise<EventResponse> {
-    return await api.get<EventResponse>(`/admin/events/pending`, {
-      requiresAuth: true,
-    });
-  }
+static async getPendingEvent(): Promise<EventResponse> {
+  return await api.get<EventResponse>(`/admin/events/pending?limit=100`, {
+    requiresAuth: true,
+  });
+}
 
   /**
    * Get all events for admin with filters

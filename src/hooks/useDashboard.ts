@@ -44,7 +44,7 @@ export function usePendingOrganizers() {
 export function usePendingEvents() {
   return useQuery<EventResponse>({
     queryKey: queryKeys.dashboard.pendingEvents,
-    queryFn: () => EventService.getPendingtEvent(),
+    queryFn: () => EventService.getPendingEvent(),
   });
 }
 

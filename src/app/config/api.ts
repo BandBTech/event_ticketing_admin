@@ -22,7 +22,7 @@ export const API_ENDPOINTS = {
   GET_SINGLE_ORGANIZER: (id: string) =>
     `${API_BASE_URL}/admin/organizers/${id}`,
   CREATE_ORGANIZERS: `${API_BASE_URL}/admin/users/organizers`,
-  GET_PENDING_ORGANIZERS: `${API_BASE_URL}/admin/organizers/pending`,
+  GET_PENDING_ORGANIZERS: `${API_BASE_URL}/admin/organizers/pending?limit=100`,
   APPROVE_ORGANIZERS: (id: string) =>
     `${API_BASE_URL}/admin/organizers/${id}/approval`,
   GET_ORGANIZER_DETAIL: (id: string) =>
