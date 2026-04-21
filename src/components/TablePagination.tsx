@@ -99,7 +99,7 @@ export default function TablePagination({
               value={limit.toString()}
               onValueChange={(val) => onLimitChange(Number(val))}
             >
-              <SelectTrigger className="h-8 w-[70px] bg-white text-sm">
+              <SelectTrigger className="h-8 w-[80px] bg-white text-sm">
                 <SelectValue placeholder={String(limit)} />
               </SelectTrigger>
               <SelectContent>

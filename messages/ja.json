@@ -933,6 +933,7 @@
     "transactionStatus": {
       "completed": "完了",
       "pending": "保留中",
+      "paid": "支払い済み",
       "approved": "承認済み",
       "rejected": "却下済み",
       "failed": "失敗",

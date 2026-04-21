@@ -920,6 +920,7 @@
     "transactionStatus": {
       "completed": "Completato",
       "pending": "In sospeso",
+      "paid": "Pagato",
       "approved": "Approvato",
       "rejected": "Rifiutato",
       "failed": "Fallito",
