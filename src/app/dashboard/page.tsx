@@ -33,8 +33,9 @@ const AdminDashboard: React.FC = () => {
   );
 
   useEffect(() => {
-    const total = pendingEventsData?.events?.length || 0;
-    setTotalPendingEvents(total);
+    const totalNumberOfPendingEvents =
+      pendingEventsData?.pagination?.total || 0;
+    setTotalPendingEvents(totalNumberOfPendingEvents);
   }, [pendingEventsData, setTotalPendingEvents]);
 
   const { data: pendingOrganizersData, isLoading: isLoadingOrganizers } =
@@ -45,8 +46,9 @@ const AdminDashboard: React.FC = () => {
   );
 
   useEffect(() => {
-    const total = pendingOrganizersData?.organizers?.length || 0;
-    setTotalPendingOrganizers(total);
+    const totalNumberOfPendingOrganizer =
+      pendingOrganizersData?.pagination?.total || 0;
+    setTotalPendingOrganizers(totalNumberOfPendingOrganizer);
   }, [pendingOrganizersData, setTotalPendingOrganizers]);
 
   if (isLoading) {

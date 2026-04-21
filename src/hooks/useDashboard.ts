@@ -1,7 +1,10 @@
 "use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { OrganizerService, type OrganizerListResponse } from "@/services/organizerService";
+import {
+  OrganizerService,
+  type OrganizerListResponse,
+} from "@/services/organizerService";
 import { EventService } from "@/services/eventServices";
 import { queryKeys } from "@/lib/queryKeys";
 import { toast } from "sonner";
@@ -15,6 +18,14 @@ interface EventResponse {
   limit: number;
   page: number;
   total: number;
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    has_next: boolean;
+    has_prev: boolean;
+    total_pages: number;
+  };
 }
 
 /**
@@ -59,7 +70,7 @@ export function useApproveOrganizer() {
       queryClient.invalidateQueries({
         queryKey: queryKeys.organizers.list,
       });
-    }
+    },
   });
 }
 
@@ -70,7 +81,13 @@ export function useRejectOrganizer() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ organizerId, adminRemark }: { organizerId: string; adminRemark: string }) =>
+    mutationFn: ({
+      organizerId,
+      adminRemark,
+    }: {
+      organizerId: string;
+      adminRemark: string;
+    }) =>
       OrganizerService.approveOrganizer({
         organizerId,
         admin_remark: adminRemark,
@@ -133,7 +150,13 @@ export function useRejectEvent() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ eventId, adminRemark }: { eventId: string; adminRemark: string }) =>
+    mutationFn: ({
+      eventId,
+      adminRemark,
+    }: {
+      eventId: string;
+      adminRemark: string;
+    }) =>
       EventService.approveEvent({
         eventId,
         admin_remark: adminRemark,

@@ -36,7 +36,7 @@ export function EventCard({
 
       {/* Event Info */}
       <div className="flex-1 min-w-0 text-left">
-        <h3 className="text-sm font-semibold text-gray-900 truncate">
+        <h3 title={event.title} className="text-sm font-semibold text-gray-900 truncate">
           {event.title}
         </h3>
         {event?.description && (

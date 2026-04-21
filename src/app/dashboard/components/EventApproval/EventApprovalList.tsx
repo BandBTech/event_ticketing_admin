@@ -77,8 +77,9 @@ const EventApprovalList = ({
   );
 
   useEffect(() => {
-    const total = pendingEventsData?.events?.length || 0;
-    setTotalPendingEvents(total);
+    const totalNumberOfPendingEvents =
+      pendingEventsData?.pagination?.total || 0;
+    setTotalPendingEvents(totalNumberOfPendingEvents);
   }, [pendingEventsData, setTotalPendingEvents]);
 
   // Mutation hooks

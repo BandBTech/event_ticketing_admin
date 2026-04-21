@@ -71,8 +71,9 @@ const OrganizerApprovalList = ({
   );
 
   useEffect(() => {
-    const total = pendingOrganizersData?.organizers?.length || 0;
-    setTotalPendingOrganizers(total);
+    const totalNumberOfPendingOrganizer =
+      pendingOrganizersData?.pagination?.total || 0;
+    setTotalPendingOrganizers(totalNumberOfPendingOrganizer);
   }, [pendingOrganizersData, setTotalPendingOrganizers]);
 
   const approveOrganizerMutation = useApproveOrganizer();
