@@ -176,6 +176,7 @@ export default function AddBillPopupModal({
       await queryClient.invalidateQueries({
         queryKey: queryKeys.bills?.list ?? ["bills"],
       });
+      handleRemoveImage();
       onOpenChange(false);
     },
     onError: (err) => {
