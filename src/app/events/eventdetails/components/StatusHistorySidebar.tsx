@@ -58,11 +58,12 @@ export default function StatusHistorySidebar({
             : [];
     }
 
-    // Sort by created_at desc if not already
-    return list.sort(
-      (a, b) =>
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-    );
+    return list
+      .filter((item) => item.status_type !== "sales")
+      .sort(
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+      );
   }, [history]);
 
   // Determine which items to show
