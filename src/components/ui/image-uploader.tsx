@@ -143,7 +143,7 @@ export function ImageUploader({
         if (err.code === "file-too-large") {
           const msg = t("imageUploader.imageSizeExceed", `File size exceeds the maximum limit of {maxSizeMB}MB.`).replace("{maxSizeMB}", `${maxSizeMB}`);
           setInternalError(msg);
-          toast.error(msg);
+          // toast.error(msg);
         } else if (err.code === "file-invalid-type") {
           const msg = t("imageUploader.invalidFileType", "Invalid media file. Please upload a valid image (PNG/JPG).");
           setInternalError(msg);

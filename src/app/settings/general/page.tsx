@@ -185,11 +185,11 @@ export default function GeneralSettingsPage() {
             onSubmit={form.handleSubmit(onSubmit)}
             className="p-6 space-y-6"
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+              <div className="min-w-[300px]">
                 <ImageUploader
                   label={t("settings.general.uploadLogo", "Upload Logo")}
-                  className="w-[300px] h-[200px]"
+                  className="w-[300px] h-[250px]"
                   helperText={t(
                     "settings.general.imageUploader.uploadImage",
                     "Upload image or drag & drop",
@@ -208,11 +208,10 @@ export default function GeneralSettingsPage() {
                     "imageUploader.browseFile",
                     "Browse File",
                   )}
-                  required
                 />
               </div>
 
-              <div className="grid">
+              <div className="grid gap-6">
                 {/* Name  */}
                 <FormField
                   control={form.control}
@@ -294,7 +293,9 @@ export default function GeneralSettingsPage() {
                 name="email"
                 render={({ field, fieldState }) => (
                   <FormItem>
-                    <FormLabel className="text-sm font-medium text-gray-900">
+                    <FormLabel 
+                    required
+                    className="text-sm font-medium text-gray-900">
                       {t("settings.general.email", "Email")}
                     </FormLabel>
                     <div className="relative">
