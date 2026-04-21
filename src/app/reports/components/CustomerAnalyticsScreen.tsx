@@ -94,7 +94,8 @@ export default function CustomerAnalytics({ data }: CustomerAnalyticsProps) {
                   <div className="flex items-baseline justify-between mb-1.5">
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium text-black">
-                        {t("reports.customerAnalytics." + seg.segment_name)}
+                        {seg.segment_name}
+                        {/* {t("reports.customerAnalytics." + seg.segment_name)} */}
                       </span>
                       <span
                         className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${colors.badge} ${colors.text}`}
