@@ -249,6 +249,7 @@ export default function AddBillPopupModal({
 
   const isPending = createMutation.isPending;
   const isSubmitting = form.formState.isSubmitting || isPending;
+  // const isSubmitting = true;
 
   const handleOpenChange = (open: boolean) => {
     if (!open && isPending) return;
@@ -288,10 +289,14 @@ export default function AddBillPopupModal({
           })}
           className="flex flex-col flex-1 overflow-hidden h-full"
         >
+          {isSubmitting && (
+            <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-white/60 backdrop-blur-[1px]">
+              <SpinnerIcon className="h-8 w-8 animate-spin text-blue-600" />
+            </div>
+          )}
           <div
             ref={scrollContainerRef}
             className="flex-1 overflow-y-auto p-6 space-y-6"
-            aria-disabled={isSubmitting}
           >
             {/* Organizer */}
             <FormField
@@ -656,70 +661,32 @@ export default function AddBillPopupModal({
                     {t("billings.addPaymentToBill.screenshot", "Screenshot")}
                   </FormLabel> */}
                   <FormControl>
-                    {isSubmitting ? (
-                      <div className="relative">
-                        <ImageUploader
-                          label={t(
-                            "billings.addPaymentToBill.screenshot",
-                            "Upload Screenshot",
-                          )}
-                          className="w-full h-50"
-                          helperText={t(
-                            "imageUploader.uploadScreenshot",
-                            "Upload screenshot image or drag & drop",
-                          )}
-                          helperTextSize={t(
-                            "imageUploader.recommendedSize",
-                            "Recommended: PNG/JPG file of 1920x1200px with size up to 5MB",
-                          )}
-                          value={imageRemoved ? "" : imagePreview || ""}
-                          onChange={(file) => {
-                            if (file) handleImageChange(file);
-                          }}
-                          onRemove={handleImageRemove}
-                          error={imageError}
-                          browseButtonText={t(
-                            "imageUploader.browseFile",
-                            "Browse File",
-                          )}
-                          required
-                        />
-
-                        {/* Disabled overlay */}
-                        <div className="absolute inset-0 bg-gray-100/80 rounded flex items-center justify-center cursor-not-allowed z-10">
-                          <span className="text-gray-400 text-sm font-medium">
-                            {t("imageUploader.disabled", "Not available")}
-                          </span>
-                        </div>
-                      </div>
-                    ) : (
-                      <ImageUploader
-                        label={t(
-                          "billings.addPaymentToBill.screenshot",
-                          "Upload Screenshot",
-                        )}
-                        className="w-full h-50"
-                        helperText={t(
-                          "imageUploader.uploadScreenshot",
-                          "Upload screenshot image or drag & drop",
-                        )}
-                        helperTextSize={t(
-                          "imageUploader.recommendedSize",
-                          "Recommended: PNG/JPG file of 1920x1200px with size up to 5MB",
-                        )}
-                        value={imageRemoved ? "" : imagePreview || ""}
-                        onChange={(file) => {
-                          if (file) handleImageChange(file);
-                        }}
-                        onRemove={handleImageRemove}
-                        error={imageError}
-                        browseButtonText={t(
-                          "imageUploader.browseFile",
-                          "Browse File",
-                        )}
-                        required
-                      />
-                    )}
+                    <ImageUploader
+                      label={t(
+                        "billings.addPaymentToBill.screenshot",
+                        "Upload Screenshot",
+                      )}
+                      className="w-full h-50"
+                      helperText={t(
+                        "imageUploader.uploadScreenshot",
+                        "Upload screenshot image or drag & drop",
+                      )}
+                      helperTextSize={t(
+                        "imageUploader.recommendedSize",
+                        "Recommended: PNG/JPG file of 1920x1200px with size up to 5MB",
+                      )}
+                      value={imageRemoved ? "" : imagePreview || ""}
+                      onChange={(file) => {
+                        if (file) handleImageChange(file);
+                      }}
+                      onRemove={handleImageRemove}
+                      error={imageError}
+                      browseButtonText={t(
+                        "imageUploader.browseFile",
+                        "Browse File",
+                      )}
+                      required
+                    />
                   </FormControl>
                   <TranslatedFormMessage t={t} />
                 </FormItem>
