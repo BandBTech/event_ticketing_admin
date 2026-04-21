@@ -28,7 +28,7 @@ export function EventCard({
   return (
     <div className="flex items-center gap-4 px-3 py-2 m-2 border-b max-w-2xl bg-white rounded-2xl border-gray-100 last:border-b-0 transition-colors">
       {/* Event Avatar */}
-      <div className="w-8 h-8 rounded-full shrink-0 overflow-hidden">
+      <div className="w-8 h-8 rounded-full shrink-0 overflow-hidden cursor-pointer">
         <div className="w-full h-full bg-gray-300 flex items-center justify-center text-white font-semibold text-lg">
           {event.title?.[0] || "E"}
         </div>
@@ -36,12 +36,16 @@ export function EventCard({
 
       {/* Event Info */}
       <div className="flex-1 min-w-0 text-left">
-        <h3 title={event.title} className="text-sm font-semibold text-gray-900 truncate">
+        <h3
+          title={event.title}
+          className="text-sm font-semibold text-gray-900 truncate cursor-pointer"
+        >
           {event.title}
         </h3>
         {event?.description && (
           <p
-            className="text-xs text-gray-500 mt-0.5 truncate"
+            className="text-xs text-gray-500 mt-0.5 truncate cursor-pointer"
+            title={event.description.replace(/<[^>]*>/g, "")}
             dangerouslySetInnerHTML={{
               __html:
                 event.description.replace(/<[^>]*>/g, "").slice(0, 100) +

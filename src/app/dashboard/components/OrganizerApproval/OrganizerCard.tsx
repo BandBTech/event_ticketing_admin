@@ -31,7 +31,7 @@ export function OrganizerCard({
       onClick={() => router.push(`/organizers/detail?id=${organizer.id}`)}
     >
       {/* Organizer Avatar */}
-      <div className="w-8 h-8 rounded-full shrink-0 overflow-hidden">
+      <div className="w-8 h-8 rounded-full shrink-0 overflow-hidden cursor-pointer">
         <div className="w-full h-full bg-gray-300 flex items-center justify-center text-white font-semibold text-lg">
           {organizer.first_name?.[0] || "O"}
         </div>
@@ -39,11 +39,11 @@ export function OrganizerCard({
 
       {/* Profile Info */}
       <div className="flex-1 min-w-0 text-center sm:text-left">
-        <h3 title={organizer.name || `${organizer.first_name} ${organizer.last_name}`} className="text-base font-semibold text-gray-900 truncate">
+        <h3 title={organizer.name || `${organizer.first_name} ${organizer.last_name}`} className="text-base font-semibold text-gray-900 truncate cursor-pointer">
           {organizer.name || `${organizer.first_name} ${organizer.last_name}`}
         </h3>
         {organizer.email && (
-          <p title={`${organizer.email}`} className="text-xs text-gray-500 truncate">{organizer.email}</p>
+          <p title={`${organizer.email}`} className="text-xs text-gray-500 truncate cursor-pointer">{organizer.email}</p>
         )}
       </div>
 
