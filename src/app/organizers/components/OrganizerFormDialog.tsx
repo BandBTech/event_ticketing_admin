@@ -249,6 +249,7 @@ export default function OrganizerFormDialog({
                             fieldState.error &&
                               "border-destructive focus:ring-destructive/20",
                           )}
+                          disabled={isPending}
                         />
                       </FormControl>
                     </div>
@@ -298,6 +299,7 @@ export default function OrganizerFormDialog({
                             fieldState.error &&
                               "border-destructive focus:ring-destructive/20",
                           )}
+                          disabled={isPending}
                         />
                       </FormControl>
                     </div>
@@ -351,6 +353,7 @@ export default function OrganizerFormDialog({
                             fieldState.error &&
                               "border-destructive focus:ring-destructive/20",
                           )}
+                          disabled={isPending}
                         />
                       </FormControl>
                       <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
@@ -400,6 +403,7 @@ export default function OrganizerFormDialog({
                             fieldState.error &&
                               "border-destructive focus:ring-destructive/20",
                           )}
+                          disabled={isPending}
                         />
                       </FormControl>
                       <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
@@ -462,6 +466,7 @@ export default function OrganizerFormDialog({
                           "transition-all duration-200",
                           fieldState.error && "border-destructive",
                         )}
+                        disabled={isPending}
                       />
                     </FormControl>
                     <TranslatedFormMessage t={t} />

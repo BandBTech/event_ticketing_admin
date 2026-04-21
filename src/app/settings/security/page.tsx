@@ -202,6 +202,7 @@ export default function SecuritySettingsPage() {
                             "h-11 pl-11 pr-12",
                             errors.currentPassword && "border-destructive",
                           )}
+                          disabled={isLoading}
                           {...register("currentPassword")}
                         />
                       </FormControl>
@@ -276,6 +277,7 @@ export default function SecuritySettingsPage() {
                             "h-11 pl-11 pr-12",
                             errors.newPassword && "border-destructive",
                           )}
+                          disabled={isLoading}
                           {...register("newPassword")}
                         />
                       </FormControl>
@@ -352,6 +354,7 @@ export default function SecuritySettingsPage() {
                             "h-11 pl-11 pr-12",
                             errors.confirmPassword && "border-destructive",
                           )}
+                          disabled={isLoading}
                           {...register("confirmPassword")}
                         />
                       </FormControl>

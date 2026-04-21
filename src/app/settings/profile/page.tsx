@@ -45,11 +45,10 @@ const createProfileSchema = () => {
       .max(50, "settings.profile.validation.lastNameMaxLength"),
     phone: z
       .string()
-      .min(1, 'settings.profile.validation.phoneRequired')
-      .refine(
-        (val) => typeof val === "string" && isValidPhoneNumber(val),
-        { message: "settings.profile.validation.phoneInvalid" },
-      ),
+      .min(1, "settings.profile.validation.phoneRequired")
+      .refine((val) => typeof val === "string" && isValidPhoneNumber(val), {
+        message: "settings.profile.validation.phoneInvalid",
+      }),
   });
 };
 
@@ -243,7 +242,7 @@ export default function ProfileSettingsPage() {
                         <Input
                           {...field}
                           type="text"
-                          disabled={!isEditing}
+                          disabled={!isEditing || isLoading}
                           className={cn(
                             "h-11 pl-11 pr-4",
                             !isEditing && "bg-gray-50 cursor-not-allowed",
@@ -257,10 +256,8 @@ export default function ProfileSettingsPage() {
                             <TranslatedFormMessage t={t} />
                           </p>
                           <p className="text-xs font-normal text-left text-muted-foreground">
-                            {field.value?.toString().length || 0} /50 {t(
-                            "common.characters",
-                            "characters",
-                          )}
+                            {field.value?.toString().length || 0} /50{" "}
+                            {t("common.characters", "characters")}
                           </p>
                         </div>
                       )}
@@ -292,7 +289,7 @@ export default function ProfileSettingsPage() {
                         <Input
                           {...field}
                           type="text"
-                          disabled={!isEditing}
+                          disabled={!isEditing || isLoading}
                           className={cn(
                             "h-11 pl-11 pr-4",
                             !isEditing && "bg-gray-50 cursor-not-allowed",
@@ -306,10 +303,8 @@ export default function ProfileSettingsPage() {
                             <TranslatedFormMessage t={t} />
                           </p>
                           <p className="text-xs font-normal text-left text-muted-foreground">
-                            {field.value?.toString().length || 0} /50 {t(
-                            "common.characters",
-                            "characters",
-                          )}
+                            {field.value?.toString().length || 0} /50{" "}
+                            {t("common.characters", "characters")}
                           </p>
                         </div>
                       )}
@@ -356,14 +351,17 @@ export default function ProfileSettingsPage() {
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required className="text-sm font-medium text-gray-900">
+                  <FormLabel
+                    required
+                    className="text-sm font-medium text-gray-900"
+                  >
                     {t("settings.profile.phoneNumber", "Phone Number")}
                   </FormLabel>
                   <FormControl>
                     <PhoneInput
                       value={field.value || ""}
                       onChange={(value) => field.onChange(value || "")}
-                      disabled={!isEditing}
+                      disabled={!isEditing || isLoading}
                       defaultCountry="NP"
                       className={cn(
                         !isEditing && "opacity-50 cursor-not-allowed",

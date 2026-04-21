@@ -147,6 +147,7 @@ export default function GeneralSettingsPage() {
   const onSubmit = (values: CompanyInfoFormValues) => {
     saveMutation.mutate(values);
   };
+  const isPending = saveMutation.isPending;
 
   if (isLoading) {
     return <LoadingSkeleton />;
@@ -216,14 +217,12 @@ export default function GeneralSettingsPage() {
                     accept="image/*"
                     onChange={handleImageSelect}
                     className="hidden"
-                    disabled={saveMutation.isPending}
+                    disabled={isPending}
                   />
                   <label
                     htmlFor="logo-upload"
                     className={`inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors ${
-                      saveMutation.isPending
-                        ? "opacity-50 cursor-not-allowed"
-                        : ""
+                      isPending ? "opacity-50 cursor-not-allowed" : ""
                     }`}
                   >
                     <UploadSimple size={20} />
@@ -268,6 +267,7 @@ export default function GeneralSettingsPage() {
                           maxLength={100}
                           placeholder={t("settings.general.enterName")}
                           aria-invalid={fieldState.invalid}
+                          disabled={isPending}
                         />
                       </FormControl>
                       <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
@@ -301,6 +301,7 @@ export default function GeneralSettingsPage() {
                           maxLength={100}
                           placeholder={t("settings.general.enterAddress")}
                           aria-invalid={fieldState.invalid}
+                          disabled={isPending}
                         />
                       </FormControl>
                       <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
@@ -334,6 +335,7 @@ export default function GeneralSettingsPage() {
                           placeholder={t("settings.general.enterEmailAddress")}
                           aria-invalid={fieldState.invalid}
                           className="bg-gray-50 text-gray-700"
+                          disabled={isPending}
                         />
                       </FormControl>
                       <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
@@ -360,9 +362,8 @@ export default function GeneralSettingsPage() {
                         value={field.value || ""}
                         onChange={(value) => field.onChange(value || "")}
                         defaultCountry="NP"
-                        className={cn(
-                          "opacity-50 cursor-not-allowed",
-                        )}
+                        disabled={isPending}
+                        className={cn("opacity-50 cursor-not-allowed")}
                       />
                     </FormControl>
                     <TranslatedFormMessage t={t} />
@@ -388,6 +389,7 @@ export default function GeneralSettingsPage() {
                             maxLength={500}
                             placeholder={t("settings.general.enterDescription")}
                             aria-invalid={fieldState.invalid}
+                            disabled={isPending}
                           />
                         </FormControl>
                         <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
@@ -422,6 +424,7 @@ export default function GeneralSettingsPage() {
                           maxLength={100}
                           placeholder={t("settings.general.enterFacebookURL")}
                           aria-invalid={fieldState.invalid}
+                          disabled={isPending}
                         />
                       </FormControl>
                       <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
@@ -455,6 +458,7 @@ export default function GeneralSettingsPage() {
                           maxLength={100}
                           placeholder={t("settings.general.enterInstagramURL")}
                           aria-invalid={fieldState.invalid}
+                          disabled={isPending}
                         />
                       </FormControl>
                       <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
@@ -488,6 +492,7 @@ export default function GeneralSettingsPage() {
                           maxLength={100}
                           placeholder={t("settings.general.enterLinkedInURL")}
                           aria-invalid={fieldState.invalid}
+                          disabled={isPending}
                         />
                       </FormControl>
                       <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
@@ -521,6 +526,7 @@ export default function GeneralSettingsPage() {
                           maxLength={100}
                           placeholder={t("settings.general.enterTwitterURL")}
                           aria-invalid={fieldState.invalid}
+                          disabled={isPending}
                         />
                       </FormControl>
                       <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
@@ -554,6 +560,7 @@ export default function GeneralSettingsPage() {
                           maxLength={100}
                           placeholder={t("settings.general.enterWebsiteURL")}
                           aria-invalid={fieldState.invalid}
+                          disabled={isPending}
                         />
                       </FormControl>
                       <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
@@ -587,6 +594,7 @@ export default function GeneralSettingsPage() {
                           maxLength={100}
                           placeholder={t("settings.general.enterTwitterURL")}
                           aria-invalid={fieldState.invalid}
+                          disabled={isPending}
                         />
                       </FormControl>
                       <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
@@ -608,10 +616,12 @@ export default function GeneralSettingsPage() {
             <div className="flex justify-end pt-4">
               <button
                 type="submit"
-                disabled={saveMutation.isPending}
-                className="px-6 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
+                disabled={isPending}
+                className={`px-6 py-2 text-sm font-medium text-white rounded-lg transition-colors cursor-pointer ${
+                  isPending ? "bg-blue-400" : "bg-blue-600 hover:bg-blue-700"
+                }`}
               >
-                {saveMutation.isPending
+                {isPending
                   ? t("settings.profile.saving")
                   : saveMutation.isSuccess
                     ? t("settings.profile.saved")
