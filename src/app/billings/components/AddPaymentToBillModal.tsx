@@ -86,7 +86,7 @@ export default function AddBillPopupModal({
     initialPreview: "",
   });
 
-  const maxAmount = billData?.remaining_amount
+  const maxAmount = billData?.remaining_amount;
   const maxAmountLength = maxAmount?.toString().length;
 
   const schema = addPaymentToBillSchema(t, maxAmount as number);
@@ -248,6 +248,7 @@ export default function AddBillPopupModal({
   };
 
   const isPending = createMutation.isPending;
+  const isSubmitting = form.formState.isSubmitting || isPending;
 
   const handleOpenChange = (open: boolean) => {
     if (!open && isPending) return;
@@ -290,6 +291,7 @@ export default function AddBillPopupModal({
           <div
             ref={scrollContainerRef}
             className="flex-1 overflow-y-auto p-6 space-y-6"
+            aria-disabled={isSubmitting}
           >
             {/* Organizer */}
             <FormField
@@ -315,7 +317,7 @@ export default function AddBillPopupModal({
                       defaultOption={defaultOrganizerOption}
                       className="w-full text-sm h-9"
                       debounceMs={300}
-                      disabled={!!billData}
+                      disabled={!!billData || isSubmitting}
                     />
                   </FormControl>
                   <TranslatedFormMessage t={t} />
@@ -348,7 +350,7 @@ export default function AddBillPopupModal({
                       defaultOption={defaultEventOption}
                       className="w-full text-sm h-9"
                       debounceMs={300}
-                      disabled={!!billData}
+                      disabled={!!billData || isSubmitting}
                     />
                   </FormControl>
                   <TranslatedFormMessage t={t} />
@@ -372,7 +374,11 @@ export default function AddBillPopupModal({
                     )}
                   </FormLabel>
                   <FormControl>
-                    <Select value={field.value} onValueChange={field.onChange}>
+                    <Select
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      disabled={isSubmitting}
+                    >
                       <SelectTrigger className="w-full text-sm h-9 justify-between px-3 bg-white">
                         <SelectValue
                           placeholder={t(
@@ -428,8 +434,16 @@ export default function AddBillPopupModal({
                     <FormControl>
                       <Input
                         type="number"
-                        placeholder={`${billData?.remaining_amount}` ? `${billData?.remaining_amount}` : "e.g Rs. 100"}
-                        max={`${billData?.remaining_amount}` ? `${billData?.remaining_amount}` : 1000000}
+                        placeholder={
+                          `${billData?.remaining_amount}`
+                            ? `${billData?.remaining_amount}`
+                            : "e.g Rs. 100"
+                        }
+                        max={
+                          `${billData?.remaining_amount}`
+                            ? `${billData?.remaining_amount}`
+                            : 1000000
+                        }
                         inputMode="decimal"
                         step="0.01"
                         {...field}
@@ -472,12 +486,16 @@ export default function AddBillPopupModal({
                           field.onChange(num);
                         }}
                         onWheel={(e) => e.currentTarget.blur()}
+                        disabled={isSubmitting}
                       />
                     </FormControl>
                     <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
                       <p> </p>
                       <p className="text-xs font-normal text-left text-muted-foreground">
-                        {t("common.max", "Max")} {`${billData?.remaining_amount}` ? `${billData?.remaining_amount}` : "e.g Rs. 100"}
+                        {t("common.max", "Max")}{" "}
+                        {`${billData?.remaining_amount}`
+                          ? `${billData?.remaining_amount}`
+                          : "e.g Rs. 100"}
                       </p>
                     </div>
                   </div>
@@ -508,6 +526,7 @@ export default function AddBillPopupModal({
                             "w-full justify-start text-left font-normal h-9",
                             !field.value && "text-muted-foreground",
                           )}
+                          disabled={isSubmitting}
                         >
                           <CalendarIcon className="mr-2 h-4 w-4" />
                           {field.value ? (
@@ -606,6 +625,7 @@ export default function AddBillPopupModal({
                       onChange={(e) => field.onChange(e.target.value)}
                       rows={3}
                       maxLength={200}
+                      disabled={isSubmitting}
                       className="w-full min-h-[80px] !bg-white"
                     />
                   </FormControl>
@@ -636,32 +656,70 @@ export default function AddBillPopupModal({
                     {t("billings.addPaymentToBill.screenshot", "Screenshot")}
                   </FormLabel> */}
                   <FormControl>
-                    <ImageUploader
-                      label={t(
-                        "billings.addPaymentToBill.screenshot",
-                        "Upload Screenshot",
-                      )}
-                      className="w-full h-50"
-                      helperText={t(
-                        "imageUploader.uploadScreenshot",
-                        "Upload screenshot image or drag & drop",
-                      )}
-                      helperTextSize={t(
-                        "imageUploader.recommendedSize",
-                        "Recommended: PNG/JPG file of 1920x1200px with size up to 5MB",
-                      )}
-                      value={imageRemoved ? "" : imagePreview || ""}
-                      onChange={(file) => {
-                        if (file) handleImageChange(file);
-                      }}
-                      onRemove={handleImageRemove}
-                      error={imageError}
-                      browseButtonText={t(
-                        "imageUploader.browseFile",
-                        "Browse File",
-                      )}
-                      required
-                    />
+                    {isSubmitting ? (
+                      <div className="relative">
+                        <ImageUploader
+                          label={t(
+                            "billings.addPaymentToBill.screenshot",
+                            "Upload Screenshot",
+                          )}
+                          className="w-full h-50"
+                          helperText={t(
+                            "imageUploader.uploadScreenshot",
+                            "Upload screenshot image or drag & drop",
+                          )}
+                          helperTextSize={t(
+                            "imageUploader.recommendedSize",
+                            "Recommended: PNG/JPG file of 1920x1200px with size up to 5MB",
+                          )}
+                          value={imageRemoved ? "" : imagePreview || ""}
+                          onChange={(file) => {
+                            if (file) handleImageChange(file);
+                          }}
+                          onRemove={handleImageRemove}
+                          error={imageError}
+                          browseButtonText={t(
+                            "imageUploader.browseFile",
+                            "Browse File",
+                          )}
+                          required
+                        />
+
+                        {/* Disabled overlay */}
+                        <div className="absolute inset-0 bg-gray-100/80 rounded flex items-center justify-center cursor-not-allowed z-10">
+                          <span className="text-gray-400 text-sm font-medium">
+                            {t("imageUploader.disabled", "Not available")}
+                          </span>
+                        </div>
+                      </div>
+                    ) : (
+                      <ImageUploader
+                        label={t(
+                          "billings.addPaymentToBill.screenshot",
+                          "Upload Screenshot",
+                        )}
+                        className="w-full h-50"
+                        helperText={t(
+                          "imageUploader.uploadScreenshot",
+                          "Upload screenshot image or drag & drop",
+                        )}
+                        helperTextSize={t(
+                          "imageUploader.recommendedSize",
+                          "Recommended: PNG/JPG file of 1920x1200px with size up to 5MB",
+                        )}
+                        value={imageRemoved ? "" : imagePreview || ""}
+                        onChange={(file) => {
+                          if (file) handleImageChange(file);
+                        }}
+                        onRemove={handleImageRemove}
+                        error={imageError}
+                        browseButtonText={t(
+                          "imageUploader.browseFile",
+                          "Browse File",
+                        )}
+                        required
+                      />
+                    )}
                   </FormControl>
                   <TranslatedFormMessage t={t} />
                 </FormItem>

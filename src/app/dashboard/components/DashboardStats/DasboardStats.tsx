@@ -156,8 +156,8 @@ export default function DashboardPage({ data }: DashboardPageProps) {
         />
         <KPICard
           label={t("dashboard.dataDisplay.totalSold")}
-          value={totalTickets}
-          subtitle={`${activeTickets} ${t("status.active")} · ${cancelledTickets} ${t("status.cancelled")}`}
+          value={activeTickets}
+          subtitle={`${totalTickets} ${t("status.active")} · ${cancelledTickets} ${t("status.cancelled")}`}
         />
         <KPICard
           label={t("dashboard.dataDisplay.transactions")}
