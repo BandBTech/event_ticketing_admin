@@ -1317,6 +1317,10 @@
         "emailRequired": "メールアドレスは必須です。",
         "validEmailAddress": "有効なメールアドレスを入力してください。",
         "validPhoneNumber": "有効な電話番号を入力してください。"
+      },
+      "imageUploader": {
+        "uploadImage": "画像をアップロード または ドラッグ＆ドロップ",
+        "recomendedImage": "推奨: 500×500ピクセル、5MB以内のPNG/JPGファイル"
       }
     },
     "tickets": {
@@ -1502,6 +1506,13 @@
   "imageUploader": {
     "uploadScreenshot": "スクリーンショット画像をアップロード、またはドラッグ＆ドロップしてください",
     "recommendedSize": "推奨: 1920x1200ピクセル、5MBまでのPNG/JPGファイル",
-    "browseFile": "ファイルを参照"
+    "browseFile": "ファイルを参照",
+    "changeImage": "画像を変更",
+    "clicktoReplace": "クリックして置き換え",
+    "invalidFileType": "無効なファイルタイプです。画像（PNG/JPG）をアップロードしてください。",
+    "fileSizeExceeds": "ファイルサイズが制限を超えています",
+    "uploadSmallerFile": "より小さい画像をアップロードしてください。",
+    "imageDimensionExceed": "画像の寸法が最大許容値を超えています",
+    "failToLoad": "画像の読み込みに失敗しました。別のファイルをお試しください。"
   }
 }

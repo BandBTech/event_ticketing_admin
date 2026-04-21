@@ -1,14 +1,13 @@
 "use client";
 
-import React, { useEffect, useState, useMemo } from "react";
-import { UploadSimple } from "@phosphor-icons/react/dist/ssr";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
-import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { PhoneInput } from "@/components/ui/phone-input";
-import { cn } from "@/lib/utils";
+import { useImageUpload } from "@/hooks/useImageUpload";
+import { ImageUploader } from "@/components/ui/image-uploader";
 import {
   Form,
   FormControl,
@@ -61,6 +60,19 @@ export default function GeneralSettingsPage() {
   const queryClient = useQueryClient();
 
   const {
+    imageFile,
+    imagePreview,
+    imageError,
+    imageRemoved,
+    validateAndProcessImage,
+    handleRemoveImage,
+  } = useImageUpload({
+    initialPreview: "",
+    maxHeight: 500,
+    maxWidth: 500,
+  });
+
+  const {
     data: response,
     isLoading,
     isError,
@@ -111,30 +123,6 @@ export default function GeneralSettingsPage() {
     },
   });
 
-  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    // Validate file type
-    if (!file.type.startsWith("image/")) {
-      setUploadError(t("settings.general.pleaseUploadImageFile"));
-      return;
-    }
-
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      setUploadError(t("settings.general.imageDimension"));
-      return;
-    }
-
-    setUploadError("");
-    setSelectedFile(file);
-
-    // Create preview URL
-    const objectUrl = URL.createObjectURL(file);
-    setPreviewUrl(objectUrl);
-  };
-
   // Cleanup preview URL on unmount
   useEffect(() => {
     return () => {
@@ -143,6 +131,23 @@ export default function GeneralSettingsPage() {
       }
     };
   }, [previewUrl]);
+
+  const handleImageChange = useCallback(
+    (file: File) => {
+      validateAndProcessImage(file);
+      setSelectedFile(file);
+
+      // Create preview URL
+      const objectUrl = URL.createObjectURL(file);
+      setPreviewUrl(objectUrl);
+    },
+    [validateAndProcessImage, form],
+  );
+
+  const handleImageRemove = useCallback(() => {
+    handleRemoveImage();
+    setSelectedFile("");
+  }, [handleRemoveImage, form]);
 
   const onSubmit = (values: CompanyInfoFormValues) => {
     saveMutation.mutate(values);
@@ -180,144 +185,109 @@ export default function GeneralSettingsPage() {
             onSubmit={form.handleSubmit(onSubmit)}
             className="p-6 space-y-6"
           >
-            {/* Logo Upload Section */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t("settings.general.companyLogo")}
-              </label>
-              <div className="flex items-start gap-4">
-                {previewUrl ? (
-                  <div className="relative">
-                    <Image
-                      src={previewUrl}
-                      alt="Company Logo"
-                      width={120}
-                      height={120}
-                      className="rounded-lg border border-gray-300 object-cover"
-                    />
-                    {selectedFile && (
-                      <div className="absolute bottom-0 left-0 right-0 bg-blue-500 text-white text-xs px-2 py-1 rounded-b-lg">
-                        {t("settings.general.newImageSelected")}
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <div className="w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center bg-gray-50">
-                    <span className="text-gray-400 text-sm">
-                      {" "}
-                      {t("settings.general.noLogo")}
-                    </span>
-                  </div>
-                )}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <ImageUploader
+                  label={t("settings.general.uploadLogo", "Upload Logo")}
+                  className="w-[300px] h-[200px]"
+                  helperText={t(
+                    "settings.general.imageUploader.uploadImage",
+                    "Upload image or drag & drop",
+                  )}
+                  helperTextSize={t(
+                    "settings.general.imageUploader.recomendedImage",
+                    "Recommended: PNG/JPG file of 500x500 px with size up to 5MB",
+                  )}
+                  value={imageRemoved ? "" : previewUrl || ""}
+                  onChange={(file) => {
+                    if (file) handleImageChange(file);
+                  }}
+                  onRemove={handleImageRemove}
+                  error={imageError}
+                  browseButtonText={t(
+                    "imageUploader.browseFile",
+                    "Browse File",
+                  )}
+                  required
+                />
+              </div>
 
-                <div className="flex-1">
-                  <input
-                    type="file"
-                    id="logo-upload"
-                    accept="image/*"
-                    onChange={handleImageSelect}
-                    className="hidden"
-                    disabled={isPending}
-                  />
-                  <label
-                    htmlFor="logo-upload"
-                    className={`inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors ${
-                      isPending ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
-                  >
-                    <UploadSimple size={20} />
-                    {selectedFile
-                      ? "Change Logo"
-                      : t("settings.general.uploadLogo")}
-                  </label>
-                  <p className="text-sm text-gray-500 mt-2">
-                    {t("settings.general.imageDimension")}
-                  </p>
-                  {selectedFile && (
-                    <p className="text-sm text-blue-600 mt-1">
-                      {/* Selected: {selectedFile.name} */}
-                    </p>
+              <div className="grid">
+                {/* Name  */}
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field, fieldState }) => (
+                    <FormItem>
+                      <FormLabel
+                        required
+                        className="text-sm font-medium text-gray-900"
+                      >
+                        {t("settings.general.name", "Name")}
+                      </FormLabel>
+                      <div className="relative">
+                        <FormControl>
+                          <Input
+                            {...field}
+                            id="name"
+                            maxLength={100}
+                            placeholder={t("settings.general.enterName")}
+                            aria-invalid={fieldState.invalid}
+                            disabled={isPending}
+                          />
+                        </FormControl>
+                        <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
+                          <p>
+                            <TranslatedFormMessage t={t} />
+                          </p>
+                          <p className="text-xs font-normal text-left text-muted-foreground">
+                            {field.value?.toString().length || 0} /100{" "}
+                            {t("common.characters", "characters")}
+                          </p>
+                        </div>
+                      </div>
+                    </FormItem>
                   )}
-                  {uploadError && (
-                    <p className="text-sm text-red-500 mt-1">{uploadError}</p>
+                />
+
+                {/* Address  */}
+                <FormField
+                  control={form.control}
+                  name="address"
+                  render={({ field, fieldState }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium text-gray-900">
+                        {t("settings.general.address", "Address")}
+                      </FormLabel>
+                      <div className="relative">
+                        <FormControl>
+                          <Input
+                            {...field}
+                            id="address"
+                            maxLength={100}
+                            placeholder={t("settings.general.enterAddress")}
+                            aria-invalid={fieldState.invalid}
+                            disabled={isPending}
+                          />
+                        </FormControl>
+                        <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
+                          <p>
+                            <TranslatedFormMessage t={t} />
+                          </p>
+                          <p className="text-xs font-normal text-left text-muted-foreground">
+                            {field.value?.toString().length || 0} /100{" "}
+                            {t("common.characters", "characters")}
+                          </p>
+                        </div>
+                      </div>
+                    </FormItem>
                   )}
-                </div>
+                />
               </div>
             </div>
 
             {/* Rest of form fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Name  */}
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field, fieldState }) => (
-                  <FormItem>
-                    <FormLabel
-                      required
-                      className="text-sm font-medium text-gray-900"
-                    >
-                      {t("settings.general.name", "Name")}
-                    </FormLabel>
-                    <div className="relative">
-                      <FormControl>
-                        <Input
-                          {...field}
-                          id="name"
-                          maxLength={100}
-                          placeholder={t("settings.general.enterName")}
-                          aria-invalid={fieldState.invalid}
-                          disabled={isPending}
-                        />
-                      </FormControl>
-                      <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
-                        <p>
-                          <TranslatedFormMessage t={t} />
-                        </p>
-                        <p className="text-xs font-normal text-left text-muted-foreground">
-                          {field.value?.toString().length || 0} /100{" "}
-                          {t("common.characters", "characters")}
-                        </p>
-                      </div>
-                    </div>
-                  </FormItem>
-                )}
-              />
-
-              {/* Address  */}
-              <FormField
-                control={form.control}
-                name="address"
-                render={({ field, fieldState }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium text-gray-900">
-                      {t("settings.general.address", "Address")}
-                    </FormLabel>
-                    <div className="relative">
-                      <FormControl>
-                        <Input
-                          {...field}
-                          id="address"
-                          maxLength={100}
-                          placeholder={t("settings.general.enterAddress")}
-                          aria-invalid={fieldState.invalid}
-                          disabled={isPending}
-                        />
-                      </FormControl>
-                      <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
-                        <p>
-                          <TranslatedFormMessage t={t} />
-                        </p>
-                        <p className="text-xs font-normal text-left text-muted-foreground">
-                          {field.value?.toString().length || 0} /100{" "}
-                          {t("common.characters", "characters")}
-                        </p>
-                      </div>
-                    </div>
-                  </FormItem>
-                )}
-              />
-
               {/* Email  */}
               <FormField
                 control={form.control}
@@ -334,7 +304,6 @@ export default function GeneralSettingsPage() {
                           id="email"
                           placeholder={t("settings.general.enterEmailAddress")}
                           aria-invalid={fieldState.invalid}
-                          className="bg-gray-50 text-gray-700"
                           disabled={isPending}
                         />
                       </FormControl>
@@ -363,7 +332,6 @@ export default function GeneralSettingsPage() {
                         onChange={(value) => field.onChange(value || "")}
                         defaultCountry="NP"
                         disabled={isPending}
-                        className={cn("opacity-50 cursor-not-allowed")}
                       />
                     </FormControl>
                     <TranslatedFormMessage t={t} />

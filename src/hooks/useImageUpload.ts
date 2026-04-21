@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useLanguageStore } from "@/store/languageStore";
 
 export interface UseImageUploadOptions {
   initialPreview?: string;
@@ -35,7 +36,8 @@ export function useImageUpload({
   maxWidth = DEFAULT_MAX_WIDTH,
   maxHeight = DEFAULT_MAX_HEIGHT,
 }: UseImageUploadOptions = {}): UseImageUploadReturn {
-  const { t } = useTranslation();
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>(initialPreview);
   const [imageError, setImageError] = useState<string>("");
@@ -55,7 +57,7 @@ export function useImageUpload({
       if (!file.type.startsWith("image/")) {
         clearImageState();
         setImageError(
-          t("event.error.invalidImageType", "Invalid file type. Please upload an image (PNG/JPG).")
+          t("imageUploader.invalidFileType", "Invalid file type. Please upload an image (PNG/JPG).")
         );
         return;
       }

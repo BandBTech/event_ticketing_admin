@@ -1303,6 +1303,10 @@
         "emailRequired": "L'email è obbligatoria.",
         "validEmailAddress": "Inserisci un indirizzo email valido.",
         "validPhoneNumber": "Inserisci un numero di telefono valido."
+      },
+      "imageUploader": {
+        "uploadImage": "Carica un'immagine o trascinala qui",
+        "recomendedImage": "Consigliato: file PNG/JPG da 500×500 px, dimensione massima 5MB"
       }
     },
     "tickets": {
@@ -1485,6 +1489,13 @@
   "imageUploader": {
     "uploadScreenshot": "Carica screenshot o trascina e rilascia",
     "recommendedSize": "Consigliato: file PNG/JPG di 1920x1200px con dimensioni fino a 5MB",
-    "browseFile": "Sfoglia file"
+    "browseFile": "Sfoglia file",
+    "changeImage": "Cambia immagine",
+    "clicktoReplace": "Clicca per sostituire",
+    "invalidFileType": "Tipo di file non valido. Carica un'immagine (PNG/JPG).",
+    "fileSizeExceeds": "Dimensione del file superata",
+    "uploadSmallerFile": "Carica un'immagine più piccola.",
+    "imageDimensionExceed": "Le dimensioni dell'immagine superano il massimo consentito",
+    "failToLoad": "Caricamento dell'immagine fallito. Prova con un altro file."
   }
 }

@@ -1354,6 +1354,10 @@
         "emailRequired": "Email is required.",
         "validEmailAddress": "Please enter a valid email address.",
         "validPhoneNumber": "Please enter a valid phone number."
+      },
+      "imageUploader": {
+        "uploadImage": "Upload image or drag & drop",
+        "recomendedImage": "Recommended: PNG/JPG file of 500*500 px with size up to 5MB"
       }
     },
     "tickets": {
@@ -1540,6 +1544,13 @@
   "imageUploader": {
     "uploadScreenshot": "Upload screenshot image or drag & drop",
     "recommendedSize": "Recommended: PNG/JPG file of 1920x1200px with size up to 5MB",
-    "browseFile": "Browse File"
+    "browseFile": "Browse File",
+    "changeImage": "Chnage Image",
+    "clicktoReplace": "Click to replace",
+    "invalidFileType": "Invalid file type. Please upload an image (PNG/JPG).",
+    "fileSizeExceeds": "File size exceeds",
+    "uploadSmallerFile": "Please upload a smaller image.",
+    "imageDimensionExceed": "Image dimensions exceed the maximum allowed",
+    "failToLoad": "Failed to load image. Please try another file."
   }
 }

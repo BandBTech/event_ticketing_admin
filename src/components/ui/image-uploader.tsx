@@ -145,7 +145,7 @@ export function ImageUploader({
           setInternalError(msg);
           toast.error(msg);
         } else if (err.code === "file-invalid-type") {
-          const msg = t("common.image.fileInvalidType", "Invalid media file. Please upload a valid image (PNG/JPG).");
+          const msg = t("imageUploader.invalidFileType", "Invalid media file. Please upload a valid image (PNG/JPG).");
           setInternalError(msg);
           toast.error(msg);
         } else {
@@ -225,8 +225,8 @@ export function ImageUploader({
               }}
             >
               <div className="text-white space-y-2 text-center">
-                <p className="font-medium">{t("common.changeImage", "Change Image")}</p>
-                <p className="text-xs text-white/80">{t("common.clickToReplace", "Click to replace")}</p>
+                <p className="font-medium">{t("imageUploader.changeImage", "Change Image")}</p>
+                <p className="text-xs text-white/80">{t("imageUploader.clicktoReplace", "Click to replace")}</p>
               </div>
             </div>
           </div>
