@@ -51,6 +51,7 @@ interface RefundTableProps {
   handleToggleStatus?: (user: User) => void;
   setSelectedUser?: (user: User) => void;
   setIsToggleConfirmDialog?: (open: boolean) => void;
+  wrapperClassName?: string;
 }
 
 export function UsersTable({
@@ -69,7 +70,8 @@ export function UsersTable({
   onSortChange,
   handleToggleStatus,
   setSelectedUser,
-  setIsToggleConfirmDialog
+  setIsToggleConfirmDialog,
+  wrapperClassName,
 }: RefundTableProps) {
   const { t } = useTranslation();
   const { locale } = useLanguageStore();
@@ -323,6 +325,7 @@ export function UsersTable({
   return (
     <>
       <ReusableTable
+        wrapperClassName={wrapperClassName}
         columns={columns}
         data={users}
         isLoading={isLoading}

@@ -53,6 +53,9 @@ export interface ReusableTableProps<TData, TValue> {
 
   // Row click handler
   onRowClick?: (row: TData) => void;
+
+  // Wrapper class
+  wrapperClassName?: string;
 }
 
 export function ReusableTable<TData, TValue>({
@@ -74,6 +77,7 @@ export function ReusableTable<TData, TValue>({
   onPageChange,
   onLimitChange,
   onRowClick,
+  wrapperClassName,
 }: ReusableTableProps<TData, TValue>) {
   const { t } = useTranslation();
 
@@ -145,9 +149,9 @@ export function ReusableTable<TData, TValue>({
     <>
       {headerComponent}
 
-      <div className="w-full">
+      <div className={`w-full${wrapperClassName ? ` ${wrapperClassName}` : ""}`}>
         <Table>
-          <TableHeader className="bg-gray-100">
+          <TableHeader className="sticky top-0 z-10 bg-gray-100">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="hover:bg-transparent">
                 {headerGroup.headers.map((header) => {
