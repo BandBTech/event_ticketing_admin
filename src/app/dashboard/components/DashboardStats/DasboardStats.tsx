@@ -133,6 +133,8 @@ export default function DashboardPage({ data }: DashboardPageProps) {
 
   const completedRefunds = data?.refunds?.completed ?? 0;
   const pendingRefunds = data?.refunds?.pending ?? 0;
+  const failedRefunds = data?.refunds?.failed ?? 0;
+  const processingRefunds = data?.refunds?.processing ?? 0;
 
   return (
     <main className="flex-1 overflow-y-auto space-y-4 p-0">
@@ -145,19 +147,17 @@ export default function DashboardPage({ data }: DashboardPageProps) {
         />
         <KPICard
           label={t("dashboard.dataDisplay.grossRevenue")}
-          value={
-            formatCurrency(
-              data?.revenue.gross_revenue ?? 0,
-              undefined,
-              locale,
-            )
-          }
+          value={formatCurrency(
+            data?.revenue.gross_revenue ?? 0,
+            undefined,
+            locale,
+          )}
           subtitle={`Net ${formatCurrency(data?.revenue.net_revenue ?? 0, undefined, locale).substring(0, 8)}`}
         />
         <KPICard
           label={t("dashboard.dataDisplay.totalSold")}
-          value={activeTickets}
-          subtitle={`${totalTickets} ${t("status.active")} · ${cancelledTickets} ${t("status.cancelled")}`}
+          value={totalTickets}
+          subtitle={`${activeTickets} ${t("status.active")} · ${cancelledTickets} ${t("status.cancelled")}`}
         />
         <KPICard
           label={t("dashboard.dataDisplay.transactions")}
@@ -260,6 +260,11 @@ export default function DashboardPage({ data }: DashboardPageProps) {
             count={data?.payout_requests.paid ?? 0}
             dotColor="#888780"
           />
+          <StatRow
+            label={t("dashboard.dataDisplay.cancelled")}
+            count={data?.payout_requests.cancelled ?? 0}
+            dotColor="#e24b4a"
+          />
         </Card>
 
         {/* Payout Bills */}
@@ -274,26 +279,40 @@ export default function DashboardPage({ data }: DashboardPageProps) {
             count={data?.payment_bills.pending ?? 0}
             dotColor="#ef9f27"
           />
-          <div className="mt-2 pt-2 border-t border-gray-100">
-            <div className="text-xs text-black mb-1">
-              {t("dashboard.dataDisplay.amountDue")}
+          <StatRow
+            label={t("billings.status.partially_paid")}
+            count={data?.payment_bills.partially_paid ?? 0}
+            dotColor="#888780"
+          />
+          <StatRow
+            label={t("dashboard.dataDisplay.cancelled")}
+            count={data?.payment_bills.cancelled ?? 0}
+            dotColor="#e24b4a"
+          />
+          <div className="mt-2 pt-2 border-t border-gray-100 flex items-center justify-between gap-2">
+            <div>
+              <div className="text-xs text-black mb-1">
+                {t("dashboard.dataDisplay.amountDue")}
+              </div>
+              <div className="text-sm font-semibold text-black">
+                {formatCurrency(
+                  data?.payment_bills.total_due ?? 0,
+                  undefined,
+                  locale,
+                )}
+              </div>
             </div>
-            <div className="text-sm font-semibold text-black">
-              {formatCurrency(
-                data?.payment_bills.total_due ?? 0,
-                undefined,
-                locale,
-              )}
-            </div>
-            <div className="text-xs text-black mt-2">
-              {t("dashboard.dataDisplay.paidOut")}
-            </div>
-            <div className="text-sm font-semibold text-black">
-              {formatCurrency(
-                data?.payment_bills.total_paid_out ?? 0,
-                undefined,
-                locale,
-              )}
+            <div>
+              <div className="text-xs text-black mt-2">
+                {t("dashboard.dataDisplay.paidOut")}
+              </div>
+              <div className="text-sm font-semibold text-black">
+                {formatCurrency(
+                  data?.payment_bills.total_paid_out ?? 0,
+                  undefined,
+                  locale,
+                )}
+              </div>
             </div>
           </div>
         </Card>
@@ -312,6 +331,16 @@ export default function DashboardPage({ data }: DashboardPageProps) {
             label={t("dashboard.dataDisplay.pending")}
             count={pendingRefunds}
             dotColor="#ef9f27"
+          />
+          <StatRow
+            label={t("dashboard.dataDisplay.processing")}
+            count={processingRefunds}
+            dotColor="#888780"
+          />
+          <StatRow
+            label={t("dashboard.dataDisplay.failed")}
+            count={failedRefunds}
+            dotColor="#e24b4a"
           />
           <div className="mt-2 pt-2 border-t border-gray-100 space-y-1">
             <div className="flex items-center justify-between">

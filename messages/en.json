@@ -595,6 +595,7 @@
       "transactions": "Transactions",
       "completed": "Completed",
       "failed": "Failed",
+      "processing": "Processing",
       "succeeded": "Succeeded",
       "payoutRequest": "Payout Request",
       "paid": "Paid",
@@ -968,6 +969,7 @@
     },
     "transactionStatus": {
       "completed": "Completed",
+      "succeeded": "Completed",
       "pending": "Pending",
       "paid": "Paid",
       "approved": "Approved",

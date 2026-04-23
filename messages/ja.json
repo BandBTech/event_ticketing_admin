@@ -567,6 +567,7 @@
       "transactions": "取引",
       "completed": "完了",
       "failed": "失敗",
+      "processing": "処理",
       "succeeded": "成功した",
       "payoutRequest": "支払いリクエスト",
       "paid": "支払い済み",
@@ -932,6 +933,7 @@
     },
     "transactionStatus": {
       "completed": "完了",
+      "succeeded": "完了",
       "pending": "保留中",
       "paid": "支払い済み",
       "approved": "承認済み",

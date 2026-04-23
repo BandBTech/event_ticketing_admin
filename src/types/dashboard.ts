@@ -43,6 +43,8 @@ export interface OrganizersStats {
 export interface RefundsStats {
   completed: number;
   pending: number;
+  failed: number;
+  processing: number;
 }
 
 export interface PayoutRequestsStats {
@@ -58,6 +60,8 @@ export interface PayoutRequestsStats {
 export interface PaymentBillsStats {
   paid: number;
   pending: number;
+  partially_paid: number;
+  cancelled: number;
   total: number;
   total_due: number;
   total_paid_out: number;

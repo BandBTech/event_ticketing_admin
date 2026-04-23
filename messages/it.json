@@ -554,6 +554,7 @@
       "transactions": "Transazioni",
       "completed": "Completate",
       "failed": "Fallite",
+      "processing": "elaborazione",
       "succeeded": "Riuscita",
       "payoutRequest": "Richiesta di Pagamento",
       "paid": "Pagato",
@@ -919,6 +920,7 @@
     },
     "transactionStatus": {
       "completed": "Completato",
+      "succeeded": "Completato",
       "pending": "In sospeso",
       "paid": "Pagato",
       "approved": "Approvato",
