@@ -56,6 +56,7 @@ export default function GeneralSettingsPage() {
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const [selectedFile, setSelectedFile] = useState<File | string>("");
   const [uploadError, setUploadError] = useState("");
+  const [isSaved, setIsSaved] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -116,6 +117,8 @@ export default function GeneralSettingsPage() {
       toast.success(t("settings.general.companyInfoUpdated"));
       setSelectedFile("");
       setUploadError("");
+      setIsSaved(true);
+      setTimeout(() => setIsSaved(false), 2000); // resets after 2s
     },
     onError: (error) => {
       console.error("Save error:", error);
@@ -293,9 +296,10 @@ export default function GeneralSettingsPage() {
                 name="email"
                 render={({ field, fieldState }) => (
                   <FormItem>
-                    <FormLabel 
-                    required
-                    className="text-sm font-medium text-gray-900">
+                    <FormLabel
+                      required
+                      className="text-sm font-medium text-gray-900"
+                    >
                       {t("settings.general.email", "Email")}
                     </FormLabel>
                     <div className="relative">
@@ -592,7 +596,7 @@ export default function GeneralSettingsPage() {
               >
                 {isPending
                   ? t("settings.profile.saving")
-                  : saveMutation.isSuccess
+                  : isSaved
                     ? t("settings.profile.saved")
                     : t("settings.general.saveChanges")}
               </button>
