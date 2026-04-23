@@ -337,6 +337,7 @@ export default function GeneralSettingsPage() {
                         onChange={(value) => field.onChange(value || "")}
                         defaultCountry="NP"
                         disabled={isPending}
+                        placeholder="eg. +977 98000000"
                       />
                     </FormControl>
                     <TranslatedFormMessage t={t} />
