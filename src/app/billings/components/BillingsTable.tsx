@@ -68,6 +68,7 @@ interface BillingsTableProps {
   >;
   setIsCancelBillDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setHistorySheetOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  wrapperClassName?: string;
 }
 
 export function BillingTable({
@@ -90,6 +91,7 @@ export function BillingTable({
   setIsAddPaymentToBillDialogOpen,
   setIsCancelBillDialogOpen,
   setHistorySheetOpen,
+  wrapperClassName,
 }: BillingsTableProps) {
   const { t } = useTranslation();
   const router = useRouter();
@@ -294,6 +296,7 @@ export function BillingTable({
   return (
     <>
       <ReusableTable
+        wrapperClassName={wrapperClassName}
         columns={columns}
         data={billings}
         isLoading={isLoading}
