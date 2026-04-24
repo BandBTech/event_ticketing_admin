@@ -43,7 +43,17 @@
     "results": "結果",
     "successfully": "成功",
     "activated": "起動済み",
-    "deactivated": "無効化"
+    "deactivated": "無効化",
+    "clickToReplace": "クリックして置き換えます",
+    "changeImage": "画像の変更",
+    "image": {
+      "fileTooLarge": "ファイルサイズが {size} を超えています。\n小さい画像をアップロードしてください。",
+      "fileInvalidType": "無効なファイルタイプです。\n画像（PNG/JPG）をアップロードしてください。",
+      "limitExceeded": "ファイル サイズが上限の {maxSizeMB}MB を超えています。",
+      "dimensionsExceeded": "画像のサイズが最大許容サイズ {maxWidth}x{maxHeight}px を超えています。",
+      "dimensionsTooSmall": "画像のサイズが小さすぎます。最小サイズは {minWidth}x{minHeight}px です。",
+      "aspectRatioInvalid": "画像のアスペクト比は約 {ratio} である必要があります。"
+    }
   },
   "navigation": {
     "events": "イベント",
@@ -276,6 +286,11 @@
       "progress": "販売進捗",
       "sold": "販売済み",
       "revenue": "収益"
+    },
+    "helperText": {
+      "bannerImage": "バナー画像をアップロードまたはドラッグ",
+      "bannerImageSize": "1920x1200px、サイズ最大5MBのPNG/JPGファイル",
+      "bannerImageBrowse": "ファイルの参照"
     },
     "eventDetails": {
       "backToEvents": "イベント一覧に戻る",
@@ -1424,6 +1439,17 @@
       "billing": "請求する",
       "billingDesc": "支払い方法を管理する",
       "ticketsDesc": "イベントチケットを表示する"
+    },
+    "organizerProfile": {
+      "description": "組織の詳細とブランディングを管理します」",
+      "logoHelperText": "推奨サイズ: 500x500px。",
+      "logoHelperTextSize": "最大サイズ: 2MB。",
+      "businessLogo": "ビジネスロゴ",
+      "businessName": "商号",
+      "about": "について",
+      "businessNamePlaceholder": "あなたのビジネス名を入力してください",
+      "aboutPlaceholder": "あなたの組織について書いてください...",
+      "logoRequired": "企業ロゴは必須です。"
     },
     "permissions": {
       "title": "権限とロール",

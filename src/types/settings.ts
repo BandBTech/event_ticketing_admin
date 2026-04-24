@@ -3,7 +3,7 @@ export interface Company {
   name: string;
   description: string;
   logo_url: string;
-  logo: File | string;
+  logo: File | null;
   email: string;
   phone: string;
   address: string;
@@ -21,7 +21,7 @@ export interface CompanyInfo {
   name: string;
   description?: string;
   logo_url?: string;
-  logo: File | string;
+  logo: File | null;
   email: string;
   phone?: string;
   address?: string;

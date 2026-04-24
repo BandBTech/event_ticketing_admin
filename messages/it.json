@@ -43,7 +43,17 @@
     "results": "Risultati",
     "successfully": "con successo",
     "activated": "attivato",
-    "deactivated": "disattivata"
+    "deactivated": "disattivata",
+    "clickToReplace": "Fare clic per sostituire",
+    "changeImage": "Cambia immagine",
+    "image": {
+      "fileTooLarge": "La dimensione del file supera le {dimensioni}. \nCarica un'immagine più piccola.",
+      "fileInvalidType": "Tipo di file non valido. \nSi prega di caricare un'immagine (PNG/JPG).",
+      "limitExceeded": "La dimensione del file supera il limite massimo di {maxSizeMB} MB.",
+      "dimensionsExceeded": "Le dimensioni dell'immagine superano il massimo consentito di {maxWidth}x{maxHeight}px.",
+      "dimensionsTooSmall": "Le dimensioni dell'immagine sono troppo piccole. La dimensione minima è {minWidth}x{minHeight}px.",
+      "aspectRatioInvalid": "Il rapporto d'aspetto dell'immagine deve essere approssimativamente {ratio}."
+    }
   },
   "navigation": {
     "events": "Eventi",
@@ -263,6 +273,11 @@
       "progress": "Avanzamento Vendite",
       "sold": "Venduti",
       "revenue": "Ricavi"
+    },
+    "helperText": {
+      "bannerImage": "Carica l'immagine del banner o trascinala",
+      "bannerImageSize": "File PNG/JPG di 1920x1200px con dimensioni fino a 5 MB",
+      "bannerImageBrowse": "Sfoglia file"
     },
     "eventDetails": {
       "backToEvents": "Torna agli Eventi",
@@ -1410,6 +1425,17 @@
       "billing": "Fatturazione",
       "billingDesc": "Gestisci i tuoi metodi di pagamento",
       "ticketsDesc": "Visualizza i biglietti per i tuoi eventi"
+    },
+    "organizerProfile": {
+      "description": "Gestisci i dettagli e il marchio della tua organizzazione\"",
+      "logoHelperText": "Dimensione consigliata: 500x500px.",
+      "logoHelperTextSize": "Dimensione massima: 2 MB.",
+      "businessLogo": "Logo aziendale",
+      "businessName": "Nome dell'azienda",
+      "about": "Di",
+      "businessNamePlaceholder": "Inserisci il nome della tua attività",
+      "aboutPlaceholder": "Scrivi della tua organizzazione...",
+      "logoRequired": "Il logo aziendale è obbligatorio."
     },
     "permissions": {
       "title": "Permessi e Ruoli",

@@ -15,6 +15,7 @@ interface ImageUploaderProps {
   onChange: (file: File | null) => void;
   onRemove?: () => void;
   error?: string;
+  errorParams?: Record<string, string | number>;
   label?: string;
   helperText?: string;
   helperTextSize?: string;
@@ -26,6 +27,8 @@ interface ImageUploaderProps {
   aspectRatioTolerance?: number; // Default 0.1
   checkAspectRatio?: boolean; // Whether to validate aspect ratio
   required?: boolean; // Whether to show required asterisk
+  minWidth?: number; // Minimum width in pixels
+  minHeight?: number; // Minimum height in pixels
   maxWidth?: number; // Max width in pixels
   maxHeight?: number; // Max height in pixels
   imageClassName?: string; // Custom class for the image
@@ -37,6 +40,7 @@ export function ImageUploader({
   onChange,
   onRemove,
   error,
+  errorParams,
   label = "Image",
   helperText = "Upload image or drag & drop",
   helperTextSize,
@@ -52,6 +56,8 @@ export function ImageUploader({
   aspectRatioTolerance = 0.1,
   checkAspectRatio = false,
   required = false,
+  minWidth,
+  minHeight,
   maxWidth,
   maxHeight,
   imageClassName,
@@ -61,12 +67,19 @@ export function ImageUploader({
   const { t } = useTranslation(locale);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [internalError, setInternalError] = useState<string>("");
+  const [internalErrorParams, setInternalErrorParams] = useState<
+    Record<string, string | number>
+  >({});
 
   const effectiveError = error || internalError;
+  const effectiveErrorParams = error
+    ? (errorParams ?? {})
+    : internalErrorParams;
   const hasError = !!effectiveError;
 
   const validateImage = (file: File) => {
-    const requiresImageElement = checkAspectRatio || maxWidth || maxHeight;
+    const requiresImageElement =
+      checkAspectRatio || minWidth || minHeight || maxWidth || maxHeight;
     if (!requiresImageElement) return;
 
     setInternalError("");
@@ -78,16 +91,58 @@ export function ImageUploader({
       const width = img.width;
       const height = img.height;
 
+      // Min Width Check
+      if (minWidth && width < minWidth) {
+        const params = { minWidth, minHeight: minHeight || minWidth };
+        setInternalError("common.image.dimensionsTooSmall");
+        setInternalErrorParams(params);
+        toast.error(
+          t(
+            "common.image.dimensionsTooSmall",
+            "Image dimensions are too small. Minimum size is {minWidth}x{minHeight}px.",
+            params,
+          ),
+        );
+        onChange(null);
+        return;
+      }
+
+      // Min Height Check
+      if (minHeight && height < minHeight) {
+        const params = { minWidth: minWidth || minHeight, minHeight };
+        setInternalError("common.image.dimensionsTooSmall");
+        setInternalErrorParams(params);
+        toast.error(
+          t(
+            "common.image.dimensionsTooSmall",
+            "Image dimensions are too small. Minimum size is {minWidth}x{minHeight}px.",
+            params,
+          ),
+        );
+        onChange(null);
+        return;
+      }
+
       // Aspect Ratio Check
       if (checkAspectRatio && aspectRatio) {
         const imageAspectRatio = width / height;
         const minAspectRatio = aspectRatio - aspectRatioTolerance;
         const maxAspectRatio = aspectRatio + aspectRatioTolerance;
 
-        if (imageAspectRatio < minAspectRatio || imageAspectRatio > maxAspectRatio) {
-          const msg = t("common.image.aspectRatioInvalid", `Image aspect ratio must be approximately ${aspectRatio.toFixed(2)}.`);
-          setInternalError(msg);
-          toast.error(msg);
+        if (
+          imageAspectRatio < minAspectRatio ||
+          imageAspectRatio > maxAspectRatio
+        ) {
+          const params = { ratio: aspectRatio.toFixed(2) };
+          setInternalError("common.image.aspectRatioInvalid");
+          setInternalErrorParams(params);
+          toast.error(
+            t(
+              "common.image.aspectRatioInvalid",
+              "Image aspect ratio must be approximately {ratio}.",
+              params,
+            ),
+          );
           onChange(null);
           return;
         }
@@ -95,18 +150,32 @@ export function ImageUploader({
 
       // Max Width Check
       if (maxWidth && width > maxWidth) {
-        const msg = t("common.image.dimensionsExceeded", `Image dimensions exceed the maximum allowed ${maxWidth}x${maxHeight || maxWidth}px.`);
-        setInternalError(msg);
-        toast.error(msg);
+        const params = { maxWidth, maxHeight: maxHeight || maxWidth };
+        setInternalError("common.image.dimensionsExceeded");
+        setInternalErrorParams(params);
+        toast.error(
+          t(
+            "common.image.dimensionsExceeded",
+            "Image dimensions exceed the maximum allowed {maxWidth}x{maxHeight}px.",
+            params,
+          ),
+        );
         onChange(null);
         return;
       }
 
       // Max Height Check
       if (maxHeight && height > maxHeight) {
-        const msg = t("common.image.dimensionsExceeded", `Image dimensions exceed the maximum allowed ${maxWidth || maxHeight}x${maxHeight}px.`);
-        setInternalError(msg);
-        toast.error(msg);
+        const params = { maxWidth: maxWidth || maxHeight, maxHeight };
+        setInternalError("common.image.dimensionsExceeded");
+        setInternalErrorParams(params);
+        toast.error(
+          t(
+            "common.image.dimensionsExceeded",
+            "Image dimensions exceed the maximum allowed {maxWidth}x{maxHeight}px.",
+            params,
+          ),
+        );
         onChange(null);
         return;
       }
@@ -130,7 +199,14 @@ export function ImageUploader({
       const file = acceptedFiles[0];
       if (file) {
         setInternalError("");
-        if (checkAspectRatio || maxWidth || maxHeight) {
+        setInternalErrorParams({});
+        if (
+          checkAspectRatio ||
+          minWidth ||
+          minHeight ||
+          maxWidth ||
+          maxHeight
+        ) {
           validateImage(file);
         }
         onChange(file);
@@ -141,17 +217,32 @@ export function ImageUploader({
       if (rejection) {
         const err = rejection.errors[0];
         if (err.code === "file-too-large") {
-          const msg = t("imageUploader.imageSizeExceed", `File size exceeds the maximum limit of {maxSizeMB}MB.`).replace("{maxSizeMB}", `${maxSizeMB}`);
-          setInternalError(msg);
-          // toast.error(msg);
+          const params = { maxSizeMB };
+          setInternalError("common.image.limitExceeded");
+          setInternalErrorParams(params);
+          toast.error(
+            t(
+              "common.image.limitExceeded",
+              "File size exceeds the maximum limit of {maxSizeMB}MB.",
+              params,
+            ),
+          );
         } else if (err.code === "file-invalid-type") {
-          const msg = t("imageUploader.invalidFileType", "Invalid media file. Please upload a valid image (PNG/JPG).");
-          setInternalError(msg);
-          toast.error(msg);
+          setInternalError("common.image.fileInvalidType");
+          setInternalErrorParams({});
+          toast.error(
+            t(
+              "common.image.fileInvalidType",
+              "Invalid media file. Please upload a valid image (PNG/JPG).",
+            ),
+          );
         } else {
           // Ensure default error message has a period
-          const msg = err.message.endsWith(".") ? err.message : `${err.message}.`;
+          const msg = err.message.endsWith(".")
+            ? err.message
+            : `${err.message}.`;
           setInternalError(msg);
+          setInternalErrorParams({});
           toast.error(msg);
         }
       }
@@ -180,7 +271,12 @@ export function ImageUploader({
 
   return (
     <div className={cn("flex flex-col gap-2", className)}>
-      {label && <Label className={hasError ? "text-red-500" : ""}>{label}{required && <span className="text-red-500"> *</span>}</Label>}
+      {label && (
+        <Label className={hasError ? "text-red-500" : ""}>
+          {label}
+          {required && <span className="text-red-500"> *</span>}
+        </Label>
+      )}
 
       <div
         {...getRootProps()}
@@ -193,18 +289,18 @@ export function ImageUploader({
             : isDragActive
               ? "border-blue-500 bg-blue-50"
               : "border-gray-300 hover:bg-gray-50",
-          uploaderClassName
+          uploaderClassName,
         )}
       >
         <input {...getInputProps()} ref={fileInputRef} />
 
         {value ? (
-          <div className="relative group overflow-hidden rounded-lg mx-auto">
+          <div className="relative group overflow-hidden rounded-lg mx-auto h-full">
             {/* Using img tag directly for flexibility with blob URLs and simplicity, optimized next/image requires width/height or fill */}
             <img
               src={value}
               alt="Preview"
-              className={cn("w-full h-full object-cover", imageClassName)}
+              className={cn("w-full h-full object-contain", imageClassName)}
             />
 
             {/* Remove Button */}
@@ -225,8 +321,12 @@ export function ImageUploader({
               }}
             >
               <div className="text-white space-y-2 text-center">
-                <p className="font-medium">{t("imageUploader.changeImage", "Change Image")}</p>
-                <p className="text-xs text-white/80">{t("imageUploader.clicktoReplace", "Click to replace")}</p>
+                <p className="font-medium">
+                  {t("common.changeImage", "Change Image")}
+                </p>
+                <p className="text-xs text-white/80">
+                  {t("common.clickToReplace", "Click to replace")}
+                </p>
               </div>
             </div>
           </div>
@@ -236,11 +336,15 @@ export function ImageUploader({
               <ImageIcon className="w-6 h-6" />
             </div>
             {isDragActive ? (
-              <p className="text-blue-600 font-medium">{t("common.dropImageHere", "Drop the image here...")}</p>
+              <p className="text-blue-600 font-medium">
+                {t("common.dropImageHere", "Drop the image here...")}
+              </p>
             ) : (
               <>
                 <p className="font-medium text-gray-900 mb-1">{helperText}</p>
-                {helperTextSize && <p className="text-xs text-gray-500 mb-2">{helperTextSize}</p>}
+                {helperTextSize && (
+                  <p className="text-xs text-gray-500 mb-2">{helperTextSize}</p>
+                )}
                 <Button
                   type="button"
                   variant="outline"
@@ -261,7 +365,7 @@ export function ImageUploader({
 
       {effectiveError && (
         <p className="text-xs font-medium text-destructive">
-          {t(effectiveError)}
+          {t(effectiveError, undefined, effectiveErrorParams)}
         </p>
       )}
     </div>

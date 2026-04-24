@@ -6,8 +6,8 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { PhoneInput } from "@/components/ui/phone-input";
-import { useImageUpload } from "@/hooks/useImageUpload";
 import { ImageUploader } from "@/components/ui/image-uploader";
+import { SpinnerIcon } from "@phosphor-icons/react";
 import {
   Form,
   FormControl,
@@ -53,25 +53,13 @@ export default function GeneralSettingsPage() {
     mode: "onChange",
   });
 
-  const [previewUrl, setPreviewUrl] = useState<string>("");
-  const [selectedFile, setSelectedFile] = useState<File | string>("");
   const [uploadError, setUploadError] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [logoError, setLogoError] = useState<string | null>(null);
   const [isSaved, setIsSaved] = useState(false);
 
   const queryClient = useQueryClient();
-
-  const {
-    imageFile,
-    imagePreview,
-    imageError,
-    imageRemoved,
-    validateAndProcessImage,
-    handleRemoveImage,
-  } = useImageUpload({
-    initialPreview: "",
-    maxHeight: 500,
-    maxWidth: 500,
-  });
 
   const {
     data: response,
@@ -115,7 +103,7 @@ export default function GeneralSettingsPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["company"] });
       toast.success(t("settings.general.companyInfoUpdated"));
-      setSelectedFile("");
+      setSelectedFile(null);
       setUploadError("");
       setIsSaved(true);
       setTimeout(() => setIsSaved(false), 2000); // resets after 2s
@@ -135,24 +123,34 @@ export default function GeneralSettingsPage() {
     };
   }, [previewUrl]);
 
-  const handleImageChange = useCallback(
-    (file: File) => {
-      validateAndProcessImage(file);
+  const validateLogo = () => {
+    if (!selectedFile && !previewUrl) {
+      setLogoError("settings.organizerProfile.logoRequired");
+      return false;
+    }
+    return true;
+  };
+
+  const handleLogoChange = (file: File | null) => {
+    if (file) {
       setSelectedFile(file);
+      setPreviewUrl(URL.createObjectURL(file));
+      setLogoError(null);
+    } else {
+      setSelectedFile(null);
+      setPreviewUrl(null);
+    }
+  };
 
-      // Create preview URL
-      const objectUrl = URL.createObjectURL(file);
-      setPreviewUrl(objectUrl);
-    },
-    [validateAndProcessImage, form],
-  );
-
-  const handleImageRemove = useCallback(() => {
-    handleRemoveImage();
-    setSelectedFile("");
-  }, [handleRemoveImage, form]);
+  const handleLogoRemove = () => {
+    setSelectedFile(null);
+    setPreviewUrl(null);
+  };
 
   const onSubmit = (values: CompanyInfoFormValues) => {
+    if (!validateLogo()) {
+      return;
+    }
     saveMutation.mutate(values);
   };
   const isPending = saveMutation.isPending;
@@ -188,27 +186,38 @@ export default function GeneralSettingsPage() {
             onSubmit={form.handleSubmit(onSubmit)}
             className="p-6 space-y-6"
           >
+            {isPending && (
+              <div className="max-w-4xl mx-auto p-6 fixed inset-0 z-[9999] flex items-center justify-center bg-white/60 backdrop-blur-[1px]">
+                <SpinnerIcon className="h-8 w-8 animate-spin text-blue-600" />
+              </div>
+            )}
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
               <div className="min-w-[300px]">
                 <ImageUploader
-                  label={t("settings.general.uploadLogo", "Upload Logo")}
-                  className="w-[300px] h-[250px]"
+                  label={t(
+                    "settings.organizerProfile.businessLogo",
+                    "Business Logo",
+                  )}
+                  value={previewUrl || ""}
+                  onChange={handleLogoChange}
+                  onRemove={handleLogoRemove}
+                  maxSizeMB={2}
+                  minWidth={100}
+                  minHeight={100}
+                  maxWidth={500}
+                  maxHeight={500}
+                  required={true}
+                  error={logoError || undefined}
                   helperText={t(
-                    "settings.general.imageUploader.uploadImage",
-                    "Upload image or drag & drop",
+                    "settings.organizerProfile.logoHelperText",
+                    "Recommended size: 500x500px. Minimum size: 100x100px.",
                   )}
                   helperTextSize={t(
-                    "settings.general.imageUploader.recomendedImage",
-                    "Recommended: PNG/JPG file of 500x500 px with size up to 5MB",
+                    "settings.organizerProfile.logoHelperTextSize",
+                    "Max size: 2MB.",
                   )}
-                  value={imageRemoved ? "" : previewUrl || ""}
-                  onChange={(file) => {
-                    if (file) handleImageChange(file);
-                  }}
-                  onRemove={handleImageRemove}
-                  error={imageError}
                   browseButtonText={t(
-                    "imageUploader.browseFile",
+                    "events.helperText.bannerImageBrowse",
                     "Browse File",
                   )}
                 />
