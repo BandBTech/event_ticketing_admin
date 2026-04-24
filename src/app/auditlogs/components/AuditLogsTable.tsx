@@ -24,6 +24,7 @@ interface RefundTableProps {
     sortBy: string | undefined,
     sortOrder: "asc" | "desc" | undefined,
   ) => void;
+  wrapperClassName?: string;
 }
 
 export function AuditLogsTable({
@@ -40,6 +41,7 @@ export function AuditLogsTable({
   sortBy,
   sortOrder,
   onSortChange,
+  wrapperClassName,
 }: RefundTableProps) {
   const { t } = useTranslation();
 
@@ -106,6 +108,7 @@ export function AuditLogsTable({
     <>
       <ReusableTable
         columns={columns}
+        wrapperClassName={wrapperClassName}
         data={auditlogs}
         isLoading={isLoading}
         currentPage={currentPage}

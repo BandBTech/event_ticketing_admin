@@ -51,6 +51,7 @@ interface RefundTableProps {
   onRetryDialogOpen?: boolean;
   setOpenRetryDialog?: (open: boolean) => void;
   retryRefund?: (refundId: string) => void;
+  wrapperClassName?: string;
 }
 
 export function RefundTable({
@@ -71,6 +72,7 @@ export function RefundTable({
   setRejectModalOpen,
   setOpenApproveDialog,
   setOpenRetryDialog,
+  wrapperClassName,
 }: RefundTableProps) {
   const { t } = useTranslation();
   const { locale } = useLanguageStore();
@@ -254,6 +256,7 @@ export function RefundTable({
   return (
     <>
       <ReusableTable
+        wrapperClassName={wrapperClassName}
         columns={columns}
         data={refunds}
         isLoading={isLoading}

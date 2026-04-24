@@ -46,6 +46,7 @@ interface PayoutTableProps {
     sortBy: string | undefined,
     sortOrder: "asc" | "desc" | undefined,
   ) => void;
+  wrapperClassName?: string;
 }
 
 export function TransactionTable({
@@ -62,6 +63,7 @@ export function TransactionTable({
   sortBy,
   sortOrder,
   onSortChange,
+  wrapperClassName,
 }: PayoutTableProps) {
   const { t } = useTranslation();
   const router = useRouter();
@@ -304,6 +306,7 @@ export function TransactionTable({
   return (
     <>
       <ReusableTable
+        wrapperClassName={wrapperClassName}
         columns={columns}
         data={transactions}
         isLoading={isLoading}
@@ -334,7 +337,10 @@ export function TransactionTable({
               </svg>
             </div>
             <h3 className="text-lg font-medium text-gray-900">
-              {t("transactions.table.noTransactionData", "No transaction data found")}
+              {t(
+                "transactions.table.noTransactionData",
+                "No transaction data found",
+              )}
             </h3>
             <p className="text-gray-500 mt-1 max-w-sm">
               {t(

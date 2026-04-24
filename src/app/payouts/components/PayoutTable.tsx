@@ -48,6 +48,7 @@ interface PayoutTableProps {
   onApproveDialogOpen?: boolean;
   setOpenApproveDialog?: (open: boolean) => void;
   approveRefund?: (refundId: string) => void;
+  wrapperClassName?: string;
 }
 
 export function PayoutTable({
@@ -67,6 +68,7 @@ export function PayoutTable({
   setSelectedRefund,
   setRejectModalOpen,
   setOpenApproveDialog,
+  wrapperClassName,
 }: PayoutTableProps) {
   const { t } = useTranslation();
   const { locale } = useLanguageStore();
@@ -74,7 +76,7 @@ export function PayoutTable({
   // Table columns
   const columns: ColumnDef<PayoutRequest>[] = React.useMemo(
     () => [
-            {
+      {
         id: "request_number",
         header: t("payouts.table.requestNumber", "Request Number"),
         accessorKey: "request_number",
@@ -200,6 +202,7 @@ export function PayoutTable({
     <>
       <ReusableTable
         columns={columns}
+        wrapperClassName={wrapperClassName}
         data={payouts}
         isLoading={isLoading}
         currentPage={currentPage}

@@ -96,7 +96,7 @@ export default function TransactionsPage() {
   const hasPreviousPage = response?.pagination.has_prev ?? currentPage > 1;
 
   return (
-    <div className="min-h-screen p-8 space-y-6">
+    <div className="h-full p-8 space-y-6 flex flex-col overflow-hidden">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
@@ -108,7 +108,7 @@ export default function TransactionsPage() {
         </div>
       </div>
 
-      <div className="glass-card-lowest rounded-2xl flex-1 flex flex-col">
+      <div className="glass-card-lowest rounded-2xl flex-1 min-h-0 flex flex-col">
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 p-4">
           <div className="relative w-full sm:w-80">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
@@ -130,10 +130,18 @@ export default function TransactionsPage() {
                 <SelectValue placeholder={t("common.filter", "Filter")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="approved">{t("status.approved", "Approved")}</SelectItem>
-                <SelectItem value="paid">{t("dashboard.dataDisplay.paid", "Paid")}</SelectItem>
-                <SelectItem value="pending">{t("events.status.pending", "Pending")}</SelectItem>
-                <SelectItem value="rejected">{t("events.status.rejected", "Rejected")}</SelectItem>
+                <SelectItem value="approved">
+                  {t("status.approved", "Approved")}
+                </SelectItem>
+                <SelectItem value="paid">
+                  {t("dashboard.dataDisplay.paid", "Paid")}
+                </SelectItem>
+                <SelectItem value="pending">
+                  {t("events.status.pending", "Pending")}
+                </SelectItem>
+                <SelectItem value="rejected">
+                  {t("events.status.rejected", "Rejected")}
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -143,6 +151,7 @@ export default function TransactionsPage() {
 
         <PayoutTable
           payouts={response?.requests || []}
+          wrapperClassName="flex-1 min-h-0 overflow-auto"
           isLoading={isLoading}
           currentPage={currentPage}
           totalPages={totalPages}
