@@ -199,39 +199,49 @@ export function RefundTable({
                   <EyeIcon weight="duotone" className="mr-2 h-4 w-4" />
                   {t(`billings.viewDetails`)}
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => {
-                    setSelectedRefund && setSelectedRefund(refund);
-                    setOpenApproveDialog && setOpenApproveDialog(true);
-                  }}
-                >
-                  <CheckCircleIcon weight="duotone" className="mr-2 h-4 w-4" />
-                  {t(`events.actions.approve`)}
-                </DropdownMenuItem>
 
-                <DropdownMenuItem
-                  onClick={() => {
-                    setSelectedRefund && setSelectedRefund(refund);
-                    setRejectModalOpen && setRejectModalOpen(true);
-                  }}
-                  className="text-red-600"
-                >
-                  <XCircleIcon weight="duotone" className="mr-2 h-4 w-4" />
-                  {t(`events.actions.reject`)}
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => {
-                    setSelectedRefund && setSelectedRefund(refund);
-                    setOpenRetryDialog && setOpenRetryDialog(true);
-                  }}
-                  className="text-red-600"
-                >
-                  <ArrowsCounterClockwiseIcon
-                    weight="duotone"
-                    className="mr-2 h-4 w-4"
-                  />
-                  {t(`events.actions.retry`)}
-                </DropdownMenuItem>
+                {refund.status === "pending" && (
+                  <>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        setSelectedRefund && setSelectedRefund(refund);
+                        setOpenApproveDialog && setOpenApproveDialog(true);
+                      }}
+                    >
+                      <CheckCircleIcon
+                        weight="duotone"
+                        className="mr-2 h-4 w-4"
+                      />
+                      {t(`events.actions.approve`)}
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem
+                      onClick={() => {
+                        setSelectedRefund && setSelectedRefund(refund);
+                        setRejectModalOpen && setRejectModalOpen(true);
+                      }}
+                      className="text-red-600"
+                    >
+                      <XCircleIcon weight="duotone" className="mr-2 h-4 w-4" />
+                      {t(`events.actions.reject`)}
+                    </DropdownMenuItem>
+                  </>
+                )}
+                {refund.status === "failed" && (
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setSelectedRefund && setSelectedRefund(refund);
+                      setOpenRetryDialog && setOpenRetryDialog(true);
+                    }}
+                    className="text-red-600"
+                  >
+                    <ArrowsCounterClockwiseIcon
+                      weight="duotone"
+                      className="mr-2 h-4 w-4"
+                    />
+                    {t(`events.actions.retry`)}
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           );

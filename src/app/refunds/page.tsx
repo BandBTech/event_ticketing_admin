@@ -167,8 +167,8 @@ export default function TransactionsPage() {
                 <SelectValue placeholder={t("transactions.filter", "Filter")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="canceled">
-                  {t("events.status.cancelled", "Canceled")}
+                <SelectItem value="succeeded">
+                  {t("transaction.transactionStatus.succeeded", "Completed")}
                 </SelectItem>
                 <SelectItem value="failed">
                   {t("dashboard.dataDisplay.failed", "Failed")}
@@ -176,8 +176,8 @@ export default function TransactionsPage() {
                 <SelectItem value="pending">
                   {t("events.status.pending", "Pending")}
                 </SelectItem>
-                <SelectItem value="succeeded">
-                  {t("dashboard.dataDisplay.succeeded", "Succeeded")}
+                <SelectItem value="processing">
+                  {t("transaction.transactionStatus.processing", "Processing")}
                 </SelectItem>
               </SelectContent>
             </Select>
