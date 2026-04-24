@@ -941,7 +941,8 @@
       "failed": "失敗",
       "cancelled": "キャンセル",
       "refunded": "返金済み",
-      "awaiting_webhook": "ウェブフックを待機中"
+      "awaiting_webhook": "ウェブフックを待機中",
+      "processing": "処理"
     },
     "transactionDetails": {
       "transactionInformation1": "取引情報",

@@ -928,7 +928,8 @@
       "failed": "Fallito",
       "cancelled": "cancellare",
       "refunded": "Rimborsato",
-      "awaiting_webhook": "in attesa del webhook"
+      "awaiting_webhook": "in attesa del webhook",
+      "processing": "elaborazione"
     },
     "transactionDetails": {
       "transactionInformation1": "Informazioni sulla Transazione",

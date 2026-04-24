@@ -1,6 +1,6 @@
 import { api } from "../lib/apiClient";
 import { API_ENDPOINTS } from "@/app/config/api";
-import { RefundResponse, RefundData } from "@/types/refunds";
+import { RefundResponse, RefundData, RefundStatusChange } from "@/types/refunds";
 
 export class RefundService {
   /**
@@ -67,6 +67,18 @@ export class RefundService {
 
     return result;
   }
+
+    /**
+     * Get event status change history
+     */
+    static async getRefundHistory(
+      eventId: string,
+    ): Promise<RefundStatusChange[]> {
+      return await api.get<RefundStatusChange[]>(
+        `/admin/payments/refunds/${eventId}/status-history`,
+        { requiresAuth: true },
+      );
+    }
 
   static async rejectRefund(payload: {
     refundId: string;

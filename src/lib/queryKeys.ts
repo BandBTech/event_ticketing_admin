@@ -131,6 +131,7 @@ export const queryKeys = {
     list: ["refunds"] as const,
     /** Key for fetching a single refund by ID */
     detail: (id: string | undefined) => ["refund", id] as const,
+    history: (id: string | undefined) => ["refund", id] as const,
   },
 
   /**

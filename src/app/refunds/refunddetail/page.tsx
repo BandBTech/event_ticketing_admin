@@ -10,6 +10,12 @@ import { Badge } from "@/components/ui/badge";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
 import { formatDateTimeLong, formatCurrency } from "@/lib/utils";
+import {RefundStatusChange} from "@/types/refunds"
+import {
+  useEventStatusHistory,
+  useEventAnalyticsById,
+} from "@/hooks/useEvents";
+import {useRefundStatusHistory} from "@/hooks/useRefunds"
 import { RefundResponse, RefundData, StatusHistoryItem } from "@/types/refunds";
 import { cn } from "@/lib/utils";
 import {
@@ -34,6 +40,7 @@ import {
   ChevronUp,
   User,
 } from "lucide-react";
+import StatusHistorySidebar from "./components/StatusHistorySidebar";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -323,11 +330,46 @@ export default function RefundDetail({ onBack }: RefundDetailProps) {
     enabled: !!refund_id,
   });
 
+  const {
+    data: statusHistory,
+    isLoading: isLoadingHistory,
+    refetch: refetchStatusHistory,
+  } = useEventStatusHistory("0823d81f-a8fb-42c4-ad2a-2d72f74e6352");
+
+  const {
+    data: statusHistory1,
+    isLoading: isLoadingHistory1,
+    refetch: refetchStatusHistory1,
+  } = useRefundStatusHistory(refund_id || "");  
+
   useEffect(() => {
     setRefundData(refundDetailData || null);
   }, [refundDetailData]);
 
   const history = DUMMY_STATUS_HISTORY;
+
+
+  // Ensure statusHistory is an array
+const historyList = Array.isArray(statusHistory1)
+  ? statusHistory1
+  : statusHistory1 &&
+      typeof statusHistory1 === "object" &&
+      "status_history" in statusHistory1 &&
+      Array.isArray((statusHistory1 as { status_history: unknown[] }).status_history)
+    ? (statusHistory1 as { status_history: unknown[] }).status_history
+    : [];      
+
+  const mappedStatusHistory = (historyList as RefundStatusChange[]).map((h) => ({
+    id: h.id,
+    event_id: h.refund_id,
+    old_status: h.old_status || "unknown",
+    new_status: h.new_status || "unknown",
+    status_type: h.changed_by_type || "approval",
+    remark: h.remarks || "",
+    changed_by: h.changed_by_type,
+    changed_by_name: h.changed_by_type || "Unknown",
+    created_at: h.changed_at,
+  }));  
 
   return (
     <div className="min-h-screen bg-[#f4f6f9] p-7 font-sans">
@@ -340,9 +382,7 @@ export default function RefundDetail({ onBack }: RefundDetailProps) {
           weight="duotone"
           className="w-5 h-5 group-hover:-translate-x-1 transition-transform"
         />
-        <span className="font-medium">
-          Back to Refunds
-        </span>
+        <span className="font-medium">Back to Refunds</span>
       </button>
 
       {/* Header Card */}
@@ -412,10 +452,10 @@ export default function RefundDetail({ onBack }: RefundDetailProps) {
                   setExpanded(expanded === "admin" ? null : "admin")
                 }
                 title={
-                  expanded === "admin" ? undefined : refundData?.event.title
+                  expanded === "admin" ? undefined : refundData?.event?.title
                 }
               >
-                {refundData?.event.title}
+                {refundData?.event?.title}
               </p>
             </div>
           </div>
@@ -438,10 +478,10 @@ export default function RefundDetail({ onBack }: RefundDetailProps) {
                   setExpanded(expanded === "admin" ? null : "admin")
                 }
                 title={
-                  expanded === "admin" ? undefined : refundData?.organizer.name
+                  expanded === "admin" ? undefined : refundData?.organizer?.name
                 }
               >
-                {refundData?.organizer.name}
+                {refundData?.organizer?.name}
               </p>
             </div>
           </div>
@@ -508,7 +548,14 @@ export default function RefundDetail({ onBack }: RefundDetailProps) {
 
         {/* Status History - 25% */}
         <div className="flex-[3.5] min-w-0">
-          <StatusHistory items={history} />
+          {/* <StatusHistory items={history} /> */}
+
+          {/* Status History */}
+          <StatusHistorySidebar
+            history={mappedStatusHistory}
+            isLoading={isLoadingHistory}
+            onRefresh={() => refetchStatusHistory()}
+          />
         </div>
       </div>
     </div>

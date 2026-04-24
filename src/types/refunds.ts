@@ -83,3 +83,18 @@ export interface StatusHistoryItem {
   metadata?: Record<string, unknown>;
   changed_at: string;
 }
+
+export interface RefundStatusChange {
+  id: string;
+  refund_id: string;
+  old_status: string;
+  new_status: string;
+  changed_by_type: "system" | "user" | "admin"; // Adjust based on your possible values
+  remarks: string;
+  metadata: {
+    request_id: string;
+    source: string;
+    webhook_event_id: string;
+  };
+  changed_at: string; // ISO 8601 timestamp
+}

@@ -866,7 +866,7 @@
       "viewPaymentHistory": "View Payment History",
       "noBillingData": "No billing data found",
       "noBillingDataSubtitle": "You haven't made any billings yet.",
-      "modals" : {
+      "modals": {
         "totalAmount": "Total Amount",
         "paidAmount": "Paid Amount",
         "remainingAmount": "Remaining Amount"
@@ -977,7 +977,8 @@
       "failed": "Failed",
       "cancelled": "Cancelled",
       "refunded": "Refunded",
-      "awaiting_webhook": "Awaiting Webhook"
+      "awaiting_webhook": "Awaiting Webhook",
+      "processing": "Processing"
     },
     "transactionDetails": {
       "transactionInformation1": "Transaction Information",
@@ -1349,7 +1350,7 @@
       "loading": "Loading",
       "companyInfoUpdated": "Company information updated successfully",
       "pleaseUploadImageFile": "Please Upload an Image File",
-      "validation":{
+      "validation": {
         "nameRequired": "Name is required.",
         "nameAtLeast2Chars": "Name must be at least 2 characters.",
         "nameAtMost100Chars": "Name must be at most 100 characters.",
