@@ -64,7 +64,8 @@
     "admin": "Admin",
     "users": "Utenti",
     "billings": "Fatturazioni",
-    "transactions": "Transazioni"
+    "transactions": "Transazioni",
+    "payments": "Pagamenti"
   },
   "hero": {
     "badge": "La Piattaforma Eventi Premier del Nepal",
@@ -992,7 +993,17 @@
       "transactionAmount": "Importo Transazione",
       "gateway": "Gateway",
       "date": "Data",
-      "close": "Chiudi"
+      "close": "Chiudi",
+      "event": "Evento",
+      "organizer": "Organizzatore",
+      "financialSummary": "Riepilogo finanziario",
+      "originalAmount": "Importo originale",
+      "refundAmount": "Importo rimborsato",
+      "reasonForRefund": "Motivo del rimborso",
+      "status": "Stato",
+      "tickets": "Biglietto(i)",
+      "backToRefunds": "Torna ai rimborsi",
+      "noStatusChanges": "Nessun cambiamento di stato registrato per questo evento."
     },
     "modal": {
       "confirmRefund": "Conferma Approvazione Rimborso",

@@ -64,7 +64,8 @@
     "admin": "管理者",
     "users": "ユーザー",
     "billings": "請求書",
-    "transactions": "取引"
+    "transactions": "取引",
+    "payments": "支払い"
   },
   "hero": {
     "badge": "ネパール最高のイベントプラットフォーム",
@@ -1005,7 +1006,17 @@
       "transactionAmount": "取引金額",
       "gateway": "決済ゲートウェイ",
       "date": "日付",
-      "close": "閉じる"
+      "close": "閉じる",
+      "event": "イベント",
+      "organizer": "主催者",
+      "financialSummary": "財務概要",
+      "originalAmount": "元の金額",
+      "refundAmount": "返金額",
+      "reasonForRefund": "返金理由",
+      "status": "ステータス",
+      "tickets": "チケット",
+      "backToRefunds": "返金一覧に戻る",
+      "noStatusChanges": "このイベントに関して、ステータスの変更は記録されていません。"
     },
     "modal": {
       "confirmRefund": "返金承認の確認",

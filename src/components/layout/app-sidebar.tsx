@@ -17,6 +17,7 @@ import {
   Ticket,
   ArrowsLeftRight,
   InvoiceIcon,
+  CreditCardIcon 
 } from "@phosphor-icons/react";
 
 import { useAuthStore } from "@/store/authStore";
@@ -58,8 +59,8 @@ export function AppSidebar() {
       { href: "/billings", labelKey: "sidebar.billings", icon: InvoiceIcon },
       {
         href: "/transactions",
-        labelKey: "sidebar.transactions",
-        icon: ArrowsLeftRight,
+        labelKey: "sidebar.payments",
+        icon: CreditCardIcon,
       },
       { href: "/reports", labelKey: "sidebar.reports", icon: FileText },
       { href: "/settings", labelKey: "sidebar.settings", icon: Gear },

@@ -333,7 +333,8 @@
     "admin": "Admin",
     "users": "Users",
     "billings": "Billings",
-    "transactions": "Transactions"
+    "transactions": "Transactions",
+    "payments": "Payments"
   },
   "auth": {
     "login": {
@@ -1041,7 +1042,17 @@
       "transactionAmount": "Transaction Amount",
       "gateway": "Gateway",
       "date": "Date",
-      "close": "Close"
+      "close": "Close",
+      "event": "Event",
+      "organizer": "Organizer",
+      "financialSummary": "Financial Summary",
+      "originalAmount": "Original Amount",
+      "refundAmount": "Refund Amount",
+      "reasonForRefund": "Reason for Refund",
+      "status": "Status",
+      "tickets": "Ticket (s)",
+      "backToRefunds": "Back to Refunds",
+      "noStatusChanges": "No status changes recorded for this event."
     },
     "modal": {
       "confirmRefund": "Confirm Refund Approval",

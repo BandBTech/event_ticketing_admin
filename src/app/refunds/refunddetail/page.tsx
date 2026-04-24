@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/queryKeys";
 import { RefundService } from "@/services/refundService";
@@ -12,7 +11,7 @@ import { useLanguageStore } from "@/store/languageStore";
 import { formatDateTimeLong, formatCurrency } from "@/lib/utils";
 import { RefundStatusChange } from "@/types/refunds";
 import { useRefundStatusHistory } from "@/hooks/useRefunds";
-import { RefundData, StatusHistoryItem } from "@/types/refunds";
+import { RefundData } from "@/types/refunds";
 import { cn } from "@/lib/utils";
 import {
   CalendarBlank as CalendarBlankIcon,
@@ -22,14 +21,6 @@ import {
 } from "@phosphor-icons/react";
 import { BanknoteArrowUp } from "lucide-react";
 import StatusHistorySidebar from "./components/StatusHistorySidebar";
-import { Span } from "next/dist/trace";
-
-function formatRefundType(type: string) {
-  return type
-    .split("_")
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(" ");
-}
 
 function FinRow({
   label,
@@ -115,7 +106,7 @@ export default function RefundDetail() {
           weight="duotone"
           className="w-5 h-5 group-hover:-translate-x-1 transition-transform"
         />
-        <span className="font-medium">Back to Refunds</span>
+        <span className="font-medium">{t("refunds.refundDetail.backToRefunds")}</span>
       </button>
 
       {/* Header Card */}
@@ -128,7 +119,7 @@ export default function RefundDetail() {
             </div>
             <div>
                 <p className="text-xs text-slate-400 font-semibold uppercase tracking-widest mb-0.5">
-                  {t("", "Refund Number")}
+                  {t("refunds.refundDetail.refundNumber", "Refund Number")}
                 </p>
               <h1
                 className="text-xl font-bold text-slate-800"
@@ -148,8 +139,8 @@ export default function RefundDetail() {
             </Badge>
             <Badge
               className={"bg-blue-50 text-blue-700 border border-blue-200"}
-            >
-              {formatRefundType(refundData?.refund_type || "")}
+              >
+              {t("refunds.refundType." + refundData?.refund_type) ?? "N/A"}
             </Badge>
           </div>
         </div>
@@ -161,7 +152,7 @@ export default function RefundDetail() {
             <CalendarBlankIcon className="text-[#6366f1] w-4 h-4 flex-shrink-0" />
             <div className="min-w-0">
               <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider">
-                Event
+                {t("refunds.refundDetail.event")}
               </p>
               <p
                 className={cn(
@@ -187,7 +178,7 @@ export default function RefundDetail() {
             <BuildingApartmentIcon className="text-[#059669] w-4 h-4 flex-shrink-0" />
             <div className="min-w-0">
               <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider">
-                Organizer
+                {t("refunds.refundDetail.organizer")}
               </p>
               <p
                 className={cn(
@@ -213,7 +204,7 @@ export default function RefundDetail() {
             <UserIcon className="text-[#d97706] w-4 h-4 flex-shrink-0" />
             <div className="min-w-0">
               <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider">
-                Initiated By
+                {t("refunds.refundDetail.initiatedBy")}
               </p>
               <p
                 className={cn(
@@ -242,11 +233,11 @@ export default function RefundDetail() {
         {/* Financial Summary - 75% */}
         <div className="flex-[6.5] bg-white border border-slate-200 rounded-2xl p-6">
           <h2 className="text-base font-semibold text-gray-900 mb-5">
-            Financial Summary
+            {t("refunds.refundDetail.financialSummary")}
           </h2>
 
           <FinRow
-            label="Original Amount"
+            label={t("refunds.refundDetail.originalAmount")}
             value={formatCurrency(
               refundData?.transaction.amount || 0,
               refundData?.currency,
@@ -254,7 +245,7 @@ export default function RefundDetail() {
             )}
           />
           <FinRow
-            label="Refund Amount"
+            label={t("refunds.refundDetail.refundAmount")}
             value={
               <>
               <span>{formatCurrency(
@@ -262,18 +253,22 @@ export default function RefundDetail() {
               refundData?.currency,
               locale,
             )}</span> {" "}
-            <span className="italic font-normal">( {refundData?.ticket_count} tickets )</span>
+            <span className="italic font-normal">( {refundData?.ticket_count} {t("refunds.refundDetail.tickets")} )</span>
               </>
             }
           />
-          <FinRow label="Reason for Refund" value={refundData?.reason} />
+          <FinRow label={t("refunds.refundDetail.reasonForRefund")} value={refundData?.reason} />
           <FinRow
-            label="Requested At"
+            label={t("refunds.refundDetail.requestedAt")}
             value={formatDateTimeLong(refundData?.requested_at, locale)}
           />
           <FinRow
-            label="Status"
-            value={refundData?.status}
+            label={t("refunds.refundDetail.status")}
+            value={
+              <>
+              {refundData?.status === "succeeded" ? t("status.completed") : t("status." + refundData?.status)}
+              </>
+            }
           />
         </div>
 

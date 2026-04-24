@@ -1,18 +1,13 @@
 import { useState, useMemo } from "react";
 import { useTranslation } from "@/hooks/useTranslation";
-import { EventStatusHistory } from "@/types/event";
 import { formatDateTime } from "@/lib/utils";
 import {
   Circle,
   User,
-  ChatCircle,
   CaretDown,
   CaretUp,
   CheckCircle,
   XCircle,
-  PauseCircle,
-  PlayCircle,
-  StopCircle,
   ArrowsClockwise,
   SpinnerGapIcon,
 } from "@phosphor-icons/react";
@@ -107,14 +102,6 @@ export default function StatusHistorySidebar({
     }
   };
 
-  const getStatusLabel = (status: string) => {
-    if (status === "succeeded") {
-      return "completed";
-    }
-
-    return t(`event.badge.${status}`, status);
-  };
-
   if (isLoading) {
     return (
       <div className="rounded-2xl glass-card-lower p-6 space-y-4 max-h-[600px] overflow-hidden">
@@ -153,7 +140,7 @@ export default function StatusHistorySidebar({
         </h3>
         <p className="text-gray-500 text-sm">
           {t(
-            "event.text.noStatusHistory",
+            "refunds.refundDetail.noStatusChanges",
             "No status changes recorded for this event.",
           )}
         </p>
@@ -217,7 +204,10 @@ export default function StatusHistorySidebar({
                     variant="outline"
                     className={`uppercase text-[10px] px-1.5 py-0 font-semibold rounded-full w-fit ${getStatusBadgeStyles(historyItem.new_status)}`}
                   >
-                    {getStatusLabel(historyItem.new_status)}
+                    {t(
+                      "transactions.transactionStatus." +
+                        historyItem.new_status,
+                    )}
                   </Badge>
                   <span className="text-[10px] text-black">
                     {formatDateTime(historyItem.created_at)}
