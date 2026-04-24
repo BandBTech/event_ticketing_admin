@@ -36,9 +36,18 @@ export interface RefundData {
   transaction: {
     id: string;
     amount: number;
-    gateway: "stripe" | string;
-    status: "completed" | "pending" | "failed" | string;
+    gateway: string;
+    status: string;
     created_at: string;
+  };
+  event: {
+    id: string;
+    title: string;
+    banner_image: string;
+  };
+  organizer: {
+    id: string;
+    name: string;
   };
   initiated_by: {
     id: string;
@@ -48,11 +57,29 @@ export interface RefundData {
   amount: number;
   currency: string;
   reason: string;
-  refund_type: "customer_request" | string;
-  status: "pending" | "completed" | "failed" | string;
+  refund_type: string;
+  status: string;
   affected_ticket_ids: string[];
   ticket_count: number;
   requested_at: string;
   created_at: string;
   updated_at: string;
+  status_history?: StatusHistoryItem[];
+}
+
+export interface StatusHistoryItem {
+  id: string;
+  refund_id: string;
+  old_status: string;
+  new_status: string;
+  changed_by_type: "system" | "admin" | "user";
+  changed_by_id?: string;
+  changed_by?: {
+    id: string;
+    name: string;
+    email: string;
+  };
+  remarks: string;
+  metadata?: Record<string, unknown>;
+  changed_at: string;
 }

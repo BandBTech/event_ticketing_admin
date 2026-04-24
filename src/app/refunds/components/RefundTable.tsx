@@ -74,6 +74,7 @@ export function RefundTable({
 }: RefundTableProps) {
   const { t } = useTranslation();
   const { locale } = useLanguageStore();
+  const router = useRouter();
 
   const [openRefundDetail, setOpenRefundDetail] = React.useState(false);
   const [selectedRefundData, setSelectedRefundData] =
@@ -181,7 +182,7 @@ export function RefundTable({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem
+                {/* <DropdownMenuItem
                   onClick={() => {
                     setSelectedRefundData && setSelectedRefundData(refund);
                     setOpenRefundDetail(true);
@@ -189,6 +190,14 @@ export function RefundTable({
                 >
                   <EyeIcon weight="duotone" className="mr-2 h-4 w-4" />
                   {t(`users.viewDetails`)}
+                </DropdownMenuItem> */}
+                <DropdownMenuItem
+                  onClick={() => {
+                    router.push(`/refunds/refunddetail?id=${refund.id}`);
+                  }}
+                >
+                  <EyeIcon weight="duotone" className="mr-2 h-4 w-4" />
+                  {t(`billings.viewDetails`)}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => {
