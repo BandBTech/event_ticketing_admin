@@ -14,13 +14,15 @@ import {
   PlayCircle,
   StopCircle,
   ArrowsClockwise,
+  SpinnerGapIcon,
 } from "@phosphor-icons/react";
 import { Badge } from "@/components/ui/badge";
+import { RefundStatusChange } from "@/types/refunds";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface StatusHistorySidebarProps {
-  history: EventStatusHistory[];
+  history: RefundStatusChange[];
   isLoading?: boolean;
   onRefresh?: () => void;
 }
@@ -43,27 +45,26 @@ export default function StatusHistorySidebar({
 
   // Ensure history is an array. If it's an object, check for common list properties.
   const historyList = useMemo(() => {
-    let list: EventStatusHistory[] = [];
+    let list: RefundStatusChange[] = [];
     if (Array.isArray(history)) {
       list = history;
     } else if (history && typeof history === "object") {
       // Check for common wrappers like { history: [] } or { items: [] }
       const h = history as Record<string, unknown>;
       list = Array.isArray(h.history)
-        ? (h.history as EventStatusHistory[])
+        ? (h.history as RefundStatusChange[])
         : Array.isArray(h.items)
-          ? (h.items as EventStatusHistory[])
+          ? (h.items as RefundStatusChange[])
           : Array.isArray(h.data)
-            ? (h.data as EventStatusHistory[])
+            ? (h.data as RefundStatusChange[])
             : [];
     }
 
-    return list
-      .filter((item) => item.status_type !== "sales")
-      .sort(
-        (a, b) =>
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-      );
+    return list.sort(
+      (a, b) =>
+        new Date(b.changed_at || "").getTime() -
+        new Date(a.changed_at || "").getTime(),
+    );
   }, [history]);
 
   // Determine which items to show
@@ -76,30 +77,16 @@ export default function StatusHistorySidebar({
     return [...firstThree, "DIVIDER", lastOne];
   }, [historyList, isExpanded]);
 
-  const getStatusIcon = (status: string, type: string) => {
-    if (type === "sales") {
-      if (status === "paused")
-        return <PauseCircle size={16} className="text-amber-500" />;
-      if (status === "active" || status === "resumed")
-        return <PlayCircle size={16} className="text-green-500" />;
-      if (status === "stopped")
-        return <StopCircle size={16} className="text-destructive" />;
-      if (status === "sales_upcoming")
-        return <PlayCircle size={16} className="text-blue-500" />;
-    }
-
+  const getStatusIcon = (status: string) => {
     switch (status) {
-      case "approved":
-        return <CheckCircle size={16} className="text-emerald-500" />;
-      case "rejected":
-        return <XCircle size={16} className="text-destructive" />;
-      case "cancelled":
-        return <XCircle size={16} className="text-destructive" />;
       case "pending":
         return <Circle size={16} weight="fill" className="text-amber-500" />;
-      // case 'draft': return <Circle size={16} className="text-gray-500" />;
-      case "on_sale":
-        return <Circle size={16} className="text-green-500" />;
+      case "processing":
+        return <SpinnerGapIcon size={16} className="text-yellow-700" />;
+      case "succeeded":
+        return <CheckCircle size={16} className="text-emerald-500" />;
+      case "failed":
+        return <XCircle size={16} className="text-destructive" />;
       default:
         return <Circle size={16} className="text-blue-500" />;
     }
@@ -109,38 +96,20 @@ export default function StatusHistorySidebar({
     switch (status) {
       case "pending":
         return "border-yellow-600 bg-yellow-700 text-yellow-100";
-      case "approved":
+      case "processing":
+        return "border-yellow-600 bg-yellow-700 text-yellow-100";
+      case "succeeded":
         return "border-green-600 bg-green-700 text-green-100";
-      case "rejected":
-        return "border-red-600 bg-red-700 text-red-100";
-      case "cancelled":
+      case "failed":
         return "border-red-600 bg-red-700 text-white";
-      case "draft":
-        return "border-gray-600 bg-gray-700 text-gray-100";
-      case "completed":
-        return "border-slate-600 bg-slate-700 text-slate-100";
-      case "on_sale":
-        return "border-green-600 bg-green-700 text-green-100";
-      case "live":
-        return "border-green-600 bg-green-100 text-green-700";
-      case "hold":
-        return "border-amber-600 bg-amber-700 text-amber-100";
-      case "scheduled":
-        return "border-blue-600 bg-blue-700 text-blue-100";
-      case "sold_out":
-        return "border-red-600 bg-red-700 text-red-100";
-      case "sales_end":
-        return "border-red-300 bg-red-200 text-red-800";
-      case "sales_upcoming":
-        return "border-blue-300 bg-blue-200 text-blue-800";
       default:
         return "border-amber-200 bg-amber-50 text-amber-700";
     }
   };
 
-  const getStatusLabel = (status: string, status_type: string) => {
-    if (status_type === "sales" && status === "active") {
-      return t(`event.badge.resumed`, status);
+  const getStatusLabel = (status: string) => {
+    if (status === "succeeded") {
+      return "completed";
     }
 
     return t(`event.badge.${status}`, status);
@@ -194,7 +163,7 @@ export default function StatusHistorySidebar({
 
   return (
     <div className="rounded-2xl glass-card-lower p-6 space-y-4 @container">
-      <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2 pb-2 z-20">
+      <h3 className="text-base font-semibold text-gray-900 flex items-center gap-2 pb-2 z-20">
         {t("event.section.statusHistory", "Status History")}
         {onRefresh && (
           <Button
@@ -234,12 +203,12 @@ export default function StatusHistorySidebar({
             );
           }
 
-          const historyItem = item as EventStatusHistory;          
+          const historyItem = item as RefundStatusChange;
 
           return (
             <div key={historyItem.id} className="relative pl-10 group">
-              <div className="absolute left-0 -top-1 w-8 h-8 flex items-center justify-center rounded-full bg-gray-50 border border-gray-100 group-last:border-emerald-500 z-10 transition-colors">
-                {getStatusIcon(historyItem.new_status, historyItem.status_type)}
+              <div className="absolute left-0 -top-1 w-8 h-8 flex items-center justify-center rounded-full bg-gray-50 border border-gray-100 z-10 transition-colors">
+                {getStatusIcon(historyItem.new_status)}
               </div>
 
               <div className="flex flex-col gap-1">
@@ -248,45 +217,17 @@ export default function StatusHistorySidebar({
                     variant="outline"
                     className={`uppercase text-[10px] px-1.5 py-0 font-semibold rounded-full w-fit ${getStatusBadgeStyles(historyItem.new_status)}`}
                   >
-                    {historyItem.new_status === "live" && (
-                      <span className="flex h-1.5 w-1.5 relative mr-1">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
-                      </span>
-                    )}
-                    {getStatusLabel(
-                      historyItem.new_status,
-                      historyItem.status_type,
-                    )}
+                    {getStatusLabel(historyItem.new_status)}
                   </Badge>
-                  <span className="text-[10px] text-gray-400">
+                  <span className="text-[10px] text-black">
                     {formatDateTime(historyItem.created_at)}
                   </span>
                 </div>
 
-                {/*<div className="text-sm font-medium text-gray-700">
-                  {historyItem.status_type === "approval"
-                    ? historyItem.old_status
-                      ? t(
-                          "event.history.statusChanged",
-                          "Status updated from {old} to {new}",
-                        )
-                          .replace("{old}", historyItem.old_status)
-                          .replace("{new}", historyItem.new_status)
-                      : t("event.history.statusSet", "Status set to {new}").replace(
-                          "{new}",
-                          historyItem.new_status,
-                        )
-                    : t("event.history.salesChanged", "Sales {new}").replace(
-                        "{new}",
-                        historyItem.new_status,
-                      )}
-                </div>*/}
-
-                <div className="flex items-center gap-1 mt-1 text-[10px] text-gray-400">
+                <div className="flex items-center gap-1 mt-1 text-[10px] text-black">
                   <User size={10} />
                   <span>
-                    {historyItem.changed_by_name ||
+                    {historyItem.changed_by_type ||
                       t("common.text.system", "System")}
                   </span>
                 </div>
