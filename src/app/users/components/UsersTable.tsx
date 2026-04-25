@@ -140,7 +140,7 @@ export function UsersTable({
           const { email, phone, country_code } = row.original;
 
           return (
-            <div className="flex flex-col gap-0.5 max-w-[200px] text-gray-700 truncate ">
+            <div className="flex flex-col gap-0.5 text-gray-700 truncate ">
               <span className="text-sm text-foreground">{email || "-"}</span>
 
               <span className="text-xs text-muted-foreground">

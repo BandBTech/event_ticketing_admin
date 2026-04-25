@@ -93,13 +93,23 @@ export function RefundTable({
       },
       {
         id: "date",
-        header: t("transactions.table.date"),
-        accessorKey: "created_at",
+        title: "Created At",
         meta: { sortKey: "created_at" },
+        header: t("transactions.table.date"),
         cell: ({ row }) => {
           const date = new Date(row.original.created_at);
           const formattedDate = date.toLocaleDateString("en-CA");
-          return <span>{formattedDate}</span>;
+          const formattedTime = date.toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+          });
+          return (
+            <div className="flex flex-col">
+              <span>{formattedDate}</span>
+              <span className="text-xs text-gray-500">at {formattedTime}</span>
+            </div>
+          );
         },
       },
       {

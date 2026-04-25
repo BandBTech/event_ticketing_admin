@@ -88,7 +88,7 @@ export function TransactionTable({
           return (
             <div className="flex flex-col">
               <span>{formattedDate}</span>
-              <span className="text-xs text-gray-500">At {formattedTime}</span>
+              <span className="text-xs text-gray-500">at {formattedTime}</span>
             </div>
           );
         },
