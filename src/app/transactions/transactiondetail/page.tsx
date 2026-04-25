@@ -100,9 +100,6 @@ export default function TransactionDetailPage() {
             </div>
           </div>
         </div>
-        <button className="w-9 h-9 rounded-lg border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-50">
-          <span className="text-lg leading-none">⋯</span>
-        </button>
       </div>
 
       {/* Middle Row */}

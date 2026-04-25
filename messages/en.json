@@ -1546,7 +1546,9 @@
     "scheduled": "Scheduled",
     "suspended": "Suspended",
     "unverified": "Unverified",
-    "verified": "Verified"
+    "verified": "Verified",
+    "expired": "Expired",
+    "refunded": "Refunded"
   },
   "pagination": {
     "previous": "Previous",

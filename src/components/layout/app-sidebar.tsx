@@ -17,13 +17,16 @@ import {
   Ticket,
   ArrowsLeftRight,
   InvoiceIcon,
-  CreditCardIcon 
+  CreditCardIcon,
 } from "@phosphor-icons/react";
+import Image from "next/image";
 
 import { useAuthStore } from "@/store/authStore";
 import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useUIStore } from "@/store/uiStore";
+import logo from "../../../public/timro-ticket-logo.png";
+import logoCollapsed from "../../../public/timro-ticket-logo-collapsed.png";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -103,15 +106,21 @@ export function AppSidebar() {
         <div className="flex items-center justify-between px-4 py-5 border-b border-gray-100">
           {collapsed ? (
             <div className="flex justify-center w-full">
-              <Ticket weight="duotone" size={28} className="text-blue-600" />
+              {/* <Ticket weight="duotone" size={28} className="text-blue-600" /> */}
+              <Image
+                src={logoCollapsed}
+                alt="Logo"
+                className="scale-90 p-1 mr-2"
+              />
             </div>
           ) : (
             <>
-              <span className="text-xl font-bold text-blue-600">E-Ticket</span>
+              {/* <span className="text-xl font-bold text-blue-600">E-Ticket</span> */}
+              <Image src={logo} alt="Logo" className="scale-90" />
               <button
                 title="toggle-button"
                 onClick={onToggle}
-                className="hidden md:block p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+                className="absolute -right-3 top-6 z-50 bg-white border border-gray-300 rounded-lg shadow-sm p-1.5 text-gray-700 hover:text-gray-900 hover:shadow-md transition-all hidden md:block"
               >
                 <CaretDoubleLeft
                   weight="bold"
@@ -126,7 +135,10 @@ export function AppSidebar() {
               onClick={onToggle}
               className="absolute -right-3 top-6 z-50 bg-white border border-gray-300 rounded-lg shadow-sm p-1.5 text-gray-700 hover:text-gray-900 hover:shadow-md transition-all hidden md:block"
             >
-              <CaretDoubleRight weight="bold" className="size-4" />
+              <CaretDoubleRight
+                weight="bold"
+                className="size-4 text-gray-500"
+              />
             </button>
           )}
         </div>
@@ -216,8 +228,6 @@ export function AppSidebar() {
               align="start"
               sideOffset={8}
             >
-
-
               {/* Profile */}
               <DropdownMenuItem
                 onClick={() => {

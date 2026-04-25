@@ -1494,7 +1494,9 @@
     "scheduled": "Programmato",
     "suspended": "Sospeso",
     "unverified": "Non verificato",
-    "verified": "Verificato"
+    "verified": "Verificato",
+    "expired": "Scaduta",
+    "refunded": "Rimborsata"
   },
   "pagination": {
     "previous": "Precedente",

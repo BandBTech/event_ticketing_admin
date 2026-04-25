@@ -1508,7 +1508,9 @@
     "scheduled": "スケジュール済み",
     "suspended": "停止中",
     "unverified": "未認証",
-    "verified": "認証済み"
+    "verified": "認証済み",
+    "expired": "期限切れ",
+    "refunded": "返金済み"
   },
   "pagination": {
     "previous": "前へ",
