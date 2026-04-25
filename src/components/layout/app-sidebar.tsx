@@ -105,18 +105,24 @@ export function AppSidebar() {
         {/* Header with Logo and Collapse Button */}
         <div className="flex items-center justify-between px-4 py-5 border-b border-gray-100">
           {collapsed ? (
-            <div className="flex justify-center w-full">
+            <div
+              onClick={() => router.push("/dashboard")}
+              className="flex justify-center w-full"
+            >
               {/* <Ticket weight="duotone" size={28} className="text-blue-600" /> */}
               <Image
                 src={logoCollapsed}
                 alt="Logo"
-                className="scale-90 p-1 mr-2"
+                className="scale-90 p-1 mr-2 cursor-pointer"
               />
             </div>
           ) : (
             <>
               {/* <span className="text-xl font-bold text-blue-600">E-Ticket</span> */}
-              <Image src={logo} alt="Logo" className="scale-90" />
+              <Image 
+              onClick={() => router.push("/dashboard")}
+              src={logo} alt="Logo" 
+              className="scale-90 p-1 mr-2 cursor-pointer" />
               <button
                 title="toggle-button"
                 onClick={onToggle}
