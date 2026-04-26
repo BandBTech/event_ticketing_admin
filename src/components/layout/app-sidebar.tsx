@@ -103,26 +103,28 @@ export function AppSidebar() {
         } ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
       >
         {/* Header with Logo and Collapse Button */}
-        <div className="flex items-center justify-between px-4 py-5 border-b border-gray-100">
+        <div className="flex items-center justify-between px-4 py-4 border-b border-gray-100">
           {collapsed ? (
             <div
               onClick={() => router.push("/dashboard")}
-              className="flex justify-center w-full"
+              className="flex justify-left w-full"
             >
               {/* <Ticket weight="duotone" size={28} className="text-blue-600" /> */}
               <Image
                 src={logoCollapsed}
                 alt="Logo"
-                className="scale-90 p-1 mr-2 cursor-pointer"
+                className="h-11 max-w-full"
               />
             </div>
           ) : (
             <>
               {/* <span className="text-xl font-bold text-blue-600">E-Ticket</span> */}
-              <Image 
-              onClick={() => router.push("/dashboard")}
-              src={logo} alt="Logo" 
-              className="scale-90 p-1 mr-2 cursor-pointer" />
+              <Image
+                onClick={() => router.push("/dashboard")}
+                src={logo}
+                alt="Logo"
+                className="h-11 max-w-[145px]"
+              />
               <button
                 title="toggle-button"
                 onClick={onToggle}
