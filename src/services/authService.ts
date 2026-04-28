@@ -87,6 +87,7 @@ class AuthService {
     const tokens = await apiRequest<TokenResponse>('/auth/admin/login', {
       method: 'POST',
       body: JSON.stringify(credentials),
+      showErrorToast: false,
     });
 
     // Store tokens with remember me preference
@@ -175,6 +176,7 @@ class AuthService {
     await apiRequest<void>('/auth/admin/reset-password-request', {
       method: 'POST',
       body: JSON.stringify({ email }),
+      showErrorToast: false,
     });
   }
 
@@ -198,6 +200,7 @@ class AuthService {
         confirm_password: data.confirm_password,
         role: data.role || 'admin'
       }),
+      showErrorToast: false,
     });
   }
 
@@ -246,6 +249,7 @@ class AuthService {
         identifier: data.identifier,
         otp_type: data.otp_type,
       }),
+      showErrorToast: false,
     });
   }
 
@@ -265,6 +269,7 @@ class AuthService {
         otp_code: data.otp_code,
         otp_type: data.otp_type,
       }),
+      showErrorToast: false,
     });
   }
 
