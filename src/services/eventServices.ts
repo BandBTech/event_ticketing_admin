@@ -295,7 +295,7 @@ static async getPendingEvent(): Promise<EventResponse> {
     return await api.put<Event>(
       `/admin/events/${eventId}/featured`,
       { is_featured: isFeatured },
-      { requiresAuth: true, showSuccessToast: true },
+      { requiresAuth: true, showSuccessToast: true, showErrorToast: false },
     );
   }
 
@@ -306,7 +306,7 @@ static async getPendingEvent(): Promise<EventResponse> {
     return await api.put<Event>(
       `/admin/events/${eventId}/cancel`,
       { cancellation_reason: reason },
-      { requiresAuth: true },
+      { requiresAuth: true, showErrorToast: false },
     );
   }
 
@@ -316,6 +316,7 @@ static async getPendingEvent(): Promise<EventResponse> {
   static async deleteEvent(eventId: string): Promise<void> {
     return await api.delete<void>(`/admin/events/${eventId}`, {
       requiresAuth: true,
+      showErrorToast: false,
     });
   }
 
