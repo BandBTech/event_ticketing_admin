@@ -1,15 +1,12 @@
-import { 
-  LoginRequest, 
-  TokenResponse, 
+import {
+  LoginRequest,
+  TokenResponse,
   UserProfileResponse,
   RefreshTokenRequest,
   AuthApiResponse,
-  AuthApiError 
 } from '@/types/auth';
 import { tokenManager } from '../lib/tokenManager';
 import { api } from '../lib/apiClient';
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://sandbox.timroticket.com/api/v1';
 
 export class AuthError extends Error {
   constructor(
@@ -20,56 +17,6 @@ export class AuthError extends Error {
   ) {
     super(message);
     this.name = 'AuthError';
-  }
-}
-
-// Legacy API request function for non-authenticated endpoints
-async function apiRequest<T>(
-  endpoint: string,
-  options: RequestInit = {}
-): Promise<T> {
-  const url = `${API_BASE_URL}${endpoint}`;
-  
-  const config: RequestInit = {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-  };
-
-  try {
-    const response = await fetch(url, config);
-    const data = await response.json();
-
-    if (!response.ok) {
-      const errorData = data as AuthApiError;
-      throw new AuthError(
-        errorData.message || 'An error occurred',
-        errorData.error?.code || 'UNKNOWN_ERROR',
-        response.status,
-        errorData.error?.details
-      );
-    }
-
-    const successData = data as AuthApiResponse<T>;
-    return successData.data;
-  } catch (error) {
-    if (error instanceof AuthError) {
-      throw error;
-    }
-    
-    if (error instanceof TypeError && error.message.includes('fetch')) {
-      throw new AuthError(
-        'Network error. Please check your connection.',
-        'NETWORK_ERROR'
-      );
-    }
-
-    throw new AuthError(
-      'An unexpected error occurred',
-      'UNEXPECTED_ERROR'
-    );
   }
 }
 
@@ -84,9 +31,7 @@ class AuthService {
    * @param rememberMe - If true, stores tokens in localStorage; if false, stores in sessionStorage
    */
   async login(credentials: LoginRequest, rememberMe: boolean = false): Promise<TokenResponse> {
-    const tokens = await apiRequest<TokenResponse>('/auth/admin/login', {
-      method: 'POST',
-      body: JSON.stringify(credentials),
+    const tokens = await api.post<TokenResponse>('/auth/admin/login', credentials, {
       showErrorToast: false,
     });
 
@@ -121,9 +66,8 @@ class AuthService {
       refresh_token: refreshToken,
     };
 
-    const tokens = await apiRequest<TokenResponse>('/auth/refresh', {
-      method: 'POST',
-      body: JSON.stringify(request),
+    const tokens = await api.post<TokenResponse>('/auth/refresh', request, {
+      showErrorToast: false,
     });
 
     // Preserve the original remember me preference when refreshing tokens
@@ -173,9 +117,7 @@ class AuthService {
    * Updated to use new endpoint
    */
   async requestPasswordReset(email: string): Promise<void> {
-    await apiRequest<void>('/auth/admin/reset-password-request', {
-      method: 'POST',
-      body: JSON.stringify({ email }),
+    await api.post<void>('/auth/admin/reset-password-request', { email }, {
       showErrorToast: false,
     });
   }
@@ -191,17 +133,13 @@ class AuthService {
     confirm_password: string;
     role?: 'user' | 'organizer' | 'admin';
   }): Promise<void> {
-    await apiRequest<void>('/auth/admin/reset-password', {
-      method: 'POST',
-      body: JSON.stringify({
-        otp: data.otp,
-        email_token: data.email_token,
-        new_password: data.new_password,
-        confirm_password: data.confirm_password,
-        role: data.role || 'admin'
-      }),
-      showErrorToast: false,
-    });
+    await api.post<void>('/auth/admin/reset-password', {
+      otp: data.otp,
+      email_token: data.email_token,
+      new_password: data.new_password,
+      confirm_password: data.confirm_password,
+      role: data.role || 'admin',
+    }, { showErrorToast: false });
   }
 
   /**
@@ -243,14 +181,10 @@ class AuthService {
     identifier: string;
     otp_type: string;
   }): Promise<{ message: string; success: boolean; expires_in: number }> {
-    return await apiRequest<{ message: string; success: boolean; expires_in: number }>('/auth/admin/send-otp', {
-      method: 'POST',
-      body: JSON.stringify({
-        identifier: data.identifier,
-        otp_type: data.otp_type,
-      }),
-      showErrorToast: false,
-    });
+    return await api.post<{ message: string; success: boolean; expires_in: number }>('/auth/admin/send-otp', {
+      identifier: data.identifier,
+      otp_type: data.otp_type,
+    }, { showErrorToast: false });
   }
 
   /**
@@ -262,15 +196,11 @@ class AuthService {
     otp_code: string;
     otp_type: string;
   }): Promise<void> {
-    await apiRequest<void>('/auth/admin/verify-otp', {
-      method: 'POST',
-      body: JSON.stringify({
-        identifier: data.identifier,
-        otp_code: data.otp_code,
-        otp_type: data.otp_type,
-      }),
-      showErrorToast: false,
-    });
+    await api.post<void>('/auth/admin/verify-otp', {
+      identifier: data.identifier,
+      otp_code: data.otp_code,
+      otp_type: data.otp_type,
+    }, { showErrorToast: false });
   }
 
   /**
