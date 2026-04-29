@@ -247,7 +247,7 @@ export default function GeneralSettingsPage() {
                             disabled={isPending}
                           />
                         </FormControl>
-                        <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
+                        <div className="flex justify-between items-center absolute top-11 left-0 w-full px-1">
                           <p>
                             <TranslatedFormMessage t={t} />
                           </p>
@@ -281,7 +281,7 @@ export default function GeneralSettingsPage() {
                             disabled={isPending}
                           />
                         </FormControl>
-                        <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
+                        <div className="flex justify-between items-center absolute top-11 left-0 w-full px-1">
                           <p>
                             <TranslatedFormMessage t={t} />
                           </p>
@@ -298,7 +298,7 @@ export default function GeneralSettingsPage() {
             </div>
 
             {/* Rest of form fields */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Email  */}
               <FormField
                 control={form.control}
@@ -321,7 +321,7 @@ export default function GeneralSettingsPage() {
                           disabled={isPending}
                         />
                       </FormControl>
-                      <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
+                      <div className="flex justify-between items-center absolute top-11 left-0 w-full px-1">
                         <p>
                           <TranslatedFormMessage t={t} />
                         </p>
@@ -375,7 +375,7 @@ export default function GeneralSettingsPage() {
                             disabled={isPending}
                           />
                         </FormControl>
-                        <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
+                        <div className="flex justify-between items-center absolute top-11 left-0 w-full px-1">
                           <p>
                             <TranslatedFormMessage t={t} />
                           </p>
@@ -410,7 +410,7 @@ export default function GeneralSettingsPage() {
                           disabled={isPending}
                         />
                       </FormControl>
-                      <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
+                      <div className="flex justify-between items-center absolute top-11 left-0 w-full px-1">
                         <p>
                           <TranslatedFormMessage t={t} />
                         </p>
@@ -444,7 +444,7 @@ export default function GeneralSettingsPage() {
                           disabled={isPending}
                         />
                       </FormControl>
-                      <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
+                      <div className="flex justify-between items-center absolute top-11 left-0 w-full px-1">
                         <p>
                           <TranslatedFormMessage t={t} />
                         </p>
@@ -478,7 +478,7 @@ export default function GeneralSettingsPage() {
                           disabled={isPending}
                         />
                       </FormControl>
-                      <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
+                      <div className="flex justify-between items-center absolute top-11 left-0 w-full px-1">
                         <p>
                           <TranslatedFormMessage t={t} />
                         </p>
@@ -512,7 +512,7 @@ export default function GeneralSettingsPage() {
                           disabled={isPending}
                         />
                       </FormControl>
-                      <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
+                      <div className="flex justify-between items-center absolute top-11 left-0 w-full px-1">
                         <p>
                           <TranslatedFormMessage t={t} />
                         </p>
@@ -546,7 +546,7 @@ export default function GeneralSettingsPage() {
                           disabled={isPending}
                         />
                       </FormControl>
-                      <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
+                      <div className="flex justify-between items-center absolute top-11 left-0 w-full px-1">
                         <p>
                           <TranslatedFormMessage t={t} />
                         </p>
@@ -580,7 +580,7 @@ export default function GeneralSettingsPage() {
                           disabled={isPending}
                         />
                       </FormControl>
-                      <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
+                      <div className="flex justify-between items-center absolute top-11 left-0 w-full px-1">
                         <p>
                           <TranslatedFormMessage t={t} />
                         </p>
