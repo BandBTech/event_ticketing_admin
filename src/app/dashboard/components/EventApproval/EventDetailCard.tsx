@@ -89,7 +89,9 @@ export function EventDetailCard({ eventDetails }: EventDetailCardProps) {
           </div>
           <div className="flex items-center gap-2">
             <MapPinIcon weight="duotone" className="w-4 h-4 text-primary-500" />
-            <span className="truncate">{eventDetails.venue_name}</span>
+            <span className="truncate">
+              {eventDetails.venue_name}, {eventDetails?.address}
+            </span>
           </div>
         </div>
 

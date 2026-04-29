@@ -118,13 +118,18 @@ const OrganizerApprovalList = ({
         className="w-[450px] sm:max-w-[450px] flex flex-col bg-[#f5f7f8]"
       >
         <SheetHeader>
-          <SheetTitle>{t("dashboard.orgazinersAwaitingApproval")}</SheetTitle>
+          <SheetTitle>
+            {t(
+              "dashboard.orgazinersAwaitingApproval",
+              "Organizers Awaiting Approval",
+            )}
+          </SheetTitle>
         </SheetHeader>
 
         <div className="overflow-auto">
           {isLoadingOrganizers ? (
             <div className="space-y-0">
-              {[1, 2, 3, 4,5, 6, 7].map((i) => (
+              {[1, 2, 3, 4, 5, 6, 7].map((i) => (
                 <ListItemSkeleton key={i} />
               ))}
             </div>
