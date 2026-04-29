@@ -99,7 +99,9 @@ export default function EventDetailsPage() {
       toast.success(
         t("events.messages.approveSuccess", "Event approved successfully"),
       );
-      queryClient.invalidateQueries({ queryKey: queryKeys.events.detail(eventId!) });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.events.detail(eventId!),
+      });
       queryClient.invalidateQueries({ queryKey: queryKeys.events.list });
       queryClient.invalidateQueries({
         queryKey: queryKeys.events.statusHistory(eventId!),
@@ -117,7 +119,9 @@ export default function EventDetailsPage() {
       toast.success(
         t("events.messages.rejectSuccess", "Event rejected successfully"),
       );
-      queryClient.invalidateQueries({ queryKey: queryKeys.events.detail(eventId!) });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.events.detail(eventId!),
+      });
       queryClient.invalidateQueries({ queryKey: queryKeys.events.list });
       queryClient.invalidateQueries({
         queryKey: queryKeys.events.statusHistory(eventId!),
@@ -482,7 +486,7 @@ export default function EventDetailsPage() {
                     <h4 className="text-sm font-medium text-gray-500 mb-1">
                       {t("events.fields.venueName", "Venue Name")}
                     </h4>
-                    <p className="font-medium text-gray-900 truncate">
+                    <p className="font-medium text-gray-900">
                       {event.venue_name}
                     </p>
                   </div>
@@ -538,7 +542,10 @@ export default function EventDetailsPage() {
               {event.tiers && event.tiers.length > 0 && (
                 <div className="pt-6 border-t border-gray-100">
                   <h4 className="text-sm font-medium text-gray-500 mb-1">
-                    {t("events.sections.ticketSalesDuration", "Ticket Sales Duration")}
+                    {t(
+                      "events.sections.ticketSalesDuration",
+                      "Ticket Sales Duration",
+                    )}
                   </h4>
                   <div className="gap-6">
                     {event.tiers.map((tier) => (
