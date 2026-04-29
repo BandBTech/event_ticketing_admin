@@ -133,14 +133,14 @@ export function ShadcnDateTimePicker({
                       size="icon"
                       variant={
                         value &&
-                          ((value.getHours() % 12 === 0 ? 12 : value.getHours() % 12) === hour)
+                        (value.getHours() % 12 === 0
+                          ? 12
+                          : value.getHours() % 12) === hour
                           ? "default"
                           : "ghost"
                       }
                       className="sm:w-full shrink-0 aspect-square"
-                      onClick={() =>
-                        handleTimeChange("hour", hour.toString())
-                      }
+                      onClick={() => handleTimeChange("hour", hour.toString())}
                     >
                       {hour}
                     </Button>
@@ -150,27 +150,24 @@ export function ShadcnDateTimePicker({
             </ScrollArea>
             <ScrollArea className="w-64 sm:w-auto">
               <div className="flex sm:flex-col p-2">
-                {Array.from({ length: 12 }, (_, i) => i * 5).map(
-                  (minute) => (
-                    <Button
-                      type="button"
-                      key={minute}
-                      size="icon"
-                      variant={
-                        value &&
-                          value.getMinutes() === minute
-                          ? "default"
-                          : "ghost"
-                      }
-                      className="sm:w-full shrink-0 aspect-square"
-                      onClick={() =>
-                        handleTimeChange("minute", minute.toString())
-                      }
-                    >
-                      {minute.toString().padStart(2, '0')}
-                    </Button>
-                  )
-                )}
+                {Array.from({ length: 12 }, (_, i) => i * 5).map((minute) => (
+                  <Button
+                    type="button"
+                    key={minute}
+                    size="icon"
+                    variant={
+                      value && value.getMinutes() === minute
+                        ? "default"
+                        : "ghost"
+                    }
+                    className="sm:w-full shrink-0 aspect-square"
+                    onClick={() =>
+                      handleTimeChange("minute", minute.toString())
+                    }
+                  >
+                    {minute.toString().padStart(2, "0")}
+                  </Button>
+                ))}
               </div>
               <ScrollBar orientation="horizontal" className="sm:hidden" />
             </ScrollArea>
@@ -183,10 +180,8 @@ export function ShadcnDateTimePicker({
                     size="icon"
                     variant={
                       value &&
-                        ((ampm === "AM" &&
-                          value.getHours() < 12) ||
-                          (ampm === "PM" &&
-                            value.getHours() >= 12))
+                      ((ampm === "AM" && value.getHours() < 12) ||
+                        (ampm === "PM" && value.getHours() >= 12))
                         ? "default"
                         : "ghost"
                     }
@@ -201,11 +196,8 @@ export function ShadcnDateTimePicker({
           </div>
         </div>
         <div className="p-3 border-t">
-          <Button
-            className="w-full"
-            onClick={() => setIsOpen(false)}
-          >
-            Done
+          <Button className="w-full" onClick={() => setIsOpen(false)}>
+            Done2
           </Button>
         </div>
       </PopoverContent>

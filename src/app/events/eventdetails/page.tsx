@@ -95,11 +95,11 @@ export default function EventDetailsPage() {
         status: "approved",
         commission_rate: data.commissionRate,
       }),
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast.success(
         t("events.messages.approveSuccess", "Event approved successfully"),
       );
-      queryClient.setQueryData(queryKeys.events.detail(eventId!), data);
+      queryClient.invalidateQueries({ queryKey: queryKeys.events.detail(eventId!) });
       queryClient.invalidateQueries({ queryKey: queryKeys.events.list });
       queryClient.invalidateQueries({
         queryKey: queryKeys.events.statusHistory(eventId!),
@@ -113,11 +113,11 @@ export default function EventDetailsPage() {
   const rejectMutation = useMutation({
     mutationFn: (data: { adminRemark: string }) =>
       EventService.rejectEvent(eventId!, data),
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast.success(
         t("events.messages.rejectSuccess", "Event rejected successfully"),
       );
-      queryClient.setQueryData(queryKeys.events.detail(eventId!), data);
+      queryClient.invalidateQueries({ queryKey: queryKeys.events.detail(eventId!) });
       queryClient.invalidateQueries({ queryKey: queryKeys.events.list });
       queryClient.invalidateQueries({
         queryKey: queryKeys.events.statusHistory(eventId!),
