@@ -538,12 +538,6 @@ function LatestEventsByOrganizer({ id }: { id: string }) {
                   <EventStatusBadge status={event?.status} />
                 </div>
               </div>
-
-              <div className="text-right pl-2">
-                <div className="font-semibold text-gray-900 text-sm">
-                  {(event?.price ?? 0) > 0 ? `$${event?.price ?? 0}` : "Free"}
-                </div>
-              </div>
             </div>
           ))}
         </div>
