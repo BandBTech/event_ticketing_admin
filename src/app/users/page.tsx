@@ -107,7 +107,9 @@ export default function TransactionsPage() {
       const employee = mockUserData.find((c) => c.id === employeeId);
       toast.success(
         `${t("users.userRoles.user")} ${
-          employee?.account_status === "active" ? t("common.deactivated") : t("common.activated")
+          employee?.account_status === "active"
+            ? t("common.deactivated")
+            : t("common.activated")
         } ${t("common.successfully")}`,
       );
       queryClient.invalidateQueries({
@@ -166,8 +168,8 @@ export default function TransactionsPage() {
   const hasPreviousPage = response?.pagination.has_prev ?? currentPage > 1;
 
   return (
-    <div className="h-[118%] p-8 space-y-6 flex flex-col overflow-auto">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div className="h-full px-8 flex flex-col overflow-hidden">
+      {/* <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
             {t("users.title", "User Management")}
@@ -176,106 +178,103 @@ export default function TransactionsPage() {
             {t("users.subTitle", "Manage your organization's users.")}
           </p>
         </div>
-      </div>
+      </div> */}
 
-      <div className="glass-card-lowest rounded-2xl flex-1 min-h-0 flex flex-col">
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 p-4">
-          <div className="relative w-full sm:w-80">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
-            <Input
-              placeholder={t("users.searchUsers", "Search Users")}
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              className="pl-9 shadow-sm"
-            />
-          </div>
-
-          <div className="flex gap-6">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  className={
-                    roleFilter
-                      ? "gap-2 bg-primary/10 text-black hover:bg-primary/10"
-                      : `gap-2 bg-background/80 backdrop-blur-sm`
-                  }
-                >
-                  <FunnelIcon weight="duotone" className="h-4 w-4" />
-                  {t("users.filterByRole")}
-                </Button>
-              </DropdownMenuTrigger>
-
-              <DropdownMenuContent align="end" className="w-48">
-                {roles.map(({ key, label }) => (
-                  <DropdownMenuItem
-                    key={key}
-                    className={roleFilter === key ? "bg-muted font-medium" : ""}
-                    onClick={() => updateParams({ role: key, page: "1" })}
-                  >
-                    {t(label)}
-                  </DropdownMenuItem>
-                ))}
-                <DropdownMenuSeparator />
-
-                <DropdownMenuItem
-                  className={`text-red-600 font-medium ${
-                    !roleFilter ? "hidden" : ""
-                  }`}
-                  onClick={() => updateParams({ role: null, page: "1" })}
-                >
-                  {t("users.clearFilters")}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  // className="gap-2 bg-background/80 backdrop-blur-sm"
-                  className={
-                    statusFilter
-                      ? "gap-2 bg-primary/10 text-black hover:bg-primary/10"
-                      : `gap-2 bg-background/80 backdrop-blur-sm`
-                  }
-                >
-                  <FunnelIcon weight="duotone" className="h-4 w-4" />
-                  {t("users.filterByAccountStatus")}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem
-                  className={
-                    statusFilter === "active" ? "bg-muted font-medium" : ""
-                  }
-                  onClick={() => updateParams({ status: "active", page: "1" })}
-                >
-                  {t("users.accountStatus.active")}
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className={
-                    statusFilter === "inactive" ? "bg-muted font-medium" : ""
-                  }
-                  onClick={() =>
-                    updateParams({ status: "inactive", page: "1" })
-                  }
-                >
-                  {t("users.accountStatus.inactive")}
-                </DropdownMenuItem>
-
-                <DropdownMenuSeparator />
-
-                <DropdownMenuItem
-                  className={`text-red-600 font-medium ${!statusFilter ? "hidden" : ""}`}
-                  onClick={() => updateParams({ status: null, page: "1" })}
-                >
-                  {t("users.clearFilters")}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 py-4">
+        <div className="relative w-full sm:w-80">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
+          <Input
+            placeholder={t("users.searchUsers", "Search Users")}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            className="pl-9 shadow-sm"
+          />
         </div>
 
+        <div className="flex gap-6">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className={
+                  roleFilter
+                    ? "gap-2 bg-primary/10 text-black hover:bg-primary/10"
+                    : `gap-2 bg-background/80 backdrop-blur-sm`
+                }
+              >
+                <FunnelIcon weight="duotone" className="h-4 w-4" />
+                {t("users.filterByRole")}
+              </Button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent align="end" className="w-48">
+              {roles.map(({ key, label }) => (
+                <DropdownMenuItem
+                  key={key}
+                  className={roleFilter === key ? "bg-muted font-medium" : ""}
+                  onClick={() => updateParams({ role: key, page: "1" })}
+                >
+                  {t(label)}
+                </DropdownMenuItem>
+              ))}
+              <DropdownMenuSeparator />
+
+              <DropdownMenuItem
+                className={`text-red-600 font-medium ${
+                  !roleFilter ? "hidden" : ""
+                }`}
+                onClick={() => updateParams({ role: null, page: "1" })}
+              >
+                {t("users.clearFilters")}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                // className="gap-2 bg-background/80 backdrop-blur-sm"
+                className={
+                  statusFilter
+                    ? "gap-2 bg-primary/10 text-black hover:bg-primary/10"
+                    : `gap-2 bg-background/80 backdrop-blur-sm`
+                }
+              >
+                <FunnelIcon weight="duotone" className="h-4 w-4" />
+                {t("users.filterByAccountStatus")}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem
+                className={
+                  statusFilter === "active" ? "bg-muted font-medium" : ""
+                }
+                onClick={() => updateParams({ status: "active", page: "1" })}
+              >
+                {t("users.accountStatus.active")}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className={
+                  statusFilter === "inactive" ? "bg-muted font-medium" : ""
+                }
+                onClick={() => updateParams({ status: "inactive", page: "1" })}
+              >
+                {t("users.accountStatus.inactive")}
+              </DropdownMenuItem>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuItem
+                className={`text-red-600 font-medium ${!statusFilter ? "hidden" : ""}`}
+                onClick={() => updateParams({ status: null, page: "1" })}
+              >
+                {t("users.clearFilters")}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
+      <div className="glass-card-lowest rounded-2xl flex-1 min-h-0 flex flex-col">
         <UsersTable
           wrapperClassName="flex-1 min-h-0 overflow-auto"
           users={response?.users || []}
