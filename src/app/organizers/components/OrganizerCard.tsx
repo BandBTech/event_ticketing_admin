@@ -133,7 +133,7 @@ function OrganizerCard({ organizer }: { organizer: Organizer }) {
         </Avatar>
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
-            <h3 className="font-bold text-lg text-gray-900 truncate pr-1 group-hover:text-primary transition-colors">
+            <h3 title={organizer.name} className="font-bold text-lg text-gray-900 truncate pr-1 group-hover:text-primary transition-colors">
               {organizer.name}
             </h3>
             <Badge
