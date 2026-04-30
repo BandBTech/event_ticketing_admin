@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { ImageUploader } from "@/components/ui/image-uploader";
 import { SpinnerIcon } from "@phosphor-icons/react";
+import { useNavigationGuard } from "@/hooks/useNavigationGuard";
 import {
   Form,
   FormControl,
@@ -25,6 +26,7 @@ import type { Country } from "react-phone-number-input";
 import { toast } from "@/lib/toast";
 import LoadingSkeleton from "./components/LoadingSkeleton";
 import { createCompanyInfoFormSchema } from "@/lib/validation";
+import { UnsavedChangesDialog } from "./components/UnsavedChangesDialog";
 
 export default function GeneralSettingsPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -68,6 +70,26 @@ export default function GeneralSettingsPage() {
   } = useQuery({
     queryKey: ["company"],
     queryFn: () => SettingService.getCompany({}),
+  });
+
+  const { isDirty } = form.formState;
+
+  const hasUnsavedChanges = useCallback(() => {
+    // Check both form dirty state and image changes
+    return isDirty || selectedFile !== null || previewUrl !== response?.logo_url;
+  }, [isDirty, selectedFile, previewUrl, response?.logo_url]);
+
+  const {
+    showLeaveDialog,
+    setShowLeaveDialog,
+    confirmLeave,
+    cancelLeave,
+    handleNavigateAway,
+  } = useNavigationGuard({
+    hasUnsavedChanges,
+    onBeforeLeave: () => {
+      form.reset(form.getValues());
+    },
   });
 
   useEffect(() => {
@@ -615,6 +637,13 @@ export default function GeneralSettingsPage() {
             </div>
           </form>
         </Form>
+
+        <UnsavedChangesDialog
+          open={showLeaveDialog}
+          onOpenChange={setShowLeaveDialog}
+          onConfirm={confirmLeave}
+          onCancel={cancelLeave}
+        />
       </div>
     </div>
   );

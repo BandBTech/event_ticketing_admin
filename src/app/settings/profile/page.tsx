@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -13,6 +13,7 @@ import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
+import { useNavigationGuard } from "@/hooks/useNavigationGuard";
 import {
   Form,
   FormControl,
@@ -29,6 +30,7 @@ import { AuthError } from "@/services/authService";
 import { toast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import { isValidPhoneNumber, parsePhoneNumber } from "react-phone-number-input";
+import { UnsavedChangesDialog } from "./components/UnsavedChangesDialog";
 
 // Validation schema
 const createProfileSchema = () => {
@@ -81,6 +83,26 @@ export default function ProfileSettingsPage() {
       phone: getFullPhoneNumber(user?.phone, user?.countryCode),
     },
     mode: "onChange",
+  });
+
+  const { isDirty } = form.formState;
+
+  const hasUnsavedChanges = useCallback(() => {
+    // Check both form dirty state and image changes
+    return isDirty;
+  }, [isDirty]);
+
+  const {
+    showLeaveDialog,
+    setShowLeaveDialog,
+    confirmLeave,
+    cancelLeave,
+    handleNavigateAway,
+  } = useNavigationGuard({
+    hasUnsavedChanges,
+    onBeforeLeave: () => {
+      form.reset(form.getValues());
+    },
   });
 
   const isInitialMount = useRef(true);
@@ -400,6 +422,13 @@ export default function ProfileSettingsPage() {
             )}
           </form>
         </Form>
+
+        <UnsavedChangesDialog
+          open={showLeaveDialog}
+          onOpenChange={setShowLeaveDialog}
+          onConfirm={confirmLeave}
+          onCancel={cancelLeave}
+        />
       </div>
     </div>
   );

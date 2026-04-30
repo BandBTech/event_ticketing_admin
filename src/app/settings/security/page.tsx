@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -13,6 +13,7 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useNavigationGuard } from "@/hooks/useNavigationGuard";
 import {
   Form,
   FormControl,
@@ -31,6 +32,7 @@ import { createValidationHelpers } from "@/lib/validation";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
 import { PasswordRequirements } from "@/app/components/PasswordRequirements";
+import { UnsavedChangesDialog } from "./components/UnsavedChangesDialog";
 
 // Validation schema
 const createChangePasswordSchema = (
@@ -82,6 +84,26 @@ export default function SecuritySettingsPage() {
       confirmPassword: "",
     },
     mode: "onChange",
+  });
+
+  const { isDirty } = form.formState;
+
+  const hasUnsavedChanges = useCallback(() => {
+    // Check both form dirty state and image changes
+    return isDirty;
+  }, [isDirty]);
+
+  const {
+    showLeaveDialog,
+    setShowLeaveDialog,
+    confirmLeave,
+    cancelLeave,
+    handleNavigateAway,
+  } = useNavigationGuard({
+    hasUnsavedChanges,
+    onBeforeLeave: () => {
+      form.reset(form.getValues());
+    },
   });
 
   const {
@@ -415,6 +437,13 @@ export default function SecuritySettingsPage() {
             </div>
           </form>
         </Form>
+
+        <UnsavedChangesDialog
+          open={showLeaveDialog}
+          onOpenChange={setShowLeaveDialog}
+          onConfirm={confirmLeave}
+          onCancel={cancelLeave}
+        />
       </div>
     </div>
   );
