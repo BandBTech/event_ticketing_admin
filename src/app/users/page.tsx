@@ -166,7 +166,7 @@ export default function TransactionsPage() {
   const hasPreviousPage = response?.pagination.has_prev ?? currentPage > 1;
 
   return (
-    <div className="h-full p-8 space-y-6 flex flex-col overflow-hidden">
+    <div className="h-[118%] p-8 space-y-6 flex flex-col overflow-auto">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
