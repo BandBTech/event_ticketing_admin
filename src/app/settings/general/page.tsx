@@ -208,6 +208,8 @@ export default function GeneralSettingsPage() {
                   maxHeight={500}
                   required={true}
                   error={logoError || undefined}
+                  uploaderClassName="h-[200px] w-[350px]"
+                  imageClassName="object-contain"
                   helperText={t(
                     "settings.organizerProfile.logoHelperText",
                     "Recommended size: 500x500px. Minimum size: 100x100px.",
