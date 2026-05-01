@@ -96,8 +96,8 @@ export default function TransactionsPage() {
   const hasPreviousPage = response?.pagination.has_prev ?? currentPage > 1;
 
   return (
-    <div className="h-full p-8 space-y-6 flex flex-col overflow-hidden">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div className="h-full px-8 flex flex-col overflow-hidden">
+      {/* <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
             {t("payouts.title", "Payout Management")}
@@ -106,10 +106,9 @@ export default function TransactionsPage() {
             {t("payouts.subtitle", "Manage your organization's payouts.")}
           </p>
         </div>
-      </div>
+      </div> */}
 
-      <div className="glass-card-lowest rounded-2xl flex-1 min-h-0 flex flex-col">
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 p-4">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 py-4">
           <div className="relative w-full sm:w-80">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
             <Input
@@ -146,6 +145,7 @@ export default function TransactionsPage() {
             </Select>
           </div>
         </div>
+      <div className="glass-card-lowest rounded-2xl flex-1 min-h-0 flex flex-col">
 
         <TransactionScreenTabs />
 

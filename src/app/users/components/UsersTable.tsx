@@ -126,7 +126,7 @@ export function UsersTable({
         id: "name",
         header: t("users.userTable.name"),
         cell: ({ row }) => (
-          <span className="max-w-[200px] text-gray-700 truncate inline-block">
+          <span className="max-w-[250px] text-gray-700 truncate inline-block">
             {row.original.first_name || "-"} {row.original.last_name || "-"}
           </span>
         ),
