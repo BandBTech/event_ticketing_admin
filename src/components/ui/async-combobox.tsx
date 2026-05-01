@@ -164,6 +164,7 @@ export function AsyncCombobox({
                       "cursor-pointer w-full",
                       option.disabled && "opacity-50 cursor-not-allowed",
                     )}
+                    title={option.label}
                     onSelect={(currentValue) => {
                       if (option.disabled) {
                         return;

@@ -526,7 +526,7 @@ function LatestEventsByOrganizer({ id }: { id: string }) {
               </div>
 
               <div className="flex-1 min-w-0">
-                <h3 className="font-medium text-gray-900 truncate group-hover:text-primary transition-colors">
+                <h3 title={event?.title} className="font-medium text-gray-900 truncate group-hover:text-primary transition-colors">
                   {event?.title}
                 </h3>
                 <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
