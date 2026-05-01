@@ -12,9 +12,7 @@ import { ReportFilters } from "./components/ReportFilters";
 import { ReportTabNav } from "./components/ReportTabNav";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
-import {
-  AsyncComboboxOption,
-} from "@/components/ui/async-combobox";
+import { AsyncComboboxOption } from "@/components/ui/async-combobox";
 import FinancialScreen from "@/app/reports/components/FinancialScreen";
 import EventPerformanceScreen from "@/app/reports/components//EventPerformanceScreen";
 
@@ -116,8 +114,6 @@ export default function ReportsPage() {
     useState<DateRangePreset>("last-7-days");
   const [selectedEventId, setSelectedEventId] = useState("");
 
-  
-
   const { data: response, isLoading } = useQuery<ReportResponse>({
     queryKey: ["report", activeTab, selectedEventId],
     queryFn: () =>
@@ -125,7 +121,8 @@ export default function ReportsPage() {
         type: activeTab,
         event_id: selectedEventId,
       }),
-    enabled: !!activeTab && (activeTab !== "event-performance" || !!selectedEventId),
+    enabled:
+      !!activeTab && (activeTab !== "event-performance" || !!selectedEventId),
     placeholderData: (previousData) => previousData,
   });
 
@@ -156,32 +153,19 @@ export default function ReportsPage() {
   const isEventIdSelected = selectedEventId ? true : false;
 
   return (
-    <div className="min-h-screen p-8 space-y-6">
+    <div className="min-h-screen px-8 space-y-6">
       <div className=" rounded-2xl flex-1 flex flex-col">
         {/* Header  */}
-        <div className="flex-1 space-y-6 p-4 md:p-6">
-          <div className="flex max-md:flex-col gap-4 md:items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                {t("reports.title", "Reports")}
-              </h1>
-              <p className="text-sm text-gray-500 mt-1">
-                {t(
-                  "reports.subtitle",
-                  "Analyze your event performance, sales, and financials",
-                )}
-              </p>
-            </div>
-            <ReportFilters
-              dateRangePreset={dateRangePreset}
-              onDateRangePresetChange={setDateRangePreset}
-              activeTab={activeTab}
-              selectedEventId={selectedEventId}
-              onEventChange={setSelectedEventId}
-              fetchEvents={fetchEvents}
-            />
-          </div>
+        <div className="flex items-start justify-between py-4 gap-2 flex-wrap">
           <ReportTabNav activeTab={activeTab} onTabChange={setActiveTab} />
+          <ReportFilters
+            dateRangePreset={dateRangePreset}
+            onDateRangePresetChange={setDateRangePreset}
+            activeTab={activeTab}
+            selectedEventId={selectedEventId}
+            onEventChange={setSelectedEventId}
+            fetchEvents={fetchEvents}
+          />
         </div>
 
         {activeTab === "overview" ? (

@@ -53,58 +53,46 @@ export function ReportFilters({
   const { t } = useTranslation(locale);
 
   return (
-    <div className="flex flex-wrap gap-4 items-end">
-      <div className="flex flex-col gap-1">
-        <Label className="text-xs text-gray-500">
-          {t("reports.dateRange.title", "Date Range")}
-        </Label>
-        <div className="relative">
-          <CalendarIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-          <Select
-            value={dateRangePreset}
-            onValueChange={onDateRangePresetChange}
-          >
-            <SelectTrigger className="w-48 text-sm pl-9 bg-white">
-              <SelectValue
-                placeholder={t(
-                  "reports.dateRange.placeholder",
-                  "Select date range",
-                )}
-              />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="today">
-                {t("reports.dateRange.today", "Today")}
-              </SelectItem>
-              <SelectItem value="yesterday">
-                {t("reports.dateRange.yesterday", "Yesterday")}
-              </SelectItem>
-              <SelectItem value="last-7-days">
-                {t("reports.dateRange.last7Days", "Last 7 Days")}
-              </SelectItem>
-              <SelectItem value="last-month">
-                {t("reports.dateRange.lastMonth", "Last Month")}
-              </SelectItem>
-              <SelectItem value="last-3-months">
-                {t("reports.dateRange.last3Months", "Last 3 Months")}
-              </SelectItem>
-              <SelectItem value="last-6-months">
-                {t("reports.dateRange.last6Months", "Last 6 Months")}
-              </SelectItem>
-              <SelectItem value="last-year">
-                {t("reports.dateRange.lastYear", "Last Year")}
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+    <div className="flex items-center justify-between gap-2">
+      <div className="relative">
+        <CalendarIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+        <Select value={dateRangePreset} onValueChange={onDateRangePresetChange}>
+          <SelectTrigger className="w-48 h-8 text-sm pl-9 bg-white">
+            <SelectValue
+              placeholder={t(
+                "reports.dateRange.placeholder",
+                "Select date range",
+              )}
+            />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="today">
+              {t("reports.dateRange.today", "Today")}
+            </SelectItem>
+            <SelectItem value="yesterday">
+              {t("reports.dateRange.yesterday", "Yesterday")}
+            </SelectItem>
+            <SelectItem value="last-7-days">
+              {t("reports.dateRange.last7Days", "Last 7 Days")}
+            </SelectItem>
+            <SelectItem value="last-month">
+              {t("reports.dateRange.lastMonth", "Last Month")}
+            </SelectItem>
+            <SelectItem value="last-3-months">
+              {t("reports.dateRange.last3Months", "Last 3 Months")}
+            </SelectItem>
+            <SelectItem value="last-6-months">
+              {t("reports.dateRange.last6Months", "Last 6 Months")}
+            </SelectItem>
+            <SelectItem value="last-year">
+              {t("reports.dateRange.lastYear", "Last Year")}
+            </SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {activeTab === "event-performance" && (
-        <div className="flex flex-col gap-1">
-          <Label className="text-xs text-gray-500">
-            {t("reports.eventPerformance.selectEvent", "Select Event")}
-          </Label>
-
+        <div className="">
           <AsyncCombobox
             queryKey={["filter", "events"]}
             value={selectedEventId}
@@ -113,7 +101,7 @@ export function ReportFilters({
             placeholder={t("billings.addBillModal.selectEvent")}
             searchPlaceholder={t("billings.addBillModal.searchEvent")}
             emptyText={t("common.noResults")}
-            className="w-[250px] text-sm h-9 justify-between px-3!"
+            className="w-[200px] text-sm h-8 justify-between px-3!"
             debounceMs={300}
           />
         </div>
