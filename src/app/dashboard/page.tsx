@@ -16,6 +16,7 @@ import React, { useEffect } from "react";
 import { DashboardSkeleton } from "./components/DashboardSkeleton";
 import { DashboardStats } from "./components/DashboardStats";
 import UpcomingEventsList from "./components/UpcomingEvents";
+import Head from "next/head";
 
 const AdminDashboard: React.FC = () => {
   const { locale } = useLanguageStore();
@@ -124,14 +125,19 @@ const AdminDashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-[80vh] bg-linear-to-br from-gray-50 via-blue-50 to-purple-50">
-      <div className="p-4">
-        <DashboardStats data={data} />
-        {data.upcoming_events_list.length > 0 && (
-          <UpcomingEventsList data={data.upcoming_events_list} />
-        )}
+    <>
+      <Head>
+        <title>Dashboard | Timro-Ticket</title>
+      </Head>
+      <div className="min-h-[80vh] bg-linear-to-br from-gray-50 via-blue-50 to-purple-50">
+        <div className="p-4">
+          <DashboardStats data={data} />
+          {data.upcoming_events_list.length > 0 && (
+            <UpcomingEventsList data={data.upcoming_events_list} />
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

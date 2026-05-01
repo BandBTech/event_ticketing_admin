@@ -284,7 +284,7 @@ export default function EventDetailsPage() {
         {/* Back Button */}
 
         <button
-          onClick={() => router.push("/users")}
+          onClick={() => router.push("/events")}
           className="flex items-center gap-1 text-gray-600 hover:text-gray-900 mb-2 group hover:bg-gray-200 py-2 px-4 rounded-lg"
         >
           <ArrowLeft
