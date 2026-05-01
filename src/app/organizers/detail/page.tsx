@@ -652,17 +652,11 @@ export default function OrganizerDetailPage() {
 
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-4">
-                  <div>
+                  <div className="min-w-0">
                     <div className="flex items-center gap-3 mb-1">
-                      <h1 className="text-2xl font-bold text-gray-900">
+                      <h1 className="text-2xl font-bold text-gray-900 break-words min-w-0 flex-1" title={organizer?.name}>
                         {organizer?.name}
                       </h1>
-                      {/* {organizer.is_email_verified && (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100">
-                          <UserCheckIcon weight="duotone" className="w-3.5 h-3.5" />
-                          {t("organizer.management.status.verified", "Verified")}
-                        </span>
-                      )} */}
                       <Badge className={accountStatusConfig?.color}>
                         {accountStatusConfig?.label}
                       </Badge>
@@ -726,7 +720,7 @@ export default function OrganizerDetailPage() {
                           />
                         </button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="w-48">
+                      <DropdownMenuContent align="end" className="w-52">
                         <DropdownMenuItem
                           onClick={() =>
                             router.push(`/events?organizer_id=${organizer?.id}`)
