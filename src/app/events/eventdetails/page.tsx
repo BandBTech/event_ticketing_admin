@@ -32,6 +32,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { ArrowLeft } from "@phosphor-icons/react";
 
 // Admin Components
 import PopupModal from "../../dashboard/components/EventApproval/PopupModal";
@@ -280,6 +281,21 @@ export default function EventDetailsPage() {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50/50">
       <div className="grow p-6 space-y-6 container mx-auto max-w-7xl">
+        {/* Back Button */}
+
+        <button
+          onClick={() => router.push("/users")}
+          className="flex items-center gap-1 text-gray-600 hover:text-gray-900 mb-2 group hover:bg-gray-200 py-2 px-4 rounded-lg"
+        >
+          <ArrowLeft
+            weight="duotone"
+            className="w-5 h-5 group-hover:-translate-x-1 transition-transform"
+          />
+          <span className="font-medium">
+            {t("events.backToEvents", "Back to Events")}
+          </span>
+        </button>
+
         {/* Header - Matching Organizer Layout */}
         <div className="flex flex-col flex-wrap gap-4 md:items-start md:justify-between lg:flex-row">
           <div className="space-y-3">
@@ -480,101 +496,102 @@ export default function EventDetailsPage() {
                 </div>
               )}
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-gray-100">
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-500 mb-1">
-                      {t("events.fields.venueName", "Venue Name")}
-                    </h4>
-                    <p className="font-medium text-gray-900">
-                      {event.venue_name}
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-500 mb-1">
-                      {t("events.fields.location", "Location")}
-                    </h4>
-                    <p className="font-medium text-gray-900">
-                      {/^-?\d+(\.\d+)?,-?\d+(\.\d+)?$/.test(
-                        event.address?.trim() || "",
-                      ) && !event.location
-                        ? event.venue_name
-                        : event.location || event.address}
-                    </p>
-                  </div>
+              <div>
+                <h4 className="text-sm font-medium text-gray-500 mb-1">
+                  {t("events.fields.venueName", "Venue Name")}
+                </h4>
+                <p className="font-medium text-gray-900">{event.venue_name}</p>
+              </div>
+              <div>
+                <h4 className="text-sm font-medium text-gray-500 mb-1">
+                  {t("events.fields.location", "Location")}
+                </h4>
+                <p className="font-medium text-gray-900">
+                  {/^-?\d+(\.\d+)?,-?\d+(\.\d+)?$/.test(
+                    event.address?.trim() || "",
+                  ) && !event.location
+                    ? event.venue_name
+                    : event.location || event.address}
+                </p>
+              </div>
+              <div className="flex justify-between space-y-4">
+                <div>
+                  <h4 className="text-sm font-medium text-gray-500 mb-1">
+                    {t("events.fields.eventStartsOn", "Event Starts On")}
+                  </h4>
+                  <p
+                    className="font-medium text-gray-900"
+                    suppressHydrationWarning
+                  >
+                    {isValid(new Date(event.start_date))
+                      ? format(
+                          new Date(event.start_date),
+                          "MMM dd, yyyy h:mm a",
+                        )
+                      : "TBD"}
+                  </p>
                 </div>
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-500 mb-1">
-                      {t("events.fields.eventStartsOn", "Event Starts On")}
-                    </h4>
-                    <p
-                      className="font-medium text-gray-900"
-                      suppressHydrationWarning
-                    >
-                      {isValid(new Date(event.start_date))
-                        ? format(
-                            new Date(event.start_date),
-                            "MMM dd, yyyy h:mm a",
-                          )
-                        : "TBD"}
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-500 mb-1">
-                      {t("events.fields.eventEndsOn", "")}
-                    </h4>
-                    <p
-                      className="font-medium text-gray-900"
-                      suppressHydrationWarning
-                    >
-                      {isValid(new Date(event.end_date))
-                        ? format(
-                            new Date(event.end_date),
-                            "MMM dd, yyyy h:mm a",
-                          )
-                        : "TBD"}
-                    </p>
-                  </div>
+                <div>
+                  <h4 className="text-sm font-medium text-gray-500 mb-1">
+                    {t("events.fields.eventEndsOn", "")}
+                  </h4>
+                  <p
+                    className="font-medium text-gray-900"
+                    suppressHydrationWarning
+                  >
+                    {isValid(new Date(event.end_date))
+                      ? format(new Date(event.end_date), "MMM dd, yyyy h:mm a")
+                      : "TBD"}
+                  </p>
                 </div>
               </div>
 
               {event.tiers && event.tiers.length > 0 && (
                 <div className="pt-6 border-t border-gray-100">
-                  <h4 className="text-sm font-medium text-gray-500 mb-1">
+                  <h4 className="text-sm font-medium text-gray-500 mb-3">
                     {t(
                       "events.sections.ticketSalesDuration",
                       "Ticket Sales Duration",
                     )}
                   </h4>
-                  <div className="gap-6">
+                  <div className="space-y-3">
                     {event.tiers.map((tier) => (
                       <div
                         key={tier.id}
-                        className="grid sm:grid-cols-3 gap-2 py-2"
+                        className="rounded-xl bg-gray-50 border border-gray-100 p-4 space-y-3"
                       >
-                        <span className="font-bold text-gray-800">
+                        <span className="font-semibold text-gray-900 break-words block">
                           {tier.tier_name}
                         </span>
-                        <div className="flex col-span-2 flex-wrap gap-x-2 gap-y-2 text-gray-500">
-                          <span className="text-gray-900 font-medium">
-                            {tier.sales_start &&
-                            isValid(new Date(tier.sales_start))
-                              ? format(
-                                  new Date(tier.sales_start),
-                                  "MMM dd, yyyy h:mm a",
-                                )
-                              : "—"}
-                          </span>
-                          -
-                          <span className="text-gray-900 font-medium">
-                            {tier.sales_end && isValid(new Date(tier.sales_end))
-                              ? format(
-                                  new Date(tier.sales_end),
-                                  "MMM dd, yyyy h:mm a",
-                                )
-                              : "—"}
-                          </span>
+                        <div className="grid sm:grid-cols-2 gap-3">
+                          <div className="space-y-1">
+                            <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">
+                              {t("events.tiers.salesStart", "Sales Start")}
+                            </p>
+                            <p className="text-sm font-medium text-gray-800">
+                              {tier.sales_start &&
+                              isValid(new Date(tier.sales_start))
+                                ? format(
+                                    new Date(tier.sales_start),
+                                    "MMM dd, yyyy h:mm a",
+                                  )
+                                : "—"}
+                            </p>
+                          </div>
+                          <div className="space-y-1">
+                            <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">
+                              {t("events.tiers.salesEnd", "Sales End")}
+                            </p>
+                            <p className="text-sm font-medium text-gray-800">
+                              {tier.sales_end &&
+                              isValid(new Date(tier.sales_end))
+                                ? format(
+                                    new Date(tier.sales_end),
+                                    "MMM dd, yyyy h:mm a",
+                                  )
+                                : "—"}
+                            </p>
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -684,7 +701,7 @@ export default function EventDetailsPage() {
                           >
                             <div className="flex justify-between items-start">
                               <div>
-                                <p className="font-medium text-gray-900">
+                                <p className="font-medium text-gray-900 lg:max-w-[200px] break-words">
                                   {tier.tier_name}
                                 </p>
                               </div>
