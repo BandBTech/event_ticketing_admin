@@ -801,7 +801,10 @@
       "accountDetails": "Account Details",
       "createdOn": "Created On",
       "updatedOn": "Updated On",
-      "email": "Email"
+      "email": "Email",
+      "permissions": "Permissions",
+      "noRolesAssigned": "No roles assigned",
+      "adminRemark": "Admin Remark"
     },
     "modals": {
       "areYouSure": "Are you sure you want to",

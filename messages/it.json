@@ -751,7 +751,10 @@
       "accountDetails": "Dettagli Account",
       "createdOn": "Creato il",
       "updatedOn": "Aggiornato il",
-      "email": "E-mail"
+      "email": "E-mail",
+      "permissions": "Autorizzazioni",
+      "noRolesAssigned": "Nessun ruolo assegnato",
+      "adminRemark": "Nota amministratore"
     },
     "modals": {
       "areYouSure": "Sei sicuro di volerlo fare",
