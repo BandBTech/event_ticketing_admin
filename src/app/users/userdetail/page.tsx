@@ -210,7 +210,7 @@ export default function OrganizerProfilePage() {
             {t("events.sections.statusSummary")}
           </h2>
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
+            {/* <div className="flex items-center justify-between">
               <span className="text-sm text-black">{t("organizer.management.status.organizer")}</span>
               {data?.organizer_status && (
                 <span
@@ -222,7 +222,7 @@ export default function OrganizerProfilePage() {
                   )}
                 </span>
               )}
-            </div>
+            </div> */}
             <div className="flex items-center justify-between">
               <span className="text-sm text-black">{t("organizer.management.status.account")}</span>
               {data?.account_status && (
@@ -237,7 +237,7 @@ export default function OrganizerProfilePage() {
               )}
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-black">{t("organizer.management.status.verified")}</span>
+              <span className="text-sm text-black">{t("users.userDetail.email", "Email")}</span>
               <span
                 className="text-xs font-semibold px-3 py-1 rounded-full"
                 style={
@@ -246,7 +246,7 @@ export default function OrganizerProfilePage() {
                     : { background: "#f3f4f6", color: "#6b7280" }
                 }
               >
-                {data?.is_email_verified ? "Yes" : "No"}
+                {data?.is_email_verified ? t("users.verifiedStatus.verified", "Verified") : t("users.verifiedStatus.unverified", "Unverified")}
               </span>
             </div>
           </div>

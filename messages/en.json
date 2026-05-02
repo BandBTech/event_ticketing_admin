@@ -800,7 +800,8 @@
       "rolesAndPermissions": "Roles & Permissions",
       "accountDetails": "Account Details",
       "createdOn": "Created On",
-      "updatedOn": "Updated On"
+      "updatedOn": "Updated On",
+      "email": "Email"
     },
     "modals": {
       "areYouSure": "Are you sure you want to",

@@ -750,7 +750,8 @@
       "rolesAndPermissions": "Ruoli e Permessi",
       "accountDetails": "Dettagli Account",
       "createdOn": "Creato il",
-      "updatedOn": "Aggiornato il"
+      "updatedOn": "Aggiornato il",
+      "email": "E-mail"
     },
     "modals": {
       "areYouSure": "Sei sicuro di volerlo fare",
