@@ -517,7 +517,7 @@ export default function EventDetailsPage() {
 
               <div className="grid sm:grid-cols-3 gap-2 py-2">
                 <h4 className="text-sm font-medium text-gray-500 mb-1">
-                  {t("", "Event Duration")}
+                  {t("events.eventDetails.eventDuration", "Event Duration")}
                 </h4>
                 <div className="flex col-span-2 flex-wrap gap-x-2 gap-y-2 text-gray-500">
                   <span className="text-gray-900 font-medium">

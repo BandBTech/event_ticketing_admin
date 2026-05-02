@@ -309,7 +309,8 @@
       "organizerId": "主催者ID",
       "viewOrganizer": "主催者を表示",
       "featured": "注目の",
-      "ticketTiers": "チケットの種類"
+      "ticketTiers": "チケットの種類",
+      "eventDuration": "イベント期間"
     },
     "history": {
       "statusChanged": "ステータスが {old} から {new} に更新されました",

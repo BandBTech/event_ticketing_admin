@@ -296,7 +296,8 @@
       "organizerId": "ID Organizzatore",
       "viewOrganizer": "Vedi Organizzatore",
       "featured": "IN PRIMO PIANO",
-      "ticketTiers": "categorie di biglietti"
+      "ticketTiers": "categorie di biglietti",
+      "eventDuration": "Durata dell'Evento"
     },
     "history": {
       "statusChanged": "Stato aggiornato da {old} a {new}",

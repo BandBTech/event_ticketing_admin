@@ -292,7 +292,8 @@
       "organizerId": "Organizer ID",
       "viewOrganizer": "View Organizer",
       "featured": "FEATURED",
-      "ticketTiers": "Ticket Tiers"
+      "ticketTiers": "Ticket Tiers",
+      "eventDuration": "Event Duration"
     },
     "badge": {
       "approved": "Approved",
