@@ -23,10 +23,9 @@ import { useRouter } from "next/navigation";
 import { createValidationHelpers } from "@/lib/validation";
 import { PasswordRequirements } from "@/app/components/PasswordRequirements";
 
-
 // Create validation schema - OTP is no longer needed as it's verified in previous step
 const createResetPasswordSchema = (
-  t: (key: string, fallback?: string) => string
+  t: (key: string, fallback?: string) => string,
 ) => {
   const v = createValidationHelpers(t);
 
@@ -61,6 +60,10 @@ function ResetPasswordContent() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  useEffect(() => {
+    document.title = `${t("webTitle.resetPassword")} | Timro-Ticket`;
+  }, [locale]);
 
   useEffect(() => {
     const emailParam = searchParams.get("email");
@@ -109,7 +112,7 @@ function ResetPasswordContent() {
       // Show success toast
       toast.success(
         "auth.toast.passwordResetSuccess",
-        "Password reset successful!"
+        "Password reset successful!",
       );
 
       setIsSuccess(true);
@@ -121,16 +124,16 @@ function ResetPasswordContent() {
       if (err instanceof AuthError) {
         toast.error(
           "auth.toast.serverError",
-          err.message || "Failed to reset password. Please try again."
+          err.message || "Failed to reset password. Please try again.",
         );
       } else {
         toast.error(
           "auth.toast.serverError",
-          "Failed to reset password. Please try again."
+          "Failed to reset password. Please try again.",
         );
       }
     } finally {
-      sessionStorage.removeItem('password_reset_email');
+      sessionStorage.removeItem("password_reset_email");
       setIsLoading(false);
     }
   };
@@ -168,7 +171,7 @@ function ResetPasswordContent() {
                     <p className="text-sm text-green-700 text-center">
                       {t(
                         "auth.resetPassword.successMessage",
-                        "Password reset successful! Redirecting to login..."
+                        "Password reset successful! Redirecting to login...",
                       )}
                     </p>
                   </div>
@@ -183,10 +186,7 @@ function ResetPasswordContent() {
                   )}
 
                   {/* Form */}
-                    <form
-                      onSubmit={handleSubmit(onSubmit)}
-                      className="space-y-6"
-                    >
+                  <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                     {/* New Password Field */}
                     <div className="space-y-2">
                       <label
@@ -212,11 +212,11 @@ function ResetPasswordContent() {
                           autoComplete="new-password"
                           placeholder={t(
                             "auth.resetPassword.newPasswordPlaceholder",
-                            "••••••••••••"
+                            "••••••••••••",
                           )}
                           className={cn(
                             "h-12 pl-16 pr-16 login-input",
-                            errors.newPassword && "border-destructive"
+                            errors.newPassword && "border-destructive",
                           )}
                           {...register("newPassword")}
                         />
@@ -243,21 +243,28 @@ function ResetPasswordContent() {
                           )}
                         </button>
                       </div>
-                        {errors.newPassword &&
-                          errors.newPassword.message !== "Invalid input" &&
-                          // Filter out messages that are already covered by PasswordRequirements
-                          !errors.newPassword.message?.includes("must be at least 8 characters") &&
-                          !errors.newPassword.message?.includes("uppercase and one lowercase") &&
-                          !errors.newPassword.message?.includes("special character") &&
-                          !errors.newPassword.message?.includes("numeric digit") && (
-                            <p
-                              className="text-sm text-destructive"
-                              role="alert"
-                            >
-                              {errors.newPassword.message}
-                            </p>
-                          )}
-                        <PasswordRequirements password={form.watch("newPassword")} />
+                      {errors.newPassword &&
+                        errors.newPassword.message !== "Invalid input" &&
+                        // Filter out messages that are already covered by PasswordRequirements
+                        !errors.newPassword.message?.includes(
+                          "must be at least 8 characters",
+                        ) &&
+                        !errors.newPassword.message?.includes(
+                          "uppercase and one lowercase",
+                        ) &&
+                        !errors.newPassword.message?.includes(
+                          "special character",
+                        ) &&
+                        !errors.newPassword.message?.includes(
+                          "numeric digit",
+                        ) && (
+                          <p className="text-sm text-destructive" role="alert">
+                            {errors.newPassword.message}
+                          </p>
+                        )}
+                      <PasswordRequirements
+                        password={form.watch("newPassword")}
+                      />
                     </div>
 
                     {/* Confirm Password Field */}
@@ -268,7 +275,7 @@ function ResetPasswordContent() {
                       >
                         {t(
                           "auth.resetPassword.confirmPassword",
-                          "Confirm Password"
+                          "Confirm Password",
                         )}
                       </label>
                       <div className="relative">
@@ -288,11 +295,11 @@ function ResetPasswordContent() {
                           autoComplete="new-password"
                           placeholder={t(
                             "auth.resetPassword.confirmPasswordPlaceholder",
-                            "••••••••••••"
+                            "••••••••••••",
                           )}
                           className={cn(
                             "h-12 pl-16 pr-16 login-input",
-                            errors.confirmPassword && "border-destructive"
+                            errors.confirmPassword && "border-destructive",
                           )}
                           {...register("confirmPassword")}
                         />
@@ -340,14 +347,14 @@ function ResetPasswordContent() {
                           "bg-blue-600 hover:bg-blue-700 text-white",
                           "shadow-lg hover:shadow-xl",
                           "disabled:opacity-50 disabled:cursor-not-allowed",
-                          isLoading && "animate-pulse"
+                          isLoading && "animate-pulse",
                         )}
                       >
                         {isLoading
                           ? t("auth.resetPassword.resetting", "Resetting...")
                           : t(
                               "auth.resetPassword.resetButton",
-                              "Reset Password"
+                              "Reset Password",
                             )}
                       </Button>
                     </div>
@@ -356,7 +363,7 @@ function ResetPasswordContent() {
                   {/* Back to Login */}
                   <div className="text-center">
                     <Link
-                        href="/auth/login"
+                      href="/auth/login"
                       className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
                     >
                       {t("auth.resetPassword.backToLogin", "Back to login")}

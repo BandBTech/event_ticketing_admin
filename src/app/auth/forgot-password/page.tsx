@@ -35,6 +35,10 @@ export default function ForgotPasswordPage() {
   const { isAuthenticated, isLoading: isAuthLoading, _authChecked } = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
 
+    useEffect(() => {
+    document.title = `${t("webTitle.forgotPassword")} | Timro-Ticket`;
+  }, [locale]);
+
   const schema = createForgotPasswordSchema(t);
   type ForgotPasswordFormData = z.infer<typeof schema>;
 

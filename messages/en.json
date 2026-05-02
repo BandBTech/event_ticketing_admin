@@ -65,6 +65,25 @@
     "profile": "My Profile",
     "logout": "Logout"
   },
+  "webTitle": {
+    "dashboard": "Dashboard",
+    "organizers": "Organizers",
+    "events": "Events",
+    "users": "Users",
+    "billings": "Billings",
+    "transactions": "Transactions",
+    "refunds": "Refunds",
+    "payouts": "Payouts",
+    "auditLogs": "Audit Logs",
+    "reports": "Reports",
+    "profileSettings": "Profile Settings",
+    "securitySettings": "Security Settings",
+    "generalSettings": "General Settings",
+    "login": "Login",
+    "forgotPassword": "Forgot Password",
+    "resetPassword": "Reset Password",
+    "verifyOtp": "Verify OTP"
+  },
   "profile": {
     "title": "My Profile",
     "subtitle": "Manage your personal information",

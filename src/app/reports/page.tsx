@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import OverviewScreen from "./components/OverviewSection";
 import SalesScreen from "./components/SalesScreen";
 import CustomerAnalyticsScreen from "./components/CustomerAnalyticsScreen";
@@ -113,6 +113,10 @@ export default function ReportsPage() {
   const [dateRangePreset, setDateRangePreset] =
     useState<DateRangePreset>("last-7-days");
   const [selectedEventId, setSelectedEventId] = useState("");
+
+  useEffect(() => {
+    document.title = `${t("webTitle.reports")} | Timro-Ticket`;
+  }, [locale]);
 
   const { data: response, isLoading } = useQuery<ReportResponse>({
     queryKey: ["report", activeTab, selectedEventId],

@@ -111,6 +111,10 @@ export default function OrganizersPage() {
 
   const debouncedSearch = useDebounce(searchInput, 500);
 
+  useEffect(() => {
+    document.title = `${t("webTitle.organizers")} | Timro-Ticket`;
+  }, [locale]);
+
   // Helper to update URL params
   const updateParams = useCallback(
     (updates: Record<string, string | null>) => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -14,7 +14,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useNavigationGuard } from "@/hooks/useNavigationGuard";
-import {MAX_CURRENT_PASSWORD_LENGTH, MAX_NEW_PASSWORD_LENGTH, MAX_CONFIRM_PASSWORD_LENGTH} from "@/lib/charsLengthValidation";
+import {
+  MAX_CURRENT_PASSWORD_LENGTH,
+  MAX_NEW_PASSWORD_LENGTH,
+  MAX_CONFIRM_PASSWORD_LENGTH,
+} from "@/lib/charsLengthValidation";
 import {
   Form,
   FormControl,
@@ -73,6 +77,10 @@ export default function SecuritySettingsPage() {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  useEffect(() => {
+    document.title = `${t("webTitle.securitySettings")} | Timro-Ticket`;
+  }, [locale]);
 
   const schema = createChangePasswordSchema(t);
   type ChangePasswordFormData = z.infer<typeof schema>;
@@ -256,7 +264,8 @@ export default function SecuritySettingsPage() {
                         <TranslatedFormMessage t={t} />
                       </div>
                       <p className="text-xs font-normal text-muted-foreground shrink-0 ml-2">
-                        {field.value?.toString().length ?? 0}/{MAX_CURRENT_PASSWORD_LENGTH}{" "}
+                        {field.value?.toString().length ?? 0}/
+                        {MAX_CURRENT_PASSWORD_LENGTH}{" "}
                         {t("common.characters", "characters")}
                       </p>
                     </div>
@@ -329,7 +338,8 @@ export default function SecuritySettingsPage() {
                         <TranslatedFormMessage t={t} />
                       </div>
                       <p className="text-xs font-normal text-muted-foreground shrink-0 ml-2">
-                        {field.value?.toString().length ?? 0}/{MAX_NEW_PASSWORD_LENGTH}{" "}
+                        {field.value?.toString().length ?? 0}/
+                        {MAX_NEW_PASSWORD_LENGTH}{" "}
                         {t("common.characters", "characters")}
                       </p>
                     </div>
@@ -408,7 +418,8 @@ export default function SecuritySettingsPage() {
                         <TranslatedFormMessage t={t} />
                       </div>
                       <p className="text-xs font-normal text-muted-foreground shrink-0 ml-2">
-                        {field.value?.toString().length ?? 0}/{MAX_CONFIRM_PASSWORD_LENGTH}{" "}
+                        {field.value?.toString().length ?? 0}/
+                        {MAX_CONFIRM_PASSWORD_LENGTH}{" "}
                         {t("common.characters", "characters")}
                       </p>
                     </div>

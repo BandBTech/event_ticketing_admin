@@ -9,7 +9,12 @@ import { PhoneInput } from "@/components/ui/phone-input";
 import { ImageUploader } from "@/components/ui/image-uploader";
 import { SpinnerIcon } from "@phosphor-icons/react";
 import { useNavigationGuard } from "@/hooks/useNavigationGuard";
-import {MAX_NAME_LENGTH, MAX_ADDRESS_LENGTH, MAX_DESCRIPTION_LENGTH, MAX_SOCIAL_URL_LENGTH} from "@/lib/charsLengthValidation";
+import {
+  MAX_NAME_LENGTH,
+  MAX_ADDRESS_LENGTH,
+  MAX_DESCRIPTION_LENGTH,
+  MAX_SOCIAL_URL_LENGTH,
+} from "@/lib/charsLengthValidation";
 import {
   Form,
   FormControl,
@@ -62,6 +67,10 @@ export default function GeneralSettingsPage() {
   const [logoError, setLogoError] = useState<string | null>(null);
   const [isSaved, setIsSaved] = useState(false);
 
+  useEffect(() => {
+    document.title = `${t("webTitle.generalSettings")} | Timro-Ticket`;
+  }, [locale]);
+
   const queryClient = useQueryClient();
 
   const {
@@ -77,7 +86,9 @@ export default function GeneralSettingsPage() {
 
   const hasUnsavedChanges = useCallback(() => {
     // Check both form dirty state and image changes
-    return isDirty || selectedFile !== null || previewUrl !== response?.logo_url;
+    return (
+      isDirty || selectedFile !== null || previewUrl !== response?.logo_url
+    );
   }, [isDirty, selectedFile, previewUrl, response?.logo_url]);
 
   const {
@@ -277,7 +288,8 @@ export default function GeneralSettingsPage() {
                             <TranslatedFormMessage t={t} />
                           </p>
                           <p className="text-xs font-normal text-left text-muted-foreground">
-                            {field.value?.toString().length || 0} /{MAX_NAME_LENGTH}{" "}
+                            {field.value?.toString().length || 0} /
+                            {MAX_NAME_LENGTH}{" "}
                             {t("common.characters", "characters")}
                           </p>
                         </div>
@@ -311,7 +323,8 @@ export default function GeneralSettingsPage() {
                             <TranslatedFormMessage t={t} />
                           </p>
                           <p className="text-xs font-normal text-left text-muted-foreground">
-                            {field.value?.toString().length || 0} /{MAX_ADDRESS_LENGTH}{" "}
+                            {field.value?.toString().length || 0} /
+                            {MAX_ADDRESS_LENGTH}{" "}
                             {t("common.characters", "characters")}
                           </p>
                         </div>
@@ -405,7 +418,8 @@ export default function GeneralSettingsPage() {
                             <TranslatedFormMessage t={t} />
                           </p>
                           <p className="text-xs font-normal text-left text-muted-foreground">
-                            {field.value?.toString().length || 0} /{MAX_DESCRIPTION_LENGTH}{" "}
+                            {field.value?.toString().length || 0} /
+                            {MAX_DESCRIPTION_LENGTH}{" "}
                             {t("common.characters", "characters")}
                           </p>
                         </div>
@@ -440,7 +454,8 @@ export default function GeneralSettingsPage() {
                           <TranslatedFormMessage t={t} />
                         </p>
                         <p className="text-xs font-normal text-left text-muted-foreground">
-                          {field.value?.toString().length || 0} /{MAX_SOCIAL_URL_LENGTH}{" "}
+                          {field.value?.toString().length || 0} /
+                          {MAX_SOCIAL_URL_LENGTH}{" "}
                           {t("common.characters", "characters")}
                         </p>
                       </div>
@@ -474,7 +489,8 @@ export default function GeneralSettingsPage() {
                           <TranslatedFormMessage t={t} />
                         </p>
                         <p className="text-xs font-normal text-left text-muted-foreground">
-                          {field.value?.toString().length || 0} /{MAX_SOCIAL_URL_LENGTH}{" "}
+                          {field.value?.toString().length || 0} /
+                          {MAX_SOCIAL_URL_LENGTH}{" "}
                           {t("common.characters", "characters")}
                         </p>
                       </div>
@@ -508,7 +524,8 @@ export default function GeneralSettingsPage() {
                           <TranslatedFormMessage t={t} />
                         </p>
                         <p className="text-xs font-normal text-left text-muted-foreground">
-                          {field.value?.toString().length || 0} /{MAX_SOCIAL_URL_LENGTH}{" "}
+                          {field.value?.toString().length || 0} /
+                          {MAX_SOCIAL_URL_LENGTH}{" "}
                           {t("common.characters", "characters")}
                         </p>
                       </div>
@@ -542,7 +559,8 @@ export default function GeneralSettingsPage() {
                           <TranslatedFormMessage t={t} />
                         </p>
                         <p className="text-xs font-normal text-left text-muted-foreground">
-                          {field.value?.toString().length || 0} /{MAX_SOCIAL_URL_LENGTH}{" "}
+                          {field.value?.toString().length || 0} /
+                          {MAX_SOCIAL_URL_LENGTH}{" "}
                           {t("common.characters", "characters")}
                         </p>
                       </div>
@@ -576,7 +594,8 @@ export default function GeneralSettingsPage() {
                           <TranslatedFormMessage t={t} />
                         </p>
                         <p className="text-xs font-normal text-left text-muted-foreground">
-                          {field.value?.toString().length || 0} /{MAX_SOCIAL_URL_LENGTH}{" "}
+                          {field.value?.toString().length || 0} /
+                          {MAX_SOCIAL_URL_LENGTH}{" "}
                           {t("common.characters", "characters")}
                         </p>
                       </div>
@@ -610,7 +629,8 @@ export default function GeneralSettingsPage() {
                           <TranslatedFormMessage t={t} />
                         </p>
                         <p className="text-xs font-normal text-left text-muted-foreground">
-                          {field.value?.toString().length || 0} /{MAX_SOCIAL_URL_LENGTH}{" "}
+                          {field.value?.toString().length || 0} /
+                          {MAX_SOCIAL_URL_LENGTH}{" "}
                           {t("common.characters", "characters")}
                         </p>
                       </div>

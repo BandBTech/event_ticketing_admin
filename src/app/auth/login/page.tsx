@@ -24,9 +24,7 @@ import { useRouter } from "next/navigation";
 import { createValidationHelpers } from "@/lib/validation";
 
 // Create validation schema with translations
-const createLoginSchema = (
-  t: (key: string, fallback?: string) => string
-) => {
+const createLoginSchema = (t: (key: string, fallback?: string) => string) => {
   const v = createValidationHelpers(t);
 
   return z.object({
@@ -44,6 +42,10 @@ export default function LoginPage() {
   const { login, isLoading, clearError, isAuthenticated } = useAuthStore();
 
   const [loginError, setLoginError] = useState("");
+
+  useEffect(() => {
+    document.title = `${t("webTitle.login")} | Timro-Ticket`;
+  }, [locale]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -84,7 +86,7 @@ export default function LoginPage() {
           email: data.email,
           password: data.password,
         },
-        data.rememberMe
+        data.rememberMe,
       );
 
       toast.success("auth.toast.loginSuccess", "Welcome back!");
@@ -94,15 +96,12 @@ export default function LoginPage() {
       if (error instanceof AuthError) {
         switch (error.code) {
           case "UNAUTHORIZED":
-            toast.error(
-              "",
-              error.message || "Invalid email or password"
-            );
+            toast.error("", error.message || "Invalid email or password");
             break;
           case "NETWORK_ERROR":
             toast.error(
               "auth.toast.networkError",
-              "Network error. Please check your connection."
+              "Network error. Please check your connection.",
             );
             break;
           case "INTERNAL_SERVER_ERROR":
@@ -177,7 +176,7 @@ export default function LoginPage() {
                       placeholder={t("auth.login.emailPlaceholder")}
                       className={cn(
                         "h-12 pl-16 pr-4 login-input",
-                        errors.email && "border-destructive"
+                        errors.email && "border-destructive",
                       )}
                       {...register("email")}
                     />
@@ -218,7 +217,7 @@ export default function LoginPage() {
                       placeholder={t("auth.login.passwordPlaceholder")}
                       className={cn(
                         "h-12 pl-16 pr-16 login-input",
-                        errors.password && "border-destructive"
+                        errors.password && "border-destructive",
                       )}
                       {...register("password")}
                     />
@@ -294,7 +293,7 @@ export default function LoginPage() {
                       "bg-blue-600 hover:bg-blue-700 text-white",
                       "shadow-lg hover:shadow-xl",
                       "disabled:opacity-50 disabled:cursor-not-allowed",
-                      isLoading && "animate-pulse"
+                      isLoading && "animate-pulse",
                     )}
                   >
                     {isLoading

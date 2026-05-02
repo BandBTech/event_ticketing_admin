@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Input } from "@/components/ui/input";
@@ -60,6 +60,10 @@ export default function TransactionsPage() {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | undefined>(
     undefined,
   );
+
+    useEffect(() => {
+    document.title = `${t("webTitle.users")} | Timro-Ticket`;
+  }, [locale]);
 
   const { data: response, isLoading } = useQuery<UserApiResponse>({
     queryKey: [

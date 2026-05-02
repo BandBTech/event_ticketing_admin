@@ -34,6 +34,10 @@ const AdminDashboard: React.FC = () => {
   );
 
   useEffect(() => {
+    document.title = `${t("webTitle.dashboard")} | Timro-Ticket`;
+  }, [locale]);
+
+  useEffect(() => {
     const totalNumberOfPendingEvents =
       pendingEventsData?.pagination?.total || 0;
     setTotalPendingEvents(totalNumberOfPendingEvents);

@@ -63,6 +63,25 @@
     "signIn": "サインイン",
     "organizeEvent": "イベント開催"
   },
+  "webTitle": {
+    "dashboard": "ダッシュボード",
+    "organizers": "主催者",
+    "events": "イベント",
+    "users": "ユーザー",
+    "billings": "請求",
+    "transactions": "取引",
+    "refunds": "返金",
+    "payouts": " 支払い",
+    "auditLogs": "監査ログ",
+    "reports": "レポート",
+    "profileSettings": "プロフィール設定",
+    "securitySettings": "セキュリティ設定",
+    "generalSettings": "一般設定",
+    "login": "ログイン",
+    "forgotPassword": "パスワードをお忘れの方",
+    "resetPassword": "パスワードをリセット",
+    "verifyOtp": "OTPを確認"
+  },
   "sidebar": {
     "dashboard": "ダッシュボード",
     "organizers": "主催者",

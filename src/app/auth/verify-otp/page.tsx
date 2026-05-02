@@ -16,7 +16,6 @@ import { useAuthStore } from "@/store/authStore";
 import { toast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 
-
 function VerifyOTPContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -32,6 +31,10 @@ function VerifyOTPContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
   const [resendTimer, setResendTimer] = useState(60);
+
+  useEffect(() => {
+    document.title = `${t("webTitle.verifyOtp")} | Timro-Ticket`;
+  }, [locale]);
 
   useEffect(() => {
     const emailParam = searchParams.get("email");
@@ -61,8 +64,8 @@ function VerifyOTPContent() {
       setError(
         t(
           "auth.verifyOTP.errors.otpIncomplete",
-          "Please enter the complete 6-digit code"
-        )
+          "Please enter the complete 6-digit code",
+        ),
       );
       return;
     }
@@ -76,7 +79,6 @@ function VerifyOTPContent() {
         identifier: email,
         otp_code: otp,
         otp_type: otpType,
-
       });
 
       // Show success toast
@@ -87,8 +89,8 @@ function VerifyOTPContent() {
         // For password reset, redirect to reset password page
         router.push(
           `/auth/reset-password?email=${encodeURIComponent(
-            email
-          )}&otp=${encodeURIComponent(otp)}`
+            email,
+          )}&otp=${encodeURIComponent(otp)}`,
         );
       } else if (password) {
         // For registration, auto-login
@@ -102,13 +104,12 @@ function VerifyOTPContent() {
         router.push("/");
       }
     } catch (err) {
-
       // Show error toast
       if (err instanceof AuthError) {
         toast.error(
           "",
           err.message || "Invalid OTP. Please try again.",
-          err.details
+          err.details,
         );
       } else {
         toast.error("auth.toast.serverError", "Invalid OTP. Please try again.");
@@ -138,7 +139,11 @@ function VerifyOTPContent() {
     } catch (err) {
       // Show error toast
       if (err instanceof AuthError) {
-        toast.error("", err.message || "Failed to resend OTP. Please try again.", err.details);
+        toast.error(
+          "",
+          err.message || "Failed to resend OTP. Please try again.",
+          err.details,
+        );
       } else {
         toast.error("", "Failed to resend OTP. Please try again.");
       }
@@ -156,10 +161,10 @@ function VerifyOTPContent() {
               {/* Back Button */}
               <button
                 onClick={() => {
-                  if (otpType === 'password_reset') {
+                  if (otpType === "password_reset") {
                     // Save email to sessionStorage for forgot-password page
-                    sessionStorage.setItem('password_reset_email', email);
-                    router.push('/auth/forgot-password');
+                    sessionStorage.setItem("password_reset_email", email);
+                    router.push("/auth/forgot-password");
                   }
                 }}
                 className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600 transition-colors cursor-pointer"
@@ -176,14 +181,14 @@ function VerifyOTPContent() {
                 <p className="text-sm text-gray-600">
                   {t(
                     "auth.verifyOTP.subtitle",
-                    "Enter the 6-digit code sent to"
+                    "Enter the 6-digit code sent to",
                   )}
                   <br />
                   <strong>{email}</strong>
                   <br />
                   {t(
                     "auth.verifyOTP.otpValidity",
-                    "The code will expire in 10 minutes."
+                    "The code will expire in 10 minutes.",
                   )}
                 </p>
               </div>
@@ -200,30 +205,12 @@ function VerifyOTPContent() {
                 <div className="flex justify-center">
                   <InputOTP maxLength={6} value={otp} onChange={setOtp}>
                     <InputOTPGroup>
-                      <InputOTPSlot
-                        index={0}
-                        className="h-14 w-14 text-lg"
-                      />
-                      <InputOTPSlot
-                        index={1}
-                        className="h-14 w-14 text-lg"
-                      />
-                      <InputOTPSlot
-                        index={2}
-                        className="h-14 w-14 text-lg"
-                      />
-                      <InputOTPSlot
-                        index={3}
-                        className="h-14 w-14 text-lg"
-                      />
-                      <InputOTPSlot
-                        index={4}
-                        className="h-14 w-14 text-lg"
-                      />
-                      <InputOTPSlot
-                        index={5}
-                        className="h-14 w-14 text-lg"
-                      />
+                      <InputOTPSlot index={0} className="h-14 w-14 text-lg" />
+                      <InputOTPSlot index={1} className="h-14 w-14 text-lg" />
+                      <InputOTPSlot index={2} className="h-14 w-14 text-lg" />
+                      <InputOTPSlot index={3} className="h-14 w-14 text-lg" />
+                      <InputOTPSlot index={4} className="h-14 w-14 text-lg" />
+                      <InputOTPSlot index={5} className="h-14 w-14 text-lg" />
                     </InputOTPGroup>
                   </InputOTP>
                 </div>
@@ -237,7 +224,7 @@ function VerifyOTPContent() {
                     "bg-blue-600 hover:bg-blue-700 text-white",
                     "shadow-lg hover:shadow-xl",
                     "disabled:opacity-50 disabled:cursor-not-allowed",
-                    isLoading && "animate-pulse"
+                    isLoading && "animate-pulse",
                   )}
                 >
                   {isLoading
@@ -249,10 +236,7 @@ function VerifyOTPContent() {
               {/* Resend OTP */}
               <div className="text-center space-y-2">
                 <p className="text-sm text-gray-600">
-                  {t(
-                    "auth.verifyOTP.didntReceive",
-                    "Didn't receive the code?"
-                  )}{" "}
+                  {t("auth.verifyOTP.didntReceive", "Didn't receive the code?")}{" "}
                   <button
                     type="button"
                     onClick={handleResendOTP}
@@ -269,7 +253,7 @@ function VerifyOTPContent() {
                 <p className="text-xs text-gray-500">
                   {t(
                     "auth.verifyOTP.checkSpam",
-                    "Check your spam folder if you don't see the email"
+                    "Check your spam folder if you don't see the email",
                   )}
                 </p>
               </div>

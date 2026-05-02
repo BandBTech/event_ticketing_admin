@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { Funnel as FunnelIcon } from "@phosphor-icons/react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
@@ -84,6 +84,10 @@ export default function BillingsPage() {
     undefined,
   );
 
+  useEffect(() => {
+    document.title = `${t("webTitle.billings")} | Timro-Ticket`;
+  }, [locale]);
+
   const { data: response, isLoading } = useQuery<PaymentBillData>({
     queryKey: [
       "bills",
@@ -146,37 +150,36 @@ export default function BillingsPage() {
         </div>
       </div> */}
 
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 py-4">
-          <div className="relative w-full sm:w-80">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
-            <Input
-              placeholder={t("billings.searchBillings", "Search Billings")}
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              className="pl-9 shadow-sm"
-            />
-          </div>
-
-          <div className="relative">
-            <Button
-              variant="outline"
-              onClick={() => setFilterSheetOpen(true)}
-              className={
-                isFilterApplied
-                  ? "gap-2 bg-primary/10 text-black hover:bg-primary/10"
-                  : `gap-2 bg-background/80 backdrop-blur-sm`
-              }
-            >
-              <FunnelIcon weight="duotone" className="h-4 w-4" />
-              {t("billings.filters")}{" "}
-              {isFilterApplied && (
-                <span className="ml-1 text-xs font-medium text-primary">{`(${filterCount})`}</span>
-              )}
-            </Button>
-          </div>
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 py-4">
+        <div className="relative w-full sm:w-80">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
+          <Input
+            placeholder={t("billings.searchBillings", "Search Billings")}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            className="pl-9 shadow-sm"
+          />
         </div>
-      <div className="glass-card-lowest rounded-2xl flex-1 min-h-0 flex flex-col">
 
+        <div className="relative">
+          <Button
+            variant="outline"
+            onClick={() => setFilterSheetOpen(true)}
+            className={
+              isFilterApplied
+                ? "gap-2 bg-primary/10 text-black hover:bg-primary/10"
+                : `gap-2 bg-background/80 backdrop-blur-sm`
+            }
+          >
+            <FunnelIcon weight="duotone" className="h-4 w-4" />
+            {t("billings.filters")}{" "}
+            {isFilterApplied && (
+              <span className="ml-1 text-xs font-medium text-primary">{`(${filterCount})`}</span>
+            )}
+          </Button>
+        </div>
+      </div>
+      <div className="glass-card-lowest rounded-2xl flex-1 min-h-0 flex flex-col">
         <BillingTable
           wrapperClassName="flex-1 min-h-0 overflow-auto"
           billings={mockUserData}

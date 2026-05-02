@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { useNavigationGuard } from "@/hooks/useNavigationGuard";
-import {FIRST_NAME_MAX, LAST_NAME_MAX} from "@/lib/charsLengthValidation";
+import { FIRST_NAME_MAX, LAST_NAME_MAX } from "@/lib/charsLengthValidation";
 import {
   Form,
   FormControl,
@@ -65,6 +65,10 @@ export default function ProfileSettingsPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const schema = useMemo(() => createProfileSchema(), []);
+
+  useEffect(() => {
+    document.title = `${t("webTitle.profileSettings")} | Timro-Ticket`;
+  }, [locale]);
 
   // Helper function to combine country code and phone number
   const getFullPhoneNumber = (phone?: string, countryCode?: string): string => {

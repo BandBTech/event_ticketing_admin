@@ -63,6 +63,25 @@
     "signIn": "Accedi",
     "organizeEvent": "Organizza Evento"
   },
+  "webTitle": {
+    "dashboard": "Cruscotto",
+    "organizers": "Organizzatori",
+    "events": "Eventi",
+    "users": "Utenti",
+    "billings": "Fatturazioni",
+    "transactions": "Transazioni",
+    "refunds": "Rimborsi",
+    "payouts": "Pagamenti",
+    "auditLogs": "Registri di controllo",
+    "reports": "Report",
+    "profileSettings": "Impostazioni profilo",
+    "securitySettings": "Impostazioni sicurezza",
+    "generalSettings": "Impostazioni generali",
+    "login": "Accedi",
+    "forgotPassword": "Password dimenticata",
+    "resetPassword": "Reimposta password",
+    "verifyOtp": "Verifica OTP"
+  },
   "sidebar": {
     "dashboard": "Pannello di controllo",
     "organizers": "Organizzatori",

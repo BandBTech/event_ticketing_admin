@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Input } from "@/components/ui/input";
@@ -61,6 +61,10 @@ export default function TransactionsPage() {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | undefined>(
     undefined,
   );
+
+  useEffect(() => {
+    document.title = `${t("webTitle.refunds")} | Timro-Ticket`;
+  }, [locale]);
 
   const { data: response, isLoading } = useQuery<RefundResponse>({
     queryKey: [
@@ -145,45 +149,44 @@ export default function TransactionsPage() {
         </div>
       </div> */}
 
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 py-4">
-          <div className="relative w-full sm:w-80">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
-            <Input
-              placeholder={t("refunds.searchRefunds", "Search Refunds")}
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              className="pl-9 shadow-sm"
-            />
-          </div>
-
-          <div className="relative">
-            <Select value={status} onValueChange={handleStatusChange}>
-              <SelectTrigger className="w-full sm:w-40 pl-9">
-                <FunnelIcon
-                  weight="duotone"
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4"
-                />
-                <SelectValue placeholder={t("transactions.filter", "Filter")} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="succeeded">
-                  {t("transaction.transactionStatus.succeeded", "Completed")}
-                </SelectItem>
-                <SelectItem value="failed">
-                  {t("dashboard.dataDisplay.failed", "Failed")}
-                </SelectItem>
-                <SelectItem value="pending">
-                  {t("events.status.pending", "Pending")}
-                </SelectItem>
-                <SelectItem value="processing">
-                  {t("transaction.transactionStatus.processing", "Processing")}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 py-4">
+        <div className="relative w-full sm:w-80">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
+          <Input
+            placeholder={t("refunds.searchRefunds", "Search Refunds")}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            className="pl-9 shadow-sm"
+          />
         </div>
-      <div className="glass-card-lowest rounded-2xl flex-1 min-h-0 flex flex-col">
 
+        <div className="relative">
+          <Select value={status} onValueChange={handleStatusChange}>
+            <SelectTrigger className="w-full sm:w-40 pl-9">
+              <FunnelIcon
+                weight="duotone"
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4"
+              />
+              <SelectValue placeholder={t("transactions.filter", "Filter")} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="succeeded">
+                {t("transaction.transactionStatus.succeeded", "Completed")}
+              </SelectItem>
+              <SelectItem value="failed">
+                {t("dashboard.dataDisplay.failed", "Failed")}
+              </SelectItem>
+              <SelectItem value="pending">
+                {t("events.status.pending", "Pending")}
+              </SelectItem>
+              <SelectItem value="processing">
+                {t("transaction.transactionStatus.processing", "Processing")}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      <div className="glass-card-lowest rounded-2xl flex-1 min-h-0 flex flex-col">
         <TransactionScreenTabs />
 
         <RefundTable

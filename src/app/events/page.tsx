@@ -67,6 +67,10 @@ export default function EventsPage() {
 
   const debouncedSearch = useDebounce(searchInput, 500);
 
+  useEffect(() => {
+    document.title = `${t("webTitle.events")} | Timro-Ticket`;
+  }, [locale]);
+
   // Helper to update URL params
   const updateParams = useCallback(
     (updates: Record<string, string | null>) => {
