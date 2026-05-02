@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useNavigationGuard } from "@/hooks/useNavigationGuard";
+import {MAX_CURRENT_PASSWORD_LENGTH, MAX_NEW_PASSWORD_LENGTH, MAX_CONFIRM_PASSWORD_LENGTH} from "@/lib/charsLengthValidation";
 import {
   Form,
   FormControl,
@@ -219,7 +220,7 @@ export default function SecuritySettingsPage() {
                             "settings.security.currentPasswordPlaceholder",
                             "Enter current password",
                           )}
-                          maxLength={50}
+                          maxLength={MAX_CURRENT_PASSWORD_LENGTH}
                           className={cn(
                             "h-11 pl-11 pr-12",
                             errors.currentPassword && "border-destructive",
@@ -255,7 +256,7 @@ export default function SecuritySettingsPage() {
                         <TranslatedFormMessage t={t} />
                       </div>
                       <p className="text-xs font-normal text-muted-foreground shrink-0 ml-2">
-                        {field.value?.toString().length ?? 0}/50{" "}
+                        {field.value?.toString().length ?? 0}/{MAX_CURRENT_PASSWORD_LENGTH}{" "}
                         {t("common.characters", "characters")}
                       </p>
                     </div>
@@ -294,7 +295,7 @@ export default function SecuritySettingsPage() {
                             "settings.security.newPasswordPlaceholder",
                             "Enter new password",
                           )}
-                          maxLength={50}
+                          maxLength={MAX_NEW_PASSWORD_LENGTH}
                           className={cn(
                             "h-11 pl-11 pr-12",
                             errors.newPassword && "border-destructive",
@@ -328,7 +329,7 @@ export default function SecuritySettingsPage() {
                         <TranslatedFormMessage t={t} />
                       </div>
                       <p className="text-xs font-normal text-muted-foreground shrink-0 ml-2">
-                        {field.value?.toString().length ?? 0}/50{" "}
+                        {field.value?.toString().length ?? 0}/{MAX_NEW_PASSWORD_LENGTH}{" "}
                         {t("common.characters", "characters")}
                       </p>
                     </div>
@@ -371,7 +372,7 @@ export default function SecuritySettingsPage() {
                             "settings.security.confirmPasswordPlaceholder",
                             "Enter new password again",
                           )}
-                          maxLength={50}
+                          maxLength={MAX_CONFIRM_PASSWORD_LENGTH}
                           className={cn(
                             "h-11 pl-11 pr-12",
                             errors.confirmPassword && "border-destructive",
@@ -407,7 +408,7 @@ export default function SecuritySettingsPage() {
                         <TranslatedFormMessage t={t} />
                       </div>
                       <p className="text-xs font-normal text-muted-foreground shrink-0 ml-2">
-                        {field.value?.toString().length ?? 0}/50{" "}
+                        {field.value?.toString().length ?? 0}/{MAX_CONFIRM_PASSWORD_LENGTH}{" "}
                         {t("common.characters", "characters")}
                       </p>
                     </div>

@@ -9,6 +9,7 @@ import { PhoneInput } from "@/components/ui/phone-input";
 import { ImageUploader } from "@/components/ui/image-uploader";
 import { SpinnerIcon } from "@phosphor-icons/react";
 import { useNavigationGuard } from "@/hooks/useNavigationGuard";
+import {MAX_NAME_LENGTH, MAX_ADDRESS_LENGTH, MAX_DESCRIPTION_LENGTH, MAX_SOCIAL_URL_LENGTH} from "@/lib/charsLengthValidation";
 import {
   Form,
   FormControl,
@@ -265,7 +266,7 @@ export default function GeneralSettingsPage() {
                           <Input
                             {...field}
                             id="name"
-                            maxLength={100}
+                            maxLength={MAX_NAME_LENGTH}
                             placeholder={t("settings.general.enterName")}
                             aria-invalid={fieldState.invalid}
                             disabled={isPending}
@@ -276,7 +277,7 @@ export default function GeneralSettingsPage() {
                             <TranslatedFormMessage t={t} />
                           </p>
                           <p className="text-xs font-normal text-left text-muted-foreground">
-                            {field.value?.toString().length || 0} /100{" "}
+                            {field.value?.toString().length || 0} /{MAX_NAME_LENGTH}{" "}
                             {t("common.characters", "characters")}
                           </p>
                         </div>
@@ -299,7 +300,7 @@ export default function GeneralSettingsPage() {
                           <Input
                             {...field}
                             id="address"
-                            maxLength={100}
+                            maxLength={MAX_ADDRESS_LENGTH}
                             placeholder={t("settings.general.enterAddress")}
                             aria-invalid={fieldState.invalid}
                             disabled={isPending}
@@ -310,7 +311,7 @@ export default function GeneralSettingsPage() {
                             <TranslatedFormMessage t={t} />
                           </p>
                           <p className="text-xs font-normal text-left text-muted-foreground">
-                            {field.value?.toString().length || 0} /100{" "}
+                            {field.value?.toString().length || 0} /{MAX_ADDRESS_LENGTH}{" "}
                             {t("common.characters", "characters")}
                           </p>
                         </div>
@@ -393,18 +394,18 @@ export default function GeneralSettingsPage() {
                           <Textarea
                             {...field}
                             id="description"
-                            maxLength={500}
+                            maxLength={MAX_DESCRIPTION_LENGTH}
                             placeholder={t("settings.general.enterDescription")}
                             aria-invalid={fieldState.invalid}
                             disabled={isPending}
                           />
                         </FormControl>
-                        <div className="flex justify-between items-center absolute top-11 left-0 w-full px-1">
+                        <div className="flex justify-between items-center absolute top-32 left-0 w-full px-1">
                           <p>
                             <TranslatedFormMessage t={t} />
                           </p>
                           <p className="text-xs font-normal text-left text-muted-foreground">
-                            {field.value?.toString().length || 0} /500{" "}
+                            {field.value?.toString().length || 0} /{MAX_DESCRIPTION_LENGTH}{" "}
                             {t("common.characters", "characters")}
                           </p>
                         </div>
@@ -428,7 +429,7 @@ export default function GeneralSettingsPage() {
                         <Input
                           {...field}
                           id="facebook_url"
-                          maxLength={100}
+                          maxLength={MAX_SOCIAL_URL_LENGTH}
                           placeholder={t("settings.general.enterFacebookURL")}
                           aria-invalid={fieldState.invalid}
                           disabled={isPending}
@@ -439,7 +440,7 @@ export default function GeneralSettingsPage() {
                           <TranslatedFormMessage t={t} />
                         </p>
                         <p className="text-xs font-normal text-left text-muted-foreground">
-                          {field.value?.toString().length || 0} /100{" "}
+                          {field.value?.toString().length || 0} /{MAX_SOCIAL_URL_LENGTH}{" "}
                           {t("common.characters", "characters")}
                         </p>
                       </div>
@@ -462,7 +463,7 @@ export default function GeneralSettingsPage() {
                         <Input
                           {...field}
                           id="instagram_url"
-                          maxLength={100}
+                          maxLength={MAX_SOCIAL_URL_LENGTH}
                           placeholder={t("settings.general.enterInstagramURL")}
                           aria-invalid={fieldState.invalid}
                           disabled={isPending}
@@ -473,7 +474,7 @@ export default function GeneralSettingsPage() {
                           <TranslatedFormMessage t={t} />
                         </p>
                         <p className="text-xs font-normal text-left text-muted-foreground">
-                          {field.value?.toString().length || 0} /100{" "}
+                          {field.value?.toString().length || 0} /{MAX_SOCIAL_URL_LENGTH}{" "}
                           {t("common.characters", "characters")}
                         </p>
                       </div>
@@ -496,7 +497,7 @@ export default function GeneralSettingsPage() {
                         <Input
                           {...field}
                           id="linkedin_url"
-                          maxLength={100}
+                          maxLength={MAX_SOCIAL_URL_LENGTH}
                           placeholder={t("settings.general.enterLinkedInURL")}
                           aria-invalid={fieldState.invalid}
                           disabled={isPending}
@@ -507,7 +508,7 @@ export default function GeneralSettingsPage() {
                           <TranslatedFormMessage t={t} />
                         </p>
                         <p className="text-xs font-normal text-left text-muted-foreground">
-                          {field.value?.toString().length || 0} /100{" "}
+                          {field.value?.toString().length || 0} /{MAX_SOCIAL_URL_LENGTH}{" "}
                           {t("common.characters", "characters")}
                         </p>
                       </div>
@@ -530,7 +531,7 @@ export default function GeneralSettingsPage() {
                         <Input
                           {...field}
                           id="twitter_url"
-                          maxLength={100}
+                          maxLength={MAX_SOCIAL_URL_LENGTH}
                           placeholder={t("settings.general.enterTwitterURL")}
                           aria-invalid={fieldState.invalid}
                           disabled={isPending}
@@ -541,7 +542,7 @@ export default function GeneralSettingsPage() {
                           <TranslatedFormMessage t={t} />
                         </p>
                         <p className="text-xs font-normal text-left text-muted-foreground">
-                          {field.value?.toString().length || 0} /100{" "}
+                          {field.value?.toString().length || 0} /{MAX_SOCIAL_URL_LENGTH}{" "}
                           {t("common.characters", "characters")}
                         </p>
                       </div>
@@ -564,7 +565,7 @@ export default function GeneralSettingsPage() {
                         <Input
                           {...field}
                           id="website_url"
-                          maxLength={100}
+                          maxLength={MAX_SOCIAL_URL_LENGTH}
                           placeholder={t("settings.general.enterWebsiteURL")}
                           aria-invalid={fieldState.invalid}
                           disabled={isPending}
@@ -575,7 +576,7 @@ export default function GeneralSettingsPage() {
                           <TranslatedFormMessage t={t} />
                         </p>
                         <p className="text-xs font-normal text-left text-muted-foreground">
-                          {field.value?.toString().length || 0} /100{" "}
+                          {field.value?.toString().length || 0} /{MAX_SOCIAL_URL_LENGTH}{" "}
                           {t("common.characters", "characters")}
                         </p>
                       </div>
@@ -598,7 +599,7 @@ export default function GeneralSettingsPage() {
                         <Input
                           {...field}
                           id="twitter_url"
-                          maxLength={100}
+                          maxLength={MAX_SOCIAL_URL_LENGTH}
                           placeholder={t("settings.general.enterTwitterURL")}
                           aria-invalid={fieldState.invalid}
                           disabled={isPending}
@@ -609,7 +610,7 @@ export default function GeneralSettingsPage() {
                           <TranslatedFormMessage t={t} />
                         </p>
                         <p className="text-xs font-normal text-left text-muted-foreground">
-                          {field.value?.toString().length || 0} /100{" "}
+                          {field.value?.toString().length || 0} /{MAX_SOCIAL_URL_LENGTH}{" "}
                           {t("common.characters", "characters")}
                         </p>
                       </div>

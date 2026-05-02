@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { useNavigationGuard } from "@/hooks/useNavigationGuard";
+import {FIRST_NAME_MAX, LAST_NAME_MAX} from "@/lib/charsLengthValidation";
 import {
   Form,
   FormControl,
@@ -269,21 +270,20 @@ export default function ProfileSettingsPage() {
                             "h-11 pl-11 pr-4",
                             !isEditing && "bg-gray-50 cursor-not-allowed",
                           )}
-                          maxLength={50}
+                          maxLength={FIRST_NAME_MAX}
                         />
                       </FormControl>
-                      {isEditing && (
-                        <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
-                          <p>
-                            <TranslatedFormMessage t={t} />
-                          </p>
-                          <p className="text-xs font-normal text-left text-muted-foreground">
-                            {field.value?.toString().length || 0} /50{" "}
-                            {t("common.characters", "characters")}
-                          </p>
-                        </div>
-                      )}
                     </div>
+
+                    {isEditing && (
+                      <div className="flex justify-between items-center mt-1 min-h-[20px]">
+                        <TranslatedFormMessage t={t} className="mt-0" />
+                        <div className="text-xs text-muted-foreground ml-auto">
+                          {field.value?.length || 0}/{FIRST_NAME_MAX}{" "}
+                          {t("common.characters", "characters")}
+                        </div>
+                      </div>
+                    )}
                   </FormItem>
                 )}
               />
@@ -316,21 +316,19 @@ export default function ProfileSettingsPage() {
                             "h-11 pl-11 pr-4",
                             !isEditing && "bg-gray-50 cursor-not-allowed",
                           )}
-                          maxLength={50}
+                          maxLength={LAST_NAME_MAX}
                         />
                       </FormControl>
-                      {isEditing && (
-                        <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
-                          <p>
-                            <TranslatedFormMessage t={t} />
-                          </p>
-                          <p className="text-xs font-normal text-left text-muted-foreground">
-                            {field.value?.toString().length || 0} /50{" "}
-                            {t("common.characters", "characters")}
-                          </p>
-                        </div>
-                      )}
                     </div>
+                    {isEditing && (
+                      <div className="flex justify-between items-center mt-1 min-h-[20px]">
+                        <TranslatedFormMessage t={t} className="mt-0" />
+                        <div className="text-xs text-muted-foreground ml-auto">
+                          {field.value?.length || 0}/{LAST_NAME_MAX}{" "}
+                          {t("common.characters", "characters")}
+                        </div>
+                      </div>
+                    )}
                   </FormItem>
                 )}
               />
