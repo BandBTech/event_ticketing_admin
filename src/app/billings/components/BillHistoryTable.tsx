@@ -29,6 +29,7 @@ interface PayoutTableProps {
     sortBy: string | undefined,
     sortOrder: "asc" | "desc" | undefined,
   ) => void;
+  wrapperClassName?: string;
 }
 
 export function BillHistoryTable({
@@ -45,6 +46,7 @@ export function BillHistoryTable({
   sortBy,
   sortOrder,
   onSortChange,
+  wrapperClassName,
 }: PayoutTableProps) {
   const { t } = useTranslation();
   const router = useRouter();
@@ -69,7 +71,7 @@ export function BillHistoryTable({
         id: "date",
         header: "Date",
         title: "Created Date",
-        // meta: { sortKey: "created_at" },
+        meta: { sortKey: "created_at" },
         cell: ({ row }) => {
           const date = new Date(row.original.created_at);
           const formattedDate = date.toLocaleDateString("en-CA");
@@ -79,7 +81,7 @@ export function BillHistoryTable({
       {
         id: "processed_by",
         header: t("Processed By"),
-        // meta: { sortKey: "event_title" },
+        meta: { sortKey: "processed_by" },
         cell: ({ row }) => (
           <span className="max-w-[200px] text-gray-700 truncate inline-block">
             {row.original.processed_by || "-"}
@@ -89,6 +91,7 @@ export function BillHistoryTable({
       {
         id: "amount",
         header: t("Amount"),
+        meta: { sortKey: "amount" },
         cell: ({ row }) => {
           const amount = row.original.amount;
           return (
@@ -101,7 +104,7 @@ export function BillHistoryTable({
       {
         id: "method",
         header: t("Method"),
-        // meta: { sortKey: "event_title" },
+        meta: { sortKey: "payment_method" },
         cell: ({ row }) => {
           const gateway = row.original.payment_method || "";
           return (
@@ -114,7 +117,6 @@ export function BillHistoryTable({
       {
         id: "screenshot",
         header: t("Screenshot"),
-        // meta: { sortKey: "event_title" },
         cell: ({ row }) => (
           <span className="max-w-[200px] text-gray-700 truncate inline-block">
             {row.original.screenshot_url ? (
@@ -138,6 +140,7 @@ export function BillHistoryTable({
   return (
     <>
       <ReusableTable
+       wrapperClassName={wrapperClassName}
         columns={columns}
         data={billHistory}
         isLoading={isLoading}

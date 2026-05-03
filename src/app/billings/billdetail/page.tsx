@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/queryKeys";
@@ -19,6 +19,7 @@ import { useLanguageStore } from "@/store/languageStore";
 import { Badge } from "@/components/ui/badge";
 import { useSearchParams } from "next/navigation";
 import { PaymentHistory } from "@/types/billings";
+import { usePaginationSync } from "@/hooks/usePaginationSync";
 import { cn } from "@/lib/utils";
 import { formatCurrency, formatDateTimeLong } from "@/lib/utils";
 import { BillHistoryTable } from "@/app/billings/components/BillHistoryTable";
@@ -130,7 +131,20 @@ export default function BillDetail() {
   const { t } = useTranslation(locale);
   const searchParams = useSearchParams();
 
+  const { currentPage, limit, handlePageChange, handleLimitChange } =
+    usePaginationSync();
+
   const billId = searchParams.get("id") || "";
+
+  // Sorting state
+  const [sortBy, setSortBy] = useState<string | undefined>(undefined);
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | undefined>(
+    undefined,
+  );
+
+  useEffect(() => {
+    document.title = `${t("webTitle.billings")} | Timro-Ticket`;
+  }, [locale]);
 
   const { data: billData, isLoading } = useQuery<Bill>({
     queryKey: queryKeys.users.detail(billId),
@@ -146,8 +160,16 @@ export default function BillDetail() {
   const { data: billHistoryData, isLoading: isBillHistoryLoading } = useQuery<
     PaymentHistory[]
   >({
-    queryKey: [...queryKeys.users.detail(billId), "history"],
-    queryFn: () => BillingService.getBillHistory(billId),
+    queryKey: [
+      ...queryKeys.users.detail(billId),
+      "history",
+      { sortBy, sortOrder },
+    ],
+    queryFn: () =>
+      BillingService.getBillHistoryForTable(billId, {
+        sort_by: sortBy,
+        sort_order: sortOrder,
+      }),
     enabled: !!billId,
   });
 
@@ -156,6 +178,18 @@ export default function BillDetail() {
       setBillHistory(billHistoryData);
     }
   }, [billHistoryData]);
+
+  const handleSortChange = useCallback(
+    (
+      newSortBy: string | undefined,
+      newSortOrder: "asc" | "desc" | undefined,
+    ) => {
+      setSortBy(newSortBy);
+      setSortOrder(newSortOrder);
+      handlePageChange(1);
+    },
+    [handlePageChange],
+  );
 
   const billedAmount = billData?.billed_amount ?? 0;
   const paidAmount = billData?.paid_amount ?? 0;
@@ -419,7 +453,7 @@ export default function BillDetail() {
           <div className="border-t border-slate-100" />
 
           {billHistory.length > 0 && (
-            <div>
+            <div className="">
               <SectionTitle>
                 {t(
                   "billings.detailPage.billPaymentHistory",
@@ -427,21 +461,24 @@ export default function BillDetail() {
                 )}
               </SectionTitle>
 
-              <BillHistoryTable
-                billHistory={billHistory}
-                isLoading={isLoading}
-                currentPage={1}
-                totalPages={1}
-                total={billHistory.length}
-                limit={10}
-                onLimitChange={() => {}}
-                hasNextPage={false}
-                hasPreviousPage={false}
-                onPageChange={() => {}}
-                sortBy={""}
-                sortOrder={"asc"}
-                onSortChange={() => {}}
-              />
+              <div className="glass-card-lowest rounded-2xl flex-1 min-h-0 flex flex-col">
+                <BillHistoryTable
+                  wrapperClassName="flex-1 min-h-0 overflow-auto"
+                  billHistory={billHistory}
+                  isLoading={isLoading}
+                  currentPage={1}
+                  totalPages={1}
+                  total={billHistory.length}
+                  limit={10}
+                  onLimitChange={() => {}}
+                  hasNextPage={false}
+                  hasPreviousPage={false}
+                  onPageChange={() => {}}
+                  sortBy={sortBy}
+                  sortOrder={sortOrder}
+                  onSortChange={handleSortChange}
+                />
+              </div>
             </div>
           )}
         </div>

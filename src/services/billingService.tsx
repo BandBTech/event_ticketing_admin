@@ -1,5 +1,5 @@
 import { api } from "../lib/apiClient";
-import { API_ENDPOINTS } from "@/app/config/api";
+import { API_BASE_URL, API_ENDPOINTS } from "@/app/config/api";
 import {
   Bill,
   PaymentBillResponse,
@@ -91,7 +91,6 @@ export class BillingService {
       if (filters.sort_order) params.append("sort_order", filters.sort_order);
     }
 
-
     const query = params.toString();
 
     const result = await api.get<PaymentBillData>(
@@ -119,6 +118,25 @@ export class BillingService {
       },
     );
     return response;
+  }
+
+  static async getBillHistoryForTable(
+    id: string,
+    filters?: { sort_by?: string; sort_order?: string },
+  ): Promise<PaymentHistory[]> {
+    const params = new URLSearchParams();
+
+    if (filters?.sort_by) params.append("sort_by", filters.sort_by);
+    if (filters?.sort_order) params.append("sort_order", filters.sort_order);
+
+    const query = params.toString();
+
+    const result = await api.get<PaymentHistory[]>(
+      `${API_BASE_URL}/admin/payments/bills/${id}/history${query ? `?${query}` : ""}`,
+      { requiresAuth: true },
+    );
+
+    return result;
   }
 
   /**
