@@ -53,6 +53,14 @@
       "dimensionsExceeded": "Le dimensioni dell'immagine superano il massimo consentito di {maxWidth}x{maxHeight}px.",
       "dimensionsTooSmall": "Le dimensioni dell'immagine sono troppo piccole. La dimensione minima è {minWidth}x{minHeight}px.",
       "aspectRatioInvalid": "Il rapporto d'aspetto dell'immagine deve essere approssimativamente {ratio}."
+    },
+    "dialog": {
+      "unsavedChanges": {
+        "title": "Modifiche non salvate",
+        "description": "Sono presenti modifiche non salvate. \nSei sicuro di voler partire? \nTutti i tuoi progressi andranno persi.",
+        "stay": "Rimani sulla pagina",
+        "leave": "Lascia la pagina"
+      }
     }
   },
   "navigation": {
