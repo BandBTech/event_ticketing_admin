@@ -77,7 +77,7 @@ export default function OrganizerProfilePage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="max-w-7xl mx-auto flex items-center justify-center">
         <div className="flex flex-col items-center gap-2">
           <Loader2 className="h-8 w-8 animate-spin text-black" />
           <p className="text-sm text-black">{t("users.loadingUsers")}</p>
@@ -87,7 +87,7 @@ export default function OrganizerProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 md:p-10">
+    <div className="max-w-7xl mx-auto p-4 md:p-6">
       {/* Back Button */}
 
       <button

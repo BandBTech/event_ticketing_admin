@@ -258,7 +258,7 @@ export default function EventsPage() {
       </div>
 
       {/* Events Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid auto-fill-[360px] gap-6">
         {isLoading ? (
           Array.from({ length: 8 }).map((_, i) => <EventCardSkeleton key={i} />)
         ) : filteredEvents.length === 0 ? (

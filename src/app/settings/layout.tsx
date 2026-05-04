@@ -115,7 +115,7 @@ export default function SettingsLayout({
             </Suspense>
           </header>
           <main className="flex-1 overflow-y-auto">
-            <div className="container mx-auto py-8 px-4 max-w-6xl">
+            <div className="container mx-auto py-8 px-4 max-w-7xl">
               <div className="flex flex-col md:flex-row gap-8">
                 {/* Settings Sidebar */}
                 <aside className="w-full md:w-64 shrink-0">

@@ -273,7 +273,7 @@ export default function OrganizersPage() {
           onOpenChange={setIsAddDialogOpen}
         />
 
-        <div className="grid grid-cols-1 @2xl:grid-cols-2 @5xl:grid-cols-3 gap-6">
+        <div className="grid auto-fill-[420px] gap-6">
           {isLoading || isFetching ? (
             Array.from({ length: 8 }).map((_, i) => (
               <OrganizerCardSkeleton key={i} />

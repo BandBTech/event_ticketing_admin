@@ -91,7 +91,10 @@ export default function Events() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
           <input
             type="text"
-            placeholder={t("event.placeholder.searchEvents", "Search events...")}
+            placeholder={t(
+              "event.placeholder.searchEvents",
+              "Search events...",
+            )}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
@@ -104,7 +107,7 @@ export default function Events() {
       </div>
 
       {/* Events Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid auto-fill-[360px] gap-6">
         {(events as Event[]).map((event) => (
           <div
             key={event?.id}
@@ -123,8 +126,8 @@ export default function Events() {
                   event.status === "ON SALE"
                     ? "bg-gradient-to-r from-green-500 to-emerald-400"
                     : event.status === "SOLD OUT"
-                    ? "bg-gradient-to-r from-red-500 to-red-400"
-                    : "bg-gradient-to-r from-yellow-500 to-amber-400"
+                      ? "bg-gradient-to-r from-red-500 to-red-400"
+                      : "bg-gradient-to-r from-yellow-500 to-amber-400"
                 }`}
               >
                 {event.status === "ON SALE" && (
@@ -170,7 +173,8 @@ export default function Events() {
                     href={`/organizerDashboard/pages/eventdetails/${event?.id}`}
                     className="flex items-center gap-2 border border-gray-300 hover:no-underline rounded-lg p-2 text-sm text-gray-700 font-medium hover:bg-gray-100 hover:shadow-lg"
                   >
-                    {t("common.viewDetail", "View Detail")} <ArrowRight className="w-4 h-4" />
+                    {t("common.viewDetail", "View Detail")}{" "}
+                    <ArrowRight className="w-4 h-4" />
                   </Link>
                   <button
                     aria-label="pencil line"
