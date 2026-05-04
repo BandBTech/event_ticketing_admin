@@ -92,6 +92,11 @@ export const useAuthStore = create<AuthStore>()((set, get) => ({
         error: null,
         _authChecked: true,
       });
+      if (typeof window !== 'undefined') {
+        const bc = new BroadcastChannel('auth_channel');
+        bc.postMessage({ type: 'logout' });
+        bc.close();
+      }
       return result;
     } catch {
       // Ensure tokens are cleared even if the API call fails
@@ -103,6 +108,11 @@ export const useAuthStore = create<AuthStore>()((set, get) => ({
         error: null,
         _authChecked: true,
       });
+      if (typeof window !== 'undefined') {
+        const bc = new BroadcastChannel('auth_channel');
+        bc.postMessage({ type: 'logout' });
+        bc.close();
+      }
       return { message: undefined };
     }
   },
