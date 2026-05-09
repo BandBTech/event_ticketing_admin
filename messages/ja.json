@@ -46,6 +46,14 @@
     "deactivated": "無効化",
     "clickToReplace": "クリックして置き換えます",
     "changeImage": "画像の変更",
+    "loader": {
+      "sendingResetCode": "リセットコードを送信中",
+      "signingIn": "ログイン中",
+      "resettingPassword": "パスワードをリセット中",
+      "verifyingEmail": "メールアドレスを確認中",
+      "creatingOrganizer": "主催者を作成中",
+      "updating": "更新中"
+    },
     "image": {
       "fileTooLarge": "ファイルサイズが {size} を超えています。\n小さい画像をアップロードしてください。",
       "fileInvalidType": "無効なファイルタイプです。\n画像（PNG/JPG）をアップロードしてください。",

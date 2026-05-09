@@ -206,7 +206,17 @@ export default function GeneralSettingsPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="relative max-w-4xl mx-auto p-6">
+      {isPending && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-xl">
+          <div className="flex flex-col items-center gap-3">
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-600 border-t-transparent" />
+            <p className="text-sm font-medium text-gray-700">
+              {t("common.loader.updating", "Updating")}
+            </p>
+          </div>
+        </div>
+      )}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200">
         <div className="p-6 border-b border-gray-200">
           <h1 className="text-2xl font-bold text-gray-900">
@@ -220,11 +230,6 @@ export default function GeneralSettingsPage() {
             onSubmit={form.handleSubmit(onSubmit)}
             className="p-6 space-y-6"
           >
-            {isPending && (
-              <div className="max-w-4xl mx-auto p-6 fixed inset-0 z-[9999] flex items-center justify-center bg-white/60 backdrop-blur-[1px]">
-                <SpinnerIcon className="h-8 w-8 animate-spin text-blue-600" />
-              </div>
-            )}
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
               <div className="min-w-[300px]">
                 <ImageUploader

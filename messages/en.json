@@ -46,6 +46,14 @@
     "deactivated": "deactivated",
     "clickToReplace": "Click to replace",
     "changeImage": "Change Image",
+    "loader": {
+      "sendingResetCode": "Sending Reset Code",
+      "signingIn": "Signing In",
+      "resettingPassword": "Reseting Password",
+      "verifyingEmail": "Verifying Email",
+      "creatingOrganizer": "Creating Organizer",
+      "updating": "Updating"
+    },
     "image": {
       "fileTooLarge": "File size exceeds {size}. Please upload a smaller image.",
       "fileInvalidType": "Invalid file type. Please upload an image (PNG/JPG).",

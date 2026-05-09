@@ -201,301 +201,307 @@ export default function OrganizerFormDialog({
   };
 
   return (
-    <Modal
-      isOpen={open}
-      onClose={() => handleOpenChange(false)}
-      title={t("organizer.create.title", "Add New Organizer")}
-      description={t(
-        "organizer.create.description",
-        "Create a new organizer account with pre-approved status.",
-      )}
-    >
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col flex-1 overflow-hidden h-full"
-        >
-          <div className="flex-1 overflow-y-auto p-6 space-y-6">
-            <div className="grid gap-4">
-              <FormField
-                control={form.control}
-                name="first_name"
-                render={({ field, fieldState }) => (
-                  <FormItem>
-                    <FormLabel
-                      required
-                      className="text-sm font-semibold text-gray-700"
-                    >
-                      {t("auth.signup.firstName", "First Name")}
-                    </FormLabel>
-                    <div className="relative group">
-                      <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none transition-colors group-focus-within:text-blue-600">
-                        <UserIcon
-                          weight="duotone"
-                          size={22}
-                          className="text-gray-400"
-                        />
-                      </div>
-                      <FormControl>
-                        <Input
-                          placeholder={t(
-                            "auth.signup.firstNamePlaceholder",
-                            "Enter first name",
-                          )}
-                          {...field}
-                          maxLength={50}
-                          className={cn(
-                            "h-12 pl-12 pr-4 bg-gray-50/50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all duration-200",
-                            fieldState.error &&
-                              "border-destructive focus:ring-destructive/20",
-                          )}
-                          disabled={isPending}
-                        />
-                      </FormControl>
-                    </div>
-                    <div className="flex justify-between items-start min-h-[1.25rem] px-1">
-                      <div className="flex-1">
-                        <TranslatedFormMessage t={t} />
-                      </div>
-                      <p className="text-xs font-normal text-muted-foreground shrink-0 ml-2">
-                        {field.value?.toString().length ?? 0}/50 {t(
-                            "common.characters",
-                            "characters",
-                          )}
-                      </p>
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="last_name"
-                render={({ field, fieldState }) => (
-                  <FormItem>
-                    <FormLabel
-                      required
-                      className="text-sm font-semibold text-gray-700"
-                    >
-                      {t("auth.signup.lastName", "Last  Name")}
-                    </FormLabel>
-                    <div className="relative group">
-                      <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none transition-colors group-focus-within:text-blue-600">
-                        <UserIcon
-                          weight="duotone"
-                          size={22}
-                          className="text-gray-400"
-                        />
-                      </div>
-                      <FormControl>
-                        <Input
-                          placeholder={t(
-                            "auth.signup.lastNamePlaceholder",
-                            "Enter last name",
-                          )}
-                          {...field}
-                          maxLength={50}
-                          className={cn(
-                            "h-12 pl-12 pr-4 bg-gray-50/50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all duration-200",
-                            fieldState.error &&
-                              "border-destructive focus:ring-destructive/20",
-                          )}
-                          disabled={isPending}
-                        />
-                      </FormControl>
-                    </div>
-                    <div className="flex justify-between items-start min-h-[1.25rem] px-1">
-                      <div className="flex-1">
-                        <TranslatedFormMessage t={t} />
-                      </div>
-                      <p className="text-xs font-normal text-muted-foreground shrink-0 ml-2">
-                        {field.value?.toString().length ?? 0}/50 {t(
-                            "common.characters",
-                            "characters",
-                          )}
-                      </p>
-                    </div>
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div>
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field, fieldState }) => (
-                  <FormItem>
-                    <FormLabel
-                      required
-                      className="text-sm font-semibold text-gray-700"
-                    >
-                      {t("auth.signup.email", "Email Address")}
-                    </FormLabel>
-                    <div className="relative group">
-                      <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none transition-colors group-focus-within:text-blue-600">
-                        <EnvelopeIcon
-                          weight="duotone"
-                          size={22}
-                          className="text-gray-400"
-                        />
-                      </div>
-                      <FormControl>
-                        <Input
-                          placeholder={t(
-                            "auth.signup.emailPlaceholder",
-                            "Enter email address",
-                          )}
-                          type="email"
-                          {...field}
-                          maxLength={50}
-                          className={cn(
-                            "h-12 pl-12 pr-4 bg-gray-50/50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all duration-200",
-                            fieldState.error &&
-                              "border-destructive focus:ring-destructive/20",
-                          )}
-                          disabled={isPending}
-                        />
-                      </FormControl>
-                      <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
-                        <p> </p>
-                        <p className="text-xs font-normal text-left text-muted-foreground">
-                          {field.value?.toString().length || 0} /50 {t(
-                            "common.characters",
-                            "characters",
-                          )}
-                        </p>
-                      </div>
-                    </div>
-                    <TranslatedFormMessage t={t} />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div>
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field, fieldState }) => (
-                  <FormItem>
-                    <FormLabel
-                      required
-                      className="text-sm font-semibold text-gray-700"
-                    >
-                      {t("auth.signup.password", "Password")}
-                    </FormLabel>
-                    <div className="relative group">
-                      <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none transition-colors group-focus-within:text-blue-600">
-                        <KeyIcon
-                          weight="duotone"
-                          size={22}
-                          className="text-gray-400"
-                        />
-                      </div>
-                      <FormControl>
-                        <Input
-                          type="text"
-                          placeholder="••••••••"
-                          {...field}
-                          maxLength={50}
-                          className={cn(
-                            "h-12 pl-12 pr-14 bg-gray-50/50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all duration-200",
-                            fieldState.error &&
-                              "border-destructive focus:ring-destructive/20",
-                          )}
-                          disabled={isPending}
-                        />
-                      </FormControl>
-                      <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
-                        <p> </p>
-                        <p className="text-xs font-normal text-left text-muted-foreground">
-                          {field.value?.toString().length || 0} /50 {t(
-                            "common.characters",
-                            "characters",
-                          )}
-                        </p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={handleGeneratePassword}
-                        title="Generate secure password"
-                        className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center w-9 h-9 hover:bg-blue-50 text-blue-600 rounded-lg transition-all duration-200 z-20 active:scale-90"
-                      >
-                        <ArrowsClockwiseIcon weight="duotone" size={20} />
-                      </button>
-                    </div>
-                    {errors.password &&
-                      errors.password.message !== "Invalid input" &&
-                      !errors.password.message?.includes(
-                        "must be at least 8 characters",
-                      ) &&
-                      !errors.password.message?.includes(
-                        "uppercase and one lowercase",
-                      ) &&
-                      !errors.password.message?.includes("special character") &&
-                      !errors.password.message?.includes("numeric digit") && (
-                        <p className="text-sm text-destructive" role="alert">
-                          {errors.password.message}
-                        </p>
-                      )}
-                    <PasswordRequirements password={field.value} />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div>
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field, fieldState }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-semibold text-gray-700">
-                      {t("auth.signup.phone", "Contact Number")}
-                    </FormLabel>
-                    <FormControl>
-                      <PhoneInput
-                        value={field.value || ""}
-                        onChange={(value) => field.onChange(value)}
-                        defaultCountry={defaultCountry}
-                        placeholder={t(
-                          "auth.signup.phonePlaceholder",
-                          "981-234-5678",
-                        )}
-                        className={cn(
-                          "transition-all duration-200",
-                          fieldState.error && "border-destructive",
-                        )}
-                        disabled={isPending}
-                      />
-                    </FormControl>
-                    <TranslatedFormMessage t={t} />
-                  </FormItem>
-                )}
-              />
+    <>
+      <Modal
+        isOpen={open}
+        onClose={() => handleOpenChange(false)}
+        title={t("organizer.create.title", "Add New Organizer")}
+        description={t(
+          "organizer.create.description",
+          "Create a new organizer account with pre-approved status.",
+        )}
+      >
+        {createMutation.isPending && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm">
+            <div className="flex flex-col items-center gap-3">
+              <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-600 border-t-transparent" />
+              <p className="text-sm font-medium text-gray-700">
+                {t("common.loader.creatingOrganizer")}
+              </p>
             </div>
           </div>
+        )}
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col flex-1 overflow-hidden h-full"
+          >
+            <div className="flex-1 overflow-y-auto p-6 space-y-6">
+              <div className="grid gap-4">
+                <FormField
+                  control={form.control}
+                  name="first_name"
+                  render={({ field, fieldState }) => (
+                    <FormItem>
+                      <FormLabel
+                        required
+                        className="text-sm font-semibold text-gray-700"
+                      >
+                        {t("auth.signup.firstName", "First Name")}
+                      </FormLabel>
+                      <div className="relative group">
+                        <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none transition-colors group-focus-within:text-blue-600">
+                          <UserIcon
+                            weight="duotone"
+                            size={22}
+                            className="text-gray-400"
+                          />
+                        </div>
+                        <FormControl>
+                          <Input
+                            placeholder={t(
+                              "auth.signup.firstNamePlaceholder",
+                              "Enter first name",
+                            )}
+                            {...field}
+                            maxLength={50}
+                            className={cn(
+                              "h-12 pl-12 pr-4 bg-gray-50/50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all duration-200",
+                              fieldState.error &&
+                                "border-destructive focus:ring-destructive/20",
+                            )}
+                            disabled={isPending}
+                          />
+                        </FormControl>
+                      </div>
+                      <div className="flex justify-between items-start min-h-[1.25rem] px-1">
+                        <div className="flex-1">
+                          <TranslatedFormMessage t={t} />
+                        </div>
+                        <p className="text-xs font-normal text-muted-foreground shrink-0 ml-2">
+                          {field.value?.toString().length ?? 0}/50{" "}
+                          {t("common.characters", "characters")}
+                        </p>
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="last_name"
+                  render={({ field, fieldState }) => (
+                    <FormItem>
+                      <FormLabel
+                        required
+                        className="text-sm font-semibold text-gray-700"
+                      >
+                        {t("auth.signup.lastName", "Last  Name")}
+                      </FormLabel>
+                      <div className="relative group">
+                        <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none transition-colors group-focus-within:text-blue-600">
+                          <UserIcon
+                            weight="duotone"
+                            size={22}
+                            className="text-gray-400"
+                          />
+                        </div>
+                        <FormControl>
+                          <Input
+                            placeholder={t(
+                              "auth.signup.lastNamePlaceholder",
+                              "Enter last name",
+                            )}
+                            {...field}
+                            maxLength={50}
+                            className={cn(
+                              "h-12 pl-12 pr-4 bg-gray-50/50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all duration-200",
+                              fieldState.error &&
+                                "border-destructive focus:ring-destructive/20",
+                            )}
+                            disabled={isPending}
+                          />
+                        </FormControl>
+                      </div>
+                      <div className="flex justify-between items-start min-h-[1.25rem] px-1">
+                        <div className="flex-1">
+                          <TranslatedFormMessage t={t} />
+                        </div>
+                        <p className="text-xs font-normal text-muted-foreground shrink-0 ml-2">
+                          {field.value?.toString().length ?? 0}/50{" "}
+                          {t("common.characters", "characters")}
+                        </p>
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </div>
 
-          <DialogFooter className="px-6 py-4 border-t bg-background shrink-0 gap-2 sm:justify-end">
-            <Button
-              variant="outline"
-              type="button"
-              onClick={() => handleOpenChange(false)}
-              disabled={isPending}
-            >
-              {t("common.cancelButton", "Cancel")}
-            </Button>
-            <Button
-              type="submit"
-              disabled={isPending}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
-            >
-              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {t("organizer.create.createOrganizer", "Create Organizer")}
-            </Button>
-          </DialogFooter>
-        </form>
-      </Form>
-    </Modal>
+              <div>
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field, fieldState }) => (
+                    <FormItem>
+                      <FormLabel
+                        required
+                        className="text-sm font-semibold text-gray-700"
+                      >
+                        {t("auth.signup.email", "Email Address")}
+                      </FormLabel>
+                      <div className="relative group">
+                        <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none transition-colors group-focus-within:text-blue-600">
+                          <EnvelopeIcon
+                            weight="duotone"
+                            size={22}
+                            className="text-gray-400"
+                          />
+                        </div>
+                        <FormControl>
+                          <Input
+                            placeholder={t(
+                              "auth.signup.emailPlaceholder",
+                              "Enter email address",
+                            )}
+                            type="email"
+                            {...field}
+                            maxLength={50}
+                            className={cn(
+                              "h-12 pl-12 pr-4 bg-gray-50/50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all duration-200",
+                              fieldState.error &&
+                                "border-destructive focus:ring-destructive/20",
+                            )}
+                            disabled={isPending}
+                          />
+                        </FormControl>
+                        <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
+                          <p> </p>
+                          <p className="text-xs font-normal text-left text-muted-foreground">
+                            {field.value?.toString().length || 0} /50{" "}
+                            {t("common.characters", "characters")}
+                          </p>
+                        </div>
+                      </div>
+                      <TranslatedFormMessage t={t} />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div>
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field, fieldState }) => (
+                    <FormItem>
+                      <FormLabel
+                        required
+                        className="text-sm font-semibold text-gray-700"
+                      >
+                        {t("auth.signup.password", "Password")}
+                      </FormLabel>
+                      <div className="relative group">
+                        <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none transition-colors group-focus-within:text-blue-600">
+                          <KeyIcon
+                            weight="duotone"
+                            size={22}
+                            className="text-gray-400"
+                          />
+                        </div>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            placeholder="••••••••"
+                            {...field}
+                            maxLength={50}
+                            className={cn(
+                              "h-12 pl-12 pr-14 bg-gray-50/50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all duration-200",
+                              fieldState.error &&
+                                "border-destructive focus:ring-destructive/20",
+                            )}
+                            disabled={isPending}
+                          />
+                        </FormControl>
+                        <div className="flex justify-between items-center absolute -bottom-6 left-0 w-full px-1">
+                          <p> </p>
+                          <p className="text-xs font-normal text-left text-muted-foreground">
+                            {field.value?.toString().length || 0} /50{" "}
+                            {t("common.characters", "characters")}
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={handleGeneratePassword}
+                          title="Generate secure password"
+                          className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center w-9 h-9 hover:bg-blue-50 text-blue-600 rounded-lg transition-all duration-200 z-20 active:scale-90"
+                        >
+                          <ArrowsClockwiseIcon weight="duotone" size={20} />
+                        </button>
+                      </div>
+                      {errors.password &&
+                        errors.password.message !== "Invalid input" &&
+                        !errors.password.message?.includes(
+                          "must be at least 8 characters",
+                        ) &&
+                        !errors.password.message?.includes(
+                          "uppercase and one lowercase",
+                        ) &&
+                        !errors.password.message?.includes(
+                          "special character",
+                        ) &&
+                        !errors.password.message?.includes("numeric digit") && (
+                          <p className="text-sm text-destructive" role="alert">
+                            {errors.password.message}
+                          </p>
+                        )}
+                      <PasswordRequirements password={field.value} />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div>
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field, fieldState }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-semibold text-gray-700">
+                        {t("auth.signup.phone", "Contact Number")}
+                      </FormLabel>
+                      <FormControl>
+                        <PhoneInput
+                          value={field.value || ""}
+                          onChange={(value) => field.onChange(value)}
+                          defaultCountry={defaultCountry}
+                          placeholder={t(
+                            "auth.signup.phonePlaceholder",
+                            "981-234-5678",
+                          )}
+                          className={cn(
+                            "transition-all duration-200",
+                            fieldState.error && "border-destructive",
+                          )}
+                          disabled={isPending}
+                        />
+                      </FormControl>
+                      <TranslatedFormMessage t={t} />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            <DialogFooter className="px-6 py-4 border-t bg-background shrink-0 gap-2 sm:justify-end">
+              <Button
+                variant="outline"
+                type="button"
+                onClick={() => handleOpenChange(false)}
+                disabled={isPending}
+              >
+                {t("common.cancelButton", "Cancel")}
+              </Button>
+              <Button
+                type="submit"
+                disabled={isPending}
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {t("organizer.create.createOrganizer", "Create Organizer")}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </Modal>
+    </>
   );
 }

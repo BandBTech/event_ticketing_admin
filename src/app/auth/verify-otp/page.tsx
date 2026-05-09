@@ -153,115 +153,130 @@ function VerifyOTPContent() {
   };
 
   return (
-    <div className="min-h-screen relative flex flex-col items-center justify-center px-4 py-8 sm:py-20">
-      <div className="w-full max-w-[410px] relative z-10">
-        <div className="relative">
-          <div className="glass-login-card rounded-2xl p-4 sm:p-6">
-            <div className="space-y-6 p-2 sm:p-3">
-              {/* Back Button */}
-              <button
-                onClick={() => {
-                  if (otpType === "password_reset") {
-                    // Save email to sessionStorage for forgot-password page
-                    sessionStorage.setItem("password_reset_email", email);
-                    router.push("/auth/forgot-password");
-                  }
-                }}
-                className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600 transition-colors cursor-pointer"
-              >
-                <ArrowLeftIcon size={16} />
-                {t("auth.verifyOTP.back", "Back")}
-              </button>
-
-              {/* Header */}
-              <div className="space-y-2">
-                <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900 font-poppins">
-                  {t("auth.verifyOTP.title", "Verify Your Email")}
-                </h1>
-                <p className="text-sm text-gray-600">
-                  {t(
-                    "auth.verifyOTP.subtitle",
-                    "Enter the 6-digit code sent to",
-                  )}
-                  <br />
-                  <strong>{email}</strong>
-                  <br />
-                  {t(
-                    "auth.verifyOTP.otpValidity",
-                    "The code will expire in 10 minutes.",
-                  )}
-                </p>
-              </div>
-
-              {/* Error Message */}
-              {error && (
-                <div className="p-3 rounded-lg bg-destructive/5 border border-destructive/20">
-                  <p className="text-sm text-destructive">{error}</p>
-                </div>
-              )}
-
-              {/* OTP Input */}
-              <div className="space-y-6">
-                <div className="flex justify-center">
-                  <InputOTP maxLength={6} value={otp} onChange={setOtp}>
-                    <InputOTPGroup>
-                      <InputOTPSlot index={0} className="h-14 w-14 text-lg" />
-                      <InputOTPSlot index={1} className="h-14 w-14 text-lg" />
-                      <InputOTPSlot index={2} className="h-14 w-14 text-lg" />
-                      <InputOTPSlot index={3} className="h-14 w-14 text-lg" />
-                      <InputOTPSlot index={4} className="h-14 w-14 text-lg" />
-                      <InputOTPSlot index={5} className="h-14 w-14 text-lg" />
-                    </InputOTPGroup>
-                  </InputOTP>
-                </div>
-
-                {/* Verify Button */}
-                <Button
-                  onClick={handleVerify}
-                  disabled={isLoading || otp.length < 6}
-                  className={cn(
-                    "w-full h-12 rounded-lg font-medium transition-all duration-200",
-                    "bg-blue-600 hover:bg-blue-700 text-white",
-                    "shadow-lg hover:shadow-xl",
-                    "disabled:opacity-50 disabled:cursor-not-allowed",
-                    isLoading && "animate-pulse",
-                  )}
+    <>
+      {isLoading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm">
+          <div className="flex flex-col items-center gap-3">
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-600 border-t-transparent" />
+            <p className="text-sm font-medium text-gray-700">
+              {t("common.loader.verifyingEmail")}
+            </p>
+          </div>
+        </div>
+      )}
+      <div className="min-h-screen relative flex flex-col items-center justify-center px-4 py-8 sm:py-20">
+        <div className="w-full max-w-[410px] relative z-10">
+          <div className="relative">
+            <div className="glass-login-card rounded-2xl p-4 sm:p-6">
+              <div className="space-y-6 p-2 sm:p-3">
+                {/* Back Button */}
+                <button
+                  onClick={() => {
+                    if (otpType === "password_reset") {
+                      // Save email to sessionStorage for forgot-password page
+                      sessionStorage.setItem("password_reset_email", email);
+                      router.push("/auth/forgot-password");
+                    }
+                  }}
+                  className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600 transition-colors cursor-pointer"
                 >
-                  {isLoading
-                    ? t("auth.verifyOTP.verifying", "Verifying...")
-                    : t("auth.verifyOTP.verifyButton", "Verify OTP")}
-                </Button>
-              </div>
+                  <ArrowLeftIcon size={16} />
+                  {t("auth.verifyOTP.back", "Back")}
+                </button>
 
-              {/* Resend OTP */}
-              <div className="text-center space-y-2">
-                <p className="text-sm text-gray-600">
-                  {t("auth.verifyOTP.didntReceive", "Didn't receive the code?")}{" "}
-                  <button
-                    type="button"
-                    onClick={handleResendOTP}
-                    disabled={isResending || resendTimer > 0}
-                    className="font-medium cursor-pointer text-primary hover:text-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                {/* Header */}
+                <div className="space-y-2">
+                  <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900 font-poppins">
+                    {t("auth.verifyOTP.title", "Verify Your Email")}
+                  </h1>
+                  <p className="text-sm text-gray-600">
+                    {t(
+                      "auth.verifyOTP.subtitle",
+                      "Enter the 6-digit code sent to",
+                    )}
+                    <br />
+                    <strong>{email}</strong>
+                    <br />
+                    {t(
+                      "auth.verifyOTP.otpValidity",
+                      "The code will expire in 10 minutes.",
+                    )}
+                  </p>
+                </div>
+
+                {/* Error Message */}
+                {error && (
+                  <div className="p-3 rounded-lg bg-destructive/5 border border-destructive/20">
+                    <p className="text-sm text-destructive">{error}</p>
+                  </div>
+                )}
+
+                {/* OTP Input */}
+                <div className="space-y-6">
+                  <div className="flex justify-center">
+                    <InputOTP maxLength={6} value={otp} onChange={setOtp}>
+                      <InputOTPGroup>
+                        <InputOTPSlot index={0} className="h-14 w-14 text-lg" />
+                        <InputOTPSlot index={1} className="h-14 w-14 text-lg" />
+                        <InputOTPSlot index={2} className="h-14 w-14 text-lg" />
+                        <InputOTPSlot index={3} className="h-14 w-14 text-lg" />
+                        <InputOTPSlot index={4} className="h-14 w-14 text-lg" />
+                        <InputOTPSlot index={5} className="h-14 w-14 text-lg" />
+                      </InputOTPGroup>
+                    </InputOTP>
+                  </div>
+
+                  {/* Verify Button */}
+                  <Button
+                    onClick={handleVerify}
+                    disabled={isLoading || otp.length < 6}
+                    className={cn(
+                      "w-full h-12 rounded-lg font-medium transition-all duration-200",
+                      "bg-blue-600 hover:bg-blue-700 text-white",
+                      "shadow-lg hover:shadow-xl",
+                      "disabled:opacity-50 disabled:cursor-not-allowed",
+                      isLoading && "animate-pulse",
+                    )}
                   >
-                    {isResending
-                      ? t("auth.verifyOTP.resending", "Resending...")
-                      : resendTimer > 0
-                        ? `Resend in ${resendTimer}s`
-                        : t("auth.verifyOTP.resend", "Resend")}
-                  </button>
-                </p>
-                <p className="text-xs text-gray-500">
-                  {t(
-                    "auth.verifyOTP.checkSpam",
-                    "Check your spam folder if you don't see the email",
-                  )}
-                </p>
+                    {isLoading
+                      ? t("auth.verifyOTP.verifying", "Verifying...")
+                      : t("auth.verifyOTP.verifyButton", "Verify OTP")}
+                  </Button>
+                </div>
+
+                {/* Resend OTP */}
+                <div className="text-center space-y-2">
+                  <p className="text-sm text-gray-600">
+                    {t(
+                      "auth.verifyOTP.didntReceive",
+                      "Didn't receive the code?",
+                    )}{" "}
+                    <button
+                      type="button"
+                      onClick={handleResendOTP}
+                      disabled={isResending || resendTimer > 0}
+                      className="font-medium cursor-pointer text-primary hover:text-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isResending
+                        ? t("auth.verifyOTP.resending", "Resending...")
+                        : resendTimer > 0
+                          ? `Resend in ${resendTimer}s`
+                          : t("auth.verifyOTP.resend", "Resend")}
+                    </button>
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {t(
+                      "auth.verifyOTP.checkSpam",
+                      "Check your spam folder if you don't see the email",
+                    )}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

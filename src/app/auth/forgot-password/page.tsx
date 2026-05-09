@@ -110,6 +110,17 @@ export default function ForgotPasswordPage() {
   };
 
   return (
+    <>
+          {isLoading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm">
+          <div className="flex flex-col items-center gap-3">
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-600 border-t-transparent" />
+            <p className="text-sm font-medium text-gray-700">
+              {t("common.loader.sendingResetCode")}
+            </p>
+          </div>
+        </div>
+      )}
       <div className="min-h-screen relative flex flex-col items-center justify-center px-4 py-8 sm:py-20">
         <div className="w-full max-w-[480px] relative z-10">
           <div className="relative">
@@ -233,5 +244,6 @@ export default function ForgotPasswordPage() {
           </div>
         </div>
       </div>
+    </>
   );
 }

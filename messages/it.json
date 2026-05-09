@@ -46,6 +46,14 @@
     "deactivated": "disattivata",
     "clickToReplace": "Fare clic per sostituire",
     "changeImage": "Cambia immagine",
+    "loader": {
+      "sendingResetCode": "Invio codice di reset",
+      "signingIn": "Accesso in corso",
+      "resettingPassword": "Reimpostazione password in corso",
+      "verifyingEmail": "Verifica email in corso",
+      "creatingOrganizer": "Creazione organizzatore in corso",
+      "updating": "Aggiornamento in corso"
+    },
     "image": {
       "fileTooLarge": "La dimensione del file supera le {dimensioni}. \nCarica un'immagine più piccola.",
       "fileInvalidType": "Tipo di file non valido. \nSi prega di caricare un'immagine (PNG/JPG).",
