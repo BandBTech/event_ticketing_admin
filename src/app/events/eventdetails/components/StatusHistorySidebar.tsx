@@ -90,16 +90,27 @@ export default function StatusHistorySidebar({
 
     switch (status) {
       case "approved":
-        return <CheckCircle size={16} className="text-emerald-500" />;
+        return <CheckCircle size={16} className="text-green-600" />;
       case "rejected":
         return <XCircle size={16} className="text-destructive" />;
       case "cancelled":
         return <XCircle size={16} className="text-destructive" />;
       case "pending":
-        return <Circle size={16} className="text-amber-500" />;
-      // case 'draft': return <Circle size={16} className="text-gray-500" />;
+        return <Circle size={16} className="text-yellow-600" />;
       case "on_sale":
+        return <Circle size={16} className="text-green-600" />;
+      case "on_hold":
+        return <Circle size={16} className="text-amber-600" />;
+      case "live":
+        return <Circle size={16} className="text-green-600" />;
+      case "completed":
+        return <Circle size={16} className="text-slate-600" />;
+      case "sales_end":
+        return <Circle size={16} className="text-red-600" />;
+      case "sales_upcoming":
         return <Circle size={16} className="text-green-500" />;
+      case "scheduled":
+        return <Circle size={16} className="text-blue-600" />;
       default:
         return <Circle size={16} className="text-blue-500" />;
     }
@@ -259,7 +270,7 @@ export default function StatusHistorySidebar({
                       historyItem.status_type,
                     )}
                   </Badge>
-                  <span className="text-[10px] text-gray-400">
+                  <span className="text-[10px] text-black">
                     {formatDateTime(historyItem.created_at)}
                   </span>
                 </div>
@@ -283,7 +294,7 @@ export default function StatusHistorySidebar({
                       )}
                 </div>*/}
 
-                <div className="flex items-center gap-1 mt-1 text-[10px] text-gray-400">
+                <div className="flex items-center gap-1 mt-1 text-[10px] text-black">
                   <User size={10} />
                   <span>
                     {historyItem.changed_by_name ||
