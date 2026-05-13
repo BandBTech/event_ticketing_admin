@@ -145,7 +145,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
           value={data?.users.total ?? 0}
           subtitle={`${data?.users.active ?? 0} ${t("status.active")} · ${data?.users.inactive ?? 0} ${t("status.inactive")}`}
         />
-        <KPICard
+        {/* <KPICard
           label={t("dashboard.dataDisplay.grossRevenue")}
           value={formatCurrency(
             data?.revenue.gross_revenue ?? 0,
@@ -153,7 +153,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
             locale,
           )}
           subtitle={`Net ${formatCurrency(data?.revenue.net_revenue ?? 0, undefined, locale).substring(0, 8)}`}
-        />
+        /> */}
         <KPICard
           label={t("dashboard.dataDisplay.totalSold")}
           value={totalTickets}
@@ -169,7 +169,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
       {/* ── Revenue Split + Event Status ── */}
       <div className="grid grid-cols-2 gap-4">
         {/* Revenue Split */}
-        <Card title={t("reports.eventPerformance.revenueSplt")}>
+        {/* <Card title={t("reports.eventPerformance.revenueSplt")}>
           <RevenueRow
             label={t("dashboard.dataDisplay.grossRevenue")}
             value={data?.revenue.gross_revenue ?? 0}
@@ -196,7 +196,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
             )}
             color="#378add"
           />
-        </Card>
+        </Card> */}
 
         {/* Event Status */}
         <Card title={t("dashboard.dataDisplay.eventStatusOverview")}>
@@ -347,37 +347,37 @@ export default function DashboardPage({ data }: DashboardPageProps) {
               <span className="text-xs text-black">
                 {t("dashboard.dataDisplay.totalRefunds")}
               </span>
-              <span className="text-xs font-semibold text-black">
+              {/* <span className="text-xs font-semibold text-black">
                 {formatCurrency(
                   data?.revenue.total_refunds ?? 0,
                   undefined,
                   locale,
                 )}
-              </span>
+              </span> */}
             </div>
             <div className="flex items-center justify-between">
               <span className="text-xs text-black">
                 {t("dashboard.dataDisplay.organizerRefunds")}
               </span>
-              <span className="text-xs font-semibold text-black">
+              {/* <span className="text-xs font-semibold text-black">
                 {formatCurrency(
                   data?.revenue.organizer_refunds ?? 0,
                   undefined,
                   locale,
                 )}
-              </span>
+              </span> */}
             </div>
             <div className="flex items-center justify-between">
               <span className="text-xs text-black">
                 {t("dashboard.dataDisplay.commissionRefunds")}
               </span>
-              <span className="text-xs font-semibold text-black">
+              {/* <span className="text-xs font-semibold text-black">
                 {formatCurrency(
                   data?.revenue.commission_refunds ?? 0,
                   undefined,
                   locale,
                 )}
-              </span>
+              </span> */}
             </div>
           </div>
         </Card>
