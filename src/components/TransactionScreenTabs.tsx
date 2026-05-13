@@ -36,11 +36,11 @@ export function TransactionScreenTabs() {
       label: t("pages.auditlogs", "Audit Logs"),
       link: "/auditlogs",
     },
-    {
-      value: "checkout-sessions",
-      label: t("pages.checkoutsessions", "Checkout Sessions"),
-      link: "/checkoutsessions",
-    },
+    // {
+    //   value: "checkout-sessions",
+    //   label: t("pages.checkoutsessions", "Checkout Sessions"),
+    //   link: "/checkoutsessions",
+    // },
   ];
 
   return (
