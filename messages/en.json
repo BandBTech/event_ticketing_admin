@@ -605,7 +605,8 @@
       "organizedBy": "Organized By",
       "onboardingIncomplete": "Onboarding Incomplete",
       "organizerNotFound": "Organizer info not available",
-      "confirmEventApproval": "Confirm Event Approval"
+      "confirmEventApproval": "Confirm Event Approval",
+      "confirmEventApprovalDesc": "Are you sure you want to approve <strong>{event}</strong> with a commission rate of <strong>{rate}%</strong> ? This action cannot be undone immediately."
     },
     "toast": {
       "organizerApproved": "Organizer approved successfully!",

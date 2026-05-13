@@ -564,7 +564,8 @@
       "commissionRatePlaceholder": "Inserisci il tasso di commissione (in%)",
       "organizedBy": "Organizzato da",
       "onboardingIncomplete": "Onboarding incompleto",
-      "confirmEventApproval": "Conferma l'approvazione dell'evento"
+      "confirmEventApproval": "Conferma l'approvazione dell'evento",
+      "confirmEventApprovalDesc": "Sei sicuro di voler approvare <strong>{event}</strong> con una commissione del <strong>{rate}%</strong>? Questa azione non può essere annullata immediatamente."
     },
     "toast": {
       "organizerApproved": "Organizzatore approvato con successo!",

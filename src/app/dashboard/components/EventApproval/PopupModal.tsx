@@ -258,19 +258,16 @@ function EventApprovalModal({
               )}
             </AlertDialogTitle>
             <AlertDialogDescription className="text-gray-500 text-base">
-              {eventName && (
-                <div className="mb-2 font-semibold text-gray-900 flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                  {t("dashboard.modal.event", "Event")}: {eventName}
-                </div>
-              )}
-              {t(
-                "dashboard.modal.confirmEventApprovalDesc",
-                "Are you sure you want to approve this event with a commission rate of {rate}%? This action cannot be undone immediately.",
-                {
-                  rate: pendingData?.commissionRate || "0",
-                },
-              )}
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: t(
+                    "dashboard.modal.confirmEventApprovalDesc",
+                    "Are you sure you want to approve <strong>{event}</strong> with a commission rate of <strong>{rate}%</strong>? This action cannot be undone immediately.",
+                  )
+                    .replace("{event}", `${eventName}`)
+                    .replace("{rate}", `${pendingData?.commissionRate || "0"}`),
+                }}
+              />
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="pt-6">
@@ -278,7 +275,7 @@ function EventApprovalModal({
               onClick={() => setShowConfirm(false)}
               className="h-11 px-6 border-gray-200 hover:bg-gray-50 transition-colors"
             >
-              {t("common.cancel", "Cancel")}
+              {t("common.cancelButton", "Cancel")}
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleConfirm}

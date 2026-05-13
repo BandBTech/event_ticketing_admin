@@ -577,7 +577,8 @@
       "commissionRatePlaceholder": "手数料率（%）を入力してください",
       "organizedBy": "主催",
       "onboardingIncomplete": "オンボーディングが不完全",
-      "confirmEventApproval": "イベント承認の確認"
+      "confirmEventApproval": "イベント承認の確認",
+      "confirmEventApprovalDesc": "<strong>{event}</strong>を<strong>{rate}%</strong>の手数料率で承認してもよろしいですか？この操作はすぐには取り消せません。"
     },
     "toast": {
       "organizerApproved": "主催者が正常に承認されました！",
