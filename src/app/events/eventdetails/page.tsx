@@ -52,7 +52,7 @@ import {
   XIcon,
 } from "@phosphor-icons/react";
 import FeaturedBadge from "../components/FeaturedBadge";
-// import { formatDateTime } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils";
 
 export default function EventDetailsPage() {
   const router = useRouter();
@@ -658,8 +658,7 @@ export default function EventDetailsPage() {
                       {t("events.analytics.revenue", "Revenue")}
                     </p>
                     <p className="text-lg font-bold text-emerald-700">
-                      {event.tiers?.[0]?.currency || "NPR"}{" "}
-                      {totalRevenue.toLocaleString()}
+                      {formatCurrency(totalRevenue, analytics?.tiers?.[0]?.currency ?? event.tiers?.[0]?.currency, locale)}
                     </p>
                   </div>
                 </div>
@@ -688,8 +687,7 @@ export default function EventDetailsPage() {
                               </div>
                               <div className="text-right">
                                 <p className="font-medium text-emerald-600">
-                                  {tier.currency || "NPR"}{" "}
-                                  {tier.revenue.toLocaleString()}
+                                  {formatCurrency(tier.revenue, tier.currency, locale)}
                                 </p>
                               </div>
                             </div>
@@ -710,8 +708,7 @@ export default function EventDetailsPage() {
                                 </span>
 
                                 <p className="text-xs text-gray-500">
-                                  {tier.currency || "NPR"}{" "}
-                                  {tier.price.toLocaleString()} /{" "}
+                                  {formatCurrency(tier.price, tier.currency, locale)} /{" "}
                                   {t("transactions.table.ticket", "ticket")}
                                 </p>
                               </div>
@@ -736,15 +733,13 @@ export default function EventDetailsPage() {
                                   {tier.tier_name}
                                 </p>
                                 <p className="text-xs text-gray-500">
-                                  {tier.currency || "NPR"}{" "}
-                                  {tier.price.toLocaleString()} /{" "}
+                                  {formatCurrency(tier.price, tier.currency, locale)} /{" "}
                                   {t("common.ticket", "ticket")}
                                 </p>
                               </div>
                               <div className="text-right">
                                 <p className="font-medium text-emerald-600">
-                                  {tier.currency || "NPR"}{" "}
-                                  {tierRevenue.toLocaleString()}
+                                  {formatCurrency(tierRevenue, tier.currency, locale)}
                                 </p>
                               </div>
                             </div>
