@@ -257,7 +257,7 @@ function EventApprovalModal({
                 "Confirm Event Approval",
               )}
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-gray-500 text-base">
+            <AlertDialogDescription className="text-black text-base">
               <span
                 dangerouslySetInnerHTML={{
                   __html: t(

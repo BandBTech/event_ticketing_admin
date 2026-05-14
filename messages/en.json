@@ -1031,7 +1031,7 @@
     },
     "transactionStatus": {
       "completed": "Completed",
-      "succeeded": "Completed",
+      "succeeded": "Succeeded",
       "pending": "Pending",
       "paid": "Paid",
       "approved": "Approved",

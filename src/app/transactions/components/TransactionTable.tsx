@@ -126,7 +126,7 @@ export function TransactionTable({
       {
         id: "ticket_count",
         header: t("transactions.table.ticket"),
-        accessorKey: "ticket_count",
+        accessorKey: "quantity",
         meta: { sortKey: "quantity" },
       },
       {
@@ -208,6 +208,7 @@ export function TransactionTable({
 
           const statusStyles: Record<string, string> = {
             completed: "bg-green-100 text-green-700",
+            succeeded: "bg-green-100 text-green-700",
             pending: "bg-yellow-100 text-yellow-700",
             failed: "bg-red-100 text-red-700",
             refunded: "bg-gray-200 text-gray-700",

@@ -982,7 +982,7 @@
     },
     "transactionStatus": {
       "completed": "Completato",
-      "succeeded": "Completato",
+      "succeeded": "ha avuto successo",
       "pending": "In sospeso",
       "paid": "Pagato",
       "approved": "Approvato",

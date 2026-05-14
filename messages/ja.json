@@ -995,7 +995,7 @@
     },
     "transactionStatus": {
       "completed": "完了",
-      "succeeded": "完了",
+      "succeeded": "成功した",
       "pending": "保留中",
       "paid": "支払い済み",
       "approved": "承認済み",
