@@ -213,10 +213,11 @@ export const formatCurrency = (amount: number, currency?: string, locale: string
   };
   const resolvedCurrency = currency || currencyMap[locale];
 
-  return new Intl.NumberFormat(locale, {
+return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: resolvedCurrency,
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
+    currencyDisplay: "narrowSymbol",
   }).format(amount);
 };
