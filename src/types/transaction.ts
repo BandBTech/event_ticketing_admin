@@ -28,6 +28,7 @@ export interface Transaction {
   updated_at: string; // ISO 8601 date string
   status: string;
   ticket_count: number;
+  gateway_fee: number;
   user_id: string; // UUID format
   user_name: string;
 }

@@ -7,6 +7,7 @@ import {
   InfoIcon,
   CoinsIcon,
 } from "@phosphor-icons/react";
+import { Badge } from "@/components/ui/badge";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -189,13 +190,25 @@ export function TransactionTable({
           };
 
           return (
-            <span
-              className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                colors[gateway?.toLowerCase()] || "bg-gray-100 text-gray-700"
-              }`}
-            >
-              {t("billings.method." + gateway)}
-            </span>
+            <div className="flex flex-col items-start gap-0.5">
+              <span
+                className={`px-2 py-0.5 text-xs font-medium rounded-full ${
+                  colors[gateway?.toLowerCase()] || "bg-gray-100 text-gray-700"
+                }`}
+              >
+                {t("billings.method." + gateway)}
+              </span>
+              {row.original.gateway_fee > 0 && (
+                <span className="text-[11px] font-medium text-red-600 pl-1">
+                  −
+                  {formatCurrency(
+                    row.original.gateway_fee,
+                    row.original.currency,
+                    locale,
+                  )}
+                </span>
+              )}
+            </div>
           );
         },
       },
