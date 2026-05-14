@@ -637,7 +637,12 @@
       "refresh": "再読み込み",
       "errorTitle": "エラーが発生しました",
       "errorSubtitle": "ダッシュボードデータの読み込みに失敗しました。後でもう一度試すか、問題が続く場合はサポートまでお問い合わせください。",
-      "tryAgain": "再試行"
+      "tryAgain": "再試行",
+      "earnings": "収益",
+      "currency": "通貨",
+      "gatewayFee": "ゲートウェイ手数料",
+      "pendingPayout": "支払い保留中",
+      "refundAmount": "返金額"
     }
   },
   "organizer": {

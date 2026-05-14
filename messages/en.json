@@ -665,7 +665,12 @@
       "refresh": "Refresh",
       "errorTitle": "Something went wrong",
       "errorSubtitle": "Failed to load dashboard data. Please try again later or contact support if the issue persists.",
-      "tryAgain": "Try Again"
+      "tryAgain": "Try Again",
+      "earnings": "Earnings",
+      "currency": "Currency",
+      "gatewayFee": "Gateway Fee",
+      "pendingPayout": "Pending Payout",
+      "refundAmount": "Refund Amount"
     }
   },
   "organizer": {

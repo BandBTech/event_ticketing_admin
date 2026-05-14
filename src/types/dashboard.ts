@@ -17,6 +17,7 @@ export interface AdminDashboardData {
   upcoming_events_list: UpcomingEvent[];
   users: UsersStats;
   refunds: RefundsStats;
+  earnings: EarningsStats[];
 }
 
 export interface EventsStats {
@@ -65,6 +66,18 @@ export interface PaymentBillsStats {
   total: number;
   total_due: number;
   total_paid_out: number;
+}
+
+export interface EarningsStats {
+  currency: string;
+  gateway_fee: number;
+  gross_revenue: number;
+  net_revenue: number;
+  paid_out: number;
+  pending_payout: number;
+  platform_commission: number;
+  refund_amount: number;
+  symbol: string;
 }
 
 export interface RevenueStats {

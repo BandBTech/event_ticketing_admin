@@ -624,7 +624,12 @@
       "refresh": "Aggiorna",
       "errorTitle": "Qualcosa è andato storto",
       "errorSubtitle": "Impossibile caricare i dati della dashboard. Riprova più tardi o contatta l'assistenza se il problema persiste.",
-      "tryAgain": "Riprova"
+      "tryAgain": "Riprova",
+      "earnings": "Guadagni",
+      "currency": "Valuta",
+      "gatewayFee": "Commissione gateway",
+      "pendingPayout": "Pagamento in sospeso",
+      "refundAmount": "Importo rimborsato"
     }
   },
   "organizer": {

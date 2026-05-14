@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { formatCurrency } from "@/lib/utils";
 import { useLanguageStore } from "@/store/languageStore";
@@ -116,10 +117,47 @@ function Card({
   );
 }
 
+function CurrencySelect({
+  selected,
+  currencies,
+  symbols,
+  onChange,
+}: {
+  selected: string;
+  currencies: string[];
+  symbols: Record<string, string>;
+  onChange: (currency: string) => void;
+}) {
+  return (
+    <select
+      value={selected}
+      onChange={(e) => onChange(e.target.value)}
+      className="px-2 py-1 text-xs font-semibold border border-gray-200 rounded-md bg-white text-black focus:outline-none focus:ring-1 focus:ring-black"
+    >
+      {currencies.map((c) => (
+        <option key={c} value={c}>
+          {c} ({symbols[c]})
+        </option>
+      ))}
+    </select>
+  );
+}
 // ── Main Page ─────────────────────────────────────────────────────────────────
 export default function DashboardPage({ data }: DashboardPageProps) {
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
+
+  const earnings = data?.earnings ?? [];
+  const currencies = earnings.map((e: { currency: string }) => e.currency);
+  const [selectedCurrency, setSelectedCurrency] = useState(
+    currencies[0] ?? "NPR",
+  );
+  const activeEarning = earnings.find(
+    (e: { currency: string }) => e.currency === selectedCurrency,
+  );
+  const symbolMap = Object.fromEntries(
+    earnings.map((e) => [e.currency, e.symbol]),
+  );
 
   // Calculate totals and percentages
   const totalEvents = data?.events?.total ?? 0;
@@ -145,17 +183,8 @@ export default function DashboardPage({ data }: DashboardPageProps) {
           value={data?.users.total ?? 0}
           subtitle={`${data?.users.active ?? 0} ${t("status.active")} · ${data?.users.inactive ?? 0} ${t("status.inactive")}`}
         />
-        {/* <KPICard
-          label={t("dashboard.dataDisplay.grossRevenue")}
-          value={formatCurrency(
-            data?.revenue.gross_revenue ?? 0,
-            undefined,
-            locale,
-          )}
-          subtitle={`Net ${formatCurrency(data?.revenue.net_revenue ?? 0, undefined, locale).substring(0, 8)}`}
-        /> */}
         <KPICard
-          label={t("dashboard.dataDisplay.totalSold")}
+          label={t("events.ticketsSold")}
           value={totalTickets}
           subtitle={`${activeTickets} ${t("status.active")} · ${cancelledTickets} ${t("status.cancelled")}`}
         />
@@ -164,41 +193,89 @@ export default function DashboardPage({ data }: DashboardPageProps) {
           value={totalTransactions}
           subtitle={`${data?.transactions.completed ?? 0} ${t("status.completed")} · ${data?.transactions.pending ?? 0} ${t("status.pending")}`}
         />
+        <KPICard
+          label={t("dashboard.dataDisplay.refunds")}
+          value={formatCurrency(
+            data?.refunds.completed ?? 0,
+            undefined,
+            locale,
+          )}
+          subtitle={`${data?.refunds.completed ?? 0} ${t("status.completed")} · ${data?.refunds.pending ?? 0} ${t("status.pending")}`}
+        />
       </div>
 
-      {/* ── Revenue Split + Event Status ── */}
-      <div className="grid grid-cols-2 gap-4">
-        {/* Revenue Split */}
-        {/* <Card title={t("reports.eventPerformance.revenueSplt")}>
-          <RevenueRow
-            label={t("dashboard.dataDisplay.grossRevenue")}
-            value={data?.revenue.gross_revenue ?? 0}
-            pct={100}
-            color="#1d9e75"
-          />
-          <RevenueRow
-            label={t("dashboard.dataDisplay.organizerEarnings")}
-            value={data?.revenue.gross_organizer_earnings ?? 0}
-            pct={Math.round(
-              ((data?.revenue.gross_organizer_earnings ?? 0) /
-                (data?.revenue.gross_revenue ?? 1)) *
-                100,
+      {/* ── Earnings Cards ── */}
+      <div>
+        <div className="flex items-center justify-start gap-5 mb-3">
+          <h2 className="text-sm font-semibold text-black">
+            {t("dashboard.dataDisplay.earnings") ?? "Earnings"}{" "}
+            {activeEarning?.symbol && `(${activeEarning.symbol})`}
+          </h2>
+          {currencies.length > 1 && (
+            <CurrencySelect
+              selected={selectedCurrency}
+              currencies={currencies}
+              symbols={symbolMap}
+              onChange={setSelectedCurrency}
+            />
+          )}
+        </div>
+        <div className="grid grid-cols-4 gap-4">
+          <KPICard
+            label={t("dashboard.dataDisplay.grossRevenue") ?? "Gross Revenue"}
+            value={formatCurrency(
+              activeEarning?.gross_revenue ?? 0,
+              activeEarning?.currency,
+              locale,
             )}
-            color="#1d9e75"
+            subtitle={`${t("dashboard.dataDisplay.netRevenue") ?? "Net"}: ${formatCurrency(
+              activeEarning?.net_revenue ?? 0,
+              activeEarning?.currency,
+              locale,
+            )}`}
           />
-          <RevenueRow
-            label={t("dashboard.dataDisplay.platformCommission")}
-            value={data?.revenue.gross_commission ?? 0}
-            pct={Math.round(
-              ((data?.revenue.gross_commission ?? 0) /
-                (data?.revenue.gross_revenue ?? 1)) *
-                100,
+          <KPICard
+            label={
+              t("dashboard.dataDisplay.platformCommission") ?? "Commission"
+            }
+            value={formatCurrency(
+              activeEarning?.platform_commission ?? 0,
+              activeEarning?.currency,
+              locale,
             )}
-            color="#378add"
+            subtitle={`${t("dashboard.dataDisplay.gatewayFee") ?? "Gateway Fee"}: ${formatCurrency(
+              activeEarning?.gateway_fee ?? 0,
+              activeEarning?.currency,
+              locale,
+            )}`}
           />
-        </Card> */}
+          <KPICard
+            label={t("dashboard.dataDisplay.paidOut") ?? "Paid Out"}
+            value={formatCurrency(
+              activeEarning?.paid_out ?? 0,
+              activeEarning?.currency,
+              locale,
+            )}
+            subtitle={`${t("dashboard.dataDisplay.pendingPayout") ?? "Pending"}: ${formatCurrency(
+              activeEarning?.pending_payout ?? 0,
+              activeEarning?.currency,
+              locale,
+            )}`}
+          />
+          <KPICard
+            label={t("dashboard.dataDisplay.refundAmount") ?? "Refunds"}
+            value={formatCurrency(
+              activeEarning?.refund_amount ?? 0,
+              activeEarning?.currency,
+              locale,
+            )}
+            subtitle=""
+          />
+        </div>
+      </div>
 
-        {/* Event Status */}
+      {/* ── Event Status ── */}
+      <div className="">
         <Card title={t("dashboard.dataDisplay.eventStatusOverview")}>
           <div className="flex justify-center">
             <EventsDonutChart data={data?.events} />
@@ -319,8 +396,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
       </div>
 
       {/* ── Refunds + Tickets ── */}
-      <div className="grid grid-cols-2 gap-4 pb-4">
-        {/* Refunds */}
+      {/* <div className="grid grid-cols-2 gap-4 pb-4">
         <Card title={t("dashboard.dataDisplay.refunds")}>
           <StatRow
             label={t("dashboard.dataDisplay.completed")}
@@ -347,42 +423,41 @@ export default function DashboardPage({ data }: DashboardPageProps) {
               <span className="text-xs text-black">
                 {t("dashboard.dataDisplay.totalRefunds")}
               </span>
-              {/* <span className="text-xs font-semibold text-black">
+              <span className="text-xs font-semibold text-black">
                 {formatCurrency(
                   data?.revenue.total_refunds ?? 0,
                   undefined,
                   locale,
                 )}
-              </span> */}
+              </span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-xs text-black">
                 {t("dashboard.dataDisplay.organizerRefunds")}
               </span>
-              {/* <span className="text-xs font-semibold text-black">
+              <span className="text-xs font-semibold text-black">
                 {formatCurrency(
                   data?.revenue.organizer_refunds ?? 0,
                   undefined,
                   locale,
                 )}
-              </span> */}
+              </span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-xs text-black">
                 {t("dashboard.dataDisplay.commissionRefunds")}
               </span>
-              {/* <span className="text-xs font-semibold text-black">
+              <span className="text-xs font-semibold text-black">
                 {formatCurrency(
                   data?.revenue.commission_refunds ?? 0,
                   undefined,
                   locale,
                 )}
-              </span> */}
+              </span>
             </div>
           </div>
         </Card>
 
-        {/* Tickets */}
         <Card title={t("dashboard.dataDisplay.tickets")}>
           <StatRow
             label={t("dashboard.dataDisplay.active")}
@@ -400,7 +475,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
             dotColor="#d3d1c7"
           />
         </Card>
-      </div>
+      </div> */}
     </main>
   );
 }

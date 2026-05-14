@@ -82,7 +82,7 @@ export function EventsDonutChart({ data }: { data?: EventStats }) {
   const total = data?.total ?? 0;
 
   return (
-    <div className="flex items-center gap-6 px-5 py-4">
+    <div className="w-full flex items-center gap-6 px-5 py-4">
       {/* Donut */}
       <div className="relative flex-shrink-0 w-36 h-36">
         <canvas ref={canvasRef} />
