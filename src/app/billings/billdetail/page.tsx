@@ -191,7 +191,7 @@ export default function BillDetail() {
     [handlePageChange],
   );
 
-  const billedAmount = billData?.billed_amount ?? 0;
+  const billedAmount = billData?.amount ?? 0;
   const paidAmount = billData?.paid_amount ?? 0;
 
   const paidPct = billedAmount > 0 ? (paidAmount / billedAmount) * 100 : 0;
@@ -367,7 +367,7 @@ export default function BillDetail() {
           />
           <MoneyCard
             label={t("billings.detailPage.billedAmount", "Billed Amount")}
-            value={billData?.billed_amount ?? 0}
+            value={billData?.amount ?? 0}
             accent="text-amber-600"
           />
         </div>
@@ -418,7 +418,7 @@ export default function BillDetail() {
               <InfoRow
                 label={t("billings.detailPage.billedAmount", "Billed Amount")}
                 value={formatCurrency(
-                  billData?.billed_amount ?? 0,
+                  billData?.amount ?? 0,
                   undefined,
                   locale,
                 )}
