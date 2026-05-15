@@ -15,9 +15,7 @@ import {
   TranslatedFormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  createRejectionSchema,
-} from "@/lib/validation";
+import { createRejectionSchema } from "@/lib/validation";
 import {
   Dialog,
   DialogContent,
@@ -56,7 +54,7 @@ function ApprovalModal({
   title: string;
   children?: React.ReactNode;
   onCancel?: () => void;
- onConfirm?: (data: { adminRemark: string }) => void;
+  onConfirm?: (data: { adminRemark: string }) => void;
   isLoading?: boolean;
   t: (
     key: string,
@@ -95,7 +93,20 @@ function ApprovalModal({
 
         {/* Form */}
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="relative space-y-4"
+          >
+            {isLoading && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-3xl">
+                <div className="flex flex-col items-center gap-3">
+                  <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-600 border-t-transparent" />
+                  <p className="text-sm font-medium text-gray-700">
+                    {t("dashboard.dataDisplay.processing")}...
+                  </p>
+                </div>
+              </div>
+            )}
             {children}
 
             <FormField
@@ -104,13 +115,15 @@ function ApprovalModal({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-semibold text-gray-700">
-                    Reason
+                    {remarkLabel || t("dashboard.modal.reason")}
                     <span className="text-red-500 ml-1">*</span>
                   </FormLabel>
                   <FormControl>
                     <Textarea
                       rows={4}
-                      placeholder="Please provide a reason for approving this cancellation"
+                      placeholder={
+                        placeholder || t("dashboard.modal.approvalReason")
+                      }
                       className="resize-none bg-gray-50/50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-red-500/20 transition-all"
                       maxLength={500}
                       {...field}
@@ -139,14 +152,12 @@ function ApprovalModal({
               </Button>
               <Button
                 type="submit"
-                // variant="destructive"
                 disabled={isLoading}
                 className="h-11 px-8 flex-1 sm:flex-none active:scale-95"
               >
-                {/* {isLoading
+                {isLoading
                   ? t("common.loading")
-                  : confirmText || t("dashboard.modal.confirmReject")} */}
-                  Approve Cancellation
+                  : confirmText || t("dashboard.modal.approveCancellation")}
               </Button>
             </div>
           </form>
@@ -214,7 +225,20 @@ function RejectionModal({
 
         {/* Form */}
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="relative space-y-4"
+          >
+            {isLoading && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-3xl">
+                <div className="flex flex-col items-center gap-3">
+                  <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-600 border-t-transparent" />
+                  <p className="text-sm font-medium text-gray-700">
+                    {t("dashboard.dataDisplay.processing")}...
+                  </p>
+                </div>
+              </div>
+            )}
             {children}
 
             <FormField
@@ -223,13 +247,15 @@ function RejectionModal({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-semibold text-gray-700">
-                    Reason
+                    {remarkLabel || t("dashboard.modal.reason")}
                     <span className="text-red-500 ml-1">*</span>
                   </FormLabel>
                   <FormControl>
                     <Textarea
                       rows={4}
-                      placeholder="Please provide a reason for rejecting this cancellation"
+                      placeholder={
+                        placeholder || t("dashboard.modal.rejectionReason")
+                      }
                       className="resize-none bg-gray-50/50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-red-500/20 transition-all"
                       maxLength={500}
                       {...field}
@@ -262,10 +288,9 @@ function RejectionModal({
                 disabled={isLoading}
                 className="h-11 px-8 flex-1 sm:flex-none active:scale-95"
               >
-                {/* {isLoading
+                {isLoading
                   ? t("common.loading")
-                  : confirmText || t("dashboard.modal.confirmReject")} */}
-                  Reject Cancellation
+                  : confirmText || t("dashboard.modal.rejectCancellation")}
               </Button>
             </div>
           </form>

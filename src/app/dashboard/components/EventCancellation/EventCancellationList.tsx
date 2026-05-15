@@ -168,8 +168,7 @@ const EventCancellationList = ({
       >
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
-            {/* {t("dashboard.eventsAwaitingApproval")} */}
-            Event Cancellation Requests
+            {t("dashboard.modal.eventCancellationRequests")}
           </SheetTitle>
         </SheetHeader>
 
@@ -209,8 +208,7 @@ const EventCancellationList = ({
               onClick={() => setRejectEventModal({ open: false })}
             />
             <PopupModal
-              // title={t("dashboard.modal.rejectEvent")}
-              title="Reject Event Cancellation"
+              title={t("dashboard.modal.rejectEventCancellation")}
               isApprove={false}
               showCommissionInput={false}
               isLoading={rejectEventMutation.isPending}
@@ -228,8 +226,7 @@ const EventCancellationList = ({
               onClick={() => setAcceptEventModal({ open: false })}
             />
             <PopupModal
-              // title={t("dashboard.modal.approveEvent")}
-              title="Approve Event Cancellation"
+              title={t("dashboard.modal.approveEventCancellation")}
               isApprove={true}
               showCommissionInput={true}
               isLoading={approveEventMutation.isPending}

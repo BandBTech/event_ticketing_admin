@@ -606,7 +606,15 @@
       "onboardingIncomplete": "Onboarding Incomplete",
       "organizerNotFound": "Organizer info not available",
       "confirmEventApproval": "Confirm Event Approval",
-      "confirmEventApprovalDesc": "Are you sure you want to approve <strong>{event}</strong> with a commission rate of <strong>{rate}%</strong> ? This action cannot be undone immediately."
+      "confirmEventApprovalDesc": "Are you sure you want to approve <strong>{event}</strong> with a commission rate of <strong>{rate}%</strong> ? This action cannot be undone immediately.",
+      "eventCancellationRequests": "Event Cancellation Requests",
+      "approveEventCancellation": "Approve Event Cancellation",
+      "rejectEventCancellation": "Reject Event Cancellation",
+      "reason": "Reason",
+      "rejectionReason": "Please provide a reason for rejecting this cancellation",
+      "approvalReason": "Please provide a reason for approving this cancellation",
+      "approveCancellation": "Approve Cancellation",
+      "rejectCancellation": "Reject Cancellation"
     },
     "toast": {
       "organizerApproved": "Organizer approved successfully!",

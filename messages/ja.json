@@ -578,7 +578,15 @@
       "organizedBy": "主催",
       "onboardingIncomplete": "オンボーディングが不完全",
       "confirmEventApproval": "イベント承認の確認",
-      "confirmEventApprovalDesc": "<strong>{event}</strong>を<strong>{rate}%</strong>の手数料率で承認してもよろしいですか？この操作はすぐには取り消せません。"
+      "confirmEventApprovalDesc": "<strong>{event}</strong>を<strong>{rate}%</strong>の手数料率で承認してもよろしいですか？この操作はすぐには取り消せません。",
+      "eventCancellationRequests": "イベントキャンセルリクエスト",
+      "approveEventCancellation": "イベントキャンセルを承認",
+      "rejectEventCancellation": "イベントキャンセルを却下",
+      "reason": "理由",
+      "rejectionReason": "このキャンセルを却下する理由を入力してください",
+      "approvalReason": "このキャンセルを承認する理由を入力してください",
+      "approveCancellation": "キャンセルを承認",
+      "rejectCancellation": "キャンセルを却下"
     },
     "toast": {
       "organizerApproved": "主催者が正常に承認されました！",

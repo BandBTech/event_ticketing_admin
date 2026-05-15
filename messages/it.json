@@ -565,7 +565,15 @@
       "organizedBy": "Organizzato da",
       "onboardingIncomplete": "Onboarding incompleto",
       "confirmEventApproval": "Conferma l'approvazione dell'evento",
-      "confirmEventApprovalDesc": "Sei sicuro di voler approvare <strong>{event}</strong> con una commissione del <strong>{rate}%</strong>? Questa azione non può essere annullata immediatamente."
+      "confirmEventApprovalDesc": "Sei sicuro di voler approvare <strong>{event}</strong> con una commissione del <strong>{rate}%</strong>? Questa azione non può essere annullata immediatamente.",
+      "eventCancellationRequests": "Richieste di cancellazione evento",
+      "approveEventCancellation": "Approva cancellazione evento",
+      "rejectEventCancellation": "Rifiuta cancellazione evento",
+      "reason": "Motivo",
+      "rejectionReason": "Fornisci un motivo per rifiutare questa cancellazione",
+      "approvalReason": "Fornisci un motivo per approvare questa cancellazione",
+      "approveCancellation": "Approva cancellazione",
+      "rejectCancellation": "Rifiuta cancellazione"
     },
     "toast": {
       "organizerApproved": "Organizzatore approvato con successo!",
