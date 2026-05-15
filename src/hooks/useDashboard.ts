@@ -8,25 +8,7 @@ import {
 import { EventService } from "@/services/eventServices";
 import { queryKeys } from "@/lib/queryKeys";
 import { toast } from "sonner";
-import type { Event } from "@/types/event";
-
-/**
- * Response type for pending events
- */
-interface EventResponse {
-  events: Event[];
-  limit: number;
-  page: number;
-  total: number;
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    has_next: boolean;
-    has_prev: boolean;
-    total_pages: number;
-  };
-}
+import type { Event, EventCancellation, EventResponse } from "@/types/event";
 
 /**
  * Hook for fetching pending organizers awaiting approval
@@ -45,6 +27,16 @@ export function usePendingEvents() {
   return useQuery<EventResponse>({
     queryKey: queryKeys.dashboard.pendingEvents,
     queryFn: () => EventService.getPendingEvent(),
+  });
+}
+
+/**
+ * Hook for fetching pending cancellation events awaiting approval
+ */
+export function usePendingCancellationEvents() {
+  return useQuery<EventResponse>({
+    queryKey: queryKeys.dashboard.pendingCancellationEvents,
+    queryFn: () => EventService.getPendingCancellationEvent(),
   });
 }
 
@@ -174,5 +166,72 @@ export function useRejectEvent() {
     onError: (error: Error) => {
       toast.error(error.message || "Failed to reject event.");
     },
+  });
+}
+
+/**
+ * Hook for approving an event cancellation
+ */
+export function useApproveCancellationEvent() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      eventId,
+      adminRemark,
+    }: {
+      eventId: string;
+      adminRemark: string;
+    }) => EventService.approveCancelEvent(eventId, adminRemark),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.dashboard.pendingEvents,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.events.list,
+      });
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "Failed to approve cancellation.");
+    },
+  });
+}
+
+/**
+ * Hook for rejecting an event cancellation
+ */
+export function useRejectCancellationEvent() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      eventId,
+      adminRemark,
+    }: {
+      eventId: string;
+      adminRemark: string;
+    }) => EventService.rejectCancelEvent(eventId, adminRemark),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.dashboard.pendingEvents,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.events.list,
+      });
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "Failed to approve cancellation.");
+    },
+  });
+}
+
+/**
+ * Hook for handling event cancellations
+ */
+export function useCancellationEvent() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => EventService.getPendingCancellationEvent(),
   });
 }

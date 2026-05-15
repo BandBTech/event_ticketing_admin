@@ -8,9 +8,10 @@ import { LanguageSelector } from "@/app/components/LanguageSelector/LanguageSele
 import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useUIStore } from "@/store/uiStore";
-import { CalendarClock, Users } from "lucide-react";
+import { CalendarClock, Users, CalendarX2 } from "lucide-react";
 import OrganizerApprovalList from "@/app/dashboard/components/OrganizerApproval/OrganizerApprovalList";
 import EventApprovalList from "@/app/dashboard/components/EventApproval/EventApprovalList";
+import EventCancellationList from "@/app/dashboard/components/EventCancellation/EventCancellationList";
 import { useEventStore } from "@/store/eventStore";
 import { useOrganizerStore } from "@/store/organizerStore";
 
@@ -51,6 +52,7 @@ export default function DashboardHeader() {
   const { t } = useTranslation(locale);
   const { toggleSidebar } = useUIStore();
   const [isPendingEventOpen, setIsPendingEventOpen] = React.useState(false);
+  const [isEventCancellationOpen, setIsEventCancellationOpen] = React.useState(false);
   const [isPendingOrganizerOpen, setIsPendingOrganizerOpen] =
     React.useState(false);
   const pendingEvents = useEventStore((state) => state.totalPendingEvents);
@@ -101,6 +103,23 @@ export default function DashboardHeader() {
         {pathname === "/dashboard" && (
           <div className="relative">
             <button
+              title="Event Cancellations"
+              onClick={() => setIsEventCancellationOpen(true)}
+              className="flex items-center justify-center w-9 h-9 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors"
+            >
+              <CalendarX2 className="h-4 w-4 text-gray-700" />
+            </button>
+
+            {pendingEvents > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
+                {pendingEvents > 99 ? "99+" : pendingEvents}
+              </span>
+            )}
+          </div>
+        )}
+        {pathname === "/dashboard" && (
+          <div className="relative">
+            <button
               title="Pending Events"
               onClick={() => setIsPendingEventOpen(true)}
               className="flex items-center justify-center w-9 h-9 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors"
@@ -143,6 +162,13 @@ export default function DashboardHeader() {
         </button> */}
       </div>
 
+      {/* Event Cancellations Modal */}
+      {isEventCancellationOpen && (
+        <EventCancellationList
+          isOpen={isEventCancellationOpen}
+          setIsOpen={setIsEventCancellationOpen}
+        />
+      )}
       {/* Pending Events Modal */}
       {isPendingEventOpen && (
         <EventApprovalList

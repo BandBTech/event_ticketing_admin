@@ -15,7 +15,17 @@ export interface AppEvent {
   available_seats: number;
   price?: number;
   commission_rate: number;
-  status: "draft" | "pending" | "approved" | "rejected" | "on_sale" | "live" | "hold" | "scheduled" | "cancelled" | "completed";
+  status:
+    | "draft"
+    | "pending"
+    | "approved"
+    | "rejected"
+    | "on_sale"
+    | "live"
+    | "hold"
+    | "scheduled"
+    | "cancelled"
+    | "completed";
   sales_status: "active" | "paused" | "stopped" | "sold_out";
   is_featured: boolean;
   is_cancelled: boolean;
@@ -23,7 +33,69 @@ export interface AppEvent {
   admin_remark: string;
   created_at: string;
   updated_at: string;
+  event: {
+    id: string;
+    title: string;
+  };
   tiers?: EventTier[];
+}
+
+/**
+ * Response type for pending events
+ */
+export interface EventResponse {
+  events: Event[];
+  requests: EventCancellation[];
+  limit: number;
+  page: number;
+  total: number;
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    has_next: boolean;
+    has_prev: boolean;
+    total_pages: number;
+  };
+}
+
+export interface EventCancellation {
+  id: string;
+  event_id: string;
+  event: {
+    id: string;
+    title: string;
+    description: string;
+    banner_image: string;
+    category: string;
+    event_type: string;
+    venue_name: string;
+    address: string;
+    location: string;
+    country: string;
+    start_date: string;
+    end_date: string;
+    timezone: string;
+    capacity: number;
+    available: number;
+    price: number;
+    currency: string;
+    commission_rate: number;
+    status: "on_sale";
+    sales_status: "active";
+    is_featured: false;
+    is_cancelled: false;
+    is_refundable: true;
+    organizer_id: string;
+    admin_remark: string;
+    created_at: string;
+    updated_at: string;
+  };
+  organizer_id: string;
+  reason: string;
+  status: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export type Event = AppEvent;
@@ -62,9 +134,16 @@ export interface EventCategory {
   icon?: string;
 }
 
-export type TicketCategory = 'General' | 'Premium' | 'VIP' | 'VVIP';
+export type TicketCategory = "General" | "Premium" | "VIP" | "VVIP";
 
-export type EventStatus = 'Draft' | 'Published' | 'On Sale' | 'Sale on Hold' | 'Sold Out' | 'Closed' | 'Cancelled';
+export type EventStatus =
+  | "Draft"
+  | "Published"
+  | "On Sale"
+  | "Sale on Hold"
+  | "Sold Out"
+  | "Closed"
+  | "Cancelled";
 
 export interface EventFilters {
   search?: string;

@@ -174,5 +174,7 @@ export const queryKeys = {
     pendingOrganizers: ["dashboard", "pendingOrganizers"] as const,
     /** Key for fetching pending events awaiting approval */
     pendingEvents: ["dashboard", "pendingEvents"] as const,
+    /** Key for fetching pending cancellation events awaiting approval */
+    pendingCancellationEvents: ["dashboard", "pendingCancellationEvents"] as const,
   },
 } as const;

@@ -1,5 +1,5 @@
 import { api } from "../lib/apiClient";
-import { Event, CreateEventData, UpdateEventRequest } from "@/types/event";
+import { Event, CreateEventData, UpdateEventRequest, EventCancellation } from "@/types/event";
 
 /**
  * Event Service
@@ -31,6 +31,7 @@ export interface PaginatedResponse<T> {
 
 interface EventResponse {
   events: Event[];
+  requests: EventCancellation[];
   limit: number;
   page: number;
   total: number;
@@ -129,11 +130,23 @@ export class EventService {
   /**
    * Get pending event
    */
-static async getPendingEvent(): Promise<EventResponse> {
-  return await api.get<EventResponse>(`/admin/events/pending?limit=100`, {
-    requiresAuth: true,
-  });
-}
+  static async getPendingEvent(): Promise<EventResponse> {
+    return await api.get<EventResponse>(`/admin/events/pending?limit=100`, {
+      requiresAuth: true,
+    });
+  }
+
+  /**
+   * Get pending event
+   */
+  static async getPendingCancellationEvent(): Promise<EventResponse> {
+    return await api.get<EventResponse>(
+      `/admin/events/cancellation-requests?limit=100`,
+      {
+        requiresAuth: true,
+      },
+    );
+  }
 
   /**
    * Get all events for admin with filters
@@ -278,6 +291,42 @@ static async getPendingEvent(): Promise<EventResponse> {
         admin_remark: data.adminRemark,
         status: "rejected",
         commission_rate: 0,
+      },
+      {
+        requiresAuth: true,
+      },
+    );
+  }
+
+  /**
+   * Approve an event cancellation
+   */
+  static async approveCancelEvent(
+    eventId: string,
+    adminRemark: string,
+  ): Promise<ApproveEventResponse> {
+    return await api.put<ApproveEventResponse>(
+      `/admin/events/cancellation-requests/${eventId}/approve`,
+      {
+        admin_remark: adminRemark,
+      },
+      {
+        requiresAuth: true,
+      },
+    );
+  }
+
+  /**
+   * Reject an event cancellation
+   */
+  static async rejectCancelEvent(
+    eventId: string,
+    adminRemark: string,
+  ): Promise<ApproveEventResponse> {
+    return await api.put<ApproveEventResponse>(
+      `/admin/events/cancellation-requests/${eventId}/reject`,
+      {
+        admin_remark: adminRemark,
       },
       {
         requiresAuth: true,

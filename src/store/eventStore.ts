@@ -1,11 +1,11 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { Event } from "@/types/event";
+import { Event, EventCancellation } from "@/types/event";
 
 interface EventStore {
-  selectedEvent: Event | null;
+  selectedEvent: Event | EventCancellation | null;
   totalPendingEvents: number;
-  setSelectedEvent: (event: Event | null) => void;
+  setSelectedEvent: (event: Event | EventCancellation | null) => void;
   clearSelectedEvent: () => void;
   setTotalPendingEvents: (count: number) => void;
 }

@@ -1,6 +1,10 @@
 "use client";
 
-import { usePendingEvents, usePendingOrganizers } from "@/hooks/useDashboard";
+import {
+  usePendingEvents,
+  usePendingOrganizers,
+  usePendingCancellationEvents,
+} from "@/hooks/useDashboard";
 import { useTranslation } from "@/hooks/useTranslation";
 import { DashboardService } from "@/services/dashboardService";
 import { useEventStore } from "@/store/eventStore";
@@ -26,6 +30,7 @@ const AdminDashboard: React.FC = () => {
     queryFn: () => DashboardService.getDashboard({}),
   });
 
+  // pending event section 
   const { data: pendingEventsData, isLoading: isLoadingEvents } =
     usePendingEvents();
 
@@ -43,6 +48,8 @@ const AdminDashboard: React.FC = () => {
     setTotalPendingEvents(totalNumberOfPendingEvents);
   }, [pendingEventsData, setTotalPendingEvents]);
 
+  // pending organizer section 
+
   const { data: pendingOrganizersData, isLoading: isLoadingOrganizers } =
     usePendingOrganizers();
 
@@ -55,6 +62,23 @@ const AdminDashboard: React.FC = () => {
       pendingOrganizersData?.pagination?.total || 0;
     setTotalPendingOrganizers(totalNumberOfPendingOrganizer);
   }, [pendingOrganizersData, setTotalPendingOrganizers]);
+
+
+  // pending cancellation event section 
+  const {
+    data: pendingCancellationEventsData,
+    isLoading: isLoadingCancellationEvents,
+  } = usePendingCancellationEvents();
+
+  const setTotalPendingCancellationEvents = useEventStore(
+    (state) => state.setTotalPendingEvents,
+  );
+
+  useEffect(() => {
+    const totalNumberOfPendingCancellationEvents =
+      pendingCancellationEventsData?.pagination?.total || 0;
+    setTotalPendingCancellationEvents(totalNumberOfPendingCancellationEvents);
+  }, [pendingCancellationEventsData, setTotalPendingCancellationEvents]);
 
   if (isLoading) {
     return (
