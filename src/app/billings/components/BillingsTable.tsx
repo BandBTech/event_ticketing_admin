@@ -120,7 +120,17 @@ export function BillingTable({
         cell: ({ row }) => {
           const date = new Date(row.original.created_at);
           const formattedDate = date.toLocaleDateString("en-CA");
-          return <span>{formattedDate}</span>;
+          const formattedTime = date.toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+          });
+          return (
+            <div className="flex flex-col">
+              <span>{formattedDate}</span>
+              <span className="text-xs text-gray-500">at {formattedTime}</span>
+            </div>
+          );
         },
       },
       {
@@ -148,40 +158,44 @@ export function BillingTable({
         meta: { sortKey: "billed_amount" },
         header: t("billings.table.billedAmount"),
         cell: ({ row }) => (
-          <span className="px-2 py-1 text-xs font-medium rounded-full flex items-center gap-2">
-            {formatCurrency(row.original.billed_amount, undefined, locale)}
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <InfoIcon className="text-yellow-800 cursor-pointer" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>
-                    {t("billings.table.modals.totalAmount")}:{" "}
-                    {formatCurrency(
-                      row.original.billed_amount,
-                      undefined,
-                      locale,
-                    )}
-                    <br />
-                    {t("billings.table.modals.paidAmount")}:{" "}
-                    {formatCurrency(
-                      row.original.paid_amount,
-                      undefined,
-                      locale,
-                    )}
-                    <br />
-                    {t("billings.table.modals.remainingAmount")}:{" "}
-                    {formatCurrency(
-                      row.original.remaining_amount,
-                      undefined,
-                      locale,
-                    )}
-                  </p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </span>
+          <div className="grid items-center">
+            <span className="px-2 py-1 text-xs font-medium rounded-full flex items-center gap-2">
+              {formatCurrency(row.original.amount, undefined, locale)}
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <InfoIcon className="text-yellow-800 cursor-pointer" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>
+                      {t("billings.table.modals.totalAmount")}:{" "}
+                      {formatCurrency(row.original.amount, undefined, locale)}
+                      <br />
+                      {t("billings.table.modals.paidAmount")}:{" "}
+                      {formatCurrency(
+                        row.original.paid_amount,
+                        undefined,
+                        locale,
+                      )}
+                      <br />
+                      {t("billings.table.modals.remainingAmount")}:{" "}
+                      {formatCurrency(
+                        row.original.remaining_amount,
+                        undefined,
+                        locale,
+                      )}
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </span>
+            <span
+              // title={`Bill Type: ${row.original.bill_type}`}
+              className="px-2 text-xs capitalize cursor-pointer"
+            >
+            {row.original.bill_type}
+            </span>
+          </div>
         ),
       },
       {
@@ -257,21 +271,21 @@ export function BillingTable({
                 )}
                 {(bills.status === "paid" ||
                   bills.status === "partially_paid") && (
-                    <DropdownMenuItem
-                      onClick={() => {
-                        setPaymentBillData(bills);
-                        setHistorySheetOpen(true);
-                      }}
-                    >
-                      <div className="flex justify-start items-center bg-gray-50 text-gray-700">
-                        <HardDrivesIcon
-                          weight="duotone"
-                          className="mr-2 h-4 w-4"
-                        />
-                        {t("billings.table.viewPaymentHistory")}
-                      </div>
-                    </DropdownMenuItem>
-                  )}
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setPaymentBillData(bills);
+                      setHistorySheetOpen(true);
+                    }}
+                  >
+                    <div className="flex justify-start items-center bg-gray-50 text-gray-700">
+                      <HardDrivesIcon
+                        weight="duotone"
+                        className="mr-2 h-4 w-4"
+                      />
+                      {t("billings.table.viewPaymentHistory")}
+                    </div>
+                  </DropdownMenuItem>
+                )}
                 {bills.status === "pending" && (
                   <DropdownMenuItem
                     onClick={() => {
@@ -351,7 +365,7 @@ export function BillingTable({
             <AlertDialogDescription className="text-gray-500 text-base">
               {t(
                 "billings.modals.cancelMessage",
-                "Are you sure you want to cancel this bill? This action cannot be undone immediately."
+                "Are you sure you want to cancel this bill? This action cannot be undone immediately.",
               )}
             </AlertDialogDescription>
           </AlertDialogHeader>

@@ -33,7 +33,7 @@ export interface Bill {
   total_revenue: number;
   total_commission: number;
   organizer_earnings: number;
-  billed_amount: number;
+  amount: number;
   paid_amount: number;
   remaining_amount: number;
   payment_method: string;
