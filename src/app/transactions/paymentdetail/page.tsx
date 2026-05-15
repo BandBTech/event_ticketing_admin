@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, {useState} from "react";
 import {
   ArrowLeft,
   TicketIcon,
@@ -48,6 +48,7 @@ const txnVariant = (
   status: string,
 ): "success" | "warning" | "danger" | "neutral" => {
   if (status === "completed") return "success";
+  if (status === "succeeded") return "success";
   if (status === "pending") return "warning";
   if (status === "failed") return "danger";
   return "neutral";
@@ -106,6 +107,7 @@ export default function PaymentDetail() {
   const searchParams = useSearchParams();
 
   const transactionId = searchParams.get("id") || "";
+    const [isCancelBillDialogOpen, setIsCancelBillDialogOpen] = useState(false);
 
   const { data: paymentDetailData, isLoading } =
     useQuery<TransactionPaymentData>({
@@ -320,6 +322,8 @@ export default function PaymentDetail() {
               sortBy={""}
               sortOrder={"asc"}
               onSortChange={() => {}}
+              setIsCancelBillDialogOpen={setIsCancelBillDialogOpen}
+              onOpenCancelBill={isCancelBillDialogOpen}
             />
           </div>
         )}

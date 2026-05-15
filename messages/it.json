@@ -978,7 +978,8 @@
       "date": "Data",
       "viewPayment": "visualizza il pagamento",
       "noTransactionData": "Nessun dato di transazione trovato",
-      "noTransactionDataSubtitle": "Non hai ancora effettuato alcuna transazione."
+      "noTransactionDataSubtitle": "Non hai ancora effettuato alcuna transazione.",
+      "cancelTicket": "Annulla Biglietto"
     },
     "paymentGateway": "Gateway di pagamento",
     "selectPaymentGateway": "Seleziona il metodo di pagamento",
@@ -1533,6 +1534,7 @@
     "active": "Attivo",
     "approved": "Approvato",
     "cancelled": "Annullato",
+    "canceled": "Annullato",
     "completed": "Completato",
     "draft": "Bozza",
     "hold": "In Sospeso",
@@ -1550,7 +1552,8 @@
     "unverified": "Non verificato",
     "verified": "Verificato",
     "expired": "Scaduta",
-    "refunded": "Rimborsata"
+    "refunded": "Rimborsata",
+    "succeeded": "Ha avuto successo"
   },
   "pagination": {
     "previous": "Precedente",

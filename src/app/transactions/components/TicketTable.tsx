@@ -3,11 +3,34 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { ColumnDef } from "@tanstack/react-table";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  DotsThreeVertical as DotsThreeVerticalIcon,
+  XCircleIcon,
+} from "@phosphor-icons/react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { ReusableTable } from "@/components/ReusableTable";
 import { formatCurrency } from "@/lib/utils";
 import { useLanguageStore } from "@/store/languageStore";
 import { Ticket } from "@/types/paymenttransactiondetail";
+import { RefundService } from "@/services/refundService";
 
 interface PayoutTableProps {
   billings: Ticket[];
@@ -26,6 +49,8 @@ interface PayoutTableProps {
     sortBy: string | undefined,
     sortOrder: "asc" | "desc" | undefined,
   ) => void;
+  setIsCancelBillDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  onOpenCancelBill: boolean;
 }
 
 export function TicketTable({
@@ -42,17 +67,33 @@ export function TicketTable({
   sortBy,
   sortOrder,
   onSortChange,
+  setIsCancelBillDialogOpen,
+  onOpenCancelBill,
 }: PayoutTableProps) {
   const { t } = useTranslation();
   const router = useRouter();
   const { locale } = useLanguageStore();
+  const [ticketData, setTicketData] = React.useState<Ticket | null>(null);
+  const queryClient = useQueryClient();
+
+  const createMutation = useMutation({
+    mutationFn: (data: { reason: string; ticketID: string }) =>
+      RefundService.createRefund({
+        reason: data.reason,
+        ticketID: data.ticketID,
+      }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["refunds"] });
+      setIsCancelBillDialogOpen(false);
+    },
+  });
 
   // Table columns
   const columns: ColumnDef<Ticket>[] = React.useMemo(
     () => [
       {
         id: "ticket_number",
-        header: t("transactions.paymentDetails.ticketNumber","Ticket Number"),
+        header: t("transactions.paymentDetails.ticketNumber", "Ticket Number"),
         cell: ({ row }) => (
           <span className="max-w-[200px] text-gray-700 truncate inline-block">
             {row.original.ticket_number || "-"}
@@ -61,12 +102,12 @@ export function TicketTable({
       },
       {
         id: "tier",
-        header: t("transactions.paymentDetails.tier","Tier"),
+        header: t("transactions.paymentDetails.tier", "Tier"),
         accessorKey: "tier.tier_name",
       },
       {
         id: "holder",
-        header: t("transactions.paymentDetails.holder","Holder"),
+        header: t("transactions.paymentDetails.holder", "Holder"),
         accessorKey: "user.name",
       },
       {
@@ -88,7 +129,9 @@ export function TicketTable({
           const statusStyles: Record<string, string> = {
             active: "bg-green-100 text-green-700",
             pending: "bg-yellow-100 text-yellow-700",
+            expired: "bg-yellow-100 text-yellow-700",
             failed: "bg-red-100 text-red-700",
+            canceled: "bg-red-100 text-red-700",
             refunded: "bg-gray-200 text-gray-700",
           };
 
@@ -99,8 +142,51 @@ export function TicketTable({
                 "bg-gray-100 text-gray-700"
               }`}
             >
-               {t("status." + status)}
+              {t("status." + status)}
             </span>
+          );
+        },
+      },
+      {
+        id: "actions",
+        header: "",
+        cell: ({ row }) => {
+          const ticket = row.original;
+
+          // if (actionLoading === user.id) {
+          //   return (
+          //     <div className="h-8 w-8 flex items-center p-0">
+          //       <Spinner className="w-4 h-4 text-amber-900 animate-spin" />
+          //     </div>
+          //   );
+          // }
+
+          return (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  disabled={ticket.status.toLowerCase() === "canceled"}
+                  variant="ghost"
+                  className="h-8 w-8 p-0"
+                >
+                  <span className="sr-only">Open menu</span>
+                  <DotsThreeVerticalIcon weight="duotone" className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem
+                  onClick={() => {
+                    setTicketData(ticket);
+                    setIsCancelBillDialogOpen(true);
+                  }}
+                >
+                  <div className="flex justify-start items-center bg-gray-50 text-red-700">
+                    <XCircleIcon weight="duotone" className="mr-2 h-4 w-4" />
+                    {t("transactions.table.cancelTicket")}
+                  </div>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           );
         },
       },
@@ -141,17 +227,55 @@ export function TicketTable({
               </svg>
             </div>
             <h3 className="text-lg font-medium text-gray-900">
-              {t("", "No transaction data found")}
+              {t("", "No ticket data found")}
             </h3>
             <p className="text-gray-500 mt-1 max-w-sm">
               {t(
                 "payouts.empty.description",
-                "You haven't made any transactions yet.",
+                "You haven't made any ticket purchases yet.",
               )}
             </p>
           </div>
         }
       />
+
+      <AlertDialog
+        open={onOpenCancelBill}
+        onOpenChange={setIsCancelBillDialogOpen}
+      >
+        <AlertDialogContent className="rounded-3xl shadow-2xl border-none bg-white/95 backdrop-blur-xl data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 duration-300">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-xl font-bold text-gray-900">
+              {t("billings.modals.confirmCancel", "Confirm Cancel Ticket")}
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-500 text-base">
+              {t(
+                "billings.modals.cancelMessage",
+                "Are you sure you want to cancel this ticket? This action cannot be undone immediately.",
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="pt-6">
+            <AlertDialogCancel
+              onClick={() => setIsCancelBillDialogOpen(false)}
+              className="h-11 px-6 border-gray-200 hover:bg-gray-50 transition-colors"
+            >
+              {t("common.cancelButton", "Cancel")}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() =>
+                createMutation.mutate({
+                  reason: "User requested cancellation",
+                  ticketID: ticketData?.id || "",
+                })
+              }
+              className="h-11 px-8 active:scale-95 bg-destructive text-white hover:bg-destructive/90 focus:bg-destructive/90 transition-colors"
+            >
+              {t("common.confirm", "Confirm")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

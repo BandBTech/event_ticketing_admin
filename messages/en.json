@@ -1027,7 +1027,8 @@
       "date": "Date",
       "viewPayment": "View Payment",
       "noTransactionData": "No transaction data found",
-      "noTransactionDataSubtitle": "You haven't made any transactions yet."
+      "noTransactionDataSubtitle": "You haven't made any transactions yet.",
+      "cancelTicket": "Cancel Ticket"
     },
     "paymentGateway": "Payment Gateway",
     "selectPaymentGateway": "Select Payment Gateway",
@@ -1585,6 +1586,7 @@
     "active": "Active",
     "approved": "Approved",
     "cancelled": "Cancelled",
+    "canceled": "Cancelled",
     "completed": "Completed",
     "draft": "Draft",
     "hold": "On Hold",
@@ -1602,7 +1604,8 @@
     "unverified": "Unverified",
     "verified": "Verified",
     "expired": "Expired",
-    "refunded": "Refunded"
+    "refunded": "Refunded",
+    "succeeded": "Succeeded"
   },
   "pagination": {
     "previous": "Previous",

@@ -1,24 +1,30 @@
 import { api } from "../lib/apiClient";
 import { API_ENDPOINTS } from "@/app/config/api";
-import { RefundResponse, RefundData, RefundStatusChange } from "@/types/refunds";
+import {
+  RefundResponse,
+  RefundData,
+  RefundStatusChange,
+} from "@/types/refunds";
 
 export class RefundService {
   /**
-   * Create new transaction from admin
+   * Create new refund from admin
    */
-  // static async createTransaction(data: Transaction): Promise<void> {
-  //   await api.post<void>(
-  //     API_ENDPOINTS.CREATE_TRANSACTION,
-  //     {
-  //       amount: data.amount,
-  //       commission_amount: data.commission_amount,
-  //       commission_rate: data.commission_rate,
-  //     },
-  //     {
-  //       requiresAuth: true,
-  //     },
-  //   );
-  // }
+  static async createRefund(data: {
+    reason: string;
+    ticketID: string;
+  }): Promise<void> {
+    await api.post<void>(
+      API_ENDPOINTS.CREATE_REFUND,
+      {
+        reason: data.reason,
+        ticketID: data.ticketID,
+      },
+      {
+        requiresAuth: true,
+      },
+    );
+  }
 
   static async getRefunds(filters?: {
     page?: number;
@@ -54,7 +60,9 @@ export class RefundService {
     return result;
   }
 
-  static async getRefundbyId(refundId: string | undefined): Promise<RefundData> {
+  static async getRefundbyId(
+    refundId: string | undefined,
+  ): Promise<RefundData> {
     const params = new URLSearchParams();
     const query = params.toString();
 
@@ -68,17 +76,17 @@ export class RefundService {
     return result;
   }
 
-    /**
-     * Get event status change history
-     */
-    static async getRefundHistory(
-      eventId: string,
-    ): Promise<RefundStatusChange[]> {
-      return await api.get<RefundStatusChange[]>(
-        `/admin/payments/refunds/${eventId}/status-history`,
-        { requiresAuth: true },
-      );
-    }
+  /**
+   * Get event status change history
+   */
+  static async getRefundHistory(
+    eventId: string,
+  ): Promise<RefundStatusChange[]> {
+    return await api.get<RefundStatusChange[]>(
+      `/admin/payments/refunds/${eventId}/status-history`,
+      { requiresAuth: true },
+    );
+  }
 
   static async rejectRefund(payload: {
     refundId: string;
