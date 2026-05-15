@@ -1060,7 +1060,8 @@
       "noRefundDataSubtitle": "まだ払い戻しは行われていません。"
     },
     "refundType": {
-      "customer_request": "お客様からのご要望"
+      "customer_request": "お客様からのご要望",
+      "admin_request": "管理者からのリクエスト"
     },
     "refundDetail": {
       "refundDetail": "返金詳細",

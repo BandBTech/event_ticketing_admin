@@ -1096,7 +1096,8 @@
       "noRefundDataSubtitle": "You haven't made any refunds yet."
     },
     "refundType": {
-      "customer_request": "Customer Request"
+      "customer_request": "Customer Request",
+      "admin_request": "Admin Request"
     },
     "refundDetail": {
       "refundDetail": "Refund Detail",

@@ -193,15 +193,6 @@ export default function DashboardPage({ data }: DashboardPageProps) {
           value={totalTransactions}
           subtitle={`${data?.transactions.completed ?? 0} ${t("status.completed")} · ${data?.transactions.pending ?? 0} ${t("status.pending")}`}
         />
-        <KPICard
-          label={t("dashboard.dataDisplay.refunds")}
-          value={formatCurrency(
-            data?.refunds.completed ?? 0,
-            undefined,
-            locale,
-          )}
-          subtitle={`${data?.refunds.completed ?? 0} ${t("status.completed")} · ${data?.refunds.pending ?? 0} ${t("status.pending")}`}
-        />
       </div>
 
       {/* ── Earnings Cards ── */}
@@ -307,15 +298,6 @@ export default function DashboardPage({ data }: DashboardPageProps) {
         {/* Payout Requests */}
         <Card
           title={t("dashboard.dataDisplay.payoutRequest")}
-          badge={
-            <span className="text-xs text-black font-semibold">
-              {formatCurrency(
-                data?.payout_requests.total_amount ?? 0,
-                undefined,
-                locale,
-              )}
-            </span>
-          }
         >
           <StatRow
             label={t("dashboard.dataDisplay.approved")}
@@ -366,37 +348,11 @@ export default function DashboardPage({ data }: DashboardPageProps) {
             count={data?.payment_bills.cancelled ?? 0}
             dotColor="#e24b4a"
           />
-          <div className="mt-2 pt-2 border-t border-gray-100 flex items-center justify-between gap-2">
-            <div>
-              <div className="text-xs text-black mb-1">
-                {t("dashboard.dataDisplay.amountDue")}
-              </div>
-              <div className="text-sm font-semibold text-black">
-                {formatCurrency(
-                  data?.payment_bills.total_due ?? 0,
-                  undefined,
-                  locale,
-                )}
-              </div>
-            </div>
-            <div>
-              <div className="text-xs text-black mt-2">
-                {t("dashboard.dataDisplay.paidOut")}
-              </div>
-              <div className="text-sm font-semibold text-black">
-                {formatCurrency(
-                  data?.payment_bills.total_paid_out ?? 0,
-                  undefined,
-                  locale,
-                )}
-              </div>
-            </div>
-          </div>
         </Card>
       </div>
 
       {/* ── Refunds + Tickets ── */}
-      {/* <div className="grid grid-cols-2 gap-4 pb-4">
+      <div className="grid grid-cols-2 gap-4 pb-4">
         <Card title={t("dashboard.dataDisplay.refunds")}>
           <StatRow
             label={t("dashboard.dataDisplay.completed")}
@@ -418,44 +374,6 @@ export default function DashboardPage({ data }: DashboardPageProps) {
             count={failedRefunds}
             dotColor="#e24b4a"
           />
-          <div className="mt-2 pt-2 border-t border-gray-100 space-y-1">
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-black">
-                {t("dashboard.dataDisplay.totalRefunds")}
-              </span>
-              <span className="text-xs font-semibold text-black">
-                {formatCurrency(
-                  data?.revenue.total_refunds ?? 0,
-                  undefined,
-                  locale,
-                )}
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-black">
-                {t("dashboard.dataDisplay.organizerRefunds")}
-              </span>
-              <span className="text-xs font-semibold text-black">
-                {formatCurrency(
-                  data?.revenue.organizer_refunds ?? 0,
-                  undefined,
-                  locale,
-                )}
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-black">
-                {t("dashboard.dataDisplay.commissionRefunds")}
-              </span>
-              <span className="text-xs font-semibold text-black">
-                {formatCurrency(
-                  data?.revenue.commission_refunds ?? 0,
-                  undefined,
-                  locale,
-                )}
-              </span>
-            </div>
-          </div>
         </Card>
 
         <Card title={t("dashboard.dataDisplay.tickets")}>
@@ -475,7 +393,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
             dotColor="#d3d1c7"
           />
         </Card>
-      </div> */}
+      </div>
     </main>
   );
 }
