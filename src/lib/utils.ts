@@ -1,22 +1,27 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
-
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
-export function formatPhoneNumber(countryCode: string | undefined, phone: string | undefined) {
+export function formatPhoneNumber(
+  countryCode: string | undefined,
+  phone: string | undefined,
+) {
   if (!phone) return "";
   if (!countryCode) return phone;
 
   // If phone already contains the country code, return phone as is (cleaning up extra plus if needed)
-  if (phone.startsWith(countryCode) || phone.startsWith(countryCode.replace('+', ''))) {
-    return phone.startsWith('+') ? phone : `+${phone}`;
+  if (
+    phone.startsWith(countryCode) ||
+    phone.startsWith(countryCode.replace("+", ""))
+  ) {
+    return phone.startsWith("+") ? phone : `+${phone}`;
   }
 
   // Otherwise combine them
-  const cleanCC = countryCode.startsWith('+') ? countryCode : `+${countryCode}`;
+  const cleanCC = countryCode.startsWith("+") ? countryCode : `+${countryCode}`;
   return `${cleanCC} ${phone}`;
 }
 
@@ -31,14 +36,15 @@ export function formatDateTime(
   options?: {
     includeSeconds?: boolean;
     timezone?: string;
-  }
+  },
 ): string {
   if (!date) return "";
 
   try {
-    const dateObj = typeof date === "string" || typeof date === "number"
-      ? new Date(date)
-      : date;
+    const dateObj =
+      typeof date === "string" || typeof date === "number"
+        ? new Date(date)
+        : date;
 
     if (isNaN(dateObj.getTime())) return "";
 
@@ -64,13 +70,16 @@ export function formatDateTime(
  * @param date - Date object, ISO string, or timestamp
  * @returns Formatted date string or empty string if invalid
  */
-export function formatDate(date: Date | string | number | null | undefined): string {
+export function formatDate(
+  date: Date | string | number | null | undefined,
+): string {
   if (!date) return "";
 
   try {
-    const dateObj = typeof date === "string" || typeof date === "number"
-      ? new Date(date)
-      : date;
+    const dateObj =
+      typeof date === "string" || typeof date === "number"
+        ? new Date(date)
+        : date;
 
     if (isNaN(dateObj.getTime())) return "";
 
@@ -89,13 +98,16 @@ export function formatDate(date: Date | string | number | null | undefined): str
  * @param date - Date object, ISO string, or timestamp
  * @returns Formatted time string or empty string if invalid
  */
-export function formatTime(date: Date | string | number | null | undefined): string {
+export function formatTime(
+  date: Date | string | number | null | undefined,
+): string {
   if (!date) return "";
 
   try {
-    const dateObj = typeof date === "string" || typeof date === "number"
-      ? new Date(date)
-      : date;
+    const dateObj =
+      typeof date === "string" || typeof date === "number"
+        ? new Date(date)
+        : date;
 
     if (isNaN(dateObj.getTime())) return "";
 
@@ -117,14 +129,15 @@ export function formatTime(date: Date | string | number | null | undefined): str
  */
 export function formatDateTimeLong(
   date: Date | string | number | null | undefined,
-  locale: string = "en-US"
+  locale: string = "en-US",
 ): string {
   if (!date) return "";
 
   try {
-    const dateObj = typeof date === "string" || typeof date === "number"
-      ? new Date(date)
-      : date;
+    const dateObj =
+      typeof date === "string" || typeof date === "number"
+        ? new Date(date)
+        : date;
 
     if (isNaN(dateObj.getTime())) return "";
 
@@ -145,13 +158,16 @@ export function formatDateTimeLong(
  * @param date - Date object, ISO string, or timestamp
  * @returns Relative time string or empty string if invalid
  */
-export function formatRelativeTime(date: Date | string | number | null | undefined): string {
+export function formatRelativeTime(
+  date: Date | string | number | null | undefined,
+): string {
   if (!date) return "";
 
   try {
-    const dateObj = typeof date === "string" || typeof date === "number"
-      ? new Date(date)
-      : date;
+    const dateObj =
+      typeof date === "string" || typeof date === "number"
+        ? new Date(date)
+        : date;
 
     if (isNaN(dateObj.getTime())) return "";
 
@@ -183,7 +199,9 @@ export function formatRelativeTime(date: Date | string | number | null | undefin
  * @param name - Name to get initials from
  * @returns Initials of the name
  */
-export function getInitials(name: string | { first_name: string, last_name?: string } | null | undefined) {
+export function getInitials(
+  name: string | { first_name: string; last_name?: string } | null | undefined,
+) {
   if (!name) return "";
 
   if (typeof name === "string") {
@@ -205,19 +223,10 @@ export function getInitials(name: string | { first_name: string, last_name?: str
  * @param currency - The currency code (e.g. "USD", "EUR")
  * @returns Formatted currency string
  */
-export const formatCurrency = (amount: number, currency?: string, locale: string = "ja") => {
-  const currencyMap: Record<string, string> = {
-    ja: "JPY",
-    en: "USD",
-    it: "EUR",
-  };
-  const resolvedCurrency = currency || currencyMap[locale];
-
-return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: resolvedCurrency,
-    minimumFractionDigits: 2,
+export const formatCurrency = (amount: number, symbol?: string) => {
+  const formatted = new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: 0,
     maximumFractionDigits: 2,
-    currencyDisplay: "narrowSymbol",
   }).format(amount);
+  return symbol ? `${symbol} ${formatted}` : formatted;
 };

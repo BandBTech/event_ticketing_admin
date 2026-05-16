@@ -31,7 +31,7 @@ function RevenueBar({
           {label}
         </span>
         <span className="text-sm font-semibold text-black flex-shrink-0">
-          {formatCurrency(value, undefined, locale)}
+          {formatCurrency(value, undefined)}
         </span>
       </div>
       <div className="h-2 bg-gray-100 rounded-full overflow-hidden mb-1">
@@ -69,19 +69,19 @@ export default function RevenueReport({ data }: RevenueReportProps) {
       <div className="grid grid-cols-4 gap-4 font-medium">
         <MetricCard
           label={t("reports.financial.grossRevenue")}
-          value={formatCurrency(m?.total_gross_revenue || 0, undefined, locale)}
+          value={formatCurrency(m?.total_gross_revenue || 0, undefined)}
           sub={t("reports.financial.beforeDeductions")}
           // valueColor="text-blue-600"
         />
         <MetricCard
           label={t("reports.financial.netRevenue")}
-          value={formatCurrency(m?.net_revenue || 0, undefined, locale)}
+          value={formatCurrency(m?.net_revenue || 0, undefined)}
           sub={`${(m?.total_refunds || 0) > 0 ? `$${m?.total_refunds} refunded` : t("reports.financial.noRefunds")}`}
           // valueColor="text-emerald-600"
         />
         <MetricCard
           label={t("reports.financial.platformCommission")}
-          value={formatCurrency(m?.total_commission || 0, undefined, locale)}
+          value={formatCurrency(m?.total_commission || 0, undefined)}
           sub={`${commissionPct}% ${t("reports.financial.ofGross")}`}
           // valueColor="text-amber-500"
         />
@@ -89,8 +89,7 @@ export default function RevenueReport({ data }: RevenueReportProps) {
           label={t("reports.financial.organizerShare")}
           value={formatCurrency(
             m?.total_organizer_share || 0,
-            undefined,
-            locale,
+            undefined
           )}
           sub={`${organizerPct}% ${t("reports.financial.ofGross")}`}
           // valueColor="text-violet-600"
@@ -103,17 +102,16 @@ export default function RevenueReport({ data }: RevenueReportProps) {
           label={t("reports.financial.avgTicketPrice")}
           value={formatCurrency(
             Math.round(m?.average_ticket_price || 0),
-            undefined,
-            locale,
+            undefined
           )}
           sub={t("reports.financial.perTicketSold")}
         />
         <MetricCard
           label={t("reports.financial.completedPayouts")}
-          value={formatCurrency(m?.completed_payouts || 0, undefined, locale)}
+          value={formatCurrency(m?.completed_payouts || 0, undefined)}
           sub={
             (m?.pending_payouts || 0) > 0
-              ? `${formatCurrency(m?.pending_payouts || 0, undefined, locale)} pending`
+              ? `${formatCurrency(m?.pending_payouts || 0, undefined)} pending`
               : t("reports.financial.nonePending")
           }
           // valueColor="text-emerald-600"
@@ -141,7 +139,7 @@ export default function RevenueReport({ data }: RevenueReportProps) {
                 value={ev.gross_revenue}
                 maxValue={maxEventRevenue}
                 color="#3b82f6"
-                sub={`${t("reports.financial.grossRevenue")} ${formatCurrency(ev.commission, undefined, locale)} · ${t("reports.financial.commission")} ${formatCurrency(ev.commission, undefined, locale)} · ${t("reports.financial.organizerShare")} ${formatCurrency(ev.organizer_share, undefined, locale)} · ${ev.refunds} ${t("reports.financial.refunds")} · ${t("reports.financial.netRevenue")} ${formatCurrency(ev.commission, undefined, locale)}`}
+                sub={`${t("reports.financial.grossRevenue")} ${formatCurrency(ev.commission, undefined)} · ${t("reports.financial.commission")} ${formatCurrency(ev.commission, undefined)} · ${t("reports.financial.organizerShare")} ${formatCurrency(ev.organizer_share, undefined)} · ${ev.refunds} ${t("reports.financial.refunds")} · ${t("reports.financial.netRevenue")} ${formatCurrency(ev.commission, undefined)}`}
               />
             ))
           )}
@@ -208,7 +206,7 @@ export default function RevenueReport({ data }: RevenueReportProps) {
                     </span>
                   </div>
                   <span className="text-sm font-semibold text-black">
-                    {formatCurrency(c.gross_revenue, undefined, locale)}
+                    {formatCurrency(c.gross_revenue, undefined)}
                   </span>
                 </div>
                 <div className="h-2 bg-gray-100 rounded-full overflow-hidden mb-1.5">
@@ -220,11 +218,11 @@ export default function RevenueReport({ data }: RevenueReportProps) {
                 <div className="flex gap-4 text-[11px] text-black">
                   <span>
                     Commission:{" "}
-                    {formatCurrency(c.commission, undefined, locale)}
+                    {formatCurrency(c.commission, undefined)}
                   </span>
                   <span>
                     Organizer:{" "}
-                    {formatCurrency(c.organizer_share, undefined, locale)}
+                    {formatCurrency(c.organizer_share, undefined)}
                   </span>
                   <span>{c.transaction_count} transactions</span>
                 </div>

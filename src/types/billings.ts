@@ -1,4 +1,5 @@
 import { format, subDays } from "date-fns";
+import { symbol } from "zod";
 
 export interface PaymentBillResponse {
   success: boolean;
@@ -20,6 +21,7 @@ export interface Bill {
   event: {
     id: string;
     title: string;
+    symbol: string;
   };
   organizer: {
     id: string;
@@ -103,6 +105,11 @@ export interface BillingFilters {
 
 export interface PaymentHistory {
   id: number;
+  event: {
+    id: string;
+    title: string;
+    symbol: string;
+  };
   amount: number;
   payment_method: string;
   method: string;

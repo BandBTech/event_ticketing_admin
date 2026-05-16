@@ -12,7 +12,6 @@ import {
   UserIcon,
   ShieldIcon,
   FileTextIcon,
-  CaretDownIcon,
 } from "@phosphor-icons/react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
@@ -25,55 +24,12 @@ import { formatCurrency, formatDateTimeLong } from "@/lib/utils";
 import { BillHistoryTable } from "@/app/billings/components/BillHistoryTable";
 
 type StatusKey = "Paid" | "Partial" | "Unpaid" | "Overdue" | string;
-type PriorityKey = "High" | "Medium" | "Low" | string;
 
 const statusStyles: Record<StatusKey, string> = {
   paid: "bg-green-100 text-green-800",
   pending: "bg-yellow-100 text-yellow-800",
   failed: "bg-red-100 text-red-800",
   cancelled: "bg-red-100 text-red-800",
-};
-
-const priorityStyles: Record<PriorityKey, string> = {
-  high: "bg-rose-50 text-rose-700 border border-rose-200",
-  normal: "bg-sky-50 text-sky-700 border border-sky-200",
-  low: "bg-slate-100 text-slate-600 border border-slate-200",
-};
-
-const InfoStringRow = ({
-  label,
-  value,
-  ref_value,
-}: {
-  label: string;
-  value: React.ReactNode;
-  ref_value?: string;
-}) => {
-  const { locale } = useLanguageStore();
-  const { t } = useTranslation(locale);
-  const displayValue =
-    value === null || value === undefined || value === ""
-      ? t("N/A")
-      : typeof value === "string"
-        ? t(`billings.method.${value}`)
-        : value;
-
-  return (
-    <div className="flex items-start justify-between py-3 border-b border-slate-100 last:border-0">
-      <span className="text-sm text-slate-500 font-medium min-w-[160px]">
-        {label}
-      </span>
-      <span className={`text-sm text-slate-800 text-right font-medium`}>
-        {ref_value ? (
-          <span className="font-mono text-blue-600 hover:underline cursor-pointer">
-            {ref_value}
-          </span>
-        ) : (
-          displayValue
-        )}
-      </span>
-    </div>
-  );
 };
 
 const InfoRow = ({
@@ -96,28 +52,6 @@ const InfoRow = ({
     </span>
   </div>
 );
-
-const MoneyCard = ({
-  label,
-  value,
-  accent,
-}: {
-  label: string;
-  value: number;
-  accent?: string;
-}) => {
-  const { locale } = useLanguageStore();
-  return (
-    <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 flex flex-col gap-1">
-      <span className="text-xs text-slate-400 font-semibold uppercase tracking-widest">
-        {label}
-      </span>
-      <span className={`text-2xl font-bold ${accent ?? "text-slate-800"}`}>
-        {formatCurrency(value, undefined, locale)}
-      </span>
-    </div>
-  );
-};
 
 const SectionTitle = ({ children }: { children: React.ReactNode }) => (
   <p className="text-xs text-slate-400 font-semibold uppercase tracking-widest mb-3">
@@ -358,8 +292,7 @@ export default function BillDetail() {
                   billData
                     ? formatCurrency(
                         Number(billData.settlements.total_amount),
-                        undefined,
-                        locale,
+                        billData.event.symbol,
                       )
                     : "N/A"
                 }
@@ -370,8 +303,7 @@ export default function BillDetail() {
                   billData
                     ? formatCurrency(
                         Number(billData.settlements.paid_amount),
-                        undefined,
-                        locale,
+                        billData.event.symbol,
                       )
                     : 0
                 }
@@ -382,8 +314,7 @@ export default function BillDetail() {
                   billData
                     ? formatCurrency(
                         Number(billData.settlements.remaining_balance),
-                        undefined,
-                        locale,
+                        billData.event.symbol,
                       )
                     : "N/A"
                 }
@@ -397,8 +328,7 @@ export default function BillDetail() {
                   billData
                     ? formatCurrency(
                         Number(billData?.settlements.gross_revenue),
-                        undefined,
-                        locale,
+                        billData.event.symbol,
                       )
                     : "N/A"
                 }
@@ -409,8 +339,7 @@ export default function BillDetail() {
                   billData
                     ? formatCurrency(
                         Number(billData?.settlements.net_revenue),
-                        undefined,
-                        locale,
+                        billData.event.symbol
                       )
                     : "N/A"
                 }
@@ -421,8 +350,7 @@ export default function BillDetail() {
                   billData
                     ? formatCurrency(
                         Number(billData?.settlements.platform_commission),
-                        undefined,
-                        locale,
+                        billData.event.symbol
                       )
                     : "N/A"
                 }
@@ -433,8 +361,7 @@ export default function BillDetail() {
                   billData
                     ? formatCurrency(
                         Number(billData?.settlements.organizer_earnings),
-                        undefined,
-                        locale,
+                        billData.event.symbol
                       )
                     : "N/A"
                 }

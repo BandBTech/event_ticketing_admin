@@ -160,7 +160,7 @@ export function BillingTable({
         cell: ({ row }) => (
           <div className="grid items-center">
             <span className="px-2 py-1 text-xs font-medium rounded-full flex items-center gap-2">
-              {formatCurrency(row.original.amount, undefined, locale)}
+              {formatCurrency(row.original.amount, row.original.event.symbol)}
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -169,20 +169,18 @@ export function BillingTable({
                   <TooltipContent>
                     <p>
                       {t("billings.table.modals.totalAmount")}:{" "}
-                      {formatCurrency(row.original.amount, undefined, locale)}
+                      {formatCurrency(row.original.amount, row.original.event.symbol)}
                       <br />
                       {t("billings.table.modals.paidAmount")}:{" "}
                       {formatCurrency(
                         row.original.paid_amount,
-                        undefined,
-                        locale,
+                        row.original.event.symbol
                       )}
                       <br />
                       {t("billings.table.modals.remainingAmount")}:{" "}
                       {formatCurrency(
                         row.original.remaining_amount,
-                        undefined,
-                        locale,
+                        row.original.event.symbol
                       )}
                     </p>
                   </TooltipContent>

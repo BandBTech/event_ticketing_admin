@@ -213,6 +213,11 @@ export type CommissionHistoryItem = {
 export type BillHistoryItem = {
   id: string;
   bill_number: string;
+  event: {
+    id: string;
+    title: string;
+    symbol: string;
+  };
   amount: number;
   status: string;
   processed_at: string;

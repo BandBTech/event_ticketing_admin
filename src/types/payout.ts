@@ -29,5 +29,6 @@ export interface EventInfo {
   id: string;
   title: string;
   banner_image: string;
+  symbol: string;
   status: "live" | "completed" | "cancelled" | string;
 }

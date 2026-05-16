@@ -116,7 +116,7 @@ export function TicketTable({
         title: "Amount",
         cell: ({ row }) => (
           <span className="px-2 py-1 text-xs font-medium rounded-full flex items-center gap-2">
-            {formatCurrency(row.original.total_amount, undefined, locale)}
+            {formatCurrency(row.original.total_amount, row.original.currency)}
           </span>
         ),
       },

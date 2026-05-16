@@ -137,7 +137,7 @@ export function TransactionTable({
         meta: { sortKey: "amount" },
         cell: ({ row }) => (
           <span className="px-2 py-1 text-xs font-medium rounded-full flex items-center gap-2">
-            {formatCurrency(row.original.amount, row.original.currency, locale)}
+            {formatCurrency(row.original.amount, row.original.currency)}
 
             <TooltipProvider>
               <Tooltip>
@@ -149,8 +149,7 @@ export function TransactionTable({
                     {t("transactions.transactionDetails.totalAmount")}:{" "}
                     {formatCurrency(
                       row.original.amount,
-                      row.original.currency,
-                      locale,
+                      row.original.currency
                     )}
                     <br />
                     {t("events.modals.commissionRate")}:{" "}
@@ -159,15 +158,13 @@ export function TransactionTable({
                     {t("dashboard.modal.commissionAmount")}:{" "}
                     {formatCurrency(
                       row.original.commission_amount,
-                      row.original.currency,
-                      locale,
+                      row.original.currency
                     )}
                     <br />
                     {t("transactions.table.organizer_share")}:{" "}
                     {formatCurrency(
                       row.original.organizer_share,
-                      row.original.currency,
-                      locale,
+                      row.original.currency
                     )}
                   </p>
                 </TooltipContent>
@@ -203,8 +200,7 @@ export function TransactionTable({
                   −
                   {formatCurrency(
                     row.original.gateway_fee,
-                    row.original.currency,
-                    locale,
+                    row.original.currency
                   )}
                 </span>
               )}

@@ -126,7 +126,7 @@ export function DailyBarChart({
   const fmt = (v: number) =>
     tab === "tickets"
       ? String(Math.round(v))
-      : formatCurrency(Math.round(v), undefined, locale);
+      : formatCurrency(Math.round(v), undefined);
 
   return (
     <div className="flex items-end gap-1 h-44 w-full overflow-x-auto pb-1">

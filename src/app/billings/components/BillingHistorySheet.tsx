@@ -89,6 +89,9 @@ export function BillingHistorySheet({
   const totalAmount = Array.isArray(historyData)
     ? historyData.reduce((sum, item) => sum + (item.amount || 0), 0)
     : 0;
+  const symbol = Array.isArray(historyData) && historyData.length > 0
+    ? historyData[0].event.symbol
+    : "";
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -131,7 +134,7 @@ export function BillingHistorySheet({
               <div className="text-sm font-semibold text-gray-800">
                 {t("dashboard.dataDisplay.total")}:{" "}
                 <span className="text-indigo-600">
-                  {formatCurrency(totalAmount, undefined, locale)}
+                  {formatCurrency(totalAmount, symbol)}
                 </span>
               </div>
             </div>
@@ -153,7 +156,7 @@ export function BillingHistorySheet({
                     {/* Top row: amount + method */}
                     <div className="flex items-center justify-between">
                       <span className="text-lg font-bold text-gray-800">
-                        {formatCurrency(item.amount, undefined, locale)}
+                        {formatCurrency(item.amount, item.event.symbol)}
                       </span>
                       <PaymentMethodBadge method={item.method} />
                     </div>

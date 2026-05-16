@@ -65,36 +65,6 @@ function StatRow({
   );
 }
 
-// ── Revenue Row with Progress ─────────────────────────────────────────────────
-function RevenueRow({
-  label,
-  value,
-  pct,
-  color,
-}: {
-  label: string;
-  value: number;
-  pct: number;
-  color: string;
-}) {
-  const { locale } = useLanguageStore();
-  return (
-    <div className="py-2 border-b border-gray-100 last:border-b-0">
-      <div className="flex items-center justify-between mb-1">
-        <span className="text-xs text-black">{label}</span>
-        <span className="text-xs font-semibold text-black">
-          {formatCurrency(value, undefined, locale)}
-        </span>
-      </div>
-      <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
-        <div
-          className="h-full rounded-full"
-          style={{ width: `${pct}%`, backgroundColor: color }}
-        />
-      </div>
-    </div>
-  );
-}
 
 // ── Card Container ────────────────────────────────────────────────────────────
 function Card({
@@ -216,13 +186,11 @@ export default function DashboardPage({ data }: DashboardPageProps) {
             label={t("dashboard.dataDisplay.grossRevenue") ?? "Gross Revenue"}
             value={formatCurrency(
               activeEarning?.gross_revenue ?? 0,
-              activeEarning?.currency,
-              locale,
+              activeEarning?.symbol
             )}
             subtitle={`${t("dashboard.dataDisplay.netRevenue") ?? "Net"}: ${formatCurrency(
               activeEarning?.net_revenue ?? 0,
-              activeEarning?.currency,
-              locale,
+              activeEarning?.symbol
             )}`}
           />
           <KPICard
@@ -231,34 +199,29 @@ export default function DashboardPage({ data }: DashboardPageProps) {
             }
             value={formatCurrency(
               activeEarning?.platform_commission ?? 0,
-              activeEarning?.currency,
-              locale,
+              activeEarning?.symbol
             )}
             subtitle={`${t("dashboard.dataDisplay.gatewayFee") ?? "Gateway Fee"}: ${formatCurrency(
               activeEarning?.gateway_fee ?? 0,
-              activeEarning?.currency,
-              locale,
+              activeEarning?.symbol
             )}`}
           />
           <KPICard
             label={t("dashboard.dataDisplay.paidOut") ?? "Paid Out"}
             value={formatCurrency(
               activeEarning?.paid_out ?? 0,
-              activeEarning?.currency,
-              locale,
+              activeEarning?.symbol
             )}
             subtitle={`${t("dashboard.dataDisplay.pendingPayout") ?? "Pending"}: ${formatCurrency(
               activeEarning?.pending_payout ?? 0,
-              activeEarning?.currency,
-              locale,
+              activeEarning?.symbol
             )}`}
           />
           <KPICard
             label={t("dashboard.dataDisplay.refundAmount") ?? "Refunds"}
             value={formatCurrency(
               activeEarning?.refund_amount ?? 0,
-              activeEarning?.currency,
-              locale,
+              activeEarning?.symbol
             )}
             subtitle=""
           />

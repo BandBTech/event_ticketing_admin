@@ -75,8 +75,7 @@ export default function CustomerAnalytics({ data }: CustomerAnalyticsProps) {
           label={t("reports.customerAnalytics.avgOrderValue")}
           value={formatCurrency(
             data?.average_order_value || 0,
-            undefined,
-            locale,
+            undefined
           )}
           sub={t("reports.customerAnalytics.perTransaction")}
         />
@@ -117,11 +116,11 @@ export default function CustomerAnalytics({ data }: CustomerAnalyticsProps) {
                   <div className="flex justify-between text-[11px] text-black">
                     <span>
                       {t("reports.customerAnalytics.total")}:{" "}
-                      {formatCurrency(seg.total_spent, undefined, locale)}
+                      {formatCurrency(seg.total_spent, undefined)}
                     </span>
                     <span>
                       {t("reports.customerAnalytics.avg")}:{" "}
-                      {formatCurrency(seg.average_spent, undefined, locale)}
+                      {formatCurrency(seg.average_spent, undefined)}
                     </span>
                   </div>
                 </div>
@@ -197,7 +196,7 @@ export default function CustomerAnalytics({ data }: CustomerAnalyticsProps) {
                     />
                   </div>
                   <span className="text-xs font-medium text-black w-24 text-right flex-shrink-0">
-                    {formatCurrency(seg.total_spent, undefined, locale)}
+                    {formatCurrency(seg.total_spent, undefined)}
                   </span>
                 </div>
                 {/* Avg spent bar */}
@@ -216,7 +215,7 @@ export default function CustomerAnalytics({ data }: CustomerAnalyticsProps) {
                     />
                   </div>
                   <span className="text-xs text-black w-24 text-right flex-shrink-0">
-                    {formatCurrency(seg.average_spent, undefined, locale)}
+                    {formatCurrency(seg.average_spent, undefined)}
                   </span>
                 </div>
               </div>

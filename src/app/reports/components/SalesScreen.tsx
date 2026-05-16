@@ -26,7 +26,7 @@ export function DailyBarChart({
   const fmt = (v: number) =>
     tab === "tickets"
       ? String(Math.round(v))
-      : formatCurrency(Math.round(v), undefined, locale);
+      : formatCurrency(Math.round(v), undefined);
 
   const yTicks = [1, 0.75, 0.5, 0.25, 0];
 
@@ -175,7 +175,7 @@ export default function SalesReport({ data }: SalesReportProps) {
       <div className="grid grid-cols-4 gap-4 font-medium">
         <MetricCard
           label={t("reports.sales.totalRevenue")}
-          value={formatCurrency(m?.total_revenue || 0, undefined, locale)}
+          value={formatCurrency(m?.total_revenue || 0, undefined)}
           sub={`${activeDays} ${t("reports.sales.activeDays")}`}
           // valueColor="text-blue-600"
         />
@@ -193,8 +193,7 @@ export default function SalesReport({ data }: SalesReportProps) {
           label={t("reports.sales.avgOrderValue")}
           value={formatCurrency(
             Math.round(m?.average_order_value || 0),
-            undefined,
-            locale,
+            undefined
           )}
           sub={t("reports.sales.perTransaction")}
         />
@@ -249,7 +248,7 @@ export default function SalesReport({ data }: SalesReportProps) {
                   </span>
                   <div className="text-right">
                     <span className="text-sm font-semibold text-black">
-                      {formatCurrency(gw.total_revenue, undefined, locale)}
+                      {formatCurrency(gw.total_revenue, undefined)}
                     </span>
                     <span className="text-xs text-black ml-2">
                       {gw.percentage_of_total.toFixed(1)}%
@@ -298,7 +297,7 @@ export default function SalesReport({ data }: SalesReportProps) {
                   </div>
                   <div className="text-right flex-shrink-0 w-28">
                     <div className="text-sm font-semibold text-black">
-                      {formatCurrency(d.revenue, undefined, locale)}
+                      {formatCurrency(d.revenue, undefined)}
                     </div>
                     <div className="text-[11px] text-black">
                       {d.tickets_sold} {t("reports.sales.tickets")}

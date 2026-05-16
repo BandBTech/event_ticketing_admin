@@ -25,6 +25,11 @@ export interface Pagination {
 
 export interface CheckoutSession {
   id: string;
+  event: {
+    id: string;
+    title: string;
+    symbol: string;
+  }
   ticket_id: string;
   user_id: string;
   checkout_token: string;

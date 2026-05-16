@@ -66,6 +66,7 @@ export interface Ticket {
   tier_id: string;
   tier: Tier;
   transaction_id: string;
+  currency: string;
   total_amount: number;
   payment_gateway: PaymentGateway;
   status: TicketStatus;

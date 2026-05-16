@@ -193,7 +193,7 @@ export default function TransactionsPage() {
         enableSorting: false,
         cell: ({ row }) => (
           <span className="px-2 py-1 text-xs font-medium rounded-full flex items-center gap-2">
-            {formatCurrency(row.original.amount, row.original.currency, locale)}
+            {formatCurrency(row.original.amount, row.original.event.symbol)}
           </span>
         ),
       },

@@ -26,19 +26,19 @@ export default function ReportPage({ data }: ReportPageProps) {
       <div className="grid grid-cols-4 gap-4 font-medium">
         <MetricCard
           label={t("reports.overview.totalRevenue")}
-          value={formatCurrency(m?.total_revenue || 0, undefined, locale)}
+          value={formatCurrency(m?.total_revenue || 0, undefined)}
           sub={t("reports.overview.grossCollected")}
           // valueColor="text-blue-600"
         />
         <MetricCard
           label={t("reports.overview.commission")}
-          value={formatCurrency(m?.total_commission || 0, undefined, locale)}
+          value={formatCurrency(m?.total_commission || 0, undefined)}
           // sub={`${commissionPct}% of revenue`}
           // valueColor="text-amber-500"
         />
         <MetricCard
           label={t("reports.overview.organizerShare")}
-          value={formatCurrency(m?.organizer_share || 0, undefined, locale)}
+          value={formatCurrency(m?.organizer_share || 0, undefined)}
           // sub={`${organizerPct}% of revenue`}
           // valueColor="text-emerald-600"
         />
@@ -55,8 +55,7 @@ export default function ReportPage({ data }: ReportPageProps) {
           label={t("reports.overview.avgOrderValue")}
           value={formatCurrency(
             Math.round(m?.average_order_value || 0),
-            undefined,
-            locale,
+            undefined
           )}
         />
         <MetricCard

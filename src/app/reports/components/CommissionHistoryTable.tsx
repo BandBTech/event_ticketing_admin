@@ -72,7 +72,7 @@ export function CommissionHistoryTable({
         accessorKey: "revenue",
         cell: ({ row }) => (
           <span className="px-2 py-1 text-xs font-medium rounded-full">
-            {formatCurrency(row.original.revenue, undefined, locale)}
+            {formatCurrency(row.original.revenue, undefined)}
           </span>
         ),
       },
@@ -92,7 +92,7 @@ export function CommissionHistoryTable({
         accessorKey: "commission_amount",
         cell: ({ row }) => (
           <span className="px-2 py-1 text-xs font-medium rounded-full">
-            {formatCurrency(row.original.commission_amount, undefined, locale)}
+            {formatCurrency(row.original.commission_amount, undefined)}
           </span>
         ),
       },

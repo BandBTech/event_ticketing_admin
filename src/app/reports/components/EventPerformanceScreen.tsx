@@ -138,7 +138,7 @@ export default function EventPerformance({
           <div className="grid grid-cols-4 gap-4 font-medium">
             <MetricCard
               label={t("reports.eventPerformance.revenue")}
-              value={formatCurrency(data?.revenue || 0, undefined, locale)}
+              value={formatCurrency(data?.revenue || 0, undefined)}
               sub={t("reports.eventPerformance.grossCollected")}
               // valueColor="text-blue-600"
             />
@@ -146,15 +146,14 @@ export default function EventPerformance({
               label={t("reports.eventPerformance.organizerEarnings")}
               value={formatCurrency(
                 data?.organizer_earnings || 0,
-                undefined,
-                locale,
+                undefined
               )}
               sub={`${organizerPct}% ${t("reports.eventPerformance.ofRevenue")}`}
               // valueColor="text-emerald-600"
             />
             <MetricCard
               label={t("reports.eventPerformance.commission")}
-              value={formatCurrency(data?.commission || 0, undefined, locale)}
+              value={formatCurrency(data?.commission || 0, undefined)}
               sub={`${commissionPct}% ${t("reports.eventPerformance.ofRevenue")}`}
               // valueColor="text-amber-500"
             />
@@ -162,8 +161,7 @@ export default function EventPerformance({
               label={t("reports.eventPerformance.avgTicketPrice")}
               value={formatCurrency(
                 data?.average_ticket_price || 0,
-                undefined,
-                locale,
+                undefined
               )}
               sub={`${data?.total_transactions} ${t("reports.eventPerformance.transactions")}`}
             />
@@ -247,14 +245,13 @@ export default function EventPerformance({
               <div className="pt-4 border-t border-gray-50">
                 <StatRow
                   label={t("reports.eventPerformance.grossRevenue")}
-                  value={formatCurrency(data?.revenue || 0, undefined, locale)}
+                  value={formatCurrency(data?.revenue || 0, undefined)}
                 />
                 <StatRow
                   label={t("reports.eventPerformance.organizerEarnings")}
                   value={formatCurrency(
                     data?.organizer_earnings || 0,
-                    undefined,
-                    locale,
+                    undefined
                   )}
                   // badge={{ bg: "bg-emerald-50", text: "text-emerald-700" }}
                 />
@@ -262,8 +259,7 @@ export default function EventPerformance({
                   label={t("reports.eventPerformance.commission")}
                   value={formatCurrency(
                     data?.commission || 0,
-                    undefined,
-                    locale,
+                    undefined
                   )}
                   // badge={{ bg: "bg-amber-50", text: "text-amber-700" }}
                 />
@@ -299,8 +295,7 @@ export default function EventPerformance({
                           <span className="ml-2 text-xs text-black">
                             {formatCurrency(
                               tier.ticket_price,
-                              undefined,
-                              locale,
+                              undefined
                             )}{" "}
                             / {t("reports.eventPerformance.ticket")}
                           </span>
@@ -340,7 +335,7 @@ export default function EventPerformance({
                         <div className="flex justify-between text-[11px] text-black mb-1">
                           <span>{t("reports.eventPerformance.revenue")}</span>
                           <span>
-                            {formatCurrency(tier.revenue, undefined, locale)}
+                            {formatCurrency(tier.revenue, undefined)}
                           </span>
                         </div>
                         <div className="h-2 bg-gray-100 rounded-full overflow-hidden">

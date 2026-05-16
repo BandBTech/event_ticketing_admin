@@ -127,7 +127,7 @@ export function RefundDetail({
                   {t("refunds.refundDetail.refundNumber", "Refund Number")}
                 </div>
                 <div className="font-medium break-all">
-                  {data?.refund_number}
+                  {/* {data?.refund_number} */}
                 </div>
 
                 <div className="text-gray-500">
@@ -135,7 +135,7 @@ export function RefundDetail({
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="font-semibold text-green-600">
-                    {formatCurrency(data?.amount || 0, data?.currency, locale)}
+                    {formatCurrency(data?.amount || 0, data?.currency)}
                   </div>
                   <div className="font-semibold">
                     ( {data?.ticket_count}{" "}
@@ -177,8 +177,7 @@ export function RefundDetail({
                 <div className="font-semibold">
                   {formatCurrency(
                     data?.transaction.amount || 0,
-                    data?.currency,
-                    locale,
+                    data?.currency
                   )}
                 </div>
 

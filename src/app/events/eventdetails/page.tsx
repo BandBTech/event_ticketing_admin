@@ -658,7 +658,7 @@ export default function EventDetailsPage() {
                       {t("events.analytics.revenue", "Revenue")}
                     </p>
                     <p className="text-lg font-bold text-emerald-700">
-                      {formatCurrency(totalRevenue, analytics?.tiers?.[0]?.currency ?? event.tiers?.[0]?.currency, locale)}
+                      {formatCurrency(totalRevenue, analytics?.tiers?.[0]?.currency ?? event.tiers?.[0]?.currency)}
                     </p>
                   </div>
                 </div>
@@ -687,7 +687,7 @@ export default function EventDetailsPage() {
                               </div>
                               <div className="text-right">
                                 <p className="font-medium text-emerald-600">
-                                  {formatCurrency(tier.revenue, tier.currency, locale)}
+                                  {formatCurrency(tier.revenue, tier.currency)}
                                 </p>
                               </div>
                             </div>
@@ -708,7 +708,7 @@ export default function EventDetailsPage() {
                                 </span>
 
                                 <p className="text-xs text-gray-500">
-                                  {formatCurrency(tier.price, tier.currency, locale)} /{" "}
+                                  {formatCurrency(tier.price, tier.currency)} /{" "}
                                   {t("transactions.table.ticket", "ticket")}
                                 </p>
                               </div>
@@ -733,13 +733,13 @@ export default function EventDetailsPage() {
                                   {tier.tier_name}
                                 </p>
                                 <p className="text-xs text-gray-500">
-                                  {formatCurrency(tier.price, tier.currency, locale)} /{" "}
+                                  {formatCurrency(tier.price, tier.currency)} /{" "}
                                   {t("common.ticket", "ticket")}
                                 </p>
                               </div>
                               <div className="text-right">
                                 <p className="font-medium text-emerald-600">
-                                  {formatCurrency(tierRevenue, tier.currency, locale)}
+                                  {formatCurrency(tierRevenue, tier.currency)}
                                 </p>
                               </div>
                             </div>

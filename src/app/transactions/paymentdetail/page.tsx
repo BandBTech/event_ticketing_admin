@@ -273,8 +273,7 @@ export default function PaymentDetail() {
                   <span className="font-bold text-slate-800 text-sm">
                     {formatCurrency(
                       transaction.amount,
-                      transaction.currency,
-                      locale,
+                      transaction.currency
                     )}
                   </span>
                 </div>

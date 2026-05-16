@@ -106,7 +106,7 @@ export function BillHistoryTable({
           const amount = row.original.amount;
           return (
             <span className="max-w-[200px] text-gray-700 truncate inline-block">
-              {formatCurrency(row.original.amount, undefined, locale)}
+              {formatCurrency(row.original.amount, row.original.event.symbol)}
             </span>
           );
         },

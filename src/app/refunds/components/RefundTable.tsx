@@ -139,7 +139,7 @@ export function RefundTable({
         meta: { sortKey: "amount" },
         cell: ({ row }) => (
           <span className="px-2 py-1 text-xs font-medium rounded-full">
-            {formatCurrency(row.original.amount, row.original.currency, locale)}
+            {formatCurrency(row.original.amount, row.original.currency)}
           </span>
         ),
       },
