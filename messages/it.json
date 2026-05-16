@@ -865,6 +865,7 @@
       "check": "Assegno",
       "mobile_payment": "Pagamento mobile",
       "stripe": "Banda",
+      "konbini": "Konbini",
       "other": "Altra"
     },
     "billType": {
@@ -923,7 +924,24 @@
       "paymentReference": "Riferimento pagamento",
       "paidAmount": "Importo pagato",
       "remaining": "Residuo",
-      "billPaymentHistory": "Cronologia pagamenti fattura"
+      "billPaymentHistory": "Cronologia pagamenti fattura",
+      "billAmountDetails": "Dettagli Importo Fattura",
+      "revenueDetails": "Dettagli Entrate",
+      "totalAmount": "Importo Totale",
+      "remainingBalance": "Saldo Residuo",
+      "grossRevenue": "Entrate Lorde",
+      "netRevenue": "Entrate Nette",
+      "platformCommission": "Commissione Piattaforma",
+      "billType": "Tipo Fattura",
+      "notes": "Note",
+      "updatedDate": "Data Aggiornamento",
+      "paymentHistory": {
+        "date": "Data",
+        "processedBy": "Elaborato Da",
+        "amount": "Importo",
+        "method": "Metodo",
+        "screenshot": "Screenshot"
+      }
     },
     "billUpdate": {
       "updateBill": "Aggiorna fattura",

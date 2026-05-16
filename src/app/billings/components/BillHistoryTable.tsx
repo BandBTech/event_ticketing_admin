@@ -69,7 +69,7 @@ export function BillHistoryTable({
     () => [
       {
         id: "date",
-        header: "Date",
+        header: t("billings.billHistory.date", "Date"),
         title: "Created Date",
         meta: { sortKey: "created_at" },
         cell: ({ row }) => {
@@ -90,7 +90,7 @@ export function BillHistoryTable({
       },
       {
         id: "processed_by",
-        header: t("Processed By"),
+        header: t("billings.billHistory.processedBy", "Processed By"),
         meta: { sortKey: "processed_by" },
         cell: ({ row }) => (
           <span className="max-w-[200px] text-gray-700 truncate inline-block">
@@ -100,7 +100,7 @@ export function BillHistoryTable({
       },
       {
         id: "amount",
-        header: t("Amount"),
+        header: t("billings.billHistory.amount", "Amount"),
         meta: { sortKey: "amount" },
         cell: ({ row }) => {
           const amount = row.original.amount;
@@ -113,7 +113,7 @@ export function BillHistoryTable({
       },
       {
         id: "method",
-        header: t("Method"),
+        header: t("billings.billHistory.method", "Method"),
         meta: { sortKey: "payment_method" },
         cell: ({ row }) => {
           const gateway = row.original.method || "";
@@ -126,7 +126,7 @@ export function BillHistoryTable({
       },
       {
         id: "screenshot",
-        header: t("Screenshot"),
+        header: t("billings.billHistory.screenshot", "Screenshot"),
         cell: ({ row }) => (
           <span className="max-w-[200px] text-gray-700 truncate inline-block">
             {row.original.screenshot_url ? (
@@ -150,7 +150,7 @@ export function BillHistoryTable({
   return (
     <>
       <ReusableTable
-       wrapperClassName={wrapperClassName}
+        wrapperClassName={wrapperClassName}
         columns={columns}
         data={billHistory}
         isLoading={isLoading}

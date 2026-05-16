@@ -285,9 +285,14 @@ export default function BillDetail() {
           {/* Bill Details + Payment Info */}
           <div className="grid md:grid-cols-2 gap-8">
             <div>
-              <SectionTitle>{t("", "Bill Amount Details")}</SectionTitle>
+              <SectionTitle>
+                {t(
+                  "billings.detailPage.billAmountDetails",
+                  "Bill Amount Details",
+                )}
+              </SectionTitle>
               <InfoRow
-                label={t("", "Total Amount")}
+                label={t("billings.detailPage.totalAmount", "Total Amount")}
                 value={
                   billData
                     ? formatCurrency(
@@ -298,7 +303,7 @@ export default function BillDetail() {
                 }
               />
               <InfoRow
-                label={t("", "Paid Amount")}
+                label={t("billings.detailPage.paidAmount", "Paid Amount")}
                 value={
                   billData
                     ? formatCurrency(
@@ -309,7 +314,10 @@ export default function BillDetail() {
                 }
               />
               <InfoRow
-                label={t("", "Remaining Balance")}
+                label={t(
+                  "billings.detailPage.remainingBalance",
+                  "Remaining Balance",
+                )}
                 value={
                   billData
                     ? formatCurrency(
@@ -321,9 +329,11 @@ export default function BillDetail() {
               />
             </div>
             <div>
-              <SectionTitle>{t("", "Revenue Details")}</SectionTitle>
+              <SectionTitle>
+                {t("billings.detailPage.revenueDetails", "Revenue Details")}
+              </SectionTitle>
               <InfoRow
-                label={t("", "Gross Revenue")}
+                label={t("billings.detailPage.grossRevenue", "Gross Revenue")}
                 value={
                   billData
                     ? formatCurrency(
@@ -334,34 +344,40 @@ export default function BillDetail() {
                 }
               />
               <InfoRow
-                label={t("", "Net Revenue")}
+                label={t("billings.detailPage.netRevenue", "Net Revenue")}
                 value={
                   billData
                     ? formatCurrency(
                         Number(billData?.settlements.net_revenue),
-                        billData.event.symbol
+                        billData.event.symbol,
                       )
                     : "N/A"
                 }
               />
               <InfoRow
-                label={t("", "Platform Commission")}
+                label={t(
+                  "billings.detailPage.platformCommission",
+                  "Platform Commission",
+                )}
                 value={
                   billData
                     ? formatCurrency(
                         Number(billData?.settlements.platform_commission),
-                        billData.event.symbol
+                        billData.event.symbol,
                       )
                     : "N/A"
                 }
               />
               <InfoRow
-                label={t("", "Organizer Earnings")}
+                label={t(
+                  "billings.detailPage.organizerEarnings",
+                  "Organizer Earnings",
+                )}
                 value={
                   billData
                     ? formatCurrency(
                         Number(billData?.settlements.organizer_earnings),
-                        billData.event.symbol
+                        billData.event.symbol,
                       )
                     : "N/A"
                 }
@@ -376,11 +392,11 @@ export default function BillDetail() {
                 {t("billings.detailPage.billDetails", "Bill Details")}
               </SectionTitle>
               <InfoRow
-                label={t("", "Billed Type")}
+                label={t("billings.detailPage.billType", "Billed Type")}
                 value={t(`billings.billType.${billData?.bill_type}`) ?? "N/A"}
               />
               <InfoRow
-                label={t("billings.detailPage.adminNotes", "Admin Notes")}
+                label={t("billings.detailPage.notes", "Notes")}
                 // value={billData?.notes || "N/A"}
                 value={
                   billData?.notes ? (

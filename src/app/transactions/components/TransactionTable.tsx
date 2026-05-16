@@ -182,6 +182,7 @@ export function TransactionTable({
 
           const colors: Record<string, string> = {
             khalti: "bg-purple-100 text-purple-700",
+            konbini: "bg-blue-200/50 text-blue-800",
             esewa: "bg-green-100 text-green-700",
             stripe: "bg-indigo-100 text-indigo-700",
           };

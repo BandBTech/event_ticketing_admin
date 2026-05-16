@@ -914,6 +914,7 @@
       "check": "Cheque",
       "mobile_payment": "Mobile Payment",
       "stripe": "Stripe",
+      "konbini": "Konbini",
       "other": "Other"
     },
     "billType": {
@@ -972,7 +973,24 @@
       "paymentReference": "Payment Reference",
       "paidAmount": "Paid Amount",
       "remaining": "Remaining",
-      "billPaymentHistory": "Bill Payment History"
+      "billPaymentHistory": "Bill Payment History",
+      "billAmountDetails": "Bill Amount Details",
+      "revenueDetails": "Revenue Details",
+      "totalAmount": "Total Amount",
+      "remainingBalance": "Remaining Balance",
+      "grossRevenue": "Gross Revenue",
+      "netRevenue": "Net Revenue",
+      "platformCommission": "Platform Commission",
+      "billType": "Bill Type",
+      "notes": "Notes",
+      "updatedDate": "Updated Date",
+      "paymentHistory": {
+        "date": "Date",
+        "processedBy": "Processed By",
+        "amount": "Amount",
+        "method": "Method",
+        "screenshot": "Screenshot"
+      }
     },
     "billUpdate": {
       "updateBill": "Update Bill",
