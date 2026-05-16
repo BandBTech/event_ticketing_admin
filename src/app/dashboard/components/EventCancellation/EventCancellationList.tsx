@@ -112,7 +112,7 @@ const EventCancellationList = ({
   } = usePendingCancellationEvents();
 
   const setTotalPendingCancellationEvents = useEventStore(
-    (state) => state.setTotalPendingEvents,
+    (state) => state.setTotalPendingCancellationEvents,
   );
 
   useEffect(() => {

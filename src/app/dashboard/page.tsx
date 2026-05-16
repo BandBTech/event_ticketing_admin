@@ -30,7 +30,7 @@ const AdminDashboard: React.FC = () => {
     queryFn: () => DashboardService.getDashboard({}),
   });
 
-  // pending event section 
+  // pending event section
   const { data: pendingEventsData, isLoading: isLoadingEvents } =
     usePendingEvents();
 
@@ -48,7 +48,7 @@ const AdminDashboard: React.FC = () => {
     setTotalPendingEvents(totalNumberOfPendingEvents);
   }, [pendingEventsData, setTotalPendingEvents]);
 
-  // pending organizer section 
+  // pending organizer section
 
   const { data: pendingOrganizersData, isLoading: isLoadingOrganizers } =
     usePendingOrganizers();
@@ -63,15 +63,14 @@ const AdminDashboard: React.FC = () => {
     setTotalPendingOrganizers(totalNumberOfPendingOrganizer);
   }, [pendingOrganizersData, setTotalPendingOrganizers]);
 
-
-  // pending cancellation event section 
+  // pending cancellation event section
   const {
     data: pendingCancellationEventsData,
     isLoading: isLoadingCancellationEvents,
   } = usePendingCancellationEvents();
 
   const setTotalPendingCancellationEvents = useEventStore(
-    (state) => state.setTotalPendingEvents,
+    (state) => state.setTotalPendingCancellationEvents,
   );
 
   useEffect(() => {

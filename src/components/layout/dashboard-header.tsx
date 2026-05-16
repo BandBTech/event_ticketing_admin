@@ -56,6 +56,7 @@ export default function DashboardHeader() {
   const [isPendingOrganizerOpen, setIsPendingOrganizerOpen] =
     React.useState(false);
   const pendingEvents = useEventStore((state) => state.totalPendingEvents);
+  const pendingCancellationEvents = useEventStore((state) => state.totalPendingCancellationEvents);
   const pendingOrganizers = useOrganizerStore(
     (state) => state.totalPendingOrganizers,
   );
@@ -110,9 +111,9 @@ export default function DashboardHeader() {
               <CalendarX2 className="h-4 w-4 text-gray-700" />
             </button>
 
-            {pendingEvents > 0 && (
+            {pendingCancellationEvents > 0 && (
               <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
-                {pendingEvents > 99 ? "99+" : pendingEvents}
+                {pendingCancellationEvents > 99 ? "99+" : pendingCancellationEvents}
               </span>
             )}
           </div>
