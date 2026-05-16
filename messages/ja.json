@@ -883,7 +883,7 @@
     "billType": {
       "auto_calculated": "自動計算",
       "manual": "手動",
-      "payout_request": "支払い請求"
+      "payout": "支払い"
     },
     "billPriority": {
       "high": "高",

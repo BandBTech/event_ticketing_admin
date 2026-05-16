@@ -919,7 +919,7 @@
     "billType": {
       "auto_calculated": "Auto Calculated",
       "manual": "Manual",
-      "payout_request": "Payout Request"
+      "payout": "Payout"
     },
     "billPriority": {
       "high": "High",

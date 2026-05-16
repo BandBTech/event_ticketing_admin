@@ -282,14 +282,14 @@ export default function BillDetail() {
                       expanded === "event" && "whitespace-normal break-words",
                     )}
                   >
-                    {billData?.event_title}
+                    {billData?.event.title}
                   </span>
-                  <CaretDownIcon
+                  {/* <CaretDownIcon
                     className={cn(
                       "h-3 w-3 flex-shrink-0 text-slate-400 transition-transform duration-200",
                       expanded === "event" && "rotate-180",
                     )}
-                  />
+                  /> */}
                 </p>
               </div>
             </div>
@@ -312,10 +312,10 @@ export default function BillDetail() {
                   title={
                     expanded === "organizer"
                       ? undefined
-                      : billData?.organizer_name
+                      : billData?.organizer.name
                   }
                 >
-                  {billData?.organizer_name || "N/A"}
+                  {billData?.organizer.name || "N/A"}
                 </p>
               </div>
             </div>
@@ -336,40 +336,14 @@ export default function BillDetail() {
                     setExpanded(expanded === "admin" ? null : "admin")
                   }
                   title={
-                    expanded === "admin" ? undefined : billData?.admin_name
+                    expanded === "admin" ? undefined : billData?.actor.name
                   }
                 >
-                  {billData?.admin_name}
+                  {billData?.actor.name}
                 </p>
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Money Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <MoneyCard
-            label={t("billings.detailPage.totalRevenue", "Total Revsenue")}
-            value={billData?.total_revenue ?? 0}
-          />
-          <MoneyCard
-            label={t("billings.detailPage.commission", "Commission")}
-            value={billData?.total_commission ?? 0}
-            accent="text-indigo-600"
-          />
-          <MoneyCard
-            label={t(
-              "billings.detailPage.organizerEarnings",
-              "Organizer Earnings",
-            )}
-            value={billData?.organizer_earnings ?? 0}
-            accent="text-emerald-600"
-          />
-          <MoneyCard
-            label={t("billings.detailPage.billedAmount", "Billed Amount")}
-            value={billData?.amount ?? 0}
-            accent="text-amber-600"
-          />
         </div>
 
         {/* Details — flat, no tabs */}
@@ -377,13 +351,119 @@ export default function BillDetail() {
           {/* Bill Details + Payment Info */}
           <div className="grid md:grid-cols-2 gap-8">
             <div>
+              <SectionTitle>{t("", "Bill Amount Details")}</SectionTitle>
+              <InfoRow
+                label={t("", "Total Amount")}
+                value={
+                  billData
+                    ? formatCurrency(
+                        Number(billData.settlements.total_amount),
+                        undefined,
+                        locale,
+                      )
+                    : "N/A"
+                }
+              />
+              <InfoRow
+                label={t("", "Paid Amount")}
+                value={
+                  billData
+                    ? formatCurrency(
+                        Number(billData.settlements.paid_amount),
+                        undefined,
+                        locale,
+                      )
+                    : 0
+                }
+              />
+              <InfoRow
+                label={t("", "Remaining Balance")}
+                value={
+                  billData
+                    ? formatCurrency(
+                        Number(billData.settlements.remaining_balance),
+                        undefined,
+                        locale,
+                      )
+                    : "N/A"
+                }
+              />
+            </div>
+            <div>
+              <SectionTitle>{t("", "Revenue Details")}</SectionTitle>
+              <InfoRow
+                label={t("", "Gross Revenue")}
+                value={
+                  billData
+                    ? formatCurrency(
+                        Number(billData?.settlements.gross_revenue),
+                        undefined,
+                        locale,
+                      )
+                    : "N/A"
+                }
+              />
+              <InfoRow
+                label={t("", "Net Revenue")}
+                value={
+                  billData
+                    ? formatCurrency(
+                        Number(billData?.settlements.net_revenue),
+                        undefined,
+                        locale,
+                      )
+                    : "N/A"
+                }
+              />
+              <InfoRow
+                label={t("", "Platform Commission")}
+                value={
+                  billData
+                    ? formatCurrency(
+                        Number(billData?.settlements.platform_commission),
+                        undefined,
+                        locale,
+                      )
+                    : "N/A"
+                }
+              />
+              <InfoRow
+                label={t("", "Organizer Earnings")}
+                value={
+                  billData
+                    ? formatCurrency(
+                        Number(billData?.settlements.organizer_earnings),
+                        undefined,
+                        locale,
+                      )
+                    : "N/A"
+                }
+              />
+            </div>
+          </div>
+        </div>
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-8">
+          <div>
+            <div>
               <SectionTitle>
                 {t("billings.detailPage.billDetails", "Bill Details")}
               </SectionTitle>
               <InfoRow
-                label={t("billings.detailPage.billedDate", "Billed Date")}
-                // value={fmtDate(billData?.bill_date ?? "N/A")}
-                value={formatDateTimeLong(billData?.bill_date, locale) || "N/A"}
+                label={t("", "Billed Type")}
+                value={t(`billings.billType.${billData?.bill_type}`) ?? "N/A"}
+              />
+              <InfoRow
+                label={t("billings.detailPage.adminNotes", "Admin Notes")}
+                // value={billData?.notes || "N/A"}
+                value={
+                  billData?.notes ? (
+                    <span className="whitespace-pre-wrap italic font-normal">
+                      {billData.notes}
+                    </span>
+                  ) : (
+                    "N/A"
+                  )
+                }
               />
               <InfoRow
                 label={t("billings.detailPage.createdDate", "Created Date")}
@@ -392,66 +472,15 @@ export default function BillDetail() {
                 }
               />
               <InfoRow
-                label={t("billings.detailPage.paidDate", "Paid Date")}
-                value={formatDateTimeLong(billData?.paid_date, locale) || "N/A"}
-              />
-            </div>
-            <div>
-              <SectionTitle>
-                {t(
-                  "billings.detailPage.paymentInformation",
-                  "Payment Information",
-                )}
-              </SectionTitle>
-              <InfoStringRow
-                label={t("billings.detailPage.paymentMethod", "Payment Method")}
-                value={billData?.payment_method}
-              />
-              {/* <InfoStringRow
-                label={t(
-                  "billings.detailPage.paymentReference",
-                  "Payment Reference",
-                )}
-                value={""}
-                ref_value={billData?.payment_ref}
-              /> */}
-              <InfoRow
-                label={t("billings.detailPage.billedAmount", "Billed Amount")}
-                value={formatCurrency(
-                  billData?.amount ?? 0,
-                  undefined,
-                  locale,
-                )}
-              />
-              <InfoRow
-                label={t("billings.detailPage.paidAmount", "Paid Amount")}
+                label={t("billings.detailPage.updatedDate", "Updated Date")}
                 value={
-                  <span className="text-emerald-600">
-                    {formatCurrency(
-                      billData?.paid_amount ?? 0,
-                      undefined,
-                      locale,
-                    )}
-                  </span>
-                }
-              />
-              <InfoRow
-                label={t("billings.detailPage.remaining", "Remaining")}
-                value={
-                  <span className="text-rose-500">
-                    {formatCurrency(
-                      billData?.remaining_amount ?? 0,
-                      undefined,
-                      locale,
-                    )}
-                  </span>
+                  formatDateTimeLong(billData?.updated_at, locale) || "N/A"
                 }
               />
             </div>
           </div>
-
-          <div className="border-t border-slate-100" />
-
+        </div>
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-8">
           {billHistory.length > 0 && (
             <div className="">
               <SectionTitle>

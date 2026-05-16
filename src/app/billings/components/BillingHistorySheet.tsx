@@ -82,6 +82,8 @@ export function BillingHistorySheet({
   });
 
   const historyData = billHistoryData || [];
+  console.log("history data:", historyData);
+  
 
   const totalTransactions = historyData.length || 0;
   const totalAmount = Array.isArray(historyData)
@@ -153,7 +155,7 @@ export function BillingHistorySheet({
                       <span className="text-lg font-bold text-gray-800">
                         {formatCurrency(item.amount, undefined, locale)}
                       </span>
-                      <PaymentMethodBadge method={item.payment_method} />
+                      <PaymentMethodBadge method={item.method} />
                     </div>
 
                     {/* Middle: dates */}
@@ -161,7 +163,7 @@ export function BillingHistorySheet({
                       <span>
                         {t("billings.addPaymentToBill.paymentDate")}:{" "}
                         <span className="font-semibold text-black">
-                          {formatDate(item.payment_date)}
+                          {formatDate(item.created_at)}
                         </span>
                       </span>
                       <span>

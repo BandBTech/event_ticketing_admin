@@ -25,6 +25,19 @@ export interface Bill {
     id: string;
     name: string;
   };
+  actor: {
+    id: string;
+    name: string;
+  };
+  settlements: {
+    total_amount: string;
+    paid_amount: number;
+    remaining_balance: number;
+    gross_revenue: number;
+    net_revenue: number;
+    platform_commission: number;
+    organizer_earnings: number;
+  };
   event_title: string;
   organizer_id: string;
   organizer_name: string;
@@ -40,12 +53,7 @@ export interface Bill {
   payment_ref: string;
   status: string;
   bill_type: string;
-  priority: string;
-  due_date: string;
   notes: string;
-  payment_screenshot_url: string;
-  bill_date: string;
-  paid_date: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -97,6 +105,7 @@ export interface PaymentHistory {
   id: number;
   amount: number;
   payment_method: string;
+  method: string;
   payment_ref: string;
   payment_date: string;
   processed_by: string;

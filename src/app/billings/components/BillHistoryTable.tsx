@@ -75,7 +75,17 @@ export function BillHistoryTable({
         cell: ({ row }) => {
           const date = new Date(row.original.created_at);
           const formattedDate = date.toLocaleDateString("en-CA");
-          return <span>{formattedDate}</span>;
+          const formattedTime = date.toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+          });
+          return (
+            <div className="flex flex-col">
+              <span>{formattedDate}</span>
+              <span className="text-xs text-gray-500">at {formattedTime}</span>
+            </div>
+          );
         },
       },
       {
@@ -106,7 +116,7 @@ export function BillHistoryTable({
         header: t("Method"),
         meta: { sortKey: "payment_method" },
         cell: ({ row }) => {
-          const gateway = row.original.payment_method || "";
+          const gateway = row.original.method || "";
           return (
             <span className="max-w-[200px] text-gray-700 truncate inline-block">
               {gateway ? t(`billings.method.${gateway}`) : "—"}
