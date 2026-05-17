@@ -1060,7 +1060,11 @@
       "ticketsIssued": "この支払いで発行されたチケット",
       "ticketNumber": "チケット番号",
       "tier": "チケット種別",
-      "holder": "保持者"
+      "holder": "保持者",
+      "searchTickets": "チケットを検索",
+      "cancelTicket": "チケットをキャンセルして払い戻しを開始します。",
+      "noTicketsFound": "お探しのチケットは見つかりませんでした",
+      "tryDifferentTicket": "別のチケット番号を試すか、検索をクリアしてください。"
     },
     "transactionFilter": {
       "filterTransaction": "トランザクションをフィルタリング"

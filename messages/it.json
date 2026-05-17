@@ -1047,7 +1047,11 @@
       "ticketsIssued": "biglietti emessi per questo pagamento",
       "ticketNumber": "Numero Biglietto",
       "tier": "Livello",
-      "holder": "Intestatario"
+      "holder": "Intestatario",
+      "searchTickets": "Cerca biglietti",
+      "cancelTicket": "Annulla il biglietto per avviare il rimborso.",
+      "noTicketsFound": "Nessun biglietto corrisponde alla tua ricerca",
+      "tryDifferentTicket": "Prova un numero di biglietto diverso o cancella la ricerca."
     },
     "transactionFilter": {
       "filterTransaction": "Filtra transazione"

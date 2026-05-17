@@ -70,7 +70,7 @@ const InfoRow = ({
   >
     <span className="text-sm text-black">{label}: </span>
     <span
-      className={`text-sm font-semibold text-slate-800 text-right ${mono ? "font-mono tracking-tight" : ""}`}
+      className={`text-sm font-semibold text-slate-800 text-right ${mono ? "tracking-tight" : ""}`}
     >
       {value}
     </span>
@@ -124,14 +124,7 @@ export default function PaymentDetail() {
   return (
     <div
       className="min-h-screen bg-[#f4f6f9] py-10 px-4"
-      style={{ fontFamily: "'Plus Jakarta Sans', 'DM Sans', sans-serif" }}
     >
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
-        * { box-sizing: border-box; }
-        .ticket-row:hover { background-color: #f8fafc; }
-      `}</style>
-
       <div className="max-w-5xl mx-auto space-y-6">
         {/* Back button */}
         <button

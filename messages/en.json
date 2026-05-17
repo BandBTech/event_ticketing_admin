@@ -1096,7 +1096,11 @@
       "ticketsIssued": "tickets issued in this payment",
       "ticketNumber": "Ticket Number",
       "tier": "Tier",
-      "holder": "Holder"
+      "holder": "Holder",
+      "searchTickets": "Search Tickets",
+      "cancelTicket": "Cancel the ticket to initiate refund.",
+      "noTicketsFound": "No tickets match your search",
+      "tryDifferentTicket": "Try a different ticket number or clear your search."
     },
     "transactionFilter": {
       "filterTransaction": "Filter Transaction"

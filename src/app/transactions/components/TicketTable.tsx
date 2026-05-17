@@ -9,6 +9,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Info } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -51,6 +60,8 @@ interface PayoutTableProps {
   ) => void;
   setIsCancelBillDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   onOpenCancelBill: boolean;
+  searchQuery?: string;
+  onSearchChange?: (query: string) => void;
 }
 
 export function TicketTable({
@@ -69,12 +80,40 @@ export function TicketTable({
   onSortChange,
   setIsCancelBillDialogOpen,
   onOpenCancelBill,
+  searchQuery,
+  onSearchChange,
 }: PayoutTableProps) {
   const { t } = useTranslation();
   const router = useRouter();
   const { locale } = useLanguageStore();
   const [ticketData, setTicketData] = React.useState<Ticket | null>(null);
   const queryClient = useQueryClient();
+  const [searchInput, setSearchInput] = React.useState(searchQuery ?? "");
+
+  // Add this inside the component, after the searchInput state
+  const filteredBillings = React.useMemo(() => {
+    if (!searchInput.trim()) return billings;
+    return billings.filter((ticket) =>
+      ticket.ticket_number
+        ?.toLowerCase()
+        .includes(searchInput.trim().toLowerCase()),
+    );
+  }, [billings, searchInput]);
+
+  // Sync local input if parent resets searchQuery externally
+  React.useEffect(() => {
+    setSearchInput(searchQuery ?? "");
+  }, [searchQuery]);
+
+  // Debounced search — waits 400ms after user stops typing
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      if (searchInput !== (searchQuery ?? "")) {
+        onSearchChange?.(searchInput);
+      }
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchInput, searchQuery, onSearchChange]);
 
   const createMutation = useMutation({
     mutationFn: (data: { reason: string; ticketID: string }) =>
@@ -153,19 +192,11 @@ export function TicketTable({
         cell: ({ row }) => {
           const ticket = row.original;
 
-          // if (actionLoading === user.id) {
-          //   return (
-          //     <div className="h-8 w-8 flex items-center p-0">
-          //       <Spinner className="w-4 h-4 text-amber-900 animate-spin" />
-          //     </div>
-          //   );
-          // }
-
           return (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
-                  disabled={ticket.status.toLowerCase() === "canceled"}
+                  disabled={ticket.status.toLowerCase() !== "active"}
                   variant="ghost"
                   className="h-8 w-8 p-0"
                 >
@@ -196,9 +227,36 @@ export function TicketTable({
 
   return (
     <>
+      <div className="relative w-full sm:w-80 mb-4 ml-2 flex items-center gap-3">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
+        <Input
+          placeholder={t(
+            "transactions.paymentDetails.searchTickets",
+            "Search Tickets",
+          )}
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          className="pl-9 shadow-sm"
+        />
+        {filteredBillings.length > 0 &&
+          filteredBillings.find((b) => b.status === "active") && (
+            <div>
+              <div className="relative group flex items-center gap-1.5">
+                <Info className="w-3.5 h-3.5 text-orange-500 cursor-pointer" />
+                <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 hidden group-hover:block z-100">
+                  <div className="bg-orange-100 text-orange-600 text-xs font-semibold rounded-lg px-4 py-3 shadow-lg w-[220px] flex items-center gap-2">
+                    <Info className="w-5 h-5 text-orange-700 cursor-pointer" />
+                    <p>{t("transactions.paymentDetails.cancelTicket")}</p>
+                    <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-orange-100 rotate-45" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+      </div>
       <ReusableTable
         columns={columns}
-        data={billings}
+        data={filteredBillings}
         isLoading={isLoading}
         currentPage={currentPage}
         totalPages={totalPages}
@@ -227,12 +285,15 @@ export function TicketTable({
               </svg>
             </div>
             <h3 className="text-lg font-medium text-gray-900">
-              {t("", "No ticket data found")}
+              {t(
+                "transactions.paymentDetails.noTicketsFound",
+                "No tickets match your search",
+              )}
             </h3>
             <p className="text-gray-500 mt-1 max-w-sm">
               {t(
-                "payouts.empty.description",
-                "You haven't made any ticket purchases yet.",
+                "transactions.paymentDetails.tryDifferentTicket",
+                "Try a different ticket number or clear your search.",
               )}
             </p>
           </div>
