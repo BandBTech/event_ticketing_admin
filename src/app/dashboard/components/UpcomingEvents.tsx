@@ -244,7 +244,7 @@ export default function UpcomingEventsList({ data }: UpcomingEventsListProps) {
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
   return (
-    <div className="p-6 min-h-screen">
+    <div className="min-h-screen">
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <div>

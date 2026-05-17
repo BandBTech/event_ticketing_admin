@@ -167,7 +167,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
 
       {/* ── Earnings Cards ── */}
       <div>
-        <div className="flex items-center justify-start gap-5 mb-3">
+        <div className="flex items-center justify-start gap-5 mb-3 ml-1">
           <h2 className="text-sm font-semibold text-black">
             {t("dashboard.dataDisplay.earnings") ?? "Earnings"}{" "}
             {activeEarning?.symbol && `(${activeEarning.symbol})`}
