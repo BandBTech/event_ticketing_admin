@@ -6,12 +6,10 @@ import {
   CalendarBlankIcon,
 } from "@phosphor-icons/react";
 import FeaturedBadge from "@/app/events/components/FeaturedBadge";
-import { Route } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
-import { t } from "i18next";
 
 type EventProps = {
   event: UpcomingEvent;
@@ -91,30 +89,22 @@ type DaysUntilResult = string | null;
 
 function getDaysUntil(
   dateStr: string | Date | number | null | undefined,
+  t: (key: string, fallback?: string) => string,
 ): DaysUntilResult {
-  if (!dateStr) {
-    return null;
-  }
+  if (!dateStr) return null;
 
   try {
     const targetDate = new Date(dateStr);
     const currentDate = new Date();
 
-    // Validate date
-    if (isNaN(targetDate.getTime())) {
-      console.error("Invalid date provided to getDaysUntil");
-      return null;
-    }
+    if (isNaN(targetDate.getTime())) return null;
 
-    // Reset time part for accurate day calculation
     targetDate.setHours(0, 0, 0, 0);
     currentDate.setHours(0, 0, 0, 0);
 
     const diff = Math.ceil(
       (targetDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24),
     );
-    const { locale } = useLanguageStore();
-    const { t } = useTranslation(locale);
 
     if (diff < 0) return null;
     if (diff === 0) return t("dashboard.upcomingEvents.today");
@@ -142,7 +132,7 @@ function EventCard({ event }: EventProps) {
   }
 
   const { date, time } = dateRange;
-  const daysUntil = getDaysUntil(event.start_date);  
+  const daysUntil = getDaysUntil(event.start_date, t);
 
   const handleOpenEventDetails = () => {
     router.push(`/events/eventdetails/?id=${event.id}`);
