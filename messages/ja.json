@@ -651,6 +651,13 @@
       "gatewayFee": "ゲートウェイ手数料",
       "pendingPayout": "支払い保留中",
       "refundAmount": "返金額"
+    },
+    "upcomingEvents": {
+      "upcomingEvents": "今後のイベント",
+      "eventsScheduled": "件のイベントが予定されています",
+      "today": "今日",
+      "tomorrow": "明日",
+      "inDiffDays": "{diff}日後"
     }
   },
   "organizer": {

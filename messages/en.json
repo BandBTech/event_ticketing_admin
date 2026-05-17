@@ -679,6 +679,13 @@
       "gatewayFee": "Gateway Fee",
       "pendingPayout": "Pending Payout",
       "refundAmount": "Refund Amount"
+    },
+    "upcomingEvents": {
+      "upcomingEvents": "Upcoming Events",
+      "eventsScheduled": "events scheduled",
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "inDiffDays": "In {diff} days"
     }
   },
   "organizer": {

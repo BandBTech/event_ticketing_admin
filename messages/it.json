@@ -638,6 +638,13 @@
       "gatewayFee": "Commissione gateway",
       "pendingPayout": "Pagamento in sospeso",
       "refundAmount": "Importo rimborsato"
+    },
+    "upcomingEvents": {
+      "upcomingEvents": "Prossimi eventi",
+      "eventsScheduled": "eventi in programma",
+      "today": "Oggi",
+      "tomorrow": "Domani",
+      "inDiffDays": "Tra {diff} giorni"
     }
   },
   "organizer": {

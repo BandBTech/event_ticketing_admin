@@ -9,6 +9,9 @@ import FeaturedBadge from "@/app/events/components/FeaturedBadge";
 import { Route } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
+import { useTranslation } from "@/hooks/useTranslation";
+import { useLanguageStore } from "@/store/languageStore";
+import { t } from "i18next";
 
 type EventProps = {
   event: UpcomingEvent;
@@ -110,39 +113,28 @@ function getDaysUntil(
     const diff = Math.ceil(
       (targetDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24),
     );
+    const { locale } = useLanguageStore();
+    const { t } = useTranslation(locale);
 
     if (diff < 0) return null;
-    if (diff === 0) return "Today";
-    if (diff === 1) return "Tomorrow";
-    return `In ${diff} days`;
+    if (diff === 0) return t("dashboard.upcomingEvents.today");
+    if (diff === 1) return t("dashboard.upcomingEvents.tomorrow");
+    return t("dashboard.upcomingEvents.inDiffDays", "In {diff} days").replace(
+      "{diff}",
+      `${diff}`,
+    );
   } catch (error) {
     console.error("Error calculating days until:", error);
     return null;
   }
 }
 
-const STATUS_MAP = {
-  on_sale: { pill: "bg-blue-50 text-blue-600", label: "On Sale" },
-  live: { pill: "bg-green-50 text-green-600", label: "Live" },
-  pending: { pill: "bg-yellow-50 text-yellow-700", label: "Pending" },
-  completed: { pill: "bg-gray-100 text-gray-500", label: "Completed" },
-  upcoming: { pill: "bg-violet-50 text-violet-600", label: "Upcoming" },
-};
-
-type StatusKey = keyof typeof STATUS_MAP;
-
-const CAT_COLORS = [
-  "bg-blue-50 text-blue-700",
-  "bg-purple-50 text-purple-700",
-  "bg-emerald-50 text-emerald-700",
-  "bg-orange-50 text-orange-700",
-  "bg-yellow-50 text-yellow-700",
-];
-
 function EventCard({ event }: EventProps) {
   const categories = parseCategories(event.category);
   const dateRange = formatDateRange(event.start_date, event.end_date);
   const router = useRouter();
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
 
   if (!dateRange) {
     console.error("Invalid date range for event:", event.id);
@@ -150,8 +142,7 @@ function EventCard({ event }: EventProps) {
   }
 
   const { date, time } = dateRange;
-  const daysUntil = getDaysUntil(event.start_date);
-  const status = STATUS_MAP[event.status as StatusKey] ?? STATUS_MAP.upcoming;
+  const daysUntil = getDaysUntil(event.start_date);  
 
   const handleOpenEventDetails = () => {
     router.push(`/events/eventdetails/?id=${event.id}`);
@@ -185,9 +176,9 @@ function EventCard({ event }: EventProps) {
 
         {/* Status — top right */}
         <span
-          className={`absolute top-3 right-3 text-[10px] font-bold uppercase px-2.5 py-1 rounded-full tracking-wide backdrop-blur-sm ${status.pill}`}
+          className={`absolute top-3 right-3 text-[10px] font-bold uppercase px-2.5 py-1 rounded-full tracking-wide backdrop-blur-sm bg-blue-50 text-blue-600`}
         >
-          {status.label}
+          {t("event.badge." + event.status)}
         </span>
 
         {/* Featured — bottom left */}
@@ -203,7 +194,8 @@ function EventCard({ event }: EventProps) {
             className={`w-1.5 h-1.5 rounded-full ring-2 ring-white/50 ${event.sales_status === "active" ? "bg-emerald-400" : "bg-gray-400"}`}
           />
           <span className="text-[10px] text-white font-semibold capitalize">
-            Sales {event.sales_status}
+            {t("events.sales")}{" "}
+            {t("dashboard.dataDisplay." + event.sales_status)}
           </span>
         </div>
       </div>
@@ -259,17 +251,21 @@ function EventCard({ event }: EventProps) {
 
 export default function UpcomingEventsList({ data }: UpcomingEventsListProps) {
   const EVENTS = data;
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
   return (
     <div className="p-6 min-h-screen">
       {/* Header */}
-        <div className="flex items-center justify-between mb-5">
-          <div>
-            <h2 className="text-lg font-bold text-gray-800">Upcoming Events</h2>
-            <p className="text-xs text-gray-400 mt-0.5">
-              {EVENTS.length} events scheduled
-            </p>
-          </div>
+      <div className="flex items-center justify-between mb-5">
+        <div>
+          <h2 className="text-lg font-bold text-gray-800">
+            {t("dashboard.upcomingEvents.upcomingEvents")}
+          </h2>
+          <p className="text-xs text-gray-400 mt-0.5">
+            {EVENTS.length} {t("dashboard.upcomingEvents.eventsScheduled")}
+          </p>
         </div>
+      </div>
 
       {/* 2-column grid */}
       <div className="grid grid-cols-2 gap-4">
