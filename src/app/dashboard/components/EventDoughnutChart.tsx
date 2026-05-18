@@ -21,6 +21,7 @@ type EventStats = {
   upcoming?: number;
   pending?: number;
   cancelled?: number;
+  cancel_pending?: number;
   live?: number;
   rejected?: number;
 };
@@ -32,6 +33,7 @@ const EVENT_SLICES = [
   { key: "scheduled", label: "SCHEDULED", color: "#7c3aed" },
   { key: "upcoming", label: "UPCOMING", color: "#6366f1" },
   { key: "pending", label: "PENDING", color: "#d97706" },
+  { key: "cancel_pending", label: "CANCELLATION PENDING", color: "#f59e0b" },
   { key: "cancelled", label: "CANCELLED", color: "#dc2626" },
   { key: "rejected", label: "REJECTED", color: "#9f1239" },
 ] as const;

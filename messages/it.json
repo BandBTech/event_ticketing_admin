@@ -219,7 +219,9 @@
       "removeFeatured": "Rimuovi dal primo piano",
       "viewOrganizer": "Vedi Organizzatore",
       "pauseSales": "Sospendi Vendite",
-      "editEvent": "Modifica Evento"
+      "editEvent": "Modifica Evento",
+      "approveCancellation": "Approva cancellazione",
+      "rejectCancellation": "Rifiuta cancellazione"
     },
     "modals": {
       "approveTitle": "Approva Evento",
@@ -251,7 +253,10 @@
       "featuredError": "Aggiornamento stato primo piano fallito",
       "actionError": "Azione fallita",
       "noStatusHistory": "Nessuna cronologia disponibile",
-      "loadError": "Impossibile caricare i dettagli dell'evento"
+      "loadError": "Impossibile caricare i dettagli dell'evento",
+      "cancellationPendingNote": "L'organizzatore ha inviato una richiesta di cancellazione. Revisione e approvazione o rifiuto richiesti.",
+      "cancellationApproved": "Cancellazione dell'evento approvata",
+      "cancellationRejected": "Cancellazione dell'evento rifiutata"
     },
     "sections": {
       "description": "Descrizione",
@@ -264,7 +269,8 @@
       "statusSummary": "Riepilogo Stato",
       "statusHistory": "Cronologia Stato",
       "financialDetails": "Dettagli finanziari",
-      "totalEarnings": "Guadagni stimati"
+      "totalEarnings": "Guadagni stimati",
+      "cancellationPending": "Richiesta di cancellazione in sospeso"
     },
     "fields": {
       "dateTime": "Data e Ora",
@@ -1583,7 +1589,8 @@
     "verified": "Verificato",
     "expired": "Scaduta",
     "refunded": "Rimborsata",
-    "succeeded": "Ha avuto successo"
+    "succeeded": "Ha avuto successo",
+    "cancel_pending": "Cancellazione in sospeso"
   },
   "pagination": {
     "previous": "Precedente",
@@ -1612,7 +1619,8 @@
       "featured": "In primo piano",
       "completed": "Completato",
       "scheduled": "Scheduled",
-      "resumed": "Vendite riprimate"
+      "resumed": "Vendite riprimate",
+      "cancel_pending": "Cancellazione in sospeso"
     },
     "section": {
       "statusHistory": "Cronologia Stato"

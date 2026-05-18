@@ -25,6 +25,7 @@ export interface AppEvent {
     | "hold"
     | "scheduled"
     | "cancelled"
+    | "cancel_pending"
     | "completed";
   sales_status: "active" | "paused" | "stopped" | "sold_out";
   is_featured: boolean;

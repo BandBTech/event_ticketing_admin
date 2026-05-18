@@ -13,6 +13,11 @@ import {
   useEventStatusHistory,
   useEventAnalyticsById,
 } from "@/hooks/useEvents";
+import {
+  usePendingCancellationEvents,
+  useApproveCancellationEvent,
+  useRejectCancellationEvent,
+} from "@/hooks/useDashboard";
 import { queryKeys } from "@/lib/queryKeys";
 
 // UI Components
@@ -65,6 +70,8 @@ export default function EventDetailsPage() {
   // Modal States
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [showRejectModal, setShowRejectModal] = useState(false);
+  const [showApproveCancellationModal, setShowApproveCancellationModal] = useState(false);
+  const [showRejectCancellationModal, setShowRejectCancellationModal] = useState(false);
 
   // Queries
   const {
@@ -83,6 +90,14 @@ export default function EventDetailsPage() {
     refetch: refetchStatusHistory,
   } = useEventStatusHistory(eventId || "");
   const { data: analytics } = useEventAnalyticsById(eventId || "");
+
+  // Cancellation request lookup for cancel_pending events
+  const { data: pendingCancellationsData, isLoading: isLoadingCancellations } = usePendingCancellationEvents();
+  const cancellationRequest = pendingCancellationsData?.requests?.find(
+    (r) => r.event_id === eventId,
+  );
+  const approveCancellationMutation = useApproveCancellationEvent();
+  const rejectCancellationMutation = useRejectCancellationEvent();
   // Note: useEventAnalytics fetches list, not single event details usually, but assuming user request context.
   // If analytics endpoint is global, we might not get per-event stats here unless filtered.
   // For now we use event.capacity/available logic as before for "Ticket Analytics".
@@ -364,6 +379,28 @@ export default function EventDetailsPage() {
               </>
             )}
 
+            {event.status === "cancel_pending" && (
+              <>
+                <Button
+                  onClick={() => setShowApproveCancellationModal(true)}
+                  disabled={isLoadingCancellations || !cancellationRequest}
+                  className="gap-2 bg-success hover:bg-success/90 text-white shadow-sm"
+                >
+                  <CheckIcon weight="duotone" size={18} />
+                  {t("events.actions.approveCancellation", "Approve Cancellation")}
+                </Button>
+                <Button
+                  onClick={() => setShowRejectCancellationModal(true)}
+                  disabled={isLoadingCancellations || !cancellationRequest}
+                  variant="destructive"
+                  className="gap-2 shadow-sm"
+                >
+                  <XIcon weight="duotone" size={18} />
+                  {t("events.actions.rejectCancellation", "Reject Cancellation")}
+                </Button>
+              </>
+            )}
+
             {/* {(event.status === 'approved' || event.status === 'live') && !event.is_cancelled && (
               <Button
                 onClick={() => setShowCancelModal(true)}
@@ -416,6 +453,27 @@ export default function EventDetailsPage() {
             )}
           </div>
         </div>
+
+        {/* Cancel Pending Banner */}
+        {event.status === "cancel_pending" && (
+          <div className="p-4 rounded-xl border bg-amber-50 border-amber-200 text-amber-800">
+            <h3 className="font-semibold mb-1 flex items-center gap-2">
+              <ShieldCheckIcon weight="duotone" className="w-5 h-5" />
+              {t("events.sections.cancellationPending", "Cancellation Request Pending")}
+            </h3>
+            <p className="text-sm opacity-90">
+              {cancellationRequest?.reason
+                ? t(
+                    "events.messages.cancellationPendingReason",
+                    `Organizer reason: ${cancellationRequest.reason}`,
+                  )
+                : t(
+                    "events.messages.cancellationPendingNote",
+                    "The organizer has submitted a cancellation request. Please review and approve or reject.",
+                  )}
+            </p>
+          </div>
+        )}
 
         {/* Admin Remark Section - if exists */}
         {event.admin_remark && (
@@ -869,6 +927,55 @@ export default function EventDetailsPage() {
           confirmText={t("events.actions.cancelEvent", "Cancel Event")}
         />
       )} */}
+
+      {/* Approve Cancellation Modal */}
+      {showApproveCancellationModal && (
+        <PopupModal
+          title={t("dashboard.modal.approveEventCancellation", "Approve Event Cancellation")}
+          isApprove={true}
+          showCommissionInput={false}
+          isLoading={approveCancellationMutation.isPending}
+          onCancel={() => setShowApproveCancellationModal(false)}
+          onConfirm={(data) => {
+            if (!cancellationRequest?.id) return;
+            approveCancellationMutation.mutate(
+              { eventId: cancellationRequest.id, adminRemark: data.adminRemark },
+              {
+                onSuccess: () => {
+                  toast.success(t("events.messages.cancellationApproved", "Event cancellation approved"));
+                  queryClient.invalidateQueries({ queryKey: queryKeys.events.detail(eventId!) });
+                  queryClient.invalidateQueries({ queryKey: queryKeys.events.statusHistory(eventId!) });
+                  setShowApproveCancellationModal(false);
+                },
+              },
+            );
+          }}
+        />
+      )}
+
+      {/* Reject Cancellation Modal */}
+      {showRejectCancellationModal && (
+        <PopupModal
+          title={t("dashboard.modal.rejectEventCancellation", "Reject Event Cancellation")}
+          isApprove={false}
+          isLoading={rejectCancellationMutation.isPending}
+          onCancel={() => setShowRejectCancellationModal(false)}
+          onConfirm={(data) => {
+            if (!cancellationRequest?.id) return;
+            rejectCancellationMutation.mutate(
+              { eventId: cancellationRequest.id, adminRemark: data.adminRemark },
+              {
+                onSuccess: () => {
+                  toast.success(t("events.messages.cancellationRejected", "Event cancellation rejected"));
+                  queryClient.invalidateQueries({ queryKey: queryKeys.events.detail(eventId!) });
+                  queryClient.invalidateQueries({ queryKey: queryKeys.events.statusHistory(eventId!) });
+                  setShowRejectCancellationModal(false);
+                },
+              },
+            );
+          }}
+        />
+      )}
     </div>
   );
 }
