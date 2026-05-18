@@ -230,7 +230,9 @@
       "removeFeatured": "注目から外す",
       "viewOrganizer": "主催者を表示",
       "pauseSales": "販売を一時停止",
-      "editEvent": "イベントを編集"
+      "editEvent": "イベントを編集",
+      "approveCancellation": "キャンセルを承認",
+      "rejectCancellation": "キャンセルを却下"
     },
     "modals": {
       "approveTitle": "イベントを承認",
@@ -262,7 +264,10 @@
       "featuredError": "注目ステータスの更新に失敗しました",
       "actionError": "操作に失敗しました",
       "noStatusHistory": "ステータス履歴はありません",
-      "loadError": "イベント詳細の読み込みに失敗しました"
+      "loadError": "イベント詳細の読み込みに失敗しました",
+      "cancellationPendingNote": "主催者がキャンセルリクエストを送信しました。承認または却下してください。",
+      "cancellationApproved": "イベントキャンセルが承認されました",
+      "cancellationRejected": "イベントキャンセルが却下されました"
     },
     "sections": {
       "description": "説明",
@@ -275,7 +280,8 @@
       "statusSummary": "ステータス概要",
       "statusHistory": "ステータス履歴",
       "financialDetails": "財務詳細",
-      "totalEarnings": "推定収益"
+      "totalEarnings": "推定収益",
+      "cancellationPending": "キャンセルリクエスト保留中"
     },
     "fields": {
       "dateTime": "日時",
@@ -1597,7 +1603,8 @@
     "verified": "認証済み",
     "expired": "期限切れ",
     "refunded": "返金済み",
-    "succeeded": "成功した"
+    "succeeded": "成功した",
+    "cancel_pending": "キャンセル申請中"
   },
   "pagination": {
     "previous": "前へ",
@@ -1629,7 +1636,8 @@
       "featured": "注目の",
       "completed": "完了",
       "scheduled": "スケジュール",
-      "resumed": "販売再開"
+      "resumed": "販売再開",
+      "cancel_pending": "キャンセル申請中"
     },
     "section": {
       "statusHistory": "ステータス履歴"

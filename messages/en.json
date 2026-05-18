@@ -242,7 +242,9 @@
       "removeFeatured": "Remove Featured",
       "viewOrganizer": "View Organizer",
       "pauseSales": "Pause Sales",
-      "editEvent": "Edit Event "
+      "editEvent": "Edit Event ",
+      "approveCancellation": "Approve Cancellation",
+      "rejectCancellation": "Reject Cancellation"
     },
     "modals": {
       "approveTitle": "Approve Event",
@@ -276,7 +278,10 @@
       "featuredError": "Failed to update featured status",
       "actionError": "Failed to perform action",
       "noStatusHistory": "No status history available",
-      "loadError": "Failed to load event details"
+      "loadError": "Failed to load event details",
+      "cancellationPendingNote": "The organizer has submitted a cancellation request. Please review and approve or reject.",
+      "cancellationApproved": "Event cancellation approved successfully",
+      "cancellationRejected": "Event cancellation rejected successfully"
     },
     "sections": {
       "description": "Description",
@@ -289,7 +294,8 @@
       "statusSummary": "Status Summary",
       "statusHistory": "Status History",
       "financialDetails": "Financial Details",
-      "totalEarnings": "Estimated Earnings"
+      "totalEarnings": "Estimated Earnings",
+      "cancellationPending": "Cancellation Request Pending"
     },
     "fields": {
       "eventDescription": "Event Description",
@@ -1635,7 +1641,8 @@
     "verified": "Verified",
     "expired": "Expired",
     "refunded": "Refunded",
-    "succeeded": "Succeeded"
+    "succeeded": "Succeeded",
+    "cancel_pending": "Cancellation Pending"
   },
   "pagination": {
     "previous": "Previous",
@@ -1667,7 +1674,8 @@
       "completed": "Completed",
       "scheduled": "Scheduled",
       "resumed": "Sales Resumed",
-      "sales_upcoming": "Sales Upcoming"
+      "sales_upcoming": "Sales Upcoming",
+      "cancel_pending": "Cancellation Pending"
     },
     "section": {
       "statusHistory": "Status History"

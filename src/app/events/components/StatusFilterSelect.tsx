@@ -52,6 +52,7 @@ export function StatusFilterSelect({
         <SelectContent>
           <SelectItem value="all">{t("events.allStatus")}</SelectItem>
           <SelectItem value="approved">{t("status.approved")}</SelectItem>
+          <SelectItem value="cancel_pending">{t("status.cancel_pending", "Cancel Pending")}</SelectItem>
           <SelectItem value="cancelled">{t("status.cancelled")}</SelectItem>
           <SelectItem value="completed">{t("status.completed")}</SelectItem>
           <SelectItem value="live">{t("status.live")}</SelectItem>
