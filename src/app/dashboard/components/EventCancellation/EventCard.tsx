@@ -4,7 +4,7 @@ import React from "react";
 import { EventCancellation } from "@/types/event";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
-import { Eye, Check, X, Calendar, Clock } from "lucide-react";
+import { Eye, Check, X, Calendar, Clock, User, MessageSquare } from "lucide-react";
 
 interface EventCardProps {
   event: EventCancellation;
@@ -68,7 +68,7 @@ export function EventCard({
               statusStyles[event.status.toLowerCase()] ?? statusStyles.pending
             }`}
           >
-            {event.status}
+            {t("event.badge." + event.status)}
           </span>
         </div>
 
@@ -76,7 +76,7 @@ export function EventCard({
         {event?.reason && (
           <div className="relative px-3 py-1 bg-gray-50 border-l-2 border-gray-300 rounded-r-lg">
             <span className="text-[10px] font-semibold uppercase tracking-wider text-black">
-              {t("dashboard.reason", "Reason")}
+              {t("events.modals.reason", "Reason")}
             </span>
             <p className="text-xs text-black leading-relaxed mt-0.5">
               {event.reason}
@@ -84,17 +84,39 @@ export function EventCard({
           </div>
         )}
 
-        {/* Dates */}
+        {/* Admin Remark */}
+        {event?.admin_remark && (
+          <div className="relative px-3 py-1 bg-amber-50 border-l-2 border-amber-300 rounded-r-lg">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-black inline-flex items-center gap-1">
+              <MessageSquare className="w-2.5 h-2.5" />
+              {t("events.reviewerRemark", "Reviewer's Remark")}
+            </span>
+            <p className="text-xs text-black leading-relaxed mt-0.5">
+              {event.admin_remark}
+            </p>
+          </div>
+        )}
+
+        {/* Dates + Reviewer */}
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-black">
           <span className="inline-flex items-center gap-1">
             <Calendar className="w-3 h-3" />
-            {t("dashboard.created", "Created")}: {formatDate(event.created_at)}
+            {t("events.created", "Created")}: {formatDate(event.created_at)}
           </span>
-          <span className="inline-flex items-center gap-1">
-            <Clock className="w-3 h-3" />
-            {t("dashboard.reviewed", "Reviewed")}:{" "}
-            {formatDate(event.created_at)}
-          </span>
+          {event?.reviewed_at && (
+            <span className="inline-flex items-center gap-1">
+              <Clock className="w-3 h-3" />
+              {t("events.reviewed", "Reviewed")}:{" "}
+              {formatDate(event.reviewed_at)}
+            </span>
+          )}
+          {event?.reviewer && (
+            <span className="inline-flex items-center gap-1">
+              <User className="w-3 h-3" />
+              {t("events.reviewedBy", "Reviewed by")}:{" "}
+              {event.reviewer.name}
+            </span>
+          )}
         </div>
 
         {/* Actions */}
@@ -106,21 +128,26 @@ export function EventCard({
             <Eye className="w-3 h-3" />
             {t("dashboard.viewEvent", "View")}
           </button>
-          <button
-            onClick={() => onApprove(event.id)}
-            disabled={isApproving}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 disabled:opacity-50 transition-colors"
-          >
-            <Check className="w-3 h-3" />
-            {t("dashboard.accept", "Approve")}
-          </button>
-          <button
-            onClick={() => onReject(event.id)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-red-700 bg-red-50 hover:bg-red-100 transition-colors"
-          >
-            <X className="w-3 h-3" />
-            {t("dashboard.reject", "Reject")}
-          </button>
+
+          {event.status !== "rejected" && (
+            <div className="flex flex-wrap items-center gap-1.5">
+              <button
+                onClick={() => onApprove(event.id)}
+                disabled={isApproving}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 disabled:opacity-50 transition-colors"
+              >
+                <Check className="w-3 h-3" />
+                {t("dashboard.accept", "Approve")}
+              </button>
+              <button
+                onClick={() => onReject(event.id)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-red-700 bg-red-50 hover:bg-red-100 transition-colors"
+              >
+                <X className="w-3 h-3" />
+                {t("dashboard.reject", "Reject")}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

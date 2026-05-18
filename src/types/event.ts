@@ -92,6 +92,10 @@ export interface EventCancellation {
     created_at: string;
     updated_at: string;
   };
+  admin_remark?: string;
+  reviewed_by?: string;
+  reviewer?: { id: string; name: string };
+  reviewed_at?: string;
   organizer_id: string;
   reason: string;
   status: string;

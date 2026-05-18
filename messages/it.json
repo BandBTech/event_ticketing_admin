@@ -209,6 +209,10 @@
     "backToEvents": "Torna agli Eventi",
     "featured": "In primo piano",
     "sales": "Vendite",
+    "created": "Creata",
+    "reviewed": "Revisione",
+    "reviewerRemark": "Osservazione del recensore",
+    "reviewedBy": "Recensito da",
     "actions": {
       "approve": "Approva",
       "reject": "Rifiuta",

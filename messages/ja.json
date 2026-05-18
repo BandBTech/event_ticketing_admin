@@ -209,6 +209,10 @@
     "backToEvents": "イベント一覧に戻る",
     "featured": "注目",
     "sales": "販売",
+    "created": "作成済み",
+    "reviewed": "レビュー",
+    "reviewerRemark": "レビュアーのコメント",
+    "reviewedBy": "レビュー担当者",
     "status": {
       "approved": "承認済み",
       "pending": "審査中",

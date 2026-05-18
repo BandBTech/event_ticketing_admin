@@ -222,6 +222,10 @@
     "backToEvents": "Back to Events",
     "featured": "Featured",
     "sales": "Sales",
+    "created": "Created",
+    "reviewed": "Reviewed",
+    "reviewerRemark": "Reviewer's Remark",
+    "reviewedBy": "Reviewed By",
     "status": {
       "approved": "Approved",
       "pending": "Pending",
