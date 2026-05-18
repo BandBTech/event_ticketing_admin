@@ -43,6 +43,7 @@ import { RefundService } from "@/services/refundService";
 
 interface PayoutTableProps {
   billings: Ticket[];
+  symbol: string | undefined;
   isLoading: boolean;
   currentPage: number;
   totalPages: number;
@@ -66,6 +67,7 @@ interface PayoutTableProps {
 
 export function TicketTable({
   billings,
+  symbol,
   isLoading,
   currentPage,
   totalPages,
@@ -144,18 +146,18 @@ export function TicketTable({
         header: t("transactions.paymentDetails.tier", "Tier"),
         accessorKey: "tier.tier_name",
       },
-      {
-        id: "holder",
-        header: t("transactions.paymentDetails.holder", "Holder"),
-        accessorKey: "user.name",
-      },
+      // {
+      //   id: "holder",
+      //   header: t("transactions.paymentDetails.holder", "Holder"),
+      //   accessorKey: "user.name",
+      // },
       {
         id: "amount",
         header: t("transactions.table.amount", "Amount"),
         title: "Amount",
         cell: ({ row }) => (
           <span className="px-2 py-1 text-xs font-medium rounded-full flex items-center gap-2">
-            {formatCurrency(row.original.total_amount, row.original.currency)}
+            {formatCurrency(row.original.total_amount, symbol)}
           </span>
         ),
       },

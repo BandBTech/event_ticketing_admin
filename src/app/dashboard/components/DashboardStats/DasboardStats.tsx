@@ -147,7 +147,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
   return (
     <main className="flex-1 overflow-y-auto space-y-4 p-0">
       {/* ── Top KPI Cards ── */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-4 gap-4">
         <KPICard
           label={t("dashboard.dataDisplay.users")}
           value={data?.users.total ?? 0}
@@ -162,6 +162,11 @@ export default function DashboardPage({ data }: DashboardPageProps) {
           label={t("dashboard.dataDisplay.transactions")}
           value={totalTransactions}
           subtitle={`${data?.transactions.completed ?? 0} ${t("status.completed")} · ${data?.transactions.pending ?? 0} ${t("status.pending")}`}
+        />
+        <KPICard
+          label={t("dashboard.dataDisplay.organizers")}
+          value={data?.organizers.total ?? 0}
+          subtitle={`${data?.organizers.approved ?? 0} ${t("status.approved")} · ${data?.organizers.pending ?? 0} ${t("status.pending")} · ${data?.organizers.rejected ?? 0} ${t("status.rejected")}`}
         />
       </div>
 
@@ -239,25 +244,6 @@ export default function DashboardPage({ data }: DashboardPageProps) {
 
       {/* ── Organizers + Payout Requests + Payout Bills ── */}
       <div className="grid grid-cols-3 gap-4">
-        {/* Organizers */}
-        <Card title={t("dashboard.dataDisplay.organizers")}>
-          <StatRow
-            label={t("dashboard.dataDisplay.approved")}
-            count={data?.organizers.approved ?? 0}
-            dotColor="#1d9e75"
-          />
-          <StatRow
-            label={t("dashboard.dataDisplay.pending")}
-            count={data?.organizers.pending ?? 0}
-            dotColor="#ef9f27"
-          />
-          <StatRow
-            label={t("dashboard.dataDisplay.rejected")}
-            count={data?.organizers.rejected ?? 0}
-            dotColor="#e24b4a"
-          />
-        </Card>
-
         {/* Payout Requests */}
         <Card
           title={t("dashboard.dataDisplay.payoutRequest")}
@@ -312,11 +298,9 @@ export default function DashboardPage({ data }: DashboardPageProps) {
             dotColor="#e24b4a"
           />
         </Card>
-      </div>
 
-      {/* ── Refunds + Tickets ── */}
-      <div className="grid grid-cols-2 gap-4 pb-4">
-        <Card title={t("dashboard.dataDisplay.refunds")}>
+          {/* Refunds */}
+                <Card title={t("dashboard.dataDisplay.refunds")}>
           <StatRow
             label={t("dashboard.dataDisplay.completed")}
             count={completedRefunds}
@@ -336,24 +320,6 @@ export default function DashboardPage({ data }: DashboardPageProps) {
             label={t("dashboard.dataDisplay.failed")}
             count={failedRefunds}
             dotColor="#e24b4a"
-          />
-        </Card>
-
-        <Card title={t("dashboard.dataDisplay.tickets")}>
-          <StatRow
-            label={t("dashboard.dataDisplay.active")}
-            count={activeTickets}
-            dotColor="#1d9e75"
-          />
-          <StatRow
-            label={t("dashboard.dataDisplay.cancelled")}
-            count={cancelledTickets}
-            dotColor="#e24b4a"
-          />
-          <StatRow
-            label={t("dashboard.dataDisplay.used")}
-            count={completedTickets}
-            dotColor="#d3d1c7"
           />
         </Card>
       </div>

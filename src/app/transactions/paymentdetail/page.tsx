@@ -118,6 +118,7 @@ export default function PaymentDetail() {
     });
 
   const transaction = paymentDetailData?.transaction;
+  const symbol = transaction?.symbol;
   const paymentIntent = paymentDetailData?.payment_intent;
   const tickets = paymentDetailData?.tickets ?? [];
 
@@ -266,7 +267,7 @@ export default function PaymentDetail() {
                   <span className="font-bold text-slate-800 text-sm">
                     {formatCurrency(
                       transaction.amount,
-                      transaction.currency
+                      symbol
                     )}
                   </span>
                 </div>
@@ -302,6 +303,7 @@ export default function PaymentDetail() {
             {/* Ticket Table  */}
             <TicketTable
               billings={tickets}
+              symbol={symbol}
               isLoading={isLoading}
               currentPage={1}
               totalPages={1}

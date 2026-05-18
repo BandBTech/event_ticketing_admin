@@ -30,6 +30,7 @@ export interface Transaction {
   payment_gateway: PaymentGateway;
   amount: number;
   currency: string;
+  symbol: string;
   quantity: number;
   status: TransactionStatus;
   gateway_txn_id: string;
