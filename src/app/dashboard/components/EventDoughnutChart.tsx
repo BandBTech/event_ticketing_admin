@@ -21,6 +21,7 @@ type EventStats = {
   upcoming?: number;
   pending?: number;
   cancelled?: number;
+  cancel_pending?: number;
   live?: number;
   rejected?: number;
 };
