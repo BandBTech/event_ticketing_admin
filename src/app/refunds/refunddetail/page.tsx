@@ -106,7 +106,9 @@ export default function RefundDetail() {
           weight="duotone"
           className="w-5 h-5 group-hover:-translate-x-1 transition-transform"
         />
-        <span className="font-medium">{t("refunds.refundDetail.backToRefunds")}</span>
+        <span className="font-medium">
+          {t("refunds.refundDetail.backToRefunds")}
+        </span>
       </button>
 
       {/* Header Card */}
@@ -118,9 +120,9 @@ export default function RefundDetail() {
               <BanknoteArrowUp className="w-[26px] h-[26px] text-[#6366f1] stroke-[1.8]" />
             </div>
             <div>
-                <p className="text-xs text-slate-400 font-semibold uppercase tracking-widest mb-0.5">
-                  {t("refunds.refundDetail.refundNumber", "Refund Number")}
-                </p>
+              <p className="text-xs text-slate-400 font-semibold uppercase tracking-widest mb-0.5">
+                {t("refunds.refundDetail.refundNumber", "Refund Number")}
+              </p>
               <h1
                 className="text-xl font-bold text-slate-800"
                 style={{ fontFamily: "'DM Mono', monospace" }}
@@ -139,7 +141,7 @@ export default function RefundDetail() {
             </Badge>
             <Badge
               className={"bg-blue-50 text-blue-700 border border-blue-200"}
-              >
+            >
               {t("refunds.refundType." + refundData?.refund_type) ?? "N/A"}
             </Badge>
           </div>
@@ -237,36 +239,41 @@ export default function RefundDetail() {
           </h2>
 
           <FinRow
+            label={t("refunds.refundDetail.affectedTicket")}
+            value={refundData?.affected_ticket_ids}
+          />
+          <FinRow
             label={t("refunds.refundDetail.originalAmount")}
             value={formatCurrency(
               refundData?.transaction.amount || 0,
-              refundData?.symbol
+              refundData?.symbol,
             )}
           />
           <FinRow
             label={t("refunds.refundDetail.refundAmount")}
             value={
               <>
-              <span>{formatCurrency(
-              refundData?.amount || 0,
-              refundData?.symbol
-            )}</span> {" "}
-            <span className="italic font-normal">( {refundData?.ticket_count} {t("refunds.refundDetail.tickets")} )</span>
+                <span>
+                  {formatCurrency(refundData?.amount || 0, refundData?.symbol)}
+                </span>{" "}
+                <span className="italic font-normal">
+                  ( {refundData?.ticket_count}{" "}
+                  {t("refunds.refundDetail.tickets")} )
+                </span>
               </>
             }
           />
-          <FinRow label={t("refunds.refundDetail.reasonForRefund")} value={refundData?.reason} />
+          <FinRow
+            label={t("refunds.refundDetail.reasonForRefund")}
+            value={refundData?.reason}
+          />
           <FinRow
             label={t("refunds.refundDetail.requestedAt")}
             value={formatDateTimeLong(refundData?.requested_at, locale)}
           />
           <FinRow
             label={t("refunds.refundDetail.status")}
-            value={
-              <>
-              {refundData?.status === "succeeded" ? t("status.completed") : t("status." + refundData?.status)}
-              </>
-            }
+            value={t("transactions.transactionStatus." + refundData?.status)}
           />
         </div>
 

@@ -239,7 +239,7 @@ export function RefundTable({
                     </DropdownMenuItem>
                   </>
                 )}
-                {refund.status === "failed" && (
+                {refund.status === "failed" || refund.status === "processing" && (
                   <DropdownMenuItem
                     onClick={() => {
                       setSelectedRefund && setSelectedRefund(refund);

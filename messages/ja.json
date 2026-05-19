@@ -857,7 +857,9 @@
     "addBill": "請求書を追加",
     "modals": {
       "confirmCancel": "請求書のキャンセル確認",
-      "cancelMessage": "この請求書をキャンセルしてもよろしいですか？この操作はすぐには元に戻せません。"
+      "confirmCancelTicket": "チケットのキャンセルを確認する",
+      "cancelMessage": "この請求書をキャンセルしてもよろしいですか？この操作はすぐには元に戻せません。",
+      "cancelTicketMessage": "本当にこのチケットをキャンセルしますか？この操作はすぐには取り消せません。"
     },
     "filter": {
       "clear": "クリア",
@@ -1129,7 +1131,8 @@
       "status": "ステータス",
       "tickets": "チケット",
       "backToRefunds": "返金一覧に戻る",
-      "noStatusChanges": "このイベントに関して、ステータスの変更は記録されていません。"
+      "noStatusChanges": "このイベントに関して、ステータスの変更は記録されていません。",
+      "affectedTicket": "影響を受けるチケット"
     },
     "modal": {
       "confirmRefund": "返金承認の確認",

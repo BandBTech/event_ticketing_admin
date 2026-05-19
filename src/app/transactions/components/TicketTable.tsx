@@ -309,11 +309,11 @@ export function TicketTable({
         <AlertDialogContent className="rounded-3xl shadow-2xl border-none bg-white/95 backdrop-blur-xl data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 duration-300">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-xl font-bold text-gray-900">
-              {t("billings.modals.confirmCancel", "Confirm Cancel Ticket")}
+              {t("billings.modals.confirmCancelTicket", "Confirm Cancel Ticket")}
             </AlertDialogTitle>
             <AlertDialogDescription className="text-gray-500 text-base">
               {t(
-                "billings.modals.cancelMessage",
+                "billings.modals.cancelTicketMessage",
                 "Are you sure you want to cancel this ticket? This action cannot be undone immediately.",
               )}
             </AlertDialogDescription>

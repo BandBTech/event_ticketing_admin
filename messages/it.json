@@ -844,7 +844,9 @@
     "addBill": "Aggiungi Fattura",
     "modals": {
       "confirmCancel": "Conferma Annullamento Fattura",
-      "cancelMessage": "Sei sicuro di voler annullare questa fattura? Questa azione non può essere annullata immediatamente."
+      "confirmCancelTicket": "Conferma Annulla Biglietto",
+      "cancelMessage": "Sei sicuro di voler annullare questa fattura? Questa azione non può essere annullata immediatamente.",
+      "cancelTicketMessage": "Sei sicuro di voler annullare questo biglietto? Questa azione non può essere annullata immediatamente."
     },
     "filter": {
       "clear": "Cancella",
@@ -1116,7 +1118,8 @@
       "status": "Stato",
       "tickets": "Biglietto(i)",
       "backToRefunds": "Torna ai rimborsi",
-      "noStatusChanges": "Nessun cambiamento di stato registrato per questo evento."
+      "noStatusChanges": "Nessun cambiamento di stato registrato per questo evento.",
+      "affectedTicket": "Biglietto interessato"
     },
     "modal": {
       "confirmRefund": "Conferma Approvazione Rimborso",

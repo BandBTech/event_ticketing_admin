@@ -890,7 +890,9 @@
     "addBill": "Add Bill",
     "modals": {
       "confirmCancel": "Confirm Cancel Bill",
-      "cancelMessage": "Are you sure you want to cancel this bill? This action cannot be undone immediately."
+      "confirmCancelTicket": "Confirm Cancel Ticket",
+      "cancelMessage": "Are you sure you want to cancel this bill? This action cannot be undone immediately.",
+      "cancelTicketMessage": "Are you sure you want to cancel this ticket? This action cannot be undone immediately."
     },
     "filter": {
       "clear": "Clear",
@@ -1162,7 +1164,8 @@
       "status": "Status",
       "tickets": "Ticket (s)",
       "backToRefunds": "Back to Refunds",
-      "noStatusChanges": "No status changes recorded for this event."
+      "noStatusChanges": "No status changes recorded for this event.",
+      "affectedTicket": "Affected Ticket"
     },
     "modal": {
       "confirmRefund": "Confirm Refund Approval",
