@@ -21,6 +21,7 @@ export interface Refund {
   };
   amount: number;
   currency: string;
+  symbol: string;
   reason: string;
   refund_type: string;
   status: string;
@@ -56,6 +57,7 @@ export interface RefundData {
   };
   amount: number;
   currency: string;
+  symbol: string;
   reason: string;
   refund_type: string;
   status: string;

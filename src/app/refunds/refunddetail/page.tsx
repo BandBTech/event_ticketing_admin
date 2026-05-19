@@ -240,7 +240,7 @@ export default function RefundDetail() {
             label={t("refunds.refundDetail.originalAmount")}
             value={formatCurrency(
               refundData?.transaction.amount || 0,
-              refundData?.currency
+              refundData?.symbol
             )}
           />
           <FinRow
@@ -249,7 +249,7 @@ export default function RefundDetail() {
               <>
               <span>{formatCurrency(
               refundData?.amount || 0,
-              refundData?.currency
+              refundData?.symbol
             )}</span> {" "}
             <span className="italic font-normal">( {refundData?.ticket_count} {t("refunds.refundDetail.tickets")} )</span>
               </>

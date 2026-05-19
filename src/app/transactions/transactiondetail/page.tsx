@@ -198,7 +198,7 @@ export default function TransactionDetailPage() {
               <span className="text-sm font-semibold text-gray-800">
                 {formatCurrency(
                   transactionDetail?.amount || 0,
-                  transactionDetail?.currency
+                  transactionDetail?.symbol
                 )}
               </span>
             </div>
@@ -216,7 +216,7 @@ export default function TransactionDetailPage() {
               >
                 {formatCurrency(
                   transactionDetail?.organizer_share || 0,
-                  transactionDetail?.currency
+                  transactionDetail?.symbol
                 )}
               </span>
             </div>
@@ -233,7 +233,7 @@ export default function TransactionDetailPage() {
               >
                 {formatCurrency(
                   transactionDetail?.commission_amount || 0,
-                  transactionDetail?.currency
+                  transactionDetail?.symbol
                 )}
               </span>
             </div>

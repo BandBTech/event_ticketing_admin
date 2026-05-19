@@ -9,6 +9,7 @@ export interface Transaction {
   commission_rate: number;
   created_at: string; // ISO 8601 date string
   currency: string;
+  symbol: string;
   event_id: string;
   event_title: string;
   user: {

@@ -135,7 +135,7 @@ export function RefundDetail({
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="font-semibold text-green-600">
-                    {formatCurrency(data?.amount || 0, data?.currency)}
+                    {formatCurrency(data?.amount || 0, data?.symbol)}
                   </div>
                   <div className="font-semibold">
                     ( {data?.ticket_count}{" "}
@@ -177,7 +177,7 @@ export function RefundDetail({
                 <div className="font-semibold">
                   {formatCurrency(
                     data?.transaction.amount || 0,
-                    data?.currency
+                    data?.symbol
                   )}
                 </div>
 
