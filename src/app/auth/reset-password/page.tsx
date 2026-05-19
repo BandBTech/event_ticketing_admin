@@ -261,18 +261,18 @@ function ResetPasswordContent() {
                         </div>
                         {errors.newPassword &&
                           errors.newPassword.message !== "Invalid input" &&
-                          // Filter out messages that are already covered by PasswordRequirements
+                          // Filter out messages already covered by PasswordRequirements
                           !errors.newPassword.message?.includes(
                             "must be at least 8 characters",
                           ) &&
                           !errors.newPassword.message?.includes(
-                            "uppercase and one lowercase",
+                            "uppercase letter",
                           ) &&
                           !errors.newPassword.message?.includes(
-                            "special character",
+                            "lowercase letter",
                           ) &&
                           !errors.newPassword.message?.includes(
-                            "numeric digit",
+                            "at least one number",
                           ) && (
                             <p
                               className="text-sm text-destructive"

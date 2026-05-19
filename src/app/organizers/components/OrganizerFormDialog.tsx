@@ -433,12 +433,14 @@ export default function OrganizerFormDialog({
                           "must be at least 8 characters",
                         ) &&
                         !errors.password.message?.includes(
-                          "uppercase and one lowercase",
+                          "uppercase letter",
                         ) &&
                         !errors.password.message?.includes(
-                          "special character",
+                          "lowercase letter",
                         ) &&
-                        !errors.password.message?.includes("numeric digit") && (
+                        !errors.password.message?.includes(
+                          "at least one number",
+                        ) && (
                           <p className="text-sm text-destructive" role="alert">
                             {errors.password.message}
                           </p>
