@@ -37,6 +37,9 @@
     "viewMore": "Visualizza altro",
     "viewCountMore": "Visualizza {count} altro",
     "system": "Sistema",
+    "text": {
+      "system": "Sistema"
+    },
     "showLess": "Mostra meno",
     "rowsPerPage": "Righe per pagina",
     "startItemToEndItemOfTotal": "{startItem}-{endItem} di {total}",
@@ -300,7 +303,7 @@
       "pending": "In attesa di",
       "cancelled": "Annullato",
       "draft": "Bozza",
-      "live": "Vivere",
+      "live": "In diretta",
       "rejected": "Respinto",
       "active": "Vendite in diretta",
       "paused": "Vendite sospese",
@@ -311,8 +314,8 @@
       "on_sale": "Vendite in diretta",
       "featured": "In primo piano",
       "completed": "Completato",
-      "scheduled": "Scheduled",
-      "resumed": "Vendite riprimate"
+      "scheduled": "Programmato",
+      "resumed": "Vendite riprese"
     },
     "analytics": {
       "progress": "Avanzamento Vendite",
@@ -1610,7 +1613,7 @@
       "pending": "In attesa di",
       "cancelled": "Annullato",
       "draft": "Bozza",
-      "live": "Vivere",
+      "live": "In diretta",
       "rejected": "Respinto",
       "active": "Vendite in diretta",
       "paused": "Vendite sospese",
@@ -1622,8 +1625,8 @@
       "hold": "In attesa",
       "featured": "In primo piano",
       "completed": "Completato",
-      "scheduled": "Scheduled",
-      "resumed": "Vendite riprimate",
+      "scheduled": "Programmato",
+      "resumed": "Vendite riprese",
       "cancel_pending": "Cancellazione in sospeso"
     },
     "section": {

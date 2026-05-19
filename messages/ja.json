@@ -37,6 +37,9 @@
     "viewMore": "もっと見る",
     "viewCountMore": "{count} 個以上見る",
     "system": "システム",
+    "text": {
+      "system": "システム"
+    },
     "showLess": "表示を減らす",
     "rowsPerPage": "1ページあたりの行数",
     "startItemToEndItemOfTotal": "{startItem}-{endItem}/{total}",
