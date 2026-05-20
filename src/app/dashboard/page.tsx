@@ -160,7 +160,13 @@ const AdminDashboard: React.FC = () => {
         <div className="p-4">
           <DashboardStats data={data} />
           {data.upcoming_events_list.length > 0 && (
-            <UpcomingEventsList data={data.upcoming_events_list} />
+            <UpcomingEventsList
+              data={[...data.upcoming_events_list].sort(
+                (a, b) =>
+                  new Date(a.start_date).getTime() -
+                  new Date(b.start_date).getTime(),
+              )}
+            />
           )}
         </div>
       </div>
