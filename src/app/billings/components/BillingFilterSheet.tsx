@@ -93,12 +93,11 @@ const handleDateChange = (
 
   if (updated.start_date && updated.end_date) {
     if (isBefore(startOfDay(updated.end_date), startOfDay(updated.start_date))) {
-      setDateError("End date cannot be before start date");
+      setDateError(t("billings.filter.endDateCannotBeBeforeStartDate"));
       return;
     }
     if (differenceInMonths(updated.end_date, updated.start_date) > 3) {
-      setDateError("Date range cannot exceed 3 months");
-      toast.error("Date range cannot exceed 3 months");
+      setDateError(t("billings.filter.dateRangeCannotExceed3Months"));
       return;
     }
   }

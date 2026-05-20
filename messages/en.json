@@ -373,7 +373,8 @@
     "history": {
       "statusChanged": "Status updated from {old} to {new}",
       "statusSet": "Status set to {new}",
-      "salesChanged": "Sales {new}"
+      "salesChanged": "Sales {new}",
+      "systemAutomatic": "System (Automatic)"
     },
     "filterByOrganizer": "Filter by Organizer",
     "allOrganizers": "All Organizers"
@@ -906,7 +907,9 @@
       "organizer": "Organizer",
       "selectOrganizer": "Select Organizer",
       "noOrganizerFound": "No organizers found",
-      "searchOrganizer": "Search Organizer"
+      "searchOrganizer": "Search Organizer",
+      "endDateCannotBeBeforeStartDate": "End date cannot be before start date.",
+      "dateRangeCannotExceed3Months": "Date range cannot exceed 3 months"
     },
     "addBillModal": {
       "addNewBill": "Add New Bill",

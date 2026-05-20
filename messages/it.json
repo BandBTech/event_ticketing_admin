@@ -350,7 +350,8 @@
     "history": {
       "statusChanged": "Stato aggiornato da {old} a {new}",
       "statusSet": "Stato impostato su {new}",
-      "salesChanged": "Vendite {new}"
+      "salesChanged": "Vendite {new}",
+      "systemAutomatic": "Sistema (automatico)"
     },
     "filterByOrganizer": "Filtra per Organizzatore",
     "allOrganizers": "Tutti gli organizzatori"
@@ -860,7 +861,9 @@
       "organizer": "Organizzatore",
       "selectOrganizer": "Seleziona Organizzatore",
       "noOrganizerFound": "Nessun organizzatore trovato",
-      "searchOrganizer": "Cerca Organizzatori"
+      "searchOrganizer": "Cerca Organizzatori",
+      "endDateCannotBeBeforeStartDate": "La data di fine non può essere precedente alla data di inizio.",
+      "dateRangeCannotExceed3Months": "L'intervallo di date non può superare i 3 mesi"
     },
     "addBillModal": {
       "addNewBill": "Aggiungi Nuova Fattura",

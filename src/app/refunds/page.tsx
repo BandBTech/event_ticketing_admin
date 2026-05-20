@@ -170,17 +170,17 @@ export default function TransactionsPage() {
               <SelectValue placeholder={t("transactions.filter", "Filter")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="succeeded">
-                {t("transaction.transactionStatus.succeeded", "Completed")}
-              </SelectItem>
               <SelectItem value="failed">
-                {t("dashboard.dataDisplay.failed", "Failed")}
+                {t("transactions.transactionStatus.failed", "Failed")}
               </SelectItem>
               <SelectItem value="pending">
-                {t("events.status.pending", "Pending")}
+                {t("transactions.transactionStatus.pending", "Pending")}
               </SelectItem>
               <SelectItem value="processing">
-                {t("transaction.transactionStatus.processing", "Processing")}
+                {t("transactions.transactionStatus.processing", "")}
+              </SelectItem>
+              <SelectItem value="succeeded">
+                {t("transactions.transactionStatus.succeeded", "Succeeded")}
               </SelectItem>
             </SelectContent>
           </Select>

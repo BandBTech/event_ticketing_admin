@@ -301,8 +301,10 @@ export default function StatusHistorySidebar({
                 <div className="flex items-center gap-1 mt-1 text-[10px] text-black">
                   <User size={10} />
                   <span>
-                    {historyItem.changed_by_name ||
-                      t("common.text.system", "System")}
+                    {historyItem.changed_by_name === "System (Automatic)"
+                      ? t("events.history.systemAutomatic")
+                      : historyItem.changed_by_name ||
+                        t("common.text.system", "System")}
                   </span>
                 </div>
               </div>

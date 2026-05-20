@@ -363,7 +363,8 @@
     "history": {
       "statusChanged": "ステータスが {old} から {new} に更新されました",
       "statusSet": "ステータスが {new} に設定されました",
-      "salesChanged": "売上 {new}"
+      "salesChanged": "売上 {new}",
+      "systemAutomatic": "システム（自動）"
     },
     "filterByOrganizer": "主催者でフィルターする",
     "allOrganizers": "主催者全員"
@@ -873,7 +874,9 @@
       "organizer": "主催者",
       "selectOrganizer": "主催者を選択",
       "noOrganizerFound": "主催者は見つかりませんでした",
-      "searchOrganizer": "検索オーガナイザー..."
+      "searchOrganizer": "検索オーガナイザー...",
+      "endDateCannotBeBeforeStartDate": "終了日は開始日より前であってはならない.",
+      "dateRangeCannotExceed3Months": "日付範囲は3ヶ月を超えることはできません"
     },
     "addBillModal": {
       "addNewBill": "新規請求書の追加",
