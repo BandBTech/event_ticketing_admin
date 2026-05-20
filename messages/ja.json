@@ -510,6 +510,7 @@
       "didntReceive": "コードが届きませんか？",
       "resend": "再送信",
       "resending": "再送信中...",
+      "resendIn": "{time}秒後に再送信",
       "checkSpam": "メールが届かない場合はスパムフォルダーも確認してください",
       "otpResent": "OTPがメールに再送信されました",
       "errors": {

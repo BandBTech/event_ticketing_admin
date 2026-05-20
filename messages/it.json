@@ -497,6 +497,7 @@
       "didntReceive": "Non hai ricevuto il codice?",
       "resend": "Invia di nuovo",
       "resending": "Invio in corso...",
+      "resendIn": "Reinvia tra {time}s",
       "checkSpam": "Controlla la cartella spam se non vedi l'email",
       "otpResent": "L'OTP è stato rinviato alla tua email",
       "errors": {

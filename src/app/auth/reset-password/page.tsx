@@ -33,13 +33,13 @@ const createResetPasswordSchema = (
     .object({
       newPassword: z
         .string()
-        .min(1, v.required("Password"))
-        .min(8, v.minLength("Password", 8))
-        .max(100, v.maxLength("Password", 100))
+        .min(1, v.required(t("auth.signup.password")))
+        .min(8, v.minLength(t("auth.signup.password"), 8))
+        .max(100, v.maxLength(t("auth.signup.password"), 100))
         .regex(/[A-Z]/, v.passwordUppercase())
         .regex(/[a-z]/, v.passwordLowercase())
         .regex(/[0-9]/, v.passwordNumber()),
-      confirmPassword: z.string().min(1, v.required("Confirm Password")),
+      confirmPassword: z.string().min(1, v.required(t("auth.signup.confirmPassword"))),
     })
     .refine((data) => data.newPassword === data.confirmPassword, {
       message: v.passwordMatch(),
@@ -71,7 +71,7 @@ function ResetPasswordContent() {
 
     if (!emailParam || !otpParam) {
       // Redirect to forgot password if email or OTP is missing
-      router.push("/auth/forgot-password");
+      // router.push("/auth/forgot-password");
       return;
     }
 

@@ -534,6 +534,7 @@
       "didntReceive": "Didn't receive the code?",
       "resend": "Resend",
       "resending": "Resending...",
+      "resendIn": "Resend in {time}s",
       "checkSpam": "Check your spam folder if you don't see the email",
       "otpResent": "OTP has been resent to your email",
       "errors": {
