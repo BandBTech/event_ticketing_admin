@@ -53,7 +53,7 @@ export function BillingFilterSheet({
     React.useState<BillingFilters>(filters);
   const [dateError, setDateError] = React.useState<string | null>(null);
   const { locale } = useLanguageStore();
-  const { t } = useTranslation(locale);
+  const { t } = useTranslation(locale);  
 
   React.useEffect(() => {
     if (open) {
@@ -83,25 +83,27 @@ export function BillingFilterSheet({
     [],
   );
 
-const handleDateChange = (
-  field: "start_date" | "end_date",
-  date: Date | undefined,
-) => {
-  const updated = { ...localFilters, [field]: date };
-  setDateError(null);
-  setLocalFilters(updated);
+  const handleDateChange = (
+    field: "start_date" | "end_date",
+    date: Date | undefined,
+  ) => {
+    const updated = { ...localFilters, [field]: date };
+    setDateError(null);
+    setLocalFilters(updated);
 
-  if (updated.start_date && updated.end_date) {
-    if (isBefore(startOfDay(updated.end_date), startOfDay(updated.start_date))) {
-      setDateError(t("billings.filter.endDateCannotBeBeforeStartDate"));
-      return;
+    if (updated.start_date && updated.end_date) {
+      if (
+        isBefore(startOfDay(updated.end_date), startOfDay(updated.start_date))
+      ) {
+        setDateError(t("billings.filter.endDateCannotBeBeforeStartDate"));
+        return;
+      }
+      if (differenceInMonths(updated.end_date, updated.start_date) > 3) {
+        setDateError(t("billings.filter.dateRangeCannotExceed3Months"));
+        return;
+      }
     }
-    if (differenceInMonths(updated.end_date, updated.start_date) > 3) {
-      setDateError(t("billings.filter.dateRangeCannotExceed3Months"));
-      return;
-    }
-  }
-};
+  };
 
   const handleApply = () => {
     onApplyFilters(localFilters);
@@ -118,7 +120,12 @@ const handleDateChange = (
     let count = 0;
     if (localFilters.start_date) count++;
     if (localFilters.end_date) count++;
-    if (localFilters.organizer_id) count++;
+    // Count multi-select organizer_ids
+    if (
+      localFilters.organizer_ids &&
+      localFilters.organizer_ids.length > 0
+    )
+      count++;
     if (localFilters.status !== "") count++;
     return count;
   }, [localFilters]);
@@ -232,25 +239,23 @@ const handleDateChange = (
                 )}
               </div>
             </div>
-            {/* <p className="text-xs text-muted-foreground">
-              Maximum range: 3 months
-            </p> */}
           </div>
 
-          {/* Organizer */}
+          {/* Organizer — Multi-select */}
           <div className="space-y-2">
             <Label>{t("billings.filter.organizer")}</Label>
             <AsyncCombobox
+              multiple
               queryKey={["filter", "organizers"]}
-              value={localFilters.organizer_id ?? ""}
-              onValueChange={(val) =>
-                setLocalFilters((prev) => ({ ...prev, organizer_id: val }))
+              value={localFilters.organizer_ids ?? []}
+              onValueChange={(vals) =>
+                setLocalFilters((prev) => ({ ...prev, organizer_ids: vals }))
               }
               fetchOptions={fetchOrganizers}
               placeholder={t("billings.filter.selectOrganizer")}
               searchPlaceholder={t("billings.filter.searchOrganizer")}
               emptyText={t("billings.filter.noOrganizerFound")}
-              className="w-full text-sm h-9 justify-between px-3!"
+              className="w-full text-sm justify-between px-3!"
               debounceMs={300}
             />
           </div>
@@ -283,9 +288,6 @@ const handleDateChange = (
                 <SelectItem value="pending">
                   {t("billings.status.pending")}
                 </SelectItem>
-                {/* <SelectItem value="overdue">
-                  {t("billings.status.overdue")}
-                </SelectItem> */}
               </SelectContent>
             </Select>
           </div>

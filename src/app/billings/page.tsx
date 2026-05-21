@@ -68,13 +68,13 @@ export default function BillingsPage() {
   const filterCount = useMemo(() => {
     let count = 0;
 
-    if (appliedFilters.organizer_id) count++;
+   if (appliedFilters.organizer_ids && appliedFilters.organizer_ids.length > 0) count++;
     if (appliedFilters.status) count++;
     if (appliedFilters.start_date) count++;
     if (appliedFilters.end_date) count++;
 
     return count;
-  }, [appliedFilters]);
+  }, [appliedFilters]);  
 
   const debouncedSearch = useDebounce(searchInput, 500);
 
@@ -94,7 +94,7 @@ export default function BillingsPage() {
       currentPage,
       limit,
       appliedFilters.status,
-      appliedFilters.organizer_id,
+      appliedFilters.organizer_ids,
       appliedFilters.start_date,
       appliedFilters.end_date,
       debouncedSearch,
@@ -106,7 +106,7 @@ export default function BillingsPage() {
         page: currentPage,
         limit: limit,
         status: appliedFilters.status,
-        organizer_id: appliedFilters.organizer_id,
+        organizer_id: appliedFilters.organizer_ids,
         start_date: appliedFilters.start_date,
         end_date: appliedFilters.end_date,
         search: debouncedSearch,

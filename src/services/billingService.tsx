@@ -63,7 +63,7 @@ export class BillingService {
     page?: number;
     limit?: number;
     status?: string;
-    organizer_id?: string;
+    organizer_id?: string[];
     start_date?: Date | undefined;
     end_date?: Date | undefined;
     search?: string;
@@ -76,16 +76,18 @@ export class BillingService {
       if (filters.page) params.append("page", filters.page.toString());
       if (filters.limit) params.append("limit", filters.limit.toString());
       if (filters.status) params.append("status", filters.status.toString());
-      if (filters.organizer_id)
-        params.append("organizer_id", filters.organizer_id.toString());
+      if (filters.organizer_id && filters.organizer_id.length > 0)
+        params.append("organizer_id", filters.organizer_id.join(","));
       if (filters.start_date)
         params.append(
           "start_date",
-          filters.start_date.toISOString().split("T")[0],
+          filters.start_date.toISOString().replace(".000Z", "Z"),
         );
-
       if (filters.end_date)
-        params.append("end_date", filters.end_date.toISOString().split("T")[0]);
+        params.append(
+          "end_date",
+          filters.end_date.toISOString().replace(".000Z", "Z"),
+        );
       if (filters.search) params.append("search", filters.search);
       if (filters.sort_by) params.append("sort_by", filters.sort_by);
       if (filters.sort_order) params.append("sort_order", filters.sort_order);

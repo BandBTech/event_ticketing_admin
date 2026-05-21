@@ -81,9 +81,7 @@ export function BillingHistorySheet({
     enabled: open,
   });
 
-  const historyData = billHistoryData || [];
-  console.log("history data:", historyData);
-  
+  const historyData = billHistoryData || [];  
 
   const totalTransactions = historyData.length || 0;
   const totalAmount = Array.isArray(historyData)

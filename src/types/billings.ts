@@ -93,7 +93,7 @@ export type UpdateBillPayload = {
 };
 
 export interface BillingFilters {
-  organizer_id: string;
+  organizer_ids: string[];
   start_date: Date | undefined;
   end_date: Date | undefined;
   status: string;
@@ -134,7 +134,7 @@ export interface BillingHistorySheetProps {
 // });
 
 export const getDefaultFilters = (): BillingFilters => ({
-  organizer_id: "",
+  organizer_ids: [],
   start_date: undefined,
   end_date: undefined,
   status: "",
