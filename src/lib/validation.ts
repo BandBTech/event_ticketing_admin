@@ -205,6 +205,128 @@ import { isValidPhoneNumber } from "react-phone-number-input";
 
 import * as z from "zod";
 
+
+export const PASSWORD_MIN = 8;
+export const PASSWORD_MAX = 50;
+
+// Auth Schemas
+export const loginSchema = (
+  t: (
+    key: string,
+    fallback?: string,
+    params?: Record<string, string | number>,
+  ) => string,
+) =>
+  z.object({
+    email: z
+      .string()
+      .min(1, t("auth.login.validation.emailRequired", "Email is required."))
+      .email(t("auth.login.validation.emailInvalid", "Email is invalid.")),
+    password: z
+      .string()
+      .min(
+        1,
+        t("auth.login.validation.passwordRequired", "Password is required."),
+      ),
+    rememberMe: z.boolean(),
+  });
+
+export type LoginFormData = z.infer<ReturnType<typeof loginSchema>>;
+
+// Forgot Password Schema
+export const forgotPasswordSchema = (
+  t: (
+    key: string,
+    fallback?: string,
+    params?: Record<string, string | number>,
+  ) => string,
+) =>
+  z.object({
+    email: z
+      .string()
+      .min(1, t("auth.login.validation.emailRequired", "Email is required."))
+      .email(t("auth.login.validation.emailInvalid", "Invalid email address.")),
+  });
+
+export type ForgotPasswordFormData = z.infer<
+  ReturnType<typeof forgotPasswordSchema>
+>;
+
+// Reset Password Schema
+export const resetPasswordSchema = (
+  t: (
+    key: string,
+    fallback?: string,
+    params?: Record<string, string | number>,
+  ) => string,
+) =>
+  z
+    .object({
+      newPassword: z
+        .string()
+        .min(
+          1,
+          t("auth.login.validation.passwordRequired", "Password is required."),
+        )
+        .min(
+          PASSWORD_MIN,
+          t(
+            "auth.signup.validation.passwordMin",
+            "Password must be at least {min} characters.",
+            { min: PASSWORD_MIN },
+          ),
+        )
+        .max(
+          PASSWORD_MAX,
+          t(
+            "auth.signup.validation.passwordMax",
+            "Password cannot exceed {max} characters.",
+            { max: PASSWORD_MAX },
+          ),
+        )
+        .regex(
+          /(?=.*[a-z])(?=.*[A-Z])/,
+          t(
+            "auth.signup.validation.passwordUpperLower",
+            "Password must contain at least one uppercase and one lowercase letter.",
+          ),
+        )
+        .regex(
+          /[^A-Za-z0-9]/,
+          t(
+            "auth.signup.validation.passwordSpecialChar",
+            "Password must contain at least one special character.",
+          ),
+        )
+        .regex(
+          /[0-9]/,
+          t(
+            "auth.signup.validation.passwordNumber",
+            "Password must contain at least one number.",
+          ),
+        ),
+      confirmPassword: z
+        .string()
+        .min(
+          1,
+          t(
+            "auth.signup.validation.confirmPasswordRequired",
+            "Confirm password is required.",
+          ),
+        ),
+    })
+    .refine((data) => data.newPassword === data.confirmPassword, {
+      message: t(
+        "auth.signup.validation.passwordMismatch",
+        "Passwords do not match.",
+      ),
+      path: ["confirmPassword"],
+    });
+
+export type ResetPasswordFormData = z.infer<
+  ReturnType<typeof resetPasswordSchema>
+>;
+
 export const createApprovalSchema = (
   t: (
     key: string,

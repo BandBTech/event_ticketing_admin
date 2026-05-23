@@ -414,11 +414,12 @@
       "signUpHere": "Sign up here.",
       "demoCredentials": "Demo: Use attendee@example.com / password123",
       "validation": {
-        "emailRequired": "Email is required",
-        "emailInvalid": "Please enter a valid email address",
-        "passwordRequired": "Password is required",
-        "passwordTooShort": "Password must be at least 6 characters long",
-        "passwordTooLong": "Password is too long"
+        "emailRequired": "Email is required.",
+        "emailInvalid": "Please enter a valid email address.",
+        "passwordRequired": "Password is required.",
+        "passwordTooShort": "Password must be at least 6 characters long.",
+        "passwordTooLong": "Password is too long.",
+        "confirmPasswordRequired": "Confirm password is required."
       },
       "errors": {
         "invalidCredentials": "Invalid email or password",
@@ -466,7 +467,13 @@
         "passwordMismatch": "Passwords do not match.",
         "phoneRequired": "Contact number is required.",
         "firstNameRequired": "First name is required.",
-        "lastNameRequired": "Last name is required."
+        "lastNameRequired": "Last name is required.",
+        "passwordRequired": "Password is required.",
+        "passwordMin": "Password must be at least {min} characters.",
+        "passwordMax": "Password cannot exceed {max} characters.",
+        "passwordUpperLower": "Password must contain at least one uppercase and one lowercase letter.",
+        "passwordSpecialChar": "Password must contain at least one special character.",
+        "confirmPasswordRequired": "Confirm password is required."
       },
       "errors": {
         "signupFailed": "Registration failed. Please try again."

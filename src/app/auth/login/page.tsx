@@ -1,18 +1,26 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import {
   EyeIcon,
   EnvelopeIcon,
   KeyIcon,
   EyeClosedIcon,
 } from "@phosphor-icons/react/dist/ssr";
+import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  TranslatedFormMessage,
+} from "@/components/ui/form";
 import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useAuthStore } from "@/store/authStore";
@@ -21,18 +29,7 @@ import { toast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { createValidationHelpers } from "@/lib/validation";
-
-// Create validation schema with translations
-const createLoginSchema = (t: (key: string, fallback?: string) => string) => {
-  const v = createValidationHelpers(t);
-
-  return z.object({
-    email: z.string().min(1, v.required("Email")).email(v.email("Email")),
-    password: z.string().min(1, v.required("Password")),
-    rememberMe: z.boolean(),
-  });
-};
+import { LoginFormData, loginSchema } from "@/lib/validation";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -53,11 +50,13 @@ export default function LoginPage() {
     }
   }, [isAuthenticated, router]);
 
-  const loginSchema = createLoginSchema(t);
-  type LoginFormData = z.infer<typeof loginSchema>;
+  const loginFormSchema = useMemo(
+    () => loginSchema((key, fallback, params) => key),
+    [],
+  );
 
   const form = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(loginFormSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -74,25 +73,18 @@ export default function LoginPage() {
     formState: { errors },
   } = form;
 
-  const rememberMe = watch("rememberMe") ?? false;
-
-  const onSubmit = async (data: LoginFormData) => {
-    setLoginError("");
-    clearError();
-
-    try {
-      await login(
-        {
-          email: data.email,
-          password: data.password,
-        },
+  const loginMutation = useMutation({
+    mutationFn: async (data: LoginFormData) => {
+      return login(
+        { email: data.email, password: data.password },
         data.rememberMe,
       );
-
+    },
+    onSuccess: () => {
       toast.success("auth.toast.loginSuccess", "Welcome back!");
-
       router.push("/dashboard");
-    } catch (error) {
+    },
+    onError: (error: Error) => {
       if (error instanceof AuthError) {
         switch (error.code) {
           case "UNAUTHORIZED":
@@ -117,7 +109,12 @@ export default function LoginPage() {
       } else {
         toast.error("auth.toast.loginError", "Login failed. Please try again.");
       }
-    }
+    },
+  });
+
+  const onSubmit = (data: LoginFormData) => {
+    clearError();
+    loginMutation.mutate(data);
   };
 
   return (
@@ -160,159 +157,174 @@ export default function LoginPage() {
                 )}
 
                 {/* Form */}
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-                  {/* Email Field */}
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="email"
-                      className="text-sm font-medium text-gray-900 block"
-                    >
-                      {t("auth.login.email")}
-                    </label>
-                    <div className="relative">
-                      <div
-                        className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded-full"
-                        aria-hidden="true"
-                      >
-                        <EnvelopeIcon
-                          weight="duotone"
-                          size={24}
-                          className="text-gray-600"
-                        />
-                      </div>
-                      <Input
-                        id="email"
-                        type="email"
-                        autoComplete="email"
-                        placeholder={t("auth.login.emailPlaceholder")}
-                        className={cn(
-                          "h-12 pl-16 pr-4 login-input",
-                          errors.email && "border-destructive",
-                        )}
-                        {...register("email")}
-                      />
-                    </div>
-                    {errors.email && (
-                      <p
-                        className="text-sm text-destructive font-medium"
-                        role="alert"
-                      >
-                        {errors.email.message}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Password Field */}
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="password"
-                      className="text-sm font-medium text-gray-900 block"
-                    >
-                      {t("auth.login.password")}
-                    </label>
-                    <div className="relative">
-                      <div
-                        className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded-full"
-                        aria-hidden="true"
-                      >
-                        <KeyIcon
-                          weight="duotone"
-                          size={24}
-                          className="text-gray-600"
-                        />
-                      </div>
-                      <Input
-                        id="password"
-                        type={showPassword ? "text" : "password"}
-                        autoComplete="current-password"
-                        placeholder={t("auth.login.passwordPlaceholder")}
-                        className={cn(
-                          "h-12 pl-16 pr-16 login-input",
-                          errors.password && "border-destructive",
-                        )}
-                        {...register("password")}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        aria-label={
-                          showPassword
-                            ? t("auth.login.hidePassword")
-                            : t("auth.login.showPassword")
-                        }
-                        className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 transition-colors"
-                      >
-                        {showPassword ? (
-                          <EyeIcon
-                            weight="duotone"
-                            size={24}
-                            className="text-gray-600"
-                          />
-                        ) : (
-                          <EyeClosedIcon
-                            weight="duotone"
-                            size={24}
-                            className="text-gray-600"
-                          />
-                        )}
-                      </button>
-                    </div>
-                    {errors.password && (
-                      <p
-                        className="text-sm text-destructive font-medium"
-                        role="alert"
-                      >
-                        {errors.password.message}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Remember Me & Forgot Password */}
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
-                    <div className="flex items-center space-x-3">
-                      <Checkbox
-                        id="remember-me"
-                        checked={rememberMe}
-                        onCheckedChange={(checked) =>
-                          setValue("rememberMe", !!checked)
-                        }
-                        className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
-                      />
-                      <label
-                        htmlFor="remember-me"
-                        className="text-sm font-medium text-gray-900 cursor-pointer"
-                      >
-                        {t("auth.login.rememberMe")}
-                      </label>
-                    </div>
-
-                    <Link
-                      href="/auth/forgot-password"
-                      className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
-                    >
-                      {t("auth.login.forgotPassword")}
-                    </Link>
-                  </div>
-
-                  {/* Login Button */}
-                  <div className="space-y-4">
-                    <Button
-                      type="submit"
-                      disabled={isLoading}
-                      className={cn(
-                        "w-full h-12 rounded-lg font-medium transition-all duration-200",
-                        "bg-blue-600 hover:bg-blue-700 text-white",
-                        "shadow-lg hover:shadow-xl",
-                        "disabled:opacity-50 disabled:cursor-not-allowed",
-                        isLoading && "animate-pulse",
+                <Form {...form}>
+                  <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+                    {/* Email Field */}
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-gray-900">
+                            {t("auth.login.email", "Email")}
+                          </FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <div
+                                className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded-full"
+                                aria-hidden="true"
+                              >
+                                <EnvelopeIcon
+                                  weight="duotone"
+                                  size={24}
+                                  className="text-gray-600"
+                                />
+                              </div>
+                              <Input
+                                type="email"
+                                autoComplete="email"
+                                placeholder={t(
+                                  "auth.login.emailPlaceholder",
+                                  "Enter email address",
+                                )}
+                                className={cn(
+                                  "h-12 pl-16 pr-4 login-input",
+                                  form.formState.errors.email &&
+                                    "border-destructive",
+                                )}
+                                {...field}
+                              />
+                            </div>
+                          </FormControl>
+                          <TranslatedFormMessage t={t} />
+                        </FormItem>
                       )}
-                    >
-                      {isLoading
-                        ? t("auth.login.signingIn")
-                        : t("auth.login.loginButton")}
-                    </Button>
-                  </div>
-                </form>
+                    />
+
+                    {/* Password Field */}
+                    <FormField
+                      control={form.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-gray-900">
+                            {t("auth.login.password", "Password")}
+                          </FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <div
+                                className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded-full"
+                                aria-hidden="true"
+                              >
+                                <KeyIcon
+                                  weight="duotone"
+                                  size={24}
+                                  className="text-gray-600"
+                                />
+                              </div>
+                              <Input
+                                type={showPassword ? "text" : "password"}
+                                autoComplete="current-password"
+                                disabled={loginMutation.isPending}
+                                placeholder={t(
+                                  "auth.login.passwordPlaceholder",
+                                  "••••••••••••",
+                                )}
+                                className={cn(
+                                  "h-12 pl-16 pr-16 login-input",
+                                  form.formState.errors.password &&
+                                    "border-destructive",
+                                )}
+                                {...field}
+                              />
+                              <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                disabled={loginMutation.isPending}
+                                aria-label={
+                                  showPassword
+                                    ? t(
+                                        "auth.login.hidePassword",
+                                        "Hide password",
+                                      )
+                                    : t(
+                                        "auth.login.showPassword",
+                                        "Show password",
+                                      )
+                                }
+                                className="cursor-pointer absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 transition-colors disabled:cursor-not-allowed"
+                              >
+                                {showPassword ? (
+                                  <EyeIcon
+                                    weight="duotone"
+                                    size={24}
+                                    className="text-gray-600"
+                                  />
+                                ) : (
+                                  <EyeClosedIcon
+                                    weight="duotone"
+                                    size={24}
+                                    className="text-gray-600"
+                                  />
+                                )}
+                              </button>
+                            </div>
+                          </FormControl>
+                          <TranslatedFormMessage t={t} />
+                        </FormItem>
+                      )}
+                    />
+
+                    {/* Remember Me & Forgot Password */}
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
+                      <FormField
+                        control={form.control}
+                        name="rememberMe"
+                        render={({ field }) => (
+                          <FormItem className="flex items-center space-x-3 space-y-0">
+                            <FormControl>
+                              <Checkbox
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                                disabled={loginMutation.isPending}
+                                className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
+                              />
+                            </FormControl>
+                            <FormLabel className="text-sm font-medium text-gray-900 cursor-pointer">
+                              {t("auth.login.rememberMe", "Remember Me")}
+                            </FormLabel>
+                          </FormItem>
+                        )}
+                      />
+
+                      <Link
+                        href="/auth/forgot-password"
+                        className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors cursor-pointer"
+                      >
+                        {t("auth.login.forgotPassword", "Forgot Password?")}
+                      </Link>
+                    </div>
+
+                    {/* Login Button */}
+                    <div className="space-y-4">
+                      <Button
+                        type="submit"
+                        disabled={isLoading}
+                        className={cn(
+                          "w-full h-12 rounded-lg font-medium transition-all duration-200",
+                          "bg-blue-600 hover:bg-blue-700 text-white",
+                          "shadow-lg hover:shadow-xl",
+                          "disabled:opacity-50 disabled:cursor-not-allowed",
+                          isLoading && "animate-pulse",
+                        )}
+                      >
+                        {isLoading
+                          ? t("auth.login.signingIn")
+                          : t("auth.login.loginButton")}
+                      </Button>
+                    </div>
+                  </form>
+                </Form>
               </div>
             </div>
           </div>

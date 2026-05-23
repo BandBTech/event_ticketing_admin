@@ -1,18 +1,24 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, Suspense, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { useSearchParams } from "next/navigation";
 import {
   EyeIcon,
   KeyIcon,
   EyeClosedIcon,
-  // ArrowLeftIcon,
 } from "@phosphor-icons/react/dist/ssr";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  TranslatedFormMessage,
+} from "@/components/ui/form";
 import { useLanguageStore } from "@/store/languageStore";
 import { useTranslation } from "@/hooks/useTranslation";
 import { authService, AuthError } from "@/services/authService";
@@ -20,32 +26,8 @@ import { toast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { createValidationHelpers } from "@/lib/validation";
 import { PasswordRequirements } from "@/app/components/PasswordRequirements";
-
-// Create validation schema - OTP is no longer needed as it's verified in previous step
-const createResetPasswordSchema = (
-  t: (key: string, fallback?: string) => string,
-) => {
-  const v = createValidationHelpers(t);
-
-  return z
-    .object({
-      newPassword: z
-        .string()
-        .min(1, v.required(t("auth.signup.password")))
-        .min(8, v.minLength(t("auth.signup.password"), 8))
-        .max(100, v.maxLength(t("auth.signup.password"), 100))
-        .regex(/[A-Z]/, v.passwordUppercase())
-        .regex(/[a-z]/, v.passwordLowercase())
-        .regex(/[0-9]/, v.passwordNumber()),
-      confirmPassword: z.string().min(1, v.required(t("auth.signup.confirmPassword"))),
-    })
-    .refine((data) => data.newPassword === data.confirmPassword, {
-      message: v.passwordMatch(),
-      path: ["confirmPassword"],
-    });
-};
+import { resetPasswordSchema, ResetPasswordFormData } from "@/lib/validation";
 
 function ResetPasswordContent() {
   const searchParams = useSearchParams();
@@ -71,7 +53,7 @@ function ResetPasswordContent() {
 
     if (!emailParam || !otpParam) {
       // Redirect to forgot password if email or OTP is missing
-      // router.push("/auth/forgot-password");
+      router.push("/auth/forgot-password");
       return;
     }
 
@@ -79,8 +61,11 @@ function ResetPasswordContent() {
     setOtp(otpParam);
   }, [searchParams, router]);
 
-  const schema = createResetPasswordSchema(t);
-  type ResetPasswordFormData = z.infer<typeof schema>;
+    // Use centralized schema with memoization
+  const schema = useMemo(
+    () => resetPasswordSchema((key, fallback, params) => key),
+    [],
+  );
 
   const form = useForm<ResetPasswordFormData>({
     resolver: zodResolver(schema),
@@ -197,187 +182,212 @@ function ResetPasswordContent() {
                     )}
 
                     {/* Form */}
-                    <form
-                      onSubmit={handleSubmit(onSubmit)}
-                      className="space-y-6"
-                    >
-                      {/* New Password Field */}
-                      <div className="space-y-2">
-                        <label
-                          htmlFor="newPassword"
-                          className="text-sm font-medium text-gray-900 block"
-                        >
-                          {t("auth.resetPassword.newPassword", "New Password")}
-                        </label>
-                        <div className="relative">
-                          <div
-                            className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded-full"
-                            aria-hidden="true"
-                          >
-                            <KeyIcon
-                              weight="duotone"
-                              size={24}
-                              className="text-gray-600"
-                            />
-                          </div>
-                          <Input
-                            id="newPassword"
-                            type={showNewPassword ? "text" : "password"}
-                            autoComplete="new-password"
-                            placeholder={t(
-                              "auth.resetPassword.newPasswordPlaceholder",
-                              "••••••••••••",
-                            )}
-                            className={cn(
-                              "h-12 pl-16 pr-16 login-input",
-                              errors.newPassword && "border-destructive",
-                            )}
-                            {...register("newPassword")}
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setShowNewPassword(!showNewPassword)}
-                            aria-label={
-                              showNewPassword
-                                ? "Hide password"
-                                : "Show password"
-                            }
-                            className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 transition-colors"
-                          >
-                            {showNewPassword ? (
-                              <EyeIcon
-                                weight="duotone"
-                                size={24}
-                                className="text-gray-600"
+                    <Form {...form}>
+                      <form
+                        onSubmit={handleSubmit(onSubmit)}
+                        className="space-y-6"
+                      >
+                        <FormField
+                          control={form.control}
+                          name="newPassword"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-sm font-medium text-gray-900">
+                                {t(
+                                  "auth.resetPassword.newPassword",
+                                  "New Password",
+                                )}
+                              </FormLabel>
+                              <FormControl>
+                                <div className="relative">
+                                  <div
+                                    className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded-full"
+                                    aria-hidden="true"
+                                  >
+                                    <KeyIcon
+                                      weight="duotone"
+                                      size={24}
+                                      className="text-gray-600"
+                                    />
+                                  </div>
+                                  <Input
+                                    type={showNewPassword ? "text" : "password"}
+                                    autoComplete="current-password"
+                                    placeholder={t(
+                                      "auth.login.passwordPlaceholder",
+                                      "••••••••••••",
+                                    )}
+                                    className={cn(
+                                      "h-12 pl-16 pr-16 login-input",
+                                      form.formState.errors.newPassword &&
+                                        "border-destructive",
+                                    )}
+                                    {...field}
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      setShowNewPassword(!showNewPassword)
+                                    }
+                                    // disabled={loginMutation.isPending}
+                                    aria-label={
+                                      showNewPassword
+                                        ? t(
+                                            "auth.login.hidePassword",
+                                            "Hide password",
+                                          )
+                                        : t(
+                                            "auth.login.showPassword",
+                                            "Show password",
+                                          )
+                                    }
+                                    className="cursor-pointer absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 transition-colors disabled:cursor-not-allowed"
+                                  >
+                                    {showNewPassword ? (
+                                      <EyeIcon
+                                        weight="duotone"
+                                        size={24}
+                                        className="text-gray-600"
+                                      />
+                                    ) : (
+                                      <EyeClosedIcon
+                                        weight="duotone"
+                                        size={24}
+                                        className="text-gray-600"
+                                      />
+                                    )}
+                                  </button>
+                                </div>
+                              </FormControl>
+                               {/* {form.formState.errors.newPassword &&
+                                form.formState.errors.newPassword.message !==
+                                  "Invalid input" &&
+                                !form.formState.errors.newPassword.message?.includes(
+                                  "must be at least 8 characters",
+                                ) &&
+                                !form.formState.errors.newPassword.message?.includes(
+                                  "uppercase and one lowercase",
+                                ) &&
+                                !form.formState.errors.newPassword.message?.includes(
+                                  "special character",
+                                ) &&
+                                !form.formState.errors.newPassword.message?.includes(
+                                  "numeric digit",
+                                ) && <TranslatedFormMessage t={t} />} */}
+                              <PasswordRequirements
+                                password={form.watch("newPassword")}
                               />
-                            ) : (
-                              <EyeClosedIcon
-                                weight="duotone"
-                                size={24}
-                                className="text-gray-600"
-                              />
-                            )}
-                          </button>
-                        </div>
-                        {errors.newPassword &&
-                          errors.newPassword.message !== "Invalid input" &&
-                          // Filter out messages already covered by PasswordRequirements
-                          !errors.newPassword.message?.includes(
-                            "must be at least 8 characters",
-                          ) &&
-                          !errors.newPassword.message?.includes(
-                            "uppercase letter",
-                          ) &&
-                          !errors.newPassword.message?.includes(
-                            "lowercase letter",
-                          ) &&
-                          !errors.newPassword.message?.includes(
-                            "at least one number",
-                          ) && (
-                            <p
-                              className="text-sm text-destructive"
-                              role="alert"
-                            >
-                              {errors.newPassword.message}
-                            </p>
+                            </FormItem>
                           )}
-                        <PasswordRequirements
-                          password={form.watch("newPassword")}
                         />
-                      </div>
 
-                      {/* Confirm Password Field */}
-                      <div className="space-y-2">
-                        <label
-                          htmlFor="confirmPassword"
-                          className="text-sm font-medium text-gray-900 block"
-                        >
-                          {t(
-                            "auth.resetPassword.confirmPassword",
-                            "Confirm Password",
+                        {/* Confirm Password Field */}
+                        <FormField
+                          control={form.control}
+                          name="confirmPassword"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-sm font-medium text-gray-900">
+                                {t(
+                                  "auth.resetPassword.confirmPassword",
+                                  "Confirm Password",
+                                )}
+                              </FormLabel>
+                              <FormControl>
+                                <div className="relative">
+                                  <div
+                                    className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded-full"
+                                    aria-hidden="true"
+                                  >
+                                    <KeyIcon
+                                      weight="duotone"
+                                      size={24}
+                                      className="text-gray-600"
+                                    />
+                                  </div>
+                                  <Input
+                                    type={
+                                      showConfirmPassword ? "text" : "password"
+                                    }
+                                    autoComplete="confirm-password"
+                                    placeholder={t(
+                                      "auth.login.passwordPlaceholder",
+                                      "••••••••••••",
+                                    )}
+                                    className={cn(
+                                      "h-12 pl-16 pr-16 login-input",
+                                      form.formState.errors.confirmPassword &&
+                                        "border-destructive",
+                                    )}
+                                    {...field}
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      setShowConfirmPassword(
+                                        !showConfirmPassword,
+                                      )
+                                    }
+                                    aria-label={
+                                      showConfirmPassword
+                                        ? t(
+                                            "auth.login.hidePassword",
+                                            "Hide password",
+                                          )
+                                        : t(
+                                            "auth.login.showPassword",
+                                            "Show password",
+                                          )
+                                    }
+                                    className="cursor-pointer absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 transition-colors disabled:cursor-not-allowed"
+                                  >
+                                    {showConfirmPassword ? (
+                                      <EyeIcon
+                                        weight="duotone"
+                                        size={24}
+                                        className="text-gray-600"
+                                      />
+                                    ) : (
+                                      <EyeClosedIcon
+                                        weight="duotone"
+                                        size={24}
+                                        className="text-gray-600"
+                                      />
+                                    )}
+                                  </button>
+                                </div>
+                              </FormControl>
+                              <TranslatedFormMessage t={t} />
+                            </FormItem>
                           )}
-                        </label>
-                        <div className="relative">
-                          <div
-                            className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded-full"
-                            aria-hidden="true"
-                          >
-                            <KeyIcon
-                              weight="duotone"
-                              size={24}
-                              className="text-gray-600"
-                            />
-                          </div>
-                          <Input
-                            id="confirmPassword"
-                            type={showConfirmPassword ? "text" : "password"}
-                            autoComplete="new-password"
-                            placeholder={t(
-                              "auth.resetPassword.confirmPasswordPlaceholder",
-                              "••••••••••••",
-                            )}
+                        />
+
+                        {/* Submit Button */}
+                        <div className="space-y-4 pt-2">
+                          <Button
+                            type="submit"
+                            disabled={isLoading}
                             className={cn(
-                              "h-12 pl-16 pr-16 login-input",
-                              errors.confirmPassword && "border-destructive",
+                              "w-full h-12 rounded-lg font-medium transition-all duration-200",
+                              "bg-blue-600 hover:bg-blue-700 text-white",
+                              "shadow-lg hover:shadow-xl",
+                              "disabled:opacity-50 disabled:cursor-not-allowed",
+                              isLoading && "animate-pulse",
                             )}
-                            {...register("confirmPassword")}
-                          />
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setShowConfirmPassword(!showConfirmPassword)
-                            }
-                            aria-label={
-                              showConfirmPassword
-                                ? "Hide password"
-                                : "Show password"
-                            }
-                            className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 transition-colors"
                           >
-                            {showConfirmPassword ? (
-                              <EyeIcon
-                                weight="duotone"
-                                size={24}
-                                className="text-gray-600"
-                              />
-                            ) : (
-                              <EyeClosedIcon
-                                weight="duotone"
-                                size={24}
-                                className="text-gray-600"
-                              />
-                            )}
-                          </button>
+                            {isLoading
+                              ? t(
+                                  "auth.resetPassword.resetting",
+                                  "Resetting...",
+                                )
+                              : t(
+                                  "auth.resetPassword.resetButton",
+                                  "Reset Password",
+                                )}
+                          </Button>
                         </div>
-                        {errors.confirmPassword && (
-                          <p className="text-sm text-destructive" role="alert">
-                            {errors.confirmPassword.message}
-                          </p>
-                        )}
-                      </div>
-
-                      {/* Submit Button */}
-                      <div className="space-y-4 pt-2">
-                        <Button
-                          type="submit"
-                          disabled={isLoading}
-                          className={cn(
-                            "w-full h-12 rounded-lg font-medium transition-all duration-200",
-                            "bg-blue-600 hover:bg-blue-700 text-white",
-                            "shadow-lg hover:shadow-xl",
-                            "disabled:opacity-50 disabled:cursor-not-allowed",
-                            isLoading && "animate-pulse",
-                          )}
-                        >
-                          {isLoading
-                            ? t("auth.resetPassword.resetting", "Resetting...")
-                            : t(
-                                "auth.resetPassword.resetButton",
-                                "Reset Password",
-                              )}
-                        </Button>
-                      </div>
-                    </form>
+                      </form>
+                    </Form>
 
                     {/* Back to Login */}
                     <div className="text-center">
