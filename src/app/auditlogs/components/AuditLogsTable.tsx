@@ -6,6 +6,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "@/hooks/useTranslation";
 import { ReusableTable } from "@/components/ReusableTable";
 import { Logs } from "@/types/auditlogs";
+import { toUpperCase } from "zod";
 
 interface RefundTableProps {
   auditlogs: Logs[];
@@ -54,7 +55,7 @@ export function AuditLogsTable({
         cell: ({ row }) => {
           const action = row.original.action;
           return (
-            <span className="capitalize">{action.replace(/_/g, " ")}</span>
+            <span title={action.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase())} className="capitalize">{action.replace(/_/g, " ")}</span>
           );
         },
       },
@@ -62,7 +63,7 @@ export function AuditLogsTable({
         id: "initiator",
         header: t("auditLogs.table.initiator"),
         cell: ({ row }) => (
-          <div className="max-w-[200px] text-gray-700 truncate inline-block">
+          <div title={row.original.actor?.name || "-"} className="max-w-[200px] text-gray-700 truncate inline-block">
             {row.original.actor?.name || "-"}
           </div>
         ),
@@ -73,7 +74,7 @@ export function AuditLogsTable({
         cell: ({ row }) => {
           const entity = row.original.entity_type;
           return (
-            <div className="max-w-[200px] text-gray-700 truncate inline-block">
+            <div title={entity.replace(/_/g, " ").replace(/^\w/, c => c.toUpperCase())} className="max-w-[200px] text-gray-700 truncate inline-block capitalize">
               {entity.replace(/_/g, " ")}
             </div>
           );
@@ -84,7 +85,7 @@ export function AuditLogsTable({
         id: "actor",
         header: t("auditLogs.table.event"),
         cell: ({ row }) => (
-          <div className="max-w-[200px] text-gray-700 truncate inline-block">
+          <div title={row.original?.event?.title || "-"} className="max-w-[200px] text-gray-700 truncate inline-block">
             {row.original?.event?.title || "-"}
           </div>
         ),
