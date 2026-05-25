@@ -11,35 +11,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { Info } from "lucide-react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   DotsThreeVertical as DotsThreeVerticalIcon,
   XCircleIcon,
 } from "@phosphor-icons/react";
+import RejectModal from "@/app/transactions/components/RejectModal";
 import { useTranslation } from "@/hooks/useTranslation";
 import { ReusableTable } from "@/components/ReusableTable";
 import { formatCurrency } from "@/lib/utils";
 import { useLanguageStore } from "@/store/languageStore";
 import { Ticket } from "@/types/paymenttransactiondetail";
-import { RefundService } from "@/services/refundService";
 
 interface PayoutTableProps {
   billings: Ticket[];
@@ -63,6 +46,7 @@ interface PayoutTableProps {
   onOpenCancelBill: boolean;
   searchQuery?: string;
   onSearchChange?: (query: string) => void;
+  transactionId: string;
 }
 
 export function TicketTable({
@@ -80,17 +64,14 @@ export function TicketTable({
   sortBy,
   sortOrder,
   onSortChange,
-  setIsCancelBillDialogOpen,
-  onOpenCancelBill,
   searchQuery,
   onSearchChange,
+  transactionId,
 }: PayoutTableProps) {
   const { t } = useTranslation();
-  const router = useRouter();
-  const { locale } = useLanguageStore();
   const [ticketData, setTicketData] = React.useState<Ticket | null>(null);
-  const queryClient = useQueryClient();
   const [searchInput, setSearchInput] = React.useState(searchQuery ?? "");
+  const [isRejectDialogOpen, setIsRejectDialogOpen] = React.useState(false);
 
   // Add this inside the component, after the searchInput state
   const filteredBillings = React.useMemo(() => {
@@ -116,18 +97,6 @@ export function TicketTable({
     }, 400);
     return () => clearTimeout(timer);
   }, [searchInput, searchQuery, onSearchChange]);
-
-  const createMutation = useMutation({
-    mutationFn: (data: { reason: string; ticketID: string }) =>
-      RefundService.createRefund({
-        reason: data.reason,
-        ticketID: data.ticketID,
-      }),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["refunds"] });
-      setIsCancelBillDialogOpen(false);
-    },
-  });
 
   // Table columns
   const columns: ColumnDef<Ticket>[] = React.useMemo(
@@ -210,7 +179,7 @@ export function TicketTable({
                 <DropdownMenuItem
                   onClick={() => {
                     setTicketData(ticket);
-                    setIsCancelBillDialogOpen(true);
+                    setIsRejectDialogOpen(true);
                   }}
                 >
                   <div className="flex justify-start items-center bg-gray-50 text-red-700">
@@ -302,43 +271,12 @@ export function TicketTable({
         }
       />
 
-      <AlertDialog
-        open={onOpenCancelBill}
-        onOpenChange={setIsCancelBillDialogOpen}
-      >
-        <AlertDialogContent className="rounded-3xl shadow-2xl border-none bg-white/95 backdrop-blur-xl data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 duration-300">
-          <AlertDialogHeader>
-            <AlertDialogTitle className="text-xl font-bold text-gray-900">
-              {t("billings.modals.confirmCancelTicket", "Confirm Cancel Ticket")}
-            </AlertDialogTitle>
-            <AlertDialogDescription className="text-gray-500 text-base">
-              {t(
-                "billings.modals.cancelTicketMessage",
-                "Are you sure you want to cancel this ticket? This action cannot be undone immediately.",
-              )}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter className="pt-6">
-            <AlertDialogCancel
-              onClick={() => setIsCancelBillDialogOpen(false)}
-              className="h-11 px-6 border-gray-200 hover:bg-gray-50 transition-colors"
-            >
-              {t("common.cancelButton", "Cancel")}
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() =>
-                createMutation.mutate({
-                  reason: "User requested cancellation",
-                  ticketID: ticketData?.id || "",
-                })
-              }
-              className="h-11 px-8 active:scale-95 bg-destructive text-white hover:bg-destructive/90 focus:bg-destructive/90 transition-colors"
-            >
-              {t("common.confirm", "Confirm")}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <RejectModal
+        open={isRejectDialogOpen}
+        onOpenChange={setIsRejectDialogOpen}
+        ticket={ticketData}
+        transactionId={transactionId}
+      />
     </>
   );
 }

@@ -1201,6 +1201,27 @@ export type RejectRefundFormValues = z.infer<
 >;
 
 /**
+ * Cancel Ticket Schema
+ */
+
+export const cancelTicketSchema = (
+  t: (
+    key: string,
+    fallback?: string,
+    params?: Record<string, string | number>,
+  ) => string,
+) => {
+  const v = createValidationHelpers(t);
+  return z.object({
+    reason: z.string().min(1, v.required(t("", "Reason"))),
+  });
+};
+
+export type CancelTicketFormValues = z.infer<
+  ReturnType<typeof cancelTicketSchema>
+>;
+
+/**
  * Approve Payout Schema
  */
 
@@ -1236,7 +1257,7 @@ export type ApprovePayoutPayload = {
 // Separate type for the full API payload
 export type RejectRefundPayload = {
   refundId: string;
-  additionalProp1: string;
+  reason: string;
 };
 
 /**

@@ -26,56 +26,64 @@ import { toast } from "sonner";
 import { queryKeys } from "@/lib/queryKeys";
 import { useLanguageStore } from "@/store/languageStore";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  rejectRefundSchema,
-  RejectRefundFormValues,
-  RejectRefundPayload,
-} from "@/lib/validation";
+import { cancelTicketSchema, CancelTicketFormValues } from "@/lib/validation";
 import { RefundService } from "@/services/refundService";
-import { Refund } from "@/types/refunds";
+import { Ticket } from "@/types/paymenttransactiondetail";
 
 interface RejectModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  refund: Refund | null;
+  ticket: Ticket | null;
+  transactionId: string;
 }
 
 export default function RejectModal({
   open,
   onOpenChange,
-  refund,
+  ticket,
+  transactionId,
 }: RejectModalProps) {
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
   const queryClient = useQueryClient();
 
-  const schema = rejectRefundSchema(t);
+  const schema = cancelTicketSchema(t);
 
-  const form = useForm<RejectRefundFormValues>({
+  const form = useForm<CancelTicketFormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
-      admin_notes: "",
+      reason: "",
     },
     mode: "onChange",
   });
 
   const createMutation = useMutation({
-    mutationFn: (data: RejectRefundPayload) => RefundService.rejectRefund(data),
+    mutationFn: (data: { reason: string; ticketID: string }) =>
+      RefundService.createRefund({
+        reason: data.reason,
+        ticketID: data.ticketID,
+      }),
     onSuccess: async () => {
-      toast.success(t("refunds.modal.refundRejectedSuccessfully", "Refund rejected successfully."));
       await queryClient.invalidateQueries({
-        queryKey: queryKeys.organizers.list,
+        queryKey: queryKeys.users.detail(transactionId),
       });
-      onOpenChange(false);
+      toast.success(
+        t(
+          "events.modals.TicketCancelledSuccessfully",
+          "Ticket Cancelled Successfully.",
+        ),
+      );
+      handleClose();
     },
   });
 
-  const onSubmit = (data: RejectRefundFormValues) => {
+  const onSubmit = (data: CancelTicketFormValues) => {
     createMutation.mutate({
-      refundId: refund?.id || "",
-      reason: data.admin_notes,
+      reason: data.reason,
+      ticketID: ticket?.id || "",
     });
   };
+
   const handleClose = () => {
     form.reset();
     onOpenChange(false);
@@ -94,7 +102,7 @@ export default function RejectModal({
       <DialogContent className="sm:max-w-[520px] overflow-y-scroll max-h-[90vh] shadow-2xl border-none bg-white/90 backdrop-blur-xl data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 duration-300">
         <DialogHeader className="space-y-3">
           <DialogTitle className="text-xl font-bold bg-red-500 bg-clip-text text-transparent">
-            {t("refunds.modal.rejectRefund", "Reject Refund")}
+            {t("billings.modals.confirmCancelTicket", "Confirm Cancel Ticket")}
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
@@ -104,21 +112,21 @@ export default function RejectModal({
           >
             <FormField
               control={form.control}
-              name="admin_notes"
+              name="reason"
               render={({ field, fieldState }) => (
                 <FormItem>
                   <FormLabel
                     required
                     className="text-sm font-semibold text-gray-700"
                   >
-                    {t("refunds.modal.adminNotes", "Admin Notes")}
+                    {t("events.modals.reason", "Reason")}
                   </FormLabel>
                   <div className="relative group">
                     <FormControl>
                       <Textarea
                         placeholder={t(
-                          "refunds.modal.enterReason",
-                          "Enter reason for rejection",
+                          "events.modals.reasonPlaceholder",
+                          "Reason",
                         )}
                         {...field}
                         maxLength={100}
@@ -161,7 +169,10 @@ export default function RejectModal({
                 {isPending && (
                   <SpinnerIcon className="mr-2 h-4 w-4 animate-spin" />
                 )}
-                {t("refunds.modal.reject", "Reject")}
+                {t(
+                  "events.actions.approveCancellation",
+                  "Approve Cancellation",
+                )}
               </Button>
             </DialogFooter>
           </form>

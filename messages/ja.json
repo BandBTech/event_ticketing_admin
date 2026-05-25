@@ -252,6 +252,7 @@
       "commissionRate": "手数料率 (%)",
       "adminRemark": "管理者メモ（任意）",
       "reason": "理由",
+      "TicketCancelledSuccessfully": "チケットは正常にキャンセルされました。",
       "remarkPlaceholder": "メモを追加...",
       "reasonPlaceholder": "理由を入力してください...",
       "deleteDesc": "この操作は元に戻すことができません。\nこれにより、イベントが完全に削除され、詳細データがサーバーから削除されます。"
@@ -1154,7 +1155,8 @@
       "confirmRefundRetry": "返金再試行の確認",
       "areYouSureYou": "この返金を再試行してもよろしいですか？この操作はすぐには元に戻せません。",
       "retry": "再試行",
-      "reject": "拒否"
+      "reject": "拒否",
+      "refundRejectedSuccessfully": "返金は正常に拒否されました。"
     }
   },
   "payouts": {

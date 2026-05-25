@@ -241,6 +241,7 @@
       "commissionRate": "Commissione (%)",
       "adminRemark": "Nota Admin (Opzionale)",
       "reason": "Motivo",
+      "TicketCancelledSuccessfully": "Biglietto annullato con successo.",
       "remarkPlaceholder": "Aggiungi una nota...",
       "reasonPlaceholder": "Fornisci un motivo...",
       "deleteDesc": "Questa azione non può essere annullata. \nCiò eliminerà definitivamente l'evento e rimuoverà i dati dettagliati dai nostri server."
@@ -1141,7 +1142,8 @@
       "confirmRefundRetry": "Conferma Nuovo Tentativo di Rimborso",
       "areYouSureYou": "Sei sicuro di voler riprovare questo rimborso? Questa azione non può essere annullata immediatamente.",
       "retry": "Riprova",
-      "reject": "Rifiuta"
+      "reject": "Rifiuta",
+      "refundRejectedSuccessfully": "Rimborso rifiutato con successo."
     }
   },
   "payouts": {

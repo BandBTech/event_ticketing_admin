@@ -318,6 +318,7 @@ export default function PaymentDetail() {
               onSortChange={() => {}}
               setIsCancelBillDialogOpen={setIsCancelBillDialogOpen}
               onOpenCancelBill={isCancelBillDialogOpen}
+              transactionId={transactionId}
             />
           </div>
         )}

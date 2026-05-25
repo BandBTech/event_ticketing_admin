@@ -261,6 +261,7 @@
       "commissionRate": "Commission Rate (%)",
       "adminRemark": "Admin Remark (Optional)",
       "reason": "Reason",
+      "TicketCancelledSuccessfully": "Ticket cancelled successfully.",
       "remarkPlaceholder": "Add a note...",
       "reasonPlaceholder": "Please provide a reason...",
       "cancellationReason": "Reason for Cancellation",
@@ -1187,7 +1188,8 @@
       "confirmRefundRetry": "Confirm Refund Retry",
       "areYouSureYou": "Are you sure you want to retry this refund? This action cannot be undone immediately.",
       "retry": "Retry",
-      "reject": "Reject"
+      "reject": "Reject",
+      "refundRejectedSuccessfully": "Refund rejected successfully."
     }
   },
   "payouts": {

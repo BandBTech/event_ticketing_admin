@@ -4,17 +4,18 @@ import {
   RefundResponse,
   RefundData,
   RefundStatusChange,
+  TicketCancellationResponse,
 } from "@/types/refunds";
 
 export class RefundService {
   /**
    * Create new refund from admin
    */
-  static async createRefund(data: {
+static async createRefund(data: {
     reason: string;
     ticketID: string;
-  }): Promise<void> {
-    await api.post<void>(
+  }): Promise<TicketCancellationResponse> {
+    return await api.post<TicketCancellationResponse>(
       API_ENDPOINTS.CREATE_REFUND,
       {
         reason: data.reason,
@@ -90,12 +91,12 @@ export class RefundService {
 
   static async rejectRefund(payload: {
     refundId: string;
-    additionalProp1: string;
+    reason: string;
   }): Promise<RefundResponse> {
     return await api.post<RefundResponse>(
       API_ENDPOINTS.REJECT_REFUND(payload.refundId),
       {
-        additionalProp1: payload.additionalProp1,
+        reason: payload.reason,
       },
       {
         requiresAuth: true,

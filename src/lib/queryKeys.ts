@@ -135,6 +135,27 @@ export const queryKeys = {
   },
 
   /**
+   * Tickets query keys
+   */
+tickets: {
+  all: (
+    page?: number,
+    itemsPerPage?: number,
+    search?: string,
+    status?: string,
+    role?: string,
+    accountStatus?: string,
+  ) =>
+    ["tickets", page, itemsPerPage, search, status, role, accountStatus] as const,
+
+  list: ["tickets"] as const,
+
+  detail: (id: string | undefined) => ["tickets", "detail", id] as const,
+
+  history: (id: string | undefined) => ["tickets", "history", id] as const,
+},
+
+  /**
    * Permissions query keys
    */
   permissions: {

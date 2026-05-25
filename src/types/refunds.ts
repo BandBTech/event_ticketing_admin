@@ -10,6 +10,13 @@ export interface RefundResponse {
   refunds: Refund[];
 }
 
+export interface TicketCancellationResponse {
+  success: boolean;
+  message: string;
+  timestamp: string;
+  request_id: string;
+}
+
 export interface Refund {
   id: string;
   refund_number: string;
