@@ -77,7 +77,7 @@ export class BillingService {
       if (filters.limit) params.append("limit", filters.limit.toString());
       if (filters.status) params.append("status", filters.status.toString());
       if (filters.organizer_id && filters.organizer_id.length > 0)
-        params.append("organizer_id", filters.organizer_id.join(","));
+        params.append("organizer_ids", filters.organizer_id.join(","));
       if (filters.start_date)
         params.append(
           "start_date",

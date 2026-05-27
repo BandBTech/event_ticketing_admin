@@ -1077,7 +1077,9 @@
       "viewPayment": "View Payment",
       "noTransactionData": "No transaction data found",
       "noTransactionDataSubtitle": "You haven't made any transactions yet.",
-      "cancelTicket": "Cancel Ticket"
+      "cancelTicket": "Cancel Ticket",
+      "totalTickets": "Total Tickets",
+      "refundedTickets": "Refunded Tickets"
     },
     "paymentGateway": "Payment Gateway",
     "selectPaymentGateway": "Select Payment Gateway",
@@ -1098,6 +1100,7 @@
       "cancelled": "Cancelled",
       "refunded": "Refunded",
       "awaiting_webhook": "Awaiting Webhook",
+      "expired": "Expired",
       "processing": "Processing"
     },
     "transactionDetails": {

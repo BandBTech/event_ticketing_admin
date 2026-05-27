@@ -283,7 +283,7 @@ export function TransactionFilterSheet({
                 />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="cash">{t("billings.method.cash")}</SelectItem>
+                <SelectItem value="konbini">{t("billings.method.konbini")}</SelectItem>
                 <SelectItem value="stripe">{t("billings.method.stripe")}</SelectItem>
               </SelectContent>
             </Select>
@@ -308,7 +308,7 @@ export function TransactionFilterSheet({
           </div>
 
           {/* User */}
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             <Label>{t("users.userRoles.user")}</Label>
             <AsyncCombobox
               queryKey={["filter", "users"]}
@@ -323,7 +323,7 @@ export function TransactionFilterSheet({
               className="w-full text-sm h-9 justify-between px-3!"
               debounceMs={300}
             />
-          </div>
+          </div> */}
 
           {/* Status */}
           <div className="space-y-2">
@@ -341,9 +341,12 @@ export function TransactionFilterSheet({
                 />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="pending">{t("status.pending")}</SelectItem>
-                <SelectItem value="paid">{t("dashboard.dataDisplay.paid")}</SelectItem>
-                <SelectItem value="completed">{t("status.completed")}</SelectItem>
+                <SelectItem value="cancelled">{t("transactions.transactionStatus.cancelled")}</SelectItem>
+                <SelectItem value="expired">{t("transactions.transactionStatus.expired")}</SelectItem>
+                <SelectItem value="failed">{t("transactions.transactionStatus.failed")}</SelectItem>
+                <SelectItem value="pending">{t("transactions.transactionStatus.pending")}</SelectItem>
+                <SelectItem value="processing">{t("transactions.transactionStatus.processing")}</SelectItem>
+                <SelectItem value="succeeded">{t("transactions.transactionStatus.succeeded")}</SelectItem>
               </SelectContent>
             </Select>
           </div>

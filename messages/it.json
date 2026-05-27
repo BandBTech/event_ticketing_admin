@@ -1031,7 +1031,9 @@
       "viewPayment": "visualizza il pagamento",
       "noTransactionData": "Nessun dato di transazione trovato",
       "noTransactionDataSubtitle": "Non hai ancora effettuato alcuna transazione.",
-      "cancelTicket": "Annulla Biglietto"
+      "cancelTicket": "Annulla Biglietto",
+      "totalTickets": "biglietti totali",
+      "refundedTickets": "biglietti rimborsati"
     },
     "paymentGateway": "Gateway di pagamento",
     "selectPaymentGateway": "Seleziona il metodo di pagamento",
@@ -1052,6 +1054,7 @@
       "cancelled": "cancellare",
       "refunded": "Rimborsato",
       "awaiting_webhook": "in attesa del webhook",
+      "expired": "scaduto",
       "processing": "elaborazione"
     },
     "transactionDetails": {

@@ -1044,7 +1044,9 @@
       "viewPayment": "支払い状況を確認する",
       "noTransactionData": "取引データが見つかりませんでした",
       "noTransactionDataSubtitle": "あなたはまだ取引を行っていません。",
-      "cancelTicket": "チケットをキャンセル"
+      "cancelTicket": "チケットをキャンセル",
+      "totalTickets": "合計チケット数",
+      "refundedTickets": "払い戻しされたチケット"
     },
     "paymentGateway": "決済ゲートウェイ",
     "selectPaymentGateway": "決済ゲートウェイを選択",
@@ -1065,6 +1067,7 @@
       "cancelled": "キャンセル",
       "refunded": "返金済み",
       "awaiting_webhook": "ウェブフックを待機中",
+      "expired": "期限切れ",
       "processing": "処理"
     },
     "transactionDetails": {

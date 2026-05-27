@@ -127,8 +127,27 @@ export function TransactionTable({
       {
         id: "ticket_count",
         header: t("transactions.table.ticket"),
-        accessorKey: "quantity",
         meta: { sortKey: "quantity" },
+        cell: ({ row }) => (
+          <span className="px-2 py-1 text-xs font-medium rounded-full flex items-center gap-2">
+            {row.original.quantity}
+
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <InfoIcon className="text-yellow-800 cursor-pointer" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>
+                    {t("transactions.table.totalTickets")}: {row.original.quantity}
+                    <br />
+                    {t("transactions.table.refundedTickets")}: {row.original.refunded_count}
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </span>
+        ),
       },
       {
         id: "amount",
@@ -147,10 +166,7 @@ export function TransactionTable({
                 <TooltipContent>
                   <p>
                     {t("transactions.transactionDetails.totalAmount")}:{" "}
-                    {formatCurrency(
-                      row.original.amount,
-                      row.original.symbol
-                    )}
+                    {formatCurrency(row.original.amount, row.original.symbol)}
                     <br />
                     {t("events.modals.commissionRate")}:{" "}
                     {row.original.commission_rate}%
@@ -158,13 +174,13 @@ export function TransactionTable({
                     {t("dashboard.modal.commissionAmount")}:{" "}
                     {formatCurrency(
                       row.original.commission_amount,
-                      row.original.symbol
+                      row.original.symbol,
                     )}
                     <br />
                     {t("transactions.table.organizer_share")}:{" "}
                     {formatCurrency(
                       row.original.organizer_share,
-                      row.original.symbol
+                      row.original.symbol,
                     )}
                   </p>
                 </TooltipContent>
@@ -201,7 +217,7 @@ export function TransactionTable({
                   −
                   {formatCurrency(
                     row.original.gateway_fee,
-                    row.original.symbol
+                    row.original.symbol,
                   )}
                 </span>
               )}
