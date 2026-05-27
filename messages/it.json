@@ -1191,7 +1191,16 @@
       "initiator": "Iniziatore",
       "selectInitiator": "Seleziona Iniziatore",
       "searchInitiator": "Cerca Iniziatore",
-      "noInitiator": "Nessun Iniziatore Trovato"
+      "noInitiator": "Nessun Iniziatore Trovato",
+      "entity": "Entità",
+      "selectEntity": "Seleziona entità",
+      "entityType": {
+        "payment_bill": "Bollettino di pagamento",
+        "payout_request": "Richiesta di pagamento",
+        "refund": "Rimborso",
+        "ticket": "Ticket",
+        "transaction": "Transazione"
+      }
     },
     "table": {
       "action": "Azione",

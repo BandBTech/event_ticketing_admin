@@ -74,8 +74,8 @@ export function AuditLogsTable({
         cell: ({ row }) => {
           const entity = row.original.entity_type;
           return (
-            <div title={entity.replace(/_/g, " ").replace(/^\w/, c => c.toUpperCase())} className="max-w-[200px] text-gray-700 truncate inline-block capitalize">
-              {entity.replace(/_/g, " ")}
+            <div title={t(`auditLogs.filterAuditLogs.entityType.${entity}`)} className="max-w-[200px] text-gray-700 truncate inline-block capitalize">
+              {t(`auditLogs.filterAuditLogs.entityType.${entity}`)}
             </div>
           );
         },

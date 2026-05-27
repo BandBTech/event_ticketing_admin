@@ -1237,7 +1237,16 @@
       "initiator": "Initiator",
       "selectInitiator": "Select Initiator",
       "searchInitiator": "Search Initiator",
-      "noInitiator": "No Initiator Found"
+      "noInitiator": "No Initiator Found",
+      "entity": "Entity",
+      "selectEntity": "Select Entity",
+      "entityType": {
+        "payment_bill": "Payment Bill",
+        "payout_request": "Payout Request",
+        "refund": "Refund",
+        "ticket": "Ticket",
+        "transaction": "Transaction"
+      }
     },
     "table": {
       "action": "Action",

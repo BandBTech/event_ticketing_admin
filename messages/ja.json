@@ -1204,7 +1204,16 @@
       "initiator": "実行元",
       "selectInitiator": "実行元を選択",
       "searchInitiator": "実行元を検索",
-      "noInitiator": "実行元が見つかりません"
+      "noInitiator": "実行元が見つかりません",
+      "entity": "エンティティ",
+      "selectEntity": "エンティティを選択",
+      "entityType": {
+        "payment_bill": "支払い請求書",
+        "payout_request": "支払いリクエスト",
+        "refund": "返金",
+        "ticket": "チケット",
+        "transaction": "トランザクション"
+      }
     },
     "table": {
       "action": "アクション",

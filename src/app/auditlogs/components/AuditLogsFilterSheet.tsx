@@ -286,7 +286,7 @@ export function AuditLogsFilterSheet({
 
           {/* Status */}
           <div className="space-y-2">
-            <Label>{t("Entity")}</Label>
+            <Label>{t("auditLogs.filterAuditLogs.entity")}</Label>
             <Select
               value={localFilters.entity_type}
               onValueChange={(value) =>
@@ -295,16 +295,16 @@ export function AuditLogsFilterSheet({
             >
               <SelectTrigger className="w-full text-sm h-9 justify-between px-3! bg-white">
                 <SelectValue
-                  placeholder={t("Select Entity")}
+                  placeholder={t("auditLogs.filterAuditLogs.selectEntity")}
                   className="text-black data-[placeholder]:text-black"
                 />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="payment_bill">{t("Payment Bill")}</SelectItem>
-                <SelectItem value="payout_request">{t("Payout Request")}</SelectItem>
-                <SelectItem value="refund">{t("Refund")}</SelectItem>
-                <SelectItem value="ticket">{t("Ticket")}</SelectItem>
-                <SelectItem value="transaction">{t("Transaction")}</SelectItem>
+                <SelectItem value="payment_bill">{t("auditLogs.filterAuditLogs.entityType.payment_bill")}</SelectItem>
+                <SelectItem value="payout_request">{t("auditLogs.filterAuditLogs.entityType.payout_request")}</SelectItem>
+                <SelectItem value="refund">{t("auditLogs.filterAuditLogs.entityType.refund")}</SelectItem>
+                <SelectItem value="ticket">{t("auditLogs.filterAuditLogs.entityType.ticket")}</SelectItem>
+                <SelectItem value="transaction">{t("auditLogs.filterAuditLogs.entityType.transaction")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
