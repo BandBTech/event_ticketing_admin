@@ -113,6 +113,9 @@ export default function TransactionsPage() {
 
   const handleStatusChange = useCallback(
     (value: string) => {
+      if (value === "all") {
+        value = "";
+      }
       setStatus(value);
       handlePageChange(1);
     },
@@ -170,18 +173,25 @@ export default function TransactionsPage() {
               <SelectValue placeholder={t("transactions.filter", "Filter")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="failed">
-                {t("transactions.transactionStatus.failed", "Failed")}
-              </SelectItem>
               <SelectItem value="pending">
                 {t("transactions.transactionStatus.pending", "Pending")}
               </SelectItem>
               <SelectItem value="processing">
-                {t("transactions.transactionStatus.processing", "")}
+                {t("transactions.transactionStatus.processing", "Processing")}
+              </SelectItem>
+              <SelectItem value="rejected">
+                {t("transactions.transactionStatus.rejected", "Rejected")}
               </SelectItem>
               <SelectItem value="succeeded">
                 {t("transactions.transactionStatus.succeeded", "Succeeded")}
               </SelectItem>
+              {status && (
+                <SelectItem value="all">
+                  <span className="text-red-500 font-semibold">
+                    {t("users.clearFilters", "Clear Filters")}
+                  </span>
+                </SelectItem>
+              )}
             </SelectContent>
           </Select>
         </div>

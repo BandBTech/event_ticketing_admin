@@ -1117,7 +1117,8 @@
       "initiatedBy": "申請者",
       "refundType": "返金の種類",
       "noRefundData": "返金データが見つかりませんでした",
-      "noRefundDataSubtitle": "まだ払い戻しは行われていません。"
+      "noRefundDataSubtitle": "まだ払い戻しは行われていません。",
+      "viewTransaction": "取引を表示"
     },
     "refundType": {
       "customer_request": "お客様からのご要望",

@@ -1104,7 +1104,8 @@
       "initiatedBy": "Iniziato Da",
       "refundType": "Tipo di rimborso",
       "noRefundData": "Nessun dato di rimborso trovato",
-      "noRefundDataSubtitle": "Non hai ancora effettuato alcun rimborso."
+      "noRefundDataSubtitle": "Non hai ancora effettuato alcun rimborso.",
+      "viewTransaction": "Visualizza Transazione"
     },
     "refundType": {
       "customer_request": "Richiesta del cliente",

@@ -1150,7 +1150,8 @@
       "initiatedBy": "Initiated By",
       "refundType": "Refund Type",
       "noRefundData": "No refund data found",
-      "noRefundDataSubtitle": "You haven't made any refunds yet."
+      "noRefundDataSubtitle": "You haven't made any refunds yet.",
+      "viewTransaction": "View Transaction"
     },
     "refundType": {
       "customer_request": "Customer Request",

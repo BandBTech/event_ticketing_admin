@@ -76,6 +76,9 @@ export default function TransactionsPage() {
 
   const handleStatusChange = useCallback(
     (value: string) => {
+      if (value === "all") {
+        value = "";
+      }
       setStatus(value);
       handlePageChange(1);
     },
@@ -145,6 +148,13 @@ export default function TransactionsPage() {
               <SelectItem value="rejected">
                 {t("events.status.rejected", "Rejected")}
               </SelectItem>
+              {status && (
+                <SelectItem value="all">
+                  <span className="text-red-500 font-semibold">
+                    {t("users.clearFilters", "Clear Filters")}
+                  </span>
+                </SelectItem>
+              )}
             </SelectContent>
           </Select>
         </div>

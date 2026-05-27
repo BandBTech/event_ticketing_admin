@@ -6,6 +6,7 @@ import {
   XCircleIcon,
   CheckCircleIcon,
   EyeIcon,
+  ArrowsLeftRightIcon ,
   ArrowsCounterClockwiseIcon,
 } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
@@ -152,11 +153,10 @@ export function RefundTable({
           const status = row.original.status;
 
           const statusStyles: Record<string, string> = {
-            completed: "bg-green-100 text-green-700",
-            succeeded: "bg-green-100 text-green-700",
-            pending: "bg-yellow-100 text-yellow-700",
             failed: "bg-red-100 text-red-700",
-            refunded: "bg-gray-200 text-gray-700",
+            pending: "bg-yellow-100 text-yellow-700",
+            succeeded: "bg-green-100 text-green-700",
+            rejected: "bg-red-100 text-red-700",
           };
 
           return (
@@ -210,6 +210,16 @@ export function RefundTable({
                 >
                   <EyeIcon weight="duotone" className="mr-2 h-4 w-4" />
                   {t(`billings.viewDetails`)}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    router.push(
+                      `/transactions/paymentdetail?id=${refund.transaction_id}`,
+                    );
+                  }}
+                >
+                  <ArrowsLeftRightIcon weight="duotone" className="mr-2 h-4 w-4" />
+                  {t(`refunds.table.viewTransaction`)}
                 </DropdownMenuItem>
 
                 {refund.status === "pending" && (
