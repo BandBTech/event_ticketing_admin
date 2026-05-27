@@ -129,7 +129,7 @@ export function EventCard({
             {t("dashboard.viewEvent", "View")}
           </button>
 
-          {event.status !== "rejected" && (
+          {event.status === "pending" && (
             <div className="flex flex-wrap items-center gap-1.5">
               <button
                 onClick={() => onApprove(event.id)}

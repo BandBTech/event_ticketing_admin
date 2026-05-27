@@ -5,6 +5,7 @@ export type AccountStatus = "active" | "inactive" | "suspended" | "blocked";
 
 export interface BillingFilters {
   user_id: string;
+  entity_type: string;
   event_id: string;
   start_date: Date | undefined;
   end_date: Date | undefined;
@@ -48,6 +49,7 @@ export interface AuditLogsListResponse {
 
 export const getDefaultFilters = (): BillingFilters => ({
   user_id: "",
+  entity_type: "",
   event_id: "",
   start_date: undefined,
   end_date: undefined,

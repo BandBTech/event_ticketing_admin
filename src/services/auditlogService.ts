@@ -29,6 +29,7 @@ export class AuditlogService {
     search?: string;
     event_id?: string;
     user_id?: string;
+    entity_type?: string;
     start_date?: Date | undefined;
     end_date?: Date | undefined;
   }): Promise<AuditLogsListResponse> {
@@ -41,7 +42,8 @@ export class AuditlogService {
       if (filters.search) params.append("search", filters.search);
       if (filters.event_id)
         params.append("event_id", filters.event_id.toString());
-      if (filters.user_id) params.append("user_id", filters.user_id.toString());
+      if (filters.user_id) params.append("actor_id", filters.user_id.toString());
+      if (filters.entity_type) params.append("entity_type", filters.entity_type.toString());
       if (filters.start_date)
         params.append(
           "start_date",

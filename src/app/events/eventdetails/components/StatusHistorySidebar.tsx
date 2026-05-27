@@ -303,8 +303,11 @@ export default function StatusHistorySidebar({
                   <span>
                     {historyItem.changed_by_name === "System (Automatic)"
                       ? t("events.history.systemAutomatic")
-                      : historyItem.changed_by_name ||
-                        t("common.text.system", "System")}
+                      : historyItem.changed_by_name &&
+                          historyItem.changed_by_name.toLowerCase() !==
+                            "unknown"
+                        ? historyItem.changed_by_name
+                        : t("common.text.system", "System")}
                   </span>
                 </div>
               </div>

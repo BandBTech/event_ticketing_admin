@@ -54,6 +54,7 @@ export default function TransactionsPage() {
     if (appliedFilters.start_date) count++;
     if (appliedFilters.end_date) count++;
     if (appliedFilters.user_id) count++;
+    if (appliedFilters.entity_type) count++;
     if (appliedFilters.event_id) count++;
     return count;
   }, [appliedFilters]);
@@ -76,6 +77,7 @@ export default function TransactionsPage() {
       debouncedSearch,
       appliedFilters.event_id,
       appliedFilters.user_id,
+      appliedFilters.entity_type,
       appliedFilters.start_date,
       appliedFilters.end_date,
       sortBy,
@@ -88,6 +90,7 @@ export default function TransactionsPage() {
         search: debouncedSearch,
         event_id: appliedFilters.event_id,
         user_id: appliedFilters.user_id,
+        entity_type: appliedFilters.entity_type,
         start_date: appliedFilters.start_date,
         end_date: appliedFilters.end_date,
       }),
@@ -126,13 +129,13 @@ export default function TransactionsPage() {
 
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 py-4">
         <div className="relative w-full sm:w-80">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
+          {/* <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
           <Input
             placeholder={t("auditLogs.searchAuditLogs", "Search Audit Logs")}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             className="pl-9 shadow-sm"
-          />
+          /> */}
         </div>
 
         <div className="relative">
