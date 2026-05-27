@@ -130,7 +130,7 @@ export default function ApproveModal({
     onSuccess: async () => {
       toast.success(t("", "Payout approved successfully"));
       await queryClient.invalidateQueries({
-        queryKey: queryKeys.organizers.list,
+        queryKey: queryKeys.payouts.list,
       });
       onOpenChange(false);
       setShowViewBills(true);

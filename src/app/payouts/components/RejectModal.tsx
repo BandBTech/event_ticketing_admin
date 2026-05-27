@@ -65,7 +65,7 @@ export default function RejectModal({
     onSuccess: async () => {
       toast.success(t("", "Payout rejected successfully"));
       await queryClient.invalidateQueries({
-        queryKey: queryKeys.organizers.list,
+        queryKey: queryKeys.payouts.list,
       });
       onOpenChange(false);
     },

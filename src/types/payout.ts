@@ -17,6 +17,7 @@ export interface PayoutRequest {
   request_number: string;
   organizer_id: string;
   event_id: string;
+  bill_id: string;
   organizer: {
     id: string;
     name: string;

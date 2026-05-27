@@ -72,6 +72,7 @@ export function PayoutTable({
 }: PayoutTableProps) {
   const { t } = useTranslation();
   const { locale } = useLanguageStore();
+  const router = useRouter();
 
   // Table columns
   const columns: ColumnDef<PayoutRequest>[] = React.useMemo(
@@ -185,7 +186,7 @@ export function PayoutTable({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
-                  disabled={payoutData.status !== "pending"}
+                  disabled={payoutData.status === "rejected"}
                   variant="ghost"
                   className="h-8 w-8 p-0"
                 >
@@ -194,26 +195,45 @@ export function PayoutTable({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem
-                  onClick={() => {
-                    setSelectedRefund && setSelectedRefund(payoutData);
-                    setOpenApproveDialog && setOpenApproveDialog(true);
-                  }}
-                >
-                  <CheckCircleIcon weight="duotone" className="mr-2 h-4 w-4" />
-                  {t("events.actions.approve")}
-                </DropdownMenuItem>
+                {payoutData.status === "approved" && (
+                  <DropdownMenuItem
+                    onClick={() => {
+                      router.push(
+                        `/billings/billdetail?id=${payoutData.bill_id}`,
+                      );
+                    }}
+                  >
+                    <EyeIcon weight="duotone" className="mr-2 h-4 w-4" />
+                    {t(`payouts.table.viewBillDetail`)}
+                  </DropdownMenuItem>
+                )}
 
-                <DropdownMenuItem
-                  onClick={() => {
-                    setSelectedRefund && setSelectedRefund(payoutData);
-                    setRejectModalOpen && setRejectModalOpen(true);
-                  }}
-                  className="text-red-600"
-                >
-                  <XCircleIcon weight="duotone" className="mr-2 h-4 w-4" />
-                  {t("events.actions.reject")}
-                </DropdownMenuItem>
+                {payoutData.status === "pending" && (
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setSelectedRefund && setSelectedRefund(payoutData);
+                      setOpenApproveDialog && setOpenApproveDialog(true);
+                    }}
+                  >
+                    <CheckCircleIcon
+                      weight="duotone"
+                      className="mr-2 h-4 w-4"
+                    />
+                    {t("events.actions.approve")}
+                  </DropdownMenuItem>
+                )}
+                {payoutData.status === "pending" && (
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setSelectedRefund && setSelectedRefund(payoutData);
+                      setRejectModalOpen && setRejectModalOpen(true);
+                    }}
+                    className="text-red-600"
+                  >
+                    <XCircleIcon weight="duotone" className="mr-2 h-4 w-4" />
+                    {t("events.actions.reject")}
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           );

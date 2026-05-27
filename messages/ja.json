@@ -1188,7 +1188,8 @@
       "eventStatus": "イベントステータス",
       "status": "ステータス",
       "requestType": "リクエストタイプ",
-      "requestNumber": "リクエスト番号"
+      "requestNumber": "リクエスト番号",
+      "viewBillDetail": "請求書の詳細を表示"
     },
     "eventStatus": {
       "completed": "完了",

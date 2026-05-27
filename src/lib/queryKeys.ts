@@ -135,6 +135,35 @@ export const queryKeys = {
   },
 
   /**
+   * Payouts query keys
+   */
+  payouts: {
+    /** Key for fetching payouts list with pagination and filters */
+    all: (
+      page?: number,
+      itemsPerPage?: number,
+      search?: string,
+      status?: string,
+      role?: string,
+      accountStatus?: string,
+    ) =>
+      [
+        "payouts",
+        page,
+        itemsPerPage,
+        search,
+        status,
+        role,
+        accountStatus,
+      ] as const,
+    /** Key for all payouts (used for invalidation) */
+    list: ["payouts"] as const,
+    /** Key for fetching a single payout by ID */
+    detail: (id: string | undefined) => ["payout", id] as const,
+    history: (id: string | undefined) => ["payout", id] as const,
+  },
+
+  /**
    * Tickets query keys
    */
 tickets: {

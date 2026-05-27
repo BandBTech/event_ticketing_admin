@@ -1221,7 +1221,8 @@
       "eventStatus": "Event Status",
       "status": "Status",
       "requestType": "Request Type",
-      "requestNumber": "Request Number"
+      "requestNumber": "Request Number",
+      "viewBillDetail": "View Bill Detail"
     },
     "eventStatus": {
       "completed": "Completed",

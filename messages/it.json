@@ -1175,7 +1175,8 @@
       "eventStatus": "Stato Evento",
       "status": "Stato",
       "requestType": "Tipo Richiesta",
-      "requestNumber": "Numero di Richiesta"
+      "requestNumber": "Numero di Richiesta",
+      "viewBillDetail": "Visualizza i dettagli della fattura"
     },
     "eventStatus": {
       "completed": "Completato",

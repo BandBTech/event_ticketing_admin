@@ -132,7 +132,7 @@ export default function BillDetail() {
 
   return (
     <div className="min-h-screen bg-slate-50 py-10 px-4">
-      <div className="max-w-4xl mx-auto space-y-5">
+      <div className="max-w-5xl mx-auto space-y-5">
         {/* Back nav */}
         <button
           onClick={() => router.push("/billings")}
