@@ -93,6 +93,21 @@ export function PayoutTable({
         },
       },
       {
+        id: "organizer_name",
+        header: t("billings.table.organizerName"),
+        meta: { sortKey: "organizer_name" },
+        cell: ({ row }) => (
+          <span className="font-medium max-w-[200px] truncate grid grid-cols-1">
+            {row.original.organizer.name}
+            {row.original.organizer.email && (
+              <span className="text-xs text-slate-600 font-normal">
+                {row.original.organizer.email}
+              </span>
+            )}
+          </span>
+        ),
+      },
+      {
         id: "event_title",
         header: t("payouts.table.eventTitle"),
         meta: { sortKey: "event_title" },

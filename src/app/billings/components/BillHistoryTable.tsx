@@ -68,9 +68,30 @@ export function BillHistoryTable({
   const columns: ColumnDef<PaymentHistory>[] = React.useMemo(
     () => [
       {
-        id: "date",
-        header: t("billings.billHistory.date", "Date"),
-        title: "Created Date",
+        id: "payment_date",
+        header: t("billings.addPaymentToBill.paymentDate"),
+        title: "Payment Date",
+        meta: { sortKey: "payment_date" },
+        cell: ({ row }) => {
+          const date = new Date(row.original.paid_at);
+          const formattedDate = date.toLocaleDateString("en-CA");
+          const formattedTime = date.toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+          });
+          return (
+            <div className="flex flex-col">
+              <span>{formattedDate}</span>
+              <span className="text-xs text-gray-500">at {formattedTime}</span>
+            </div>
+          );
+        },
+      },
+      {
+        id: "bill_created_date",
+        header: t("billings.addPaymentToBill.billCreationDate"),
+        title: "Bill Creation Date",
         meta: { sortKey: "created_at" },
         cell: ({ row }) => {
           const date = new Date(row.original.created_at);

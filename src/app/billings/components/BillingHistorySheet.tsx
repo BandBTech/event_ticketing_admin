@@ -81,15 +81,16 @@ export function BillingHistorySheet({
     enabled: open,
   });
 
-  const historyData = billHistoryData || [];  
+  const historyData = billHistoryData || [];
 
   const totalTransactions = historyData.length || 0;
   const totalAmount = Array.isArray(historyData)
     ? historyData.reduce((sum, item) => sum + (item.amount || 0), 0)
     : 0;
-  const symbol = Array.isArray(historyData) && historyData.length > 0
-    ? historyData[0].event.symbol
-    : "";
+  const symbol =
+    Array.isArray(historyData) && historyData.length > 0
+      ? historyData[0].event.symbol
+      : "";
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -162,9 +163,9 @@ export function BillingHistorySheet({
                     {/* Middle: dates */}
                     <div className="flex items-center justify-between text-xs text-black">
                       <span>
-                        {t("billings.addPaymentToBill.paymentDate")}:{" "}
+                        {t("billings.billHistory.processedBy")}:{" "}
                         <span className="font-semibold text-black">
-                          {formatDate(item.created_at)}
+                          {item.processed_by}
                         </span>
                       </span>
                       <span>
@@ -183,9 +184,17 @@ export function BillingHistorySheet({
 
                     {/* Bottom: processed by */}
                     <div className="text-xs text-black">
-                      {t("billings.billHistory.processedBy")}:{" "}
+                      {t("billings.addPaymentToBill.paymentDate")}:{" "}
                       <span className="font-semibold text-black">
-                        {item.processed_by}
+                        {formatDate(item.paid_at)}
+                      </span>
+                    </div>
+
+                    {/* Bottom: processed by */}
+                    <div className="text-xs text-black">
+                      {t("billings.addPaymentToBill.billCreationDate")}:{" "}
+                      <span className="font-semibold text-black">
+                        {formatDate(item.created_at)}
                       </span>
                     </div>
 

@@ -210,7 +210,7 @@ export default function RefundDetail() {
               </p>
               <p
                 className={cn(
-                  "text-sm font-semibold text-slate-700 cursor-pointer",
+                  "text-sm font-semibold text-slate-700 cursor-pointer grid grid-cols-1",
                   expanded === "admin"
                     ? "whitespace-normal break-words"
                     : "truncate",
@@ -225,6 +225,9 @@ export default function RefundDetail() {
                 }
               >
                 {refundData?.initiated_by.name || "-"}
+                <span className="text-xs text-slate-600 font-normal italic">
+                  {refundData?.initiated_by.email || "No email"}
+                </span>
               </p>
             </div>
           </div>
@@ -246,7 +249,7 @@ export default function RefundDetail() {
             label={t("refunds.refundDetail.originalAmount")}
             value={formatCurrency(
               refundData?.transaction.amount || 0,
-              refundData?.symbol,
+              refundData?.event.symbol,
             )}
           />
           <FinRow
@@ -254,7 +257,7 @@ export default function RefundDetail() {
             value={
               <>
                 <span>
-                  {formatCurrency(refundData?.amount || 0, refundData?.symbol)}
+                  {formatCurrency(refundData?.amount || 0, refundData?.event.symbol)}
                 </span>{" "}
                 <span className="italic font-normal">
                   ( {refundData?.ticket_count}{" "}
@@ -270,6 +273,10 @@ export default function RefundDetail() {
           <FinRow
             label={t("refunds.refundDetail.requestedAt")}
             value={formatDateTimeLong(refundData?.requested_at, locale)}
+          />
+          <FinRow
+            label={t("refunds.refundDetail.updatedAt")}
+            value={formatDateTimeLong(refundData?.updated_at, locale)}
           />
           <FinRow
             label={t("refunds.refundDetail.status")}

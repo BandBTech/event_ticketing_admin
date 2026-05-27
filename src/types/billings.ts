@@ -119,6 +119,7 @@ export interface PaymentHistory {
   notes: string;
   screenshot_url: string;
   created_at: string;
+  paid_at: string;
 }
 
 export interface BillingHistorySheetProps {

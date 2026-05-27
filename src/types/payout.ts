@@ -17,6 +17,11 @@ export interface PayoutRequest {
   request_number: string;
   organizer_id: string;
   event_id: string;
+  organizer: {
+    id: string;
+    name: string;
+    email: string;
+  };
   event: EventInfo;
   amount: number;
   status: "pending" | "approved" | "rejected" | string;

@@ -52,6 +52,7 @@ export interface RefundData {
     id: string;
     title: string;
     banner_image: string;
+    symbol: string;
   };
   organizer: {
     id: string;
@@ -64,7 +65,6 @@ export interface RefundData {
   };
   amount: number;
   currency: string;
-  symbol: string;
   reason: string;
   refund_type: string;
   status: string;
