@@ -1048,7 +1048,7 @@
       "cancelTicket": "チケットをキャンセル",
       "totalTickets": "合計チケット数",
       "refundedTickets": "払い戻しされたチケット",
-      "viewRefundDetails": "返金詳細を表示"
+      "viewRefundDetails": "払い戻しを見る"
     },
     "paymentGateway": "決済ゲートウェイ",
     "selectPaymentGateway": "決済ゲートウェイを選択",

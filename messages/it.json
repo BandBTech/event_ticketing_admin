@@ -1035,7 +1035,7 @@
       "cancelTicket": "Annulla Biglietto",
       "totalTickets": "biglietti totali",
       "refundedTickets": "biglietti rimborsati",
-      "viewRefundDetails": "Visualizza Dettagli Rimborso"
+      "viewRefundDetails": "Visualizza i rimborsi"
     },
     "paymentGateway": "Gateway di pagamento",
     "selectPaymentGateway": "Seleziona il metodo di pagamento",

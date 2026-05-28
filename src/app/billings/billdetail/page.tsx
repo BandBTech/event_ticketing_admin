@@ -433,7 +433,7 @@ export default function BillDetail() {
                 )}
               </SectionTitle>
 
-              <div className="glass-card-lowest rounded-2xl flex-1 min-h-0 flex flex-col">
+              <div className="glass-card-lowest rounded-2xl flex-1 min-h-0 flex flex-col h-[70vh]">
                 <BillHistoryTable
                   wrapperClassName="flex-1 min-h-0 overflow-auto"
                   billHistory={billHistory}
