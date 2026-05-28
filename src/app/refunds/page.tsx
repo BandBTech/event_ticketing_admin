@@ -46,6 +46,21 @@ export default function TransactionsPage() {
   const { currentPage, limit, handlePageChange, handleLimitChange } =
     usePaginationSync();
 
+const transactionIdFromParams = searchParams.get("id") || undefined;
+const [transactionId, setTransactionId] = useState<string | undefined>(undefined);
+
+// Consume ?id= once, then strip from URL
+React.useEffect(() => {
+  if (transactionIdFromParams) {
+    setTransactionId(transactionIdFromParams);
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("id");
+    const query = params.toString();
+    router.replace(`${pathname}${query ? `?${query}` : ""}`, {
+      scroll: false,
+    });
+  }
+}, [transactionIdFromParams]);
   const [searchInput, setSearchInput] = React.useState("");
   const [status, setStatus] = useState<string>("");
   const [isRejectDialogOpen, setIsRejectDialogOpen] = React.useState(false);
@@ -73,6 +88,7 @@ export default function TransactionsPage() {
       limit,
       status,
       debouncedSearch,
+      transactionId,
       sortBy,
       sortOrder,
     ],
@@ -82,6 +98,7 @@ export default function TransactionsPage() {
         limit: limit,
         search: debouncedSearch,
         status: status,
+        transaction_id: transactionId,
         sort_by: sortBy,
         sort_order: sortOrder,
       }),

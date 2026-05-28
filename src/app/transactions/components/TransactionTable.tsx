@@ -6,8 +6,8 @@ import {
   DotsThreeVertical as DotsThreeVerticalIcon,
   InfoIcon,
   CoinsIcon,
+  HandCoinsIcon,
 } from "@phosphor-icons/react";
-import { Badge } from "@/components/ui/badge";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -139,9 +139,11 @@ export function TransactionTable({
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>
-                    {t("transactions.table.totalTickets")}: {row.original.quantity}
+                    {t("transactions.table.totalTickets")}:{" "}
+                    {row.original.quantity}
                     <br />
-                    {t("transactions.table.refundedTickets")}: {row.original.refunded_count}
+                    {t("transactions.table.refundedTickets")}:{" "}
+                    {row.original.refunded_count}
                   </p>
                 </TooltipContent>
               </Tooltip>
@@ -299,6 +301,24 @@ export function TransactionTable({
                     {t("transactions.table.viewPayment")}
                   </div>
                 </DropdownMenuItem>
+
+                {transaction.refunded_count > 0 && (
+                  <DropdownMenuItem
+                    onClick={() => {
+                      router.push(
+                        `/refunds?id=${transaction.id}`,
+                      );
+                    }}
+                  >
+                    <div className="flex justify-start items-center bg-gray-50 text-gray-700">
+                      <HandCoinsIcon
+                        weight="duotone"
+                        className="mr-2 h-4 w-4"
+                      />
+                      {t("transactions.table.viewRefundDetails")}
+                    </div>
+                  </DropdownMenuItem>
+                )}
                 {/* <DropdownMenuItem
                   onClick={() => {
                     router.push(`/users/userdetail?id=${user.id}`);

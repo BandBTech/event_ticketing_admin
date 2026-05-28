@@ -1047,7 +1047,8 @@
       "noTransactionDataSubtitle": "あなたはまだ取引を行っていません。",
       "cancelTicket": "チケットをキャンセル",
       "totalTickets": "合計チケット数",
-      "refundedTickets": "払い戻しされたチケット"
+      "refundedTickets": "払い戻しされたチケット",
+      "viewRefundDetails": "返金詳細を表示"
     },
     "paymentGateway": "決済ゲートウェイ",
     "selectPaymentGateway": "決済ゲートウェイを選択",

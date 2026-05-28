@@ -33,6 +33,7 @@ static async createRefund(data: {
     sort?: string;
     filter?: string;
     status?: string;
+    transaction_id?: string;
     search?: string;
     sort_by?: string;
     sort_order?: "asc" | "desc";
@@ -45,6 +46,7 @@ static async createRefund(data: {
       if (filters.filter) params.append("filter", filters.filter);
       if (filters.status) params.append("status", filters.status);
       if (filters.search) params.append("search", filters.search);
+      if (filters.transaction_id) params.append("transaction_id", filters.transaction_id);
       if (filters.sort_by) params.append("sort_by", filters.sort_by);
       if (filters.sort_order) params.append("sort_order", filters.sort_order);
     }

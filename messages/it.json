@@ -1034,7 +1034,8 @@
       "noTransactionDataSubtitle": "Non hai ancora effettuato alcuna transazione.",
       "cancelTicket": "Annulla Biglietto",
       "totalTickets": "biglietti totali",
-      "refundedTickets": "biglietti rimborsati"
+      "refundedTickets": "biglietti rimborsati",
+      "viewRefundDetails": "Visualizza Dettagli Rimborso"
     },
     "paymentGateway": "Gateway di pagamento",
     "selectPaymentGateway": "Seleziona il metodo di pagamento",
