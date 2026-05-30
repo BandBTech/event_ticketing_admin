@@ -1,12 +1,15 @@
 "use client";
 
-import React, {useState} from "react";
+import React, { useState } from "react";
 import {
   ArrowLeft,
   TicketIcon,
   UserIcon,
   CreditCardIcon,
 } from "@phosphor-icons/react";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
+import { Info } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
@@ -107,7 +110,8 @@ export default function PaymentDetail() {
   const searchParams = useSearchParams();
 
   const transactionId = searchParams.get("id") || "";
-    const [isCancelBillDialogOpen, setIsCancelBillDialogOpen] = useState(false);
+  const [isCancelBillDialogOpen, setIsCancelBillDialogOpen] = useState(false);
+  const [searchInput, setSearchInput] = React.useState("");
 
   const { data: paymentDetailData, isLoading } =
     useQuery<TransactionPaymentData>({
@@ -122,10 +126,18 @@ export default function PaymentDetail() {
   const paymentIntent = paymentDetailData?.payment_intent;
   const tickets = paymentDetailData?.tickets ?? [];
 
+  // Add this inside the component, after the searchInput state
+  const filteredTickets = React.useMemo(() => {
+    if (!searchInput.trim()) return tickets;
+    return tickets.filter((ticket) =>
+      ticket.ticket_number
+        ?.toLowerCase()
+        .includes(searchInput.trim().toLowerCase()),
+    );
+  }, [tickets, searchInput]);
+
   return (
-    <div
-      className="min-h-screen bg-[#f4f6f9] py-10 px-4"
-    >
+    <div className="min-h-screen bg-[#f4f6f9] py-10 px-4">
       <div className="max-w-5xl mx-auto space-y-6">
         {/* Back button */}
         <button
@@ -265,10 +277,7 @@ export default function PaymentDetail() {
                     :{" "}
                   </span>
                   <span className="font-bold text-slate-800 text-sm">
-                    {formatCurrency(
-                      transaction.amount,
-                      symbol
-                    )}
+                    {formatCurrency(transaction.amount, symbol)}
                   </span>
                 </div>
               </div>
@@ -280,7 +289,7 @@ export default function PaymentDetail() {
         {!isLoading && tickets.length > 0 && (
           <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
             {/* Table header */}
-            <div className="px-2 py-4 border-b border-slate-100 flex items-center justify-between">
+            <div className="px-2 py-4 mb-2 border-b border-slate-100 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-lg bg-violet-50 flex items-center justify-center text-violet-500">
                   <TicketIcon className="w-5 h-5" />
@@ -298,28 +307,64 @@ export default function PaymentDetail() {
                   </p>
                 </div>
               </div>
+
+              <div className="flex gap-2 items-center">
+                {filteredTickets.length > 0 &&
+                  filteredTickets.find((b) => b.status === "active") && (
+                    <div>
+                      <div className="relative group flex items-center gap-1.5">
+                        <Info className="w-3.5 h-3.5 text-orange-500 cursor-pointer" />
+                        <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 hidden group-hover:block z-100">
+                          <div className="bg-orange-100 text-orange-600 text-xs font-semibold rounded-lg px-4 py-3 shadow-lg w-[220px] flex items-center gap-2">
+                            <Info className="w-5 h-5 text-orange-700 cursor-pointer" />
+                            <p>
+                              {t("transactions.paymentDetails.cancelTicket")}
+                            </p>
+                            <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-orange-100 rotate-45" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                <div className="relative w-full sm:w-80 ml-2 flex items-center gap-3">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                  <Input
+                    placeholder={t(
+                      "transactions.paymentDetails.searchTickets",
+                      "Search Tickets",
+                    )}
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
+                    className="pl-9 shadow-sm"
+                  />
+                </div>
+              </div>
             </div>
 
-            {/* Ticket Table  */}
-            <TicketTable
-              billings={tickets}
-              symbol={symbol}
-              isLoading={isLoading}
-              currentPage={1}
-              totalPages={1}
-              total={tickets.length}
-              limit={0}
-              onLimitChange={() => {}}
-              hasNextPage={false}
-              hasPreviousPage={false}
-              onPageChange={() => {}}
-              sortBy={""}
-              sortOrder={"asc"}
-              onSortChange={() => {}}
-              setIsCancelBillDialogOpen={setIsCancelBillDialogOpen}
-              onOpenCancelBill={isCancelBillDialogOpen}
-              transactionId={transactionId}
-            />
+            <div className="glass-card-lowest rounded-2xl flex-1 min-h-0 flex flex-col h-[70vh]">
+              {/* Ticket Table  */}
+              <TicketTable
+                wrapperClassName="flex-1 min-h-0 overflow-auto"
+                billings={filteredTickets}
+                symbol={symbol}
+                isLoading={isLoading}
+                currentPage={1}
+                totalPages={1}
+                total={tickets.length}
+                limit={0}
+                onLimitChange={() => {}}
+                hasNextPage={false}
+                hasPreviousPage={false}
+                onPageChange={() => {}}
+                sortBy={""}
+                sortOrder={"asc"}
+                onSortChange={() => {}}
+                setIsCancelBillDialogOpen={setIsCancelBillDialogOpen}
+                onOpenCancelBill={isCancelBillDialogOpen}
+                transactionId={transactionId}
+              />
+            </div>
           </div>
         )}
 
