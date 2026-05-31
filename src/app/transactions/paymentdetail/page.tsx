@@ -69,11 +69,11 @@ const InfoRow = ({
   last?: boolean;
 }) => (
   <div
-    className={`flex items-center justify-between py-3 ${!last ? "border-b border-slate-100" : ""}`}
+    className={`flex items-start justify-between gap-4 py-3 ${!last ? "border-b border-slate-100" : ""}`}
   >
-    <span className="text-sm text-black">{label}: </span>
+    <span className="text-sm text-black shrink-0">{label}: </span>
     <span
-      className={`text-sm font-semibold text-slate-800 text-right ${mono ? "tracking-tight" : ""}`}
+      className={`text-sm font-semibold text-slate-800 text-right break-all ${mono ? "tracking-tight" : ""}`}
     >
       {value}
     </span>
