@@ -423,8 +423,8 @@ export default function BillDetail() {
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-8">
-          {billHistory.length > 0 && (
+        {billHistory.length > 0 && (
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-8">
             <div className="">
               <SectionTitle>
                 {t(
@@ -452,8 +452,8 @@ export default function BillDetail() {
                 />
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

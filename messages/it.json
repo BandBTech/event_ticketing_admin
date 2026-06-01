@@ -197,7 +197,7 @@
     "soldOut": "Esaurito",
     "priceTBA": "Prezzo da definire",
     "title": "Eventi",
-    "searchEvents": "Cerca Eventi",
+    "searchEvents": "Cerca per titolo dell'evento",
     "allStatus": "Tutti gli stati",
     "moreFilters": "Più filtri",
     "details": "Dettagli",
@@ -739,7 +739,7 @@
       }
     },
     "title": "Organizzatori",
-    "searchOrganizers": "Cerca Organizzatori",
+    "searchOrganizers": "Cerca per nome completo / nome dell'azienda / email / telefono",
     "status": "Stato",
     "profile": "Profilo",
     "events": "Eventi",
@@ -773,7 +773,7 @@
   "users": {
     "title": "Gestione utenti",
     "subTitle": "Gestisci gli utenti della tua organizzazione.",
-    "searchUsers": "Cerca Utenti",
+    "searchUsers": "Cerca per nome completo / email / telefono",
     "filter": "Filtra",
     "filterByAccountStatus": "Filtra per Stato Account",
     "filterByRole": "Filtra per Ruolo",
@@ -844,7 +844,7 @@
   "billings": {
     "title": "gestione della fatturazione",
     "subtitle": "Gestisci la fatturazione della tua organizzazione.",
-    "searchBillings": "Cerca Fatturazione",
+    "searchBillings": "Cerca per titolo dell'evento / nome dell'organizzatore / nome dell'azienda",
     "filterByStatus": "Filtra per stato",
     "priority": "Priorità",
     "viewDetails": "Visualizza dettagli",
@@ -1008,12 +1008,12 @@
   "transactions": {
     "title": "Gestione delle Transazioni",
     "subtitle": "Gestisci le transazioni della tua organizzazione.",
-    "searchTransactions": "Cerca Transazioni",
+    "searchTransactions": "Cerca per titolo dell'evento / nome completo del cliente / indirizzo email del cliente",
     "backToTransactions": "Torna alle transazioni",
-    "searchRefunds": "Cerca Rimborsi",
+    "searchRefunds": "Ricerca per numero di rimborso / nome completo dell'iniziatore",
     "searchAuditLogs": "Ricerca nei registri di controllo",
     "searchCheckoutSessions": "Ricerca nei sessioni di checkout",
-    "searchPayouts": "Cerca Pagamenti",
+    "searchPayouts": "Ricerca per numero di richiesta / nome dell'organizzatore / email dell'organizzatore / titolo dell'evento",
     "refund": "Rimborsa",
     "auditLogs": "Registri di controllo",
     "checkoutsessions": "Sessioni di checkout",
@@ -1087,7 +1087,7 @@
       "ticketNumber": "Numero Biglietto",
       "tier": "Livello",
       "holder": "Intestatario",
-      "searchTickets": "Cerca biglietti",
+      "searchTickets": "Ricerca per numero di biglietto",
       "cancelTicket": "Annulla il biglietto per avviare il rimborso.",
       "noTicketsFound": "Nessun biglietto corrisponde alla tua ricerca",
       "tryDifferentTicket": "Prova un numero di biglietto diverso o cancella la ricerca."
@@ -1099,7 +1099,7 @@
   "refunds": {
     "title": "Gestione Rimborsi",
     "subtitle": "Gestisci i rimborsi della tua organizzazione.",
-    "searchRefunds": "Cerca Rimborsi",
+    "searchRefunds": "Ricerca per numero di rimborso / nome completo dell'iniziatore",
     "table": {
       "refundNumber": "Numero Rimborso",
       "initiatedBy": "Iniziato Da",
@@ -1156,7 +1156,7 @@
   "payouts": {
     "title": "Gestione dei Pagamenti",
     "subtitle": "Gestisci i pagamenti della tua organizzazione.",
-    "searchPayout": "Cerca Pagamenti",
+    "searchPayout": "Ricerca per numero di richiesta / nome dell'organizzatore / email dell'organizzatore / titolo dell'evento",
     "noPayoutData": "Nessun dato sui pagamenti trovato",
     "noPayoutDataSubtitle": "Non hai ancora effettuato alcun pagamento.",
     "modals": {

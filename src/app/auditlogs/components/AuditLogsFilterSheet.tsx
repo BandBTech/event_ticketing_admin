@@ -267,7 +267,7 @@ export function AuditLogsFilterSheet({
           </div>
 
           {/* Organizer */}
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             <Label>{t("auditLogs.filterAuditLogs.initiator")}</Label>
             <AsyncCombobox
               queryKey={["filter", "initiator"]}
@@ -282,7 +282,7 @@ export function AuditLogsFilterSheet({
               className="w-full text-sm h-9 justify-between px-3!"
               debounceMs={300}
             />
-          </div>
+          </div> */}
 
           {/* Status */}
           <div className="space-y-2">

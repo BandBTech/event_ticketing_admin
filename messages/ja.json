@@ -197,7 +197,7 @@
     "soldOut": "完売",
     "priceTBA": "価格未定",
     "title": "イベント",
-    "searchEvents": "イベントを検索",
+    "searchEvents": "イベントタイトルで検索",
     "allStatus": "すべてのステータス",
     "moreFilters": "その他のフィルター",
     "details": "詳細",
@@ -752,7 +752,7 @@
       }
     },
     "title": "主催者管理",
-    "searchOrganizers": "主催者を検索",
+    "searchOrganizers": "氏名／会社名／メールアドレス／電話番号で検索",
     "status": "ステータス",
     "profile": "プロフィール",
     "events": "イベント",
@@ -786,7 +786,7 @@
   "users": {
     "title": "ユーザー管理",
     "subTitle": "組織のユーザーを管理します。",
-    "searchUsers": "ユーザーを検索",
+    "searchUsers": "氏名／メールアドレス／電話番号で検索",
     "filter": "フィルター",
     "filterByAccountStatus": "アカウントステータスでフィルター",
     "filterByRole": "役割でフィルター",
@@ -857,7 +857,7 @@
   "billings": {
     "title": "請求管理",
     "subtitle": "組織の請求業務を管理しましょう。",
-    "searchBillings": "請求情報の検索",
+    "searchBillings": "イベントタイトル／主催者名／企業名で検索",
     "filterByStatus": "ステータスでフィルター",
     "priority": "優先度",
     "viewDetails": "詳細を見る",
@@ -1021,12 +1021,12 @@
   "transactions": {
     "title": "トランザクション管理",
     "subtitle": "組織の取引を管理します。",
-    "searchTransactions": "取引を検索",
+    "searchTransactions": "イベントタイトル／顧客氏名／顧客メールアドレスで検索",
     "backToTransactions": "取引履歴に戻る",
-    "searchRefunds": "返金を検索",
+    "searchRefunds": "払い戻し番号／申請者の氏名で検索",
     "searchAuditLogs": "監査ログを検索",
     "searchCheckoutSessions": "検索チェックアウトセッション",
-    "searchPayouts": "支払いを検索",
+    "searchPayouts": "リクエスト番号／主催者名／主催者メールアドレス／イベントタイトルで検索",
     "refund": "返金",
     "auditLogs": "監査ログ",
     "checkoutsessions": "チェックアウトセッション",
@@ -1100,7 +1100,7 @@
       "ticketNumber": "チケット番号",
       "tier": "チケット種別",
       "holder": "保持者",
-      "searchTickets": "チケットを検索",
+      "searchTickets": "チケット番号で検索",
       "cancelTicket": "チケットをキャンセルして払い戻しを開始します。",
       "noTicketsFound": "お探しのチケットは見つかりませんでした",
       "tryDifferentTicket": "別のチケット番号を試すか、検索をクリアしてください。"
@@ -1112,7 +1112,7 @@
   "refunds": {
     "title": "返金管理",
     "subtitle": "組織の返金を管理します。",
-    "searchRefunds": "返金を検索",
+    "searchRefunds": "払い戻し番号／申請者の氏名で検索",
     "table": {
       "refundNumber": "返金番号",
       "initiatedBy": "申請者",
@@ -1169,7 +1169,7 @@
   "payouts": {
     "title": "ペイアウト管理",
     "subtitle": "組織のペイアウトを管理します。",
-    "searchPayout": "ペイアウトを検索",
+    "searchPayout": "リクエスト番号／主催者名／主催者メールアドレス／イベントタイトルで検索",
     "noPayoutData": "支払いデータが見つかりませんでした",
     "noPayoutDataSubtitle": "あなたはまだ支払いを行っていません。",
     "modals": {

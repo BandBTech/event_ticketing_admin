@@ -332,7 +332,7 @@ export default function PaymentDetail() {
                   <Input
                     placeholder={t(
                       "transactions.paymentDetails.searchTickets",
-                      "Search Tickets",
+                      "Search By Ticket Number",
                     )}
                     value={searchInput}
                     onChange={(e) => setSearchInput(e.target.value)}

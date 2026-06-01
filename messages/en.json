@@ -207,7 +207,7 @@
     "soldOut": "Sold out",
     "priceTBA": "Price TBA",
     "title": "Events",
-    "searchEvents": "Search Events",
+    "searchEvents": "Search By Event Title",
     "allStatus": "All Status",
     "moreFilters": "More Filters",
     "details": "Details",
@@ -791,7 +791,7 @@
       "lastUpdated": "Last Updated"
     },
     "title": "Organizers",
-    "searchOrganizers": "Search Organizers",
+    "searchOrganizers": "Search By Full Name / Business Name / Email / Phone",
     "status": "Status",
     "profile": "Profile",
     "events": "Events",
@@ -813,7 +813,7 @@
   "users": {
     "title": "User Management",
     "subTitle": "Manage your organization's users.",
-    "searchUsers": "Search Users",
+    "searchUsers": "Search By Full Name / Email / Phone",
     "generatePassword": {
       "success": "Password generated successfully",
       "successCopy": "Password generated and copied to clipboard!"
@@ -891,7 +891,7 @@
   "billings": {
     "title": "Billings Management",
     "subtitle": "Manage your organization's billings.",
-    "searchBillings": "Search Billings",
+    "searchBillings": "Search By Event Title / Organizer Name / Business Name",
     "priority": "Priority",
     "viewDetails": "View Details",
     "addPayment": "Add Payment",
@@ -1054,12 +1054,12 @@
   "transactions": {
     "title": "Transaction Management",
     "subtitle": "Manage your organization's transactions.",
-    "searchTransactions": "Search Transactions",
+    "searchTransactions": "Search By Event Title / Customer Full Name / Customer Email",
     "backToTransactions": "Back to Transactions",
-    "searchRefunds": "Search Refunds",
+    "searchRefunds": "Search By Refund Number / Initiator Full Name",
     "searchAuditLogs": "Search Audit Logs",
     "searchCheckoutSessions": "Search Checkout Sessions",
-    "searchPayouts": "Search Payouts",
+    "searchPayouts": "Search By Request Number / Organizer Name / Organizer Email / Event Title",
     "refund": "Refund",
     "auditLogs": "Audit Logs",
     "payouts": "Payouts",
@@ -1133,7 +1133,7 @@
       "ticketNumber": "Ticket Number",
       "tier": "Tier",
       "holder": "Holder",
-      "searchTickets": "Search Tickets",
+      "searchTickets": "Search By Ticket Number",
       "cancelTicket": "Cancel the ticket to initiate refund.",
       "noTicketsFound": "No tickets match your search",
       "tryDifferentTicket": "Try a different ticket number or clear your search."
@@ -1145,7 +1145,7 @@
   "refunds": {
     "title": "Refund Management",
     "subtitle": "Manage your organization's refunds.",
-    "searchRefunds": "Search Refunds",
+    "searchRefunds": "Search By Refund Number / Initiator Full Name",
     "table": {
       "refundNumber": "Refund Number",
       "initiatedBy": "Initiated By",
@@ -1202,7 +1202,7 @@
   "payouts": {
     "title": "Payout Management",
     "subtitle": "Manage your organization's payouts.",
-    "searchPayout": "Search Payouts",
+    "searchPayout": "Search By Request Number / Organizer Name / Organizer Email / Event Title",
     "noPayoutData": "No payout data found",
     "noPayoutDataSubtitle": "You haven't made any payouts yet.",
     "modals": {

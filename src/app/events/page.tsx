@@ -220,7 +220,7 @@ export default function EventsPage() {
 
       {/* Search and Filters */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-        <div className="relative flex-1 max-w-md w-full">
+        <div className="relative  w-full sm:w-auto flex-1 max-w-[50%]">
           <MagnifyingGlassIcon
             weight="duotone"
             className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground"

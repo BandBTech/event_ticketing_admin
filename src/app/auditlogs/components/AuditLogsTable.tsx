@@ -61,7 +61,7 @@ export function AuditLogsTable({
       },
       {
         id: "initiator",
-        header: t("auditLogs.table.initiator"),
+        header: t("dashboard.dataDisplay.users"),
         cell: ({ row }) => (
           <div title={row.original.actor?.name || "-"} className="max-w-[200px] text-gray-700 truncate inline-block">
             {row.original.actor?.name || "-"}
