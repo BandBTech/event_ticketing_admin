@@ -57,7 +57,7 @@ const txnVariant = (
   return "neutral";
 };
 
-const InfoRow = ({
+const InfoRow1 = ({
   label,
   value,
   mono,
@@ -74,6 +74,24 @@ const InfoRow = ({
     <span className="text-sm text-black shrink-0">{label}: </span>
     <span
       className={`text-sm font-semibold text-slate-800 text-right break-all ${mono ? "tracking-tight" : ""}`}
+    >
+      {value}
+    </span>
+  </div>
+);
+const InfoRow = ({
+  label,
+  value,
+  mono,
+}: {
+  label: string;
+  value: React.ReactNode;
+  mono?: boolean;
+}) => (
+  <div className="flex items-start justify-between gap-4 py-3 border-b border-slate-100 last:border-0">
+    <span className="text-sm text-slate-500 font-medium shrink-0">{label}</span>
+    <span
+      className={`text-sm text-slate-800 text-right break-all ${mono ? "font-mono" : "font-medium"}`}
     >
       {value}
     </span>
@@ -268,18 +286,13 @@ export default function PaymentDetail() {
 
               {/* Amount breakdown */}
               <div className="mt-4 rounded-lg bg-slate-50 border border-slate-100 p-3 space-y-2">
-                <div className="flex justify-between text-xs text-black">
-                  <span>
-                    {t(
-                      "transactions.paymentDetails.totalAmount",
-                      "Total Amount",
-                    )}
-                    :{" "}
-                  </span>
-                  <span className="font-bold text-slate-800 text-sm">
-                    {formatCurrency(transaction.amount, symbol)}
-                  </span>
-                </div>
+                <InfoRow
+                  label={t(
+                    "transactions.paymentDetails.totalAmount",
+                    "Total Amount",
+                  )}
+                  value={formatCurrency(transaction.amount, symbol)}
+                />
               </div>
             </div>
           </div>
