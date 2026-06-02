@@ -591,6 +591,7 @@
       "confirmEventApprovalDesc": "Sei sicuro di voler approvare <strong>{event}</strong> con una commissione del <strong>{rate}%</strong>? Questa azione non può essere annullata immediatamente.",
       "eventCancellationRequests": "Richieste di cancellazione evento",
       "approveEventCancellation": "Approva cancellazione evento",
+      "approveEventCancellationDescription": "Sei sicuro di voler approvare l'annullamento di questo evento?",
       "rejectEventCancellation": "Rifiuta cancellazione evento",
       "reason": "Motivo",
       "rejectionReason": "Fornisci un motivo per rifiutare questa cancellazione",

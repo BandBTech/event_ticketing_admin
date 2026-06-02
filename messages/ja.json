@@ -604,6 +604,7 @@
       "confirmEventApprovalDesc": "<strong>{event}</strong>を<strong>{rate}%</strong>の手数料率で承認してもよろしいですか？この操作はすぐには取り消せません。",
       "eventCancellationRequests": "イベントキャンセルリクエスト",
       "approveEventCancellation": "イベントキャンセルを承認",
+      "approveEventCancellationDescription": "このイベントのキャンセルを承認してもよろしいですか?",
       "rejectEventCancellation": "イベントキャンセルを却下",
       "reason": "理由",
       "rejectionReason": "このキャンセルを却下する理由を入力してください",

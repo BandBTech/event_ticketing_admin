@@ -12,6 +12,16 @@ import {
   useRejectCancellationEvent,
 } from "@/hooks/useDashboard";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   Sheet,
   SheetContent,
   SheetHeader,
@@ -218,21 +228,49 @@ const EventCancellationList = ({
           </>
         )}
 
-        {/* Approve Event Modal */}
+        {/* Approve Organizer Modal */}
         {acceptEventModal.open && (
           <>
             <div
               className="fixed inset-0 bg-black/30 z-40"
               onClick={() => setAcceptEventModal({ open: false })}
             />
-            <PopupModal
-              title={t("dashboard.modal.approveEventCancellation")}
-              isApprove={true}
-              showCommissionInput={true}
-              isLoading={approveEventMutation.isPending}
-              onCancel={() => setAcceptEventModal({ open: false })}
-              onConfirm={handleApproveEvent}
-            />
+            <AlertDialog
+              open={acceptEventModal.open}
+              onOpenChange={(open) =>
+                setAcceptEventModal((prev) => ({ ...prev, open }))
+              }
+            >
+              <AlertDialogContent className="rounded-3xl shadow-2xl border-none bg-white/95 backdrop-blur-xl data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 duration-300">
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="text-xl font-bold text-gray-900">
+                    {t("dashboard.modal.approveEventCancellation", "Approve Event Cancellation")}
+                  </AlertDialogTitle>
+                  <AlertDialogDescription className="text-gray-500 text-base">
+                    {t(
+                      "dashboard.modal.approveEventCancellationDescription",
+                      "Are you sure you want to approve this event cancellation?",
+                    )}
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter className="pt-6">
+                  <AlertDialogCancel
+                    onClick={() => setAcceptEventModal({ open: false })}
+                    className="h-11 px-6 border-gray-200 hover:bg-gray-50 transition-colors"
+                  >
+                    {t("common.cancelButton", "Cancel")}
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() =>
+                      handleApproveEvent({ adminRemark: "Approved by admin" })
+                    }
+                    className="h-11 px-8 active:scale-95"
+                  >
+                    {t("events.actions.approveCancellation", "Approve Cancellation")}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </>
         )}
       </SheetContent>

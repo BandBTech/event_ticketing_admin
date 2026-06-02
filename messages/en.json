@@ -629,6 +629,7 @@
       "confirmEventApprovalDesc": "Are you sure you want to approve <strong>{event}</strong> with a commission rate of <strong>{rate}%</strong> ? This action cannot be undone immediately.",
       "eventCancellationRequests": "Event Cancellation Requests",
       "approveEventCancellation": "Approve Event Cancellation",
+      "approveEventCancellationDescription": "Are you sure you want to approve this event cancellation?",
       "rejectEventCancellation": "Reject Event Cancellation",
       "reason": "Reason",
       "rejectionReason": "Please provide a reason for rejecting this cancellation",
