@@ -185,7 +185,7 @@ export function useApproveCancellationEvent() {
     }) => EventService.approveCancelEvent(eventId, adminRemark),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: queryKeys.dashboard.pendingEvents,
+        queryKey: queryKeys.dashboard.pendingCancellationEvents,
       });
       queryClient.invalidateQueries({
         queryKey: queryKeys.events.list,
@@ -213,7 +213,7 @@ export function useRejectCancellationEvent() {
     }) => EventService.rejectCancelEvent(eventId, adminRemark),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: queryKeys.dashboard.pendingEvents,
+        queryKey: queryKeys.dashboard.pendingCancellationEvents,
       });
       queryClient.invalidateQueries({
         queryKey: queryKeys.events.list,
