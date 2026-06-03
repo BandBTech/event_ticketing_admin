@@ -1631,7 +1631,8 @@
     "expired": "Scaduta",
     "refunded": "Rimborsata",
     "succeeded": "Ha avuto successo",
-    "cancel_pending": "Cancellazione in sospeso"
+    "cancel_pending": "Cancellazione in sospeso",
+    "checked_in": "Check-in"
   },
   "pagination": {
     "previous": "Precedente",

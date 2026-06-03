@@ -1645,7 +1645,8 @@
     "expired": "期限切れ",
     "refunded": "返金済み",
     "succeeded": "成功した",
-    "cancel_pending": "キャンセル申請中"
+    "cancel_pending": "キャンセル申請中",
+    "checked_in": "チェックインしました"
   },
   "pagination": {
     "previous": "前へ",

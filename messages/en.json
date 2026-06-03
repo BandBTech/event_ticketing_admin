@@ -1680,7 +1680,8 @@
     "expired": "Expired",
     "refunded": "Refunded",
     "succeeded": "Succeeded",
-    "cancel_pending": "Cancellation Pending"
+    "cancel_pending": "Cancellation Pending",
+    "checked_in": "Checked In"
   },
   "pagination": {
     "previous": "Previous",
