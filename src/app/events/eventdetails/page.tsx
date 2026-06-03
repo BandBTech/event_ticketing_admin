@@ -70,8 +70,10 @@ export default function EventDetailsPage() {
   // Modal States
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [showRejectModal, setShowRejectModal] = useState(false);
-  const [showApproveCancellationModal, setShowApproveCancellationModal] = useState(false);
-  const [showRejectCancellationModal, setShowRejectCancellationModal] = useState(false);
+  const [showApproveCancellationModal, setShowApproveCancellationModal] =
+    useState(false);
+  const [showRejectCancellationModal, setShowRejectCancellationModal] =
+    useState(false);
 
   // Queries
   const {
@@ -92,7 +94,8 @@ export default function EventDetailsPage() {
   const { data: analytics } = useEventAnalyticsById(eventId || "");
 
   // Cancellation request lookup for cancel_pending events
-  const { data: pendingCancellationsData, isLoading: isLoadingCancellations } = usePendingCancellationEvents();
+  const { data: pendingCancellationsData, isLoading: isLoadingCancellations } =
+    usePendingCancellationEvents();
   const cancellationRequest = pendingCancellationsData?.requests?.find(
     (r) => r.event_id === eventId,
   );
@@ -387,7 +390,10 @@ export default function EventDetailsPage() {
                   className="gap-2 bg-success hover:bg-success/90 text-white shadow-sm"
                 >
                   <CheckIcon weight="duotone" size={18} />
-                  {t("events.actions.approveCancellation", "Approve Cancellation")}
+                  {t(
+                    "events.actions.approveCancellation",
+                    "Approve Cancellation",
+                  )}
                 </Button>
                 <Button
                   onClick={() => setShowRejectCancellationModal(true)}
@@ -396,7 +402,10 @@ export default function EventDetailsPage() {
                   className="gap-2 shadow-sm"
                 >
                   <XIcon weight="duotone" size={18} />
-                  {t("events.actions.rejectCancellation", "Reject Cancellation")}
+                  {t(
+                    "events.actions.rejectCancellation",
+                    "Reject Cancellation",
+                  )}
                 </Button>
               </>
             )}
@@ -459,7 +468,10 @@ export default function EventDetailsPage() {
           <div className="p-4 rounded-xl border bg-amber-50 border-amber-200 text-amber-800">
             <h3 className="font-semibold mb-1 flex items-center gap-2">
               <ShieldCheckIcon weight="duotone" className="w-5 h-5" />
-              {t("events.sections.cancellationPending", "Cancellation Request Pending")}
+              {t(
+                "events.sections.cancellationPending",
+                "Cancellation Request Pending",
+              )}
             </h3>
             <p className="text-sm opacity-90">
               {cancellationRequest?.reason
@@ -716,7 +728,11 @@ export default function EventDetailsPage() {
                       {t("events.analytics.revenue", "Revenue")}
                     </p>
                     <p className="text-lg font-bold text-emerald-700">
-                      {formatCurrency(totalRevenue, analytics?.tiers?.[0]?.currency ?? event.tiers?.[0]?.currency)}
+                      {formatCurrency(
+                        totalRevenue,
+                        analytics?.tiers?.[0]?.currency ??
+                          event.tiers?.[0]?.currency,
+                      )}
                     </p>
                   </div>
                 </div>
@@ -928,47 +944,108 @@ export default function EventDetailsPage() {
         />
       )} */}
 
-      {/* Approve Cancellation Modal */}
+
+      {/* Approve Event Cancellation Modal */}
       {showApproveCancellationModal && (
-        <PopupModal
-          title={t("dashboard.modal.approveEventCancellation", "Approve Event Cancellation")}
-          isApprove={true}
-          showCommissionInput={false}
-          isLoading={approveCancellationMutation.isPending}
-          onCancel={() => setShowApproveCancellationModal(false)}
-          onConfirm={(data) => {
-            if (!cancellationRequest?.id) return;
-            approveCancellationMutation.mutate(
-              { eventId: cancellationRequest.id, adminRemark: data.adminRemark },
-              {
-                onSuccess: () => {
-                  toast.success(t("events.messages.cancellationApproved", "Event cancellation approved"));
-                  queryClient.invalidateQueries({ queryKey: queryKeys.events.detail(eventId!) });
-                  queryClient.invalidateQueries({ queryKey: queryKeys.events.statusHistory(eventId!) });
-                  setShowApproveCancellationModal(false);
-                },
-              },
-            );
-          }}
-        />
+        <>
+          <div
+            className="fixed inset-0 bg-black/30 z-40"
+            onClick={() => setShowApproveCancellationModal(false)}
+          />
+          <AlertDialog
+            open={showApproveCancellationModal}
+            onOpenChange={(open) => setShowApproveCancellationModal(open)}
+          >
+            <AlertDialogContent className="rounded-3xl shadow-2xl border-none bg-white/95 backdrop-blur-xl data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 duration-300">
+              <AlertDialogHeader>
+                <AlertDialogTitle className="text-xl font-bold text-gray-900">
+                  {t(
+                    "dashboard.modal.approveEventCancellation",
+                    "Approve Event Cancellation",
+                  )}
+                </AlertDialogTitle>
+                <AlertDialogDescription className="text-gray-500 text-base">
+                  {t(
+                    "dashboard.modal.approveEventCancellationDescription",
+                    "Are you sure you want to approve this event cancellation?",
+                  )}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter className="pt-6">
+                <AlertDialogCancel
+                  onClick={() => setShowApproveCancellationModal(false)}
+                  className="h-11 px-6 border-gray-200 hover:bg-gray-50 transition-colors"
+                >
+                  {t("common.cancelButton", "Cancel")}
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={(data) => {
+                    if (!cancellationRequest?.id) return;
+                    approveCancellationMutation.mutate(
+                      { eventId: cancellationRequest.id, adminRemark: "Event cancellation approved by admin." },
+                      {
+                        onSuccess: () => {
+                          toast.success(
+                            t(
+                              "events.messages.cancellationApproved",
+                              "Event cancellation approved",
+                            ),
+                          );
+                          queryClient.invalidateQueries({
+                            queryKey: queryKeys.events.detail(eventId!),
+                          });
+                          queryClient.invalidateQueries({
+                            queryKey: queryKeys.events.statusHistory(eventId!),
+                          });
+                          setShowApproveCancellationModal(false);
+                        },
+                      },
+                    );
+                  }}
+                  className="h-11 px-8 active:scale-95"
+                >
+                  {t(
+                    "events.actions.approveCancellation",
+                    "Approve Cancellation",
+                  )}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </>
       )}
 
       {/* Reject Cancellation Modal */}
       {showRejectCancellationModal && (
         <PopupModal
-          title={t("dashboard.modal.rejectEventCancellation", "Reject Event Cancellation")}
+          title={t(
+            "dashboard.modal.rejectEventCancellation",
+            "Reject Event Cancellation",
+          )}
           isApprove={false}
           isLoading={rejectCancellationMutation.isPending}
           onCancel={() => setShowRejectCancellationModal(false)}
           onConfirm={(data) => {
             if (!cancellationRequest?.id) return;
             rejectCancellationMutation.mutate(
-              { eventId: cancellationRequest.id, adminRemark: data.adminRemark },
+              {
+                eventId: cancellationRequest.id,
+                adminRemark: data.adminRemark,
+              },
               {
                 onSuccess: () => {
-                  toast.success(t("events.messages.cancellationRejected", "Event cancellation rejected"));
-                  queryClient.invalidateQueries({ queryKey: queryKeys.events.detail(eventId!) });
-                  queryClient.invalidateQueries({ queryKey: queryKeys.events.statusHistory(eventId!) });
+                  toast.success(
+                    t(
+                      "events.messages.cancellationRejected",
+                      "Event cancellation rejected",
+                    ),
+                  );
+                  queryClient.invalidateQueries({
+                    queryKey: queryKeys.events.detail(eventId!),
+                  });
+                  queryClient.invalidateQueries({
+                    queryKey: queryKeys.events.statusHistory(eventId!),
+                  });
                   setShowRejectCancellationModal(false);
                 },
               },
