@@ -6,7 +6,7 @@ import {
   XCircleIcon,
   CheckCircleIcon,
   EyeIcon,
-  ArrowsLeftRightIcon ,
+  ArrowsLeftRightIcon,
   ArrowsCounterClockwiseIcon,
 } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
@@ -116,7 +116,16 @@ export function RefundTable({
       {
         id: "initiated_by",
         header: t("refunds.table.initiatedBy", "Initiated By"),
-        accessorKey: "initiated_by.name",
+        cell: ({ row }) => {
+          const initiatorName = row.original.initiated_by.name || "-";
+          const initiatorEmail = row.original.initiated_by.email || "-";
+          return (
+            <div className="flex flex-col">
+              <span>{initiatorName}</span>
+              <span className="text-xs text-gray-500 italic">{initiatorEmail}</span>
+            </div>
+          );
+        },
         meta: { sortKey: "initiated_by" },
       },
       {
@@ -218,7 +227,10 @@ export function RefundTable({
                     );
                   }}
                 >
-                  <ArrowsLeftRightIcon weight="duotone" className="mr-2 h-4 w-4" />
+                  <ArrowsLeftRightIcon
+                    weight="duotone"
+                    className="mr-2 h-4 w-4"
+                  />
                   {t(`refunds.table.viewTransaction`)}
                 </DropdownMenuItem>
 
@@ -249,21 +261,22 @@ export function RefundTable({
                     </DropdownMenuItem>
                   </>
                 )}
-                {refund.status === "failed" || refund.status === "processing" && (
-                  <DropdownMenuItem
-                    onClick={() => {
-                      setSelectedRefund && setSelectedRefund(refund);
-                      setOpenRetryDialog && setOpenRetryDialog(true);
-                    }}
-                    className="text-red-600"
-                  >
-                    <ArrowsCounterClockwiseIcon
-                      weight="duotone"
-                      className="mr-2 h-4 w-4"
-                    />
-                    {t(`events.actions.retry`)}
-                  </DropdownMenuItem>
-                )}
+                {refund.status === "failed" ||
+                  (refund.status === "processing" && (
+                    <DropdownMenuItem
+                      onClick={() => {
+                        setSelectedRefund && setSelectedRefund(refund);
+                        setOpenRetryDialog && setOpenRetryDialog(true);
+                      }}
+                      className="text-red-600"
+                    >
+                      <ArrowsCounterClockwiseIcon
+                        weight="duotone"
+                        className="mr-2 h-4 w-4"
+                      />
+                      {t(`events.actions.retry`)}
+                    </DropdownMenuItem>
+                  ))}
               </DropdownMenuContent>
             </DropdownMenu>
           );
@@ -291,6 +304,7 @@ export function RefundTable({
         sortBy={sortBy}
         sortOrder={sortOrder}
         onSortChange={onSortChange}
+        onRowClick={(row) => router.push(`/refunds/refunddetail?id=${row.id}`)}
         showSerialNumber={true}
         emptyState={
           <div className="flex flex-col items-center justify-center py-16 text-center">

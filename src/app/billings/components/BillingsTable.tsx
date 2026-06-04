@@ -323,6 +323,7 @@ export function BillingTable({
         sortBy={sortBy}
         sortOrder={sortOrder}
         onSortChange={onSortChange}
+        onRowClick={(row) => router.push(`/billings/billdetail?id=${row.id}`)}
         showSerialNumber={true}
         emptyState={
           <div className="flex flex-col items-center justify-center py-16 text-center">

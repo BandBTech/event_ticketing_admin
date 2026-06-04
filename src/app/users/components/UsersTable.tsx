@@ -11,7 +11,7 @@ import { ReusableTable } from "@/components/ReusableTable";
 import { useLanguageStore } from "@/store/languageStore";
 import { User } from "@/types/user";
 import { format } from "date-fns";
-import {formatDateTimeLong} from "@/lib/utils"
+import { formatDateTimeLong } from "@/lib/utils";
 import {
   DotsThreeVertical as DotsThreeVerticalIcon,
   XCircleIcon,
@@ -288,8 +288,9 @@ export function UsersTable({
                   <DropdownMenuItem
                     onClick={(e) => {
                       e.stopPropagation();
-                      setSelectedUser && setSelectedUser(user)
-                      setIsToggleConfirmDialog && setIsToggleConfirmDialog(true);
+                      setSelectedUser && setSelectedUser(user);
+                      setIsToggleConfirmDialog &&
+                        setIsToggleConfirmDialog(true);
                     }}
                   >
                     {user.account_status === "active" ? (
@@ -340,6 +341,7 @@ export function UsersTable({
         sortBy={sortBy}
         sortOrder={sortOrder}
         onSortChange={onSortChange}
+        onRowClick={(row) => router.push(`/users/userdetail?id=${row.id}`)}
         showSerialNumber={true}
         emptyState={
           <div className="flex flex-col items-center justify-center py-16 text-center">
