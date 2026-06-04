@@ -11,6 +11,7 @@ import {
   useApproveCancellationEvent,
   useRejectCancellationEvent,
 } from "@/hooks/useDashboard";
+import { StatusFilterTabs } from "@/app/dashboard/components/EventCancellation/StatusFilterTabs";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -36,6 +37,8 @@ interface ModalState {
   open: boolean;
   id?: string;
 }
+
+export type CancellationStatus = "pending" | "approved" | "rejected";
 
 interface EventCancellation {
   id: string;
@@ -114,6 +117,8 @@ const EventCancellationList = ({
   const [acceptEventModal, setAcceptEventModal] = useState<ModalState>({
     open: false,
   });
+  const [activeStatus, setActiveStatus] =
+    useState<CancellationStatus>("pending");
 
   // pending cancellation event section
   const {
@@ -168,7 +173,8 @@ const EventCancellationList = ({
     );
   };
 
-  const events = pendingCancellationEventsData?.requests || [];
+  const allEvents = pendingCancellationEventsData?.requests || [];
+  const events = allEvents.filter((e) => e.status === activeStatus);
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -181,6 +187,11 @@ const EventCancellationList = ({
             {t("dashboard.modal.eventCancellationRequests")}
           </SheetTitle>
         </SheetHeader>
+
+        <StatusFilterTabs
+          activeStatus={activeStatus}
+          onChange={setActiveStatus}
+        />
 
         <div className="overflow-auto">
           {isLoadingCancellationEvents ? (
@@ -244,7 +255,10 @@ const EventCancellationList = ({
               <AlertDialogContent className="rounded-3xl shadow-2xl border-none bg-white/95 backdrop-blur-xl data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 duration-300">
                 <AlertDialogHeader>
                   <AlertDialogTitle className="text-xl font-bold text-gray-900">
-                    {t("dashboard.modal.approveEventCancellation", "Approve Event Cancellation")}
+                    {t(
+                      "dashboard.modal.approveEventCancellation",
+                      "Approve Event Cancellation",
+                    )}
                   </AlertDialogTitle>
                   <AlertDialogDescription className="text-gray-500 text-base">
                     {t(
@@ -266,7 +280,10 @@ const EventCancellationList = ({
                     }
                     className="h-11 px-8 active:scale-95"
                   >
-                    {t("events.actions.approveCancellation", "Approve Cancellation")}
+                    {t(
+                      "events.actions.approveCancellation",
+                      "Approve Cancellation",
+                    )}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
