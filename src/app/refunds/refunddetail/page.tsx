@@ -83,8 +83,8 @@ export default function RefundDetail() {
       ? (statusHistory1 as { status_history: unknown[] }).status_history
       : [];
 
-  const mappedStatusHistory = (historyList as RefundStatusChange[]).map(
-    (h) => ({
+  const mappedStatusHistory = (historyList as RefundStatusChange[])
+    .map((h) => ({
       id: h.id,
       refund_id: h.refund_id,
       old_status: h.old_status || "unknown",
@@ -92,8 +92,12 @@ export default function RefundDetail() {
       changed_by_type: h.changed_by_type || "approval",
       remarks: h.remarks || "",
       created_at: h.changed_at,
-    }),
-  );
+    }))
+    .sort(
+      (a, b) =>
+        new Date(b.created_at ?? 0).getTime() -
+        new Date(a.created_at ?? 0).getTime(),
+    );
 
   return (
     <div className="min-h-screen bg-[#f4f6f9] p-7 font-sans">
@@ -257,7 +261,10 @@ export default function RefundDetail() {
             value={
               <>
                 <span>
-                  {formatCurrency(refundData?.amount || 0, refundData?.event.symbol)}
+                  {formatCurrency(
+                    refundData?.amount || 0,
+                    refundData?.event.symbol,
+                  )}
                 </span>{" "}
                 <span className="italic font-normal">
                   ( {refundData?.ticket_count}{" "}

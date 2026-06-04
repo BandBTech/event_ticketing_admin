@@ -77,10 +77,12 @@ export default function StatusHistorySidebar({
       case "pending":
         return <Circle size={16} weight="fill" className="text-amber-500" />;
       case "processing":
-        return <SpinnerGapIcon size={16} className="text-yellow-700" />;
+        return <SpinnerGapIcon size={16} className="text-gray-700" />;
       case "succeeded":
         return <CheckCircle size={16} className="text-emerald-500" />;
       case "failed":
+        return <XCircle size={16} className="text-destructive" />;
+      case "rejected":
         return <XCircle size={16} className="text-destructive" />;
       default:
         return <Circle size={16} className="text-blue-500" />;
@@ -92,10 +94,12 @@ export default function StatusHistorySidebar({
       case "pending":
         return "border-yellow-600 bg-yellow-700 text-yellow-100";
       case "processing":
-        return "border-yellow-600 bg-yellow-700 text-yellow-100";
+        return "border-gray-600 bg-gray-700 text-gray-100";
       case "succeeded":
         return "border-green-600 bg-green-700 text-green-100";
       case "failed":
+        return "border-red-600 bg-red-700 text-white";
+      case "rejected":
         return "border-red-600 bg-red-700 text-white";
       default:
         return "border-amber-200 bg-amber-50 text-amber-700";
