@@ -693,14 +693,14 @@ export default function EventDetailsPage() {
             {/* Ticket Analytics (Renamed from Ticket Tiers as in Organizer, but retaining our logic) */}
             <div className="glass-card-lower rounded-2xl p-6 border border-gray-100 @container">
               <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                {t("events.sections.ticketAnalytics", "Ticket Analytics")}
+                {t("event.sections.ticketAnalytics", "Ticket Analytics")}
               </h2>
               <div className="space-y-6">
                 {/* Sales Progress */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-500">
-                      {t("events.analytics.progress", "Sales Progress")}
+                      {t("event.analytics.progress", "Sales Progress")}
                     </span>
                     <span className="font-medium text-gray-900">
                       {Math.round(progress)}%

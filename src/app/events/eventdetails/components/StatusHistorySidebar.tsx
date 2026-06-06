@@ -77,18 +77,19 @@ export default function StatusHistorySidebar({
   }, [historyList, isExpanded]);
 
   const getStatusIcon = (status: string, type: string) => {
+    const lowerStatus = status.toLowerCase();
     if (type === "sales") {
-      if (status === "paused")
+      if (lowerStatus === "paused")
         return <PauseCircle size={16} className="text-amber-500" />;
-      if (status === "active" || status === "resumed")
+      if (lowerStatus === "active" || lowerStatus === "resumed")
         return <PlayCircle size={16} className="text-green-500" />;
-      if (status === "stopped")
+      if (lowerStatus === "stopped")
         return <StopCircle size={16} className="text-destructive" />;
-      if (status === "sales_upcoming")
+      if (lowerStatus === "sales_upcoming")
         return <PlayCircle size={16} className="text-blue-500" />;
     }
 
-    switch (status) {
+    switch (lowerStatus) {
       case "approved":
         return <CheckCircle size={16} className="text-green-600" />;
       case "rejected":
@@ -102,6 +103,7 @@ export default function StatusHistorySidebar({
       case "on_sale":
         return <Circle size={16} className="text-green-600" />;
       case "on_hold":
+      case "hold":
         return <Circle size={16} className="text-amber-600" />;
       case "live":
         return <Circle size={16} className="text-green-600" />;
@@ -119,7 +121,8 @@ export default function StatusHistorySidebar({
   };
 
   const getStatusBadgeStyles = (status: string) => {
-    switch (status) {
+    const lowerStatus = status.toLowerCase();
+    switch (lowerStatus) {
       case "pending":
         return "border-yellow-600 bg-yellow-700 text-yellow-100";
       case "approved":
@@ -139,6 +142,7 @@ export default function StatusHistorySidebar({
       case "live":
         return "border-green-600 bg-green-100 text-green-700";
       case "hold":
+      case "on_hold":
         return "border-amber-600 bg-amber-700 text-amber-100";
       case "scheduled":
         return "border-blue-600 bg-blue-700 text-blue-100";
@@ -154,11 +158,21 @@ export default function StatusHistorySidebar({
   };
 
   const getStatusLabel = (status: string, status_type: string) => {
-    if (status_type === "sales" && status === "active") {
+    const lowerStatus = status.toLowerCase();
+    if (status_type === "sales" && lowerStatus === "active") {
       return t(`event.badge.resumed`, status);
     }
 
-    return t(`event.badge.${status}`, status);
+    return t(`event.badge.${lowerStatus}`, status);
+  };
+
+  const getChangedByName = (name?: string) => {
+    if (!name) return t("event.history.systemAutomatic", "System (Automatic)");
+    const lowerName = name.trim().toLowerCase();
+    if (lowerName === "system" || lowerName === "system (automatic)") {
+      return t("event.history.systemAutomatic", "System (Automatic)");
+    }
+    return name;
   };
 
   if (isLoading) {
@@ -301,13 +315,7 @@ export default function StatusHistorySidebar({
                 <div className="flex items-center gap-1 mt-1 text-[10px] text-black">
                   <User size={10} />
                   <span>
-                    {historyItem.changed_by_name === "System (Automatic)"
-                      ? t("events.history.systemAutomatic")
-                      : historyItem.changed_by_name &&
-                          historyItem.changed_by_name.toLowerCase() !==
-                            "unknown"
-                        ? historyItem.changed_by_name
-                        : t("common.text.system", "System")}
+                    {getChangedByName(historyItem.changed_by_name)}
                   </span>
                 </div>
               </div>

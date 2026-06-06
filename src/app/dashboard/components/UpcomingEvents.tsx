@@ -168,7 +168,7 @@ function EventCard({ event }: EventProps) {
         <span
           className={`absolute top-3 right-3 text-[10px] font-bold uppercase px-2.5 py-1 rounded-full tracking-wide backdrop-blur-sm bg-blue-50 text-blue-600`}
         >
-          {t("event.badge." + event.status)}
+          {t("event.badge." + event.status.toLowerCase(), event.status)}
         </span>
 
         {/* Featured — bottom left */}

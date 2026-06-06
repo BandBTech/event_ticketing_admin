@@ -68,7 +68,7 @@ export function EventCard({
               statusStyles[event.status.toLowerCase()] ?? statusStyles.pending
             }`}
           >
-            {t("event.badge." + event.status)}
+            {t("event.badge." + event.status.toLowerCase(), event.status)}
           </span>
         </div>
 

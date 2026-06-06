@@ -153,9 +153,6 @@ const AdminDashboard: React.FC = () => {
 
   return (
     <>
-      <Head>
-        <title>Dashboard | Timro-Ticket</title>
-      </Head>
       <div className="min-h-[80vh] bg-linear-to-br from-gray-50 via-blue-50 to-purple-50">
         <div className="p-4">
           <DashboardStats data={data} />

@@ -194,9 +194,6 @@ export default function OrganizersPage() {
 
   return (
     <>
-      <Head>
-        <title>Organizer | Timro-ticket</title>
-      </Head>
       <div className="min-h-screen p-8 @container">
         {/* Search, Filter and Add Organizer Action */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
