@@ -420,7 +420,7 @@ export default function EventDetailsPage() {
               </Button>
             )} */}
 
-            {(event.status === "cancelled" || event.is_cancelled) && (
+            {/* {(event.status === "cancelled" || event.is_cancelled) && (
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button
@@ -459,7 +459,7 @@ export default function EventDetailsPage() {
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
-            )}
+            )} */}
           </div>
         </div>
 
