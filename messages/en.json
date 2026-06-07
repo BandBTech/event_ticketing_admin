@@ -1681,7 +1681,8 @@
     "refunded": "Refunded",
     "succeeded": "Succeeded",
     "cancel_pending": "Cancellation Pending",
-    "checked_in": "Checked In"
+    "checked_in": "Checked In",
+    "partially_refunded": "Partially Refunded"
   },
   "pagination": {
     "previous": "Previous",

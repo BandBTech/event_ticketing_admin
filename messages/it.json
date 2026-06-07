@@ -1632,7 +1632,8 @@
     "refunded": "Rimborsata",
     "succeeded": "Ha avuto successo",
     "cancel_pending": "Cancellazione in sospeso",
-    "checked_in": "Check-in"
+    "checked_in": "Check-in",
+    "partially_refunded": "Rimborso parziale"
   },
   "pagination": {
     "previous": "Precedente",
