@@ -26,6 +26,12 @@ export interface Refund {
     name: string;
     email: string;
   };
+  event: {
+    id: string;
+    title: string;
+    currency: string;
+    symbol: string;
+  };
   amount: number;
   currency: string;
   symbol: string;
@@ -107,6 +113,6 @@ export interface RefundStatusChange {
   };
   remarks: string;
   metadata?: Record<string, unknown>; // optional
-  changed_at?: string;                // optional
-  created_at?: string;                // add this
+  changed_at?: string; // optional
+  created_at?: string; // add this
 }

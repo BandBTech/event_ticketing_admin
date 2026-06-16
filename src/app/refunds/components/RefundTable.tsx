@@ -114,6 +114,19 @@ export function RefundTable({
         },
       },
       {
+        id: "event",
+        header: t("refunds.refundDetail.event", "Event"),
+        cell: ({ row }) => {
+          const eventName = row.original.event.title || "-";
+          return (
+            <div className="flex flex-col">
+              <span>{eventName}</span>
+            </div>
+          );
+        },
+        meta: { sortKey: "event_name" },
+      },
+      {
         id: "initiated_by",
         header: t("refunds.table.initiatedBy", "Initiated By"),
         cell: ({ row }) => {
