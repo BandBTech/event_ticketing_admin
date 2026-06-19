@@ -1632,6 +1632,7 @@
     "inactive": "無効",
     "live": "公開中",
     "on_sale": "販売中",
+    "on_hold": "保留中",
     "pending": "承認待ち",
     "published": "公開済み",
     "rejected": "却下",

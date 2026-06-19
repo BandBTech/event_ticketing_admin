@@ -43,35 +43,65 @@ export interface ReportResponse {
 }
 
 export interface Overview {
-  summary_metrics: {
-    total_revenue: number;
-    total_commission: number;
-    organizer_share: number;
-    total_tickets_sold: number;
-    active_events: number;
-    total_events: number;
-    total_transactions: number;
-    completed_transactions: number;
-    pending_transactions: number;
-    failed_transactions: number;
-    average_order_value: number;
-    conversion_rate: number;
+  events: {
+    approved: number;
+    cancel_pending: number;
+    cancelled: number;
+    completed: number;
+    draft: number;
+    held: number;
+    hold: number;
+    live: number;
+    on_sale: number;
+    on_hold: number;
+    pending: number;
+    rejected: number;
+    sales_end: number;
+    sales_upcoming: number;
+    scheduled: number;
+    total: number;
   };
-  top_performing_events: null;
-  recent_transactions: null;
-  revenue_trend: null;
-  ticket_sales_trend: null;
-  events_statistics: {
-    total_events: number;
-    draft_events: number;
-    pending_events: number;
-    approved_events: number;
-    rejected_events: number;
-    on_sale_events: number;
-    live_events: number;
-    completed_events: number;
-    cancelled_events: number;
+  users: { active: number; inactive: number; total: number };
+  guests: { total: number };
+  organizers: {
+    approved: number;
+    pending: number;
+    rejected: number;
+    total: number;
   };
+  transactions: {
+    canceled: number;
+    expired: number;
+    failed: number;
+    pending: number;
+    processing: number;
+    succeeded: number;
+    total: number;
+  };
+  refunds: {
+    cancelled: number;
+    failed: number;
+    pending: number;
+    processing: number;
+    rejected: number;
+    succeeded: number;
+    total: number;
+  };
+  billing: {
+    cancelled: number;
+    paid: number;
+    partially_paid: number;
+    pending: number;
+    total: number;
+  };
+  payouts: {
+    cancelled: number;
+    paid: number;
+    partially_paid: number;
+    pending: number;
+    total: number;
+  };
+  sales_trend: unknown[];
 }
 
 type SummaryMetrics = {
@@ -127,29 +157,6 @@ type PaymentGateway = {
 };
 
 export type ChartTab = "revenue" | "tickets" | "aov";
-
-// type SummaryMetrics = {
-//   total_revenue: number;
-//   total_commission: number;
-//   organizer_share: number;
-//   total_tickets_sold: number;
-//   active_events: number;
-//   total_events: number;
-//   total_transactions: number;
-//   completed_transactions: number;
-//   pending_transactions: number;
-//   failed_transactions: number;
-//   average_order_value: number;
-//   conversion_rate: number;
-// };
-
-type SalesReportData = {
-  summary_metrics: SummaryMetrics;
-  daily_sales: DailySale[];
-  sales_by_payment_gateway: PaymentGateway[];
-};
-
-// customer analytics type interface
 
 type CustomerSegment = {
   segment_name: string;
@@ -275,6 +282,10 @@ export type RevenueReportProps = {
 };
 
 export type ReportPageProps = {
+  data: ReportResponse | undefined;
+};
+
+export type OverviewReportProps = {
   data: ReportResponse | undefined;
 };
 
