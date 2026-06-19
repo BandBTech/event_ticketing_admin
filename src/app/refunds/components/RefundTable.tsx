@@ -124,7 +124,7 @@ export function RefundTable({
             </div>
           );
         },
-        meta: { sortKey: "event_name" },
+        meta: { sortKey: "event_title" },
       },
       {
         id: "initiated_by",
