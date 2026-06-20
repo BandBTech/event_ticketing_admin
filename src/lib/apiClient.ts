@@ -9,7 +9,7 @@ import { toast } from './toast';
 import { t } from 'i18next';
 
 // API Configuration
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://sandbox.timroticket.com/api/v1';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.timroticket.com/api/v1';
 
 // Request queue for handling concurrent requests during token refresh
 let isRefreshing = false;

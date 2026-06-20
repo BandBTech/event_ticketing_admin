@@ -1,5 +1,5 @@
 import { api } from "../lib/apiClient";
-import { API_BASE_URL, API_ENDPOINTS } from "@/app/config/api";
+import { API_ENDPOINTS } from "@/app/config/api";
 import {
   Bill,
   PaymentBillResponse,
@@ -9,6 +9,8 @@ import {
   AddPaymentToBillPayload,
   UpdateBillPayload,
 } from "@/types/billings";
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.timroticket.com/api/v1';
 
 export class BillingService {
   /**
