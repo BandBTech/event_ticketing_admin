@@ -8,6 +8,63 @@ export interface ReportResponse {
     total_pages: number;
   };
   overview: Overview;
+  events: {
+    approved: number;
+    cancel_pending: number;
+    cancelled: number;
+    completed: number;
+    draft: number;
+    held: number;
+    hold: number;
+    live: number;
+    on_sale: number;
+    on_hold: number;
+    pending: number;
+    rejected: number;
+    sales_end: number;
+    sales_upcoming: number;
+    scheduled: number;
+    total: number;
+  };
+  transactions: {
+    canceled: number;
+    expired: number;
+    failed: number;
+    pending: number;
+    processing: number;
+    succeeded: number;
+    total: number;
+  };
+  refunds: {
+    cancelled: number;
+    failed: number;
+    pending: number;
+    processing: number;
+    rejected: number;
+    succeeded: number;
+    total: number;
+  };
+  billing: {
+    cancelled: number;
+    paid: number;
+    partially_paid: number;
+    pending: number;
+    total: number;
+  };
+  payouts: {
+    cancelled: number;
+    paid: number;
+    partially_paid: number;
+    pending: number;
+    total: number;
+  };
+  organizers: {
+    approved: number;
+    pending: number;
+    rejected: number;
+    total: number;
+  };
+  users: { active: number; inactive: number; total: number };
   summary_metrics: SummaryMetrics;
   events_statistics: EventsStatistics;
   sales_by_payment_gateway: PaymentGateway[];

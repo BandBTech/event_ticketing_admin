@@ -14,13 +14,16 @@ export default function ReportPage({ data }: OverviewReportProps) {
   const { locale } = useLanguageStore();
   const { t } = useTranslation(locale);
 
-  const ev = data?.overview?.events;
-  const tx = data?.overview?.transactions;
-  const rf = data?.overview?.refunds;
-  const bl = data?.overview?.billing;
-  const py = data?.overview?.payouts;
-  const or = data?.overview?.organizers;
-  const us = data?.overview?.users;
+    console.log("📊 Report data:", data); // add this
+  console.log("📊 Overview:", data?.overview); // and this
+
+  const ev = data?.events;
+  const tx = data?.transactions;
+  const rf = data?.refunds;
+  const bl = data?.billing;
+  const py = data?.payouts;
+  const or = data?.organizers;
+  const us = data?.users;
 
   return (
     <main className="flex-1 overflow-y-auto space-y-5">
