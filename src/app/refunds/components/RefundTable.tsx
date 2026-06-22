@@ -106,7 +106,7 @@ export function RefundTable({
             hour12: true,
           });
           return (
-            <div className="flex flex-col">
+            <div className="flex flex-col min-w-[80px]">
               <span>{formattedDate}</span>
               <span className="text-xs text-gray-500">at {formattedTime}</span>
             </div>
@@ -116,15 +116,15 @@ export function RefundTable({
       {
         id: "event",
         header: t("refunds.refundDetail.event", "Event"),
-        cell: ({ row }) => {
-          const eventName = row.original.event.title || "-";
-          return (
-            <div className="flex flex-col">
-              <span>{eventName}</span>
-            </div>
-          );
-        },
         meta: { sortKey: "event_title" },
+        cell: ({ row }) => (
+          <span
+            title={row.original.event.title}
+            className="max-w-[180px] truncate inline-block"
+          >
+            {row.original.event.title}
+          </span>
+        ),
       },
       {
         id: "initiated_by",
@@ -134,8 +134,10 @@ export function RefundTable({
           const initiatorEmail = row.original.initiated_by.email || "-";
           return (
             <div className="flex flex-col">
-              <span>{initiatorName}</span>
-              <span className="text-xs text-gray-500 italic">{initiatorEmail}</span>
+              <span title={initiatorName}>{initiatorName}</span>
+              <span title={initiatorEmail} className="text-xs text-gray-500 italic">
+                {initiatorEmail}
+              </span>
             </div>
           );
         },
@@ -148,11 +150,7 @@ export function RefundTable({
         cell: ({ row }) => {
           const type = row.original.refund_type;
 
-          return (
-            <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-700">
-              {t("refunds.refundType." + type)}
-            </span>
-          );
+          return <span className="">{t("refunds.refundType." + type)}</span>;
         },
       },
       {
