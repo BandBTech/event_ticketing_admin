@@ -87,7 +87,7 @@ export function TransactionTable({
             hour12: true,
           });
           return (
-            <div className="flex flex-col">
+            <div className="flex flex-col min-w-[80px]">
               <span>{formattedDate}</span>
               <span className="text-xs text-gray-500">at {formattedTime}</span>
             </div>
