@@ -323,7 +323,7 @@ export default function EventDetailsPage() {
                 {t("common.back", "Back")}
               </Button>
             </div> */}
-            <h1 className="text-3xl text-gray-900 font-bold tracking-tight">
+            <h1 className="text-3xl text-gray-900 font-bold tracking-tight break-all">
               {event.title}
             </h1>
             <div className="flex items-center gap-3 text-sm text-gray-600 flex-wrap">
@@ -528,7 +528,7 @@ export default function EventDetailsPage() {
 
             {/* Description Card */}
             <div className="glass-card-lowest rounded-2xl p-8 shadow-sm border border-gray-100 space-y-6">
-              <div>
+              <div className="break-all">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">
                   {t("events.sections.description", "Event Description")}
                 </h3>
@@ -566,13 +566,13 @@ export default function EventDetailsPage() {
                 </div>
               )}
 
-              <div>
+              <div className="break-all">
                 <h4 className="text-sm font-medium text-gray-500 mb-1">
                   {t("events.fields.venueName", "Venue Name")}
                 </h4>
                 <p className="font-medium text-gray-900">{event.venue_name}</p>
               </div>
-              <div>
+              <div className="break-all">
                 <h4 className="text-sm font-medium text-gray-500 mb-1">
                   {t("events.fields.location", "Location")}
                 </h4>
