@@ -63,13 +63,13 @@ export function EventCard({
           >
             {event.event.title}
           </h3>
-          <span
+          {/* <span
             className={`shrink-0 px-2 py-0.5 rounded-full text-[11px] font-medium capitalize ${
               statusStyles[event.status.toLowerCase()] ?? statusStyles.pending
             }`}
           >
             {t("event.badge." + event.status.toLowerCase(), event.status)}
-          </span>
+          </span> */}
         </div>
 
         {/* Reason */}
