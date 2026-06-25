@@ -61,7 +61,7 @@ export function AuditLogsTable({
       },
       {
         id: "initiator",
-        header: t("dashboard.dataDisplay.users"),
+        header: t("transactions.table.user"),
         cell: ({ row }) => (
           <div title={row.original.actor?.name || "-"} className="max-w-[200px] text-gray-700 truncate inline-block">
             {row.original.actor?.name || "-"}
@@ -83,7 +83,7 @@ export function AuditLogsTable({
       },
       {
         id: "actor",
-        header: t("auditLogs.table.event"),
+        header: t("payouts.table.eventTitle"),
         cell: ({ row }) => (
           <div title={row.original?.event?.title || "-"} className="max-w-[200px] text-gray-700 truncate inline-block">
             {row.original?.event?.title || "-"}

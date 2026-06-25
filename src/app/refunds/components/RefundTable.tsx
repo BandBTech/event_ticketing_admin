@@ -115,7 +115,7 @@ export function RefundTable({
       },
       {
         id: "event",
-        header: t("refunds.refundDetail.event", "Event"),
+        header: t("payouts.table.eventTitle"),
         meta: { sortKey: "event_title" },
         cell: ({ row }) => (
           <span
@@ -134,8 +134,8 @@ export function RefundTable({
           const initiatorEmail = row.original.initiated_by.email || "-";
           return (
             <div className="flex flex-col">
-              <span title={initiatorName} className="font-medium">{initiatorName}</span>
-              <span title={initiatorEmail} className="text-gray-500">
+              <span title={initiatorName} className="">{initiatorName}</span>
+              <span title={initiatorEmail} className="text-gray-700">
                 {initiatorEmail}
               </span>
             </div>
@@ -159,7 +159,7 @@ export function RefundTable({
         accessorKey: "amount",
         meta: { sortKey: "amount" },
         cell: ({ row }) => (
-          <span className="px-2 py-1 font-medium rounded-full">
+          <span className="px-2 py-1 rounded-full">
             {formatCurrency(row.original.amount, row.original.event.symbol)}
           </span>
         ),

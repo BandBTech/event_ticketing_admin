@@ -96,7 +96,7 @@ export function TransactionTable({
       },
       {
         id: "event",
-        header: t("transactions.table.event"),
+        header: t("payouts.table.eventTitle"),
         meta: { sortKey: "event_title" },
         cell: ({ row }) => (
           <span className="max-w-[200px] text-gray-700 truncate inline-block">
@@ -114,10 +114,10 @@ export function TransactionTable({
 
           return (
             <div className="flex flex-col gap-0.5 py-1 max-w-[200px] truncate">
-              <span className="font-medium text-gray-900 leading-tight">
+              <span className="text-gray-900 leading-tight">
                 {user}
               </span>
-              <span className="text-gray-400 leading-tight">
+              <span className="text-gray-700 leading-tight">
                 {email}
               </span>
             </div>
@@ -129,7 +129,7 @@ export function TransactionTable({
         header: t("transactions.table.ticket"),
         meta: { sortKey: "quantity" },
         cell: ({ row }) => (
-          <span className="px-2 py-1 font-medium rounded-full flex items-center gap-2">
+          <span className="px-2 py-1 rounded-full flex items-center gap-2">
             {row.original.quantity}
 
             <TooltipProvider>
@@ -157,7 +157,7 @@ export function TransactionTable({
         title: "Amount",
         meta: { sortKey: "amount" },
         cell: ({ row }) => (
-          <span className="px-2 py-1 font-medium rounded-full flex items-center gap-2">
+          <span className="px-2 py-1 rounded-full flex items-center gap-2">
             {formatCurrency(row.original.amount, row.original.symbol)}
 
             <TooltipProvider>
