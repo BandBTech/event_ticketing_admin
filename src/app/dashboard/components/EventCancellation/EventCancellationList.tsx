@@ -188,10 +188,10 @@ const EventCancellationList = ({
           </SheetTitle>
         </SheetHeader>
 
-        <StatusFilterTabs
+        {/* <StatusFilterTabs
           activeStatus={activeStatus}
           onChange={setActiveStatus}
-        />
+        /> */}
 
         <div className="overflow-auto">
           {isLoadingCancellationEvents ? (
