@@ -132,7 +132,7 @@ const EventCancellationList = ({
 
   useEffect(() => {
     const totalNumberOfPendingCancellationEvents =
-      pendingCancellationEventsData?.pagination?.total || 0;
+      pendingCancellationEventsData?.count?.pending || 0;
     setTotalPendingCancellationEvents(totalNumberOfPendingCancellationEvents);
   }, [pendingCancellationEventsData, setTotalPendingCancellationEvents]);
 

@@ -1,5 +1,10 @@
 import { api } from "../lib/apiClient";
-import { Event, CreateEventData, UpdateEventRequest, EventCancellation } from "@/types/event";
+import {
+  Event,
+  CreateEventData,
+  UpdateEventRequest,
+  EventCancellation,
+} from "@/types/event";
 
 /**
  * Event Service
@@ -35,6 +40,11 @@ interface EventResponse {
   limit: number;
   page: number;
   total: number;
+  count: {
+    pending: number;
+    approved: number;
+    rejected: number;
+  };
   pagination: {
     page: number;
     limit: number;

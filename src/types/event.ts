@@ -50,6 +50,11 @@ export interface EventResponse {
   limit: number;
   page: number;
   total: number;
+  count: {
+    pending: number;
+    approved: number;
+    rejected: number;
+  };
   pagination: {
     page: number;
     limit: number;
