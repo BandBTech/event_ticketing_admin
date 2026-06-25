@@ -104,7 +104,7 @@ export function AuditLogsTable({
           return (
             <div className="flex flex-col">
               <span>{formattedDate}</span>
-              <span className="text-xs text-gray-500">at {formattedTime}</span>
+              <span className="text-gray-500">at {formattedTime}</span>
             </div>
           );
         },

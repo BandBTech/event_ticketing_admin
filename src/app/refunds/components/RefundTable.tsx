@@ -108,7 +108,7 @@ export function RefundTable({
           return (
             <div className="flex flex-col min-w-[80px]">
               <span>{formattedDate}</span>
-              <span className="text-xs text-gray-500">at {formattedTime}</span>
+              <span className="text-gray-500">at {formattedTime}</span>
             </div>
           );
         },
@@ -134,8 +134,8 @@ export function RefundTable({
           const initiatorEmail = row.original.initiated_by.email || "-";
           return (
             <div className="flex flex-col">
-              <span title={initiatorName}>{initiatorName}</span>
-              <span title={initiatorEmail} className="text-xs text-gray-500 italic">
+              <span title={initiatorName} className="font-medium">{initiatorName}</span>
+              <span title={initiatorEmail} className="text-gray-500">
                 {initiatorEmail}
               </span>
             </div>
@@ -159,7 +159,7 @@ export function RefundTable({
         accessorKey: "amount",
         meta: { sortKey: "amount" },
         cell: ({ row }) => (
-          <span className="px-2 py-1 text-xs font-medium rounded-full">
+          <span className="px-2 py-1 font-medium rounded-full">
             {formatCurrency(row.original.amount, row.original.event.symbol)}
           </span>
         ),
@@ -181,7 +181,7 @@ export function RefundTable({
 
           return (
             <span
-              className={`px-2 py-1 text-xs font-semibold rounded-full ${
+              className={`px-2 py-1 font-semibold rounded-full ${
                 statusStyles[status?.toLowerCase()] ||
                 "bg-gray-100 text-gray-700"
               }`}
