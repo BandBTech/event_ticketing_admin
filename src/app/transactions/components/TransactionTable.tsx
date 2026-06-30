@@ -99,7 +99,7 @@ export function TransactionTable({
         header: t("payouts.table.eventTitle"),
         meta: { sortKey: "event_title" },
         cell: ({ row }) => (
-          <span className="max-w-[200px] text-gray-700 truncate inline-block">
+          <span title={row.original.event.title || "-"} className="max-w-[200px] text-gray-700 truncate inline-block">
             {row.original.event.title || "-"}
           </span>
         ),
@@ -114,10 +114,10 @@ export function TransactionTable({
 
           return (
             <div className="flex flex-col gap-0.5 py-1 max-w-[200px] truncate">
-              <span className="text-gray-900 leading-tight">
+              <span title={user} className="text-gray-900 leading-tight">
                 {user}
               </span>
-              <span className="text-gray-700 leading-tight">
+              <span title={email} className="text-gray-700 leading-tight">
                 {email}
               </span>
             </div>
