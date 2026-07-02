@@ -132,7 +132,7 @@ const EventCancellationList = ({
 
   useEffect(() => {
     const totalNumberOfPendingCancellationEvents =
-      pendingCancellationEventsData?.pagination?.total || 0;
+      pendingCancellationEventsData?.count?.pending || 0;
     setTotalPendingCancellationEvents(totalNumberOfPendingCancellationEvents);
   }, [pendingCancellationEventsData, setTotalPendingCancellationEvents]);
 
@@ -188,10 +188,10 @@ const EventCancellationList = ({
           </SheetTitle>
         </SheetHeader>
 
-        <StatusFilterTabs
+        {/* <StatusFilterTabs
           activeStatus={activeStatus}
           onChange={setActiveStatus}
-        />
+        /> */}
 
         <div className="overflow-auto">
           {isLoadingCancellationEvents ? (

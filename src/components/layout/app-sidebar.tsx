@@ -17,6 +17,8 @@ import {
   InvoiceIcon,
   CreditCardIcon,
   UserIcon,
+  CaretDoubleRightIcon,
+  CaretDoubleLeftIcon,
 } from "@phosphor-icons/react";
 import Image from "next/image";
 
@@ -122,32 +124,27 @@ export function AppSidebar() {
                 onClick={() => router.push("/dashboard")}
                 src={logo}
                 alt="Logo"
-                className="h-11 max-w-[145px]"
+                className="h-11"
               />
-              <button
-                title="toggle-button"
-                onClick={onToggle}
-                className="absolute -right-3 top-6 z-50 bg-white border border-gray-300 rounded-lg shadow-sm p-1.5 text-gray-700 hover:text-gray-900 hover:shadow-md transition-all hidden md:block"
-              >
-                <CaretDoubleLeft
-                  weight="bold"
-                  className="size-4 text-gray-500"
-                />
-              </button>
             </>
           )}
-          {collapsed && (
-            <button
-              title="toggle-button"
-              onClick={onToggle}
-              className="absolute -right-3 top-6 z-50 bg-white border border-gray-300 rounded-lg shadow-sm p-1.5 text-gray-700 hover:text-gray-900 hover:shadow-md transition-all hidden md:block"
-            >
-              <CaretDoubleRight
+          <button
+            title="toggle-button"
+            onClick={onToggle}
+            className="absolute -right-4 top-6 z-50 bg-white border border-gray-300 rounded-lg shadow-sm p-1.5 text-gray-700 hover:text-gray-900 hover:shadow-md transition-all hidden md:block"
+          >
+            {collapsed ? (
+              <CaretDoubleRightIcon
                 weight="bold"
                 className="size-4 text-gray-500"
               />
-            </button>
-          )}
+            ) : (
+              <CaretDoubleLeftIcon
+                weight="bold"
+                className="size-4 text-gray-500"
+              />
+            )}
+          </button>
         </div>
 
         {/* Navigation */}

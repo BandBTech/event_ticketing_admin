@@ -99,7 +99,7 @@ export function PayoutTable({
           return (
             <div className="flex flex-col min-w-[80px]">
               <span>{formattedDate}</span>
-              <span className="text-xs text-gray-500">at {formattedTime}</span>
+              <span className="text-gray-500">at {formattedTime}</span>
             </div>
           );
         },
@@ -109,10 +109,18 @@ export function PayoutTable({
         header: t("billings.table.organizerName"),
         meta: { sortKey: "organizer_name" },
         cell: ({ row }) => (
-          <span className="font-medium max-w-[200px] truncate grid grid-cols-1">
-            {row.original.organizer.name}
+          <span className="max-w-[180px] grid grid-cols-1">
+            <span
+              title={row.original.organizer.name}
+              className="max-w-[180px] truncate inline-block"
+            >
+              {row.original.organizer.name}
+            </span>
             {row.original.organizer.email && (
-              <span className="text-xs text-slate-600 font-normal">
+              <span
+                title={row.original.organizer.email}
+                className="text-gray-700 max-w-[180px] truncate inline-block"
+              >
                 {row.original.organizer.email}
               </span>
             )}
@@ -124,7 +132,10 @@ export function PayoutTable({
         header: t("payouts.table.eventTitle"),
         meta: { sortKey: "event_title" },
         cell: ({ row }) => (
-          <span className="font-medium max-w-[200px] truncate inline-block">
+          <span
+            title={row.original.event.title}
+            className="max-w-[180px] truncate inline-block"
+          >
             {row.original.event.title}
           </span>
         ),
@@ -134,7 +145,7 @@ export function PayoutTable({
         header: t("payouts.table.amount"),
         meta: { sortKey: "amount" },
         cell: ({ row }) => (
-          <span className="px-2 py-1 text-xs font-medium rounded-full">
+          <span className="px-1 py-1 rounded-full">
             {formatCurrency(row.original.amount, row.original.event.symbol)}
           </span>
         ),
@@ -159,7 +170,7 @@ export function PayoutTable({
 
           return (
             <span
-              className={`px-2 py-1 text-xs font-semibold rounded-full ${
+              className={`px-2 py-1 font-semibold rounded-full ${
                 statusStyles[status?.toLowerCase()] ||
                 "bg-gray-100 text-gray-700"
               }`}

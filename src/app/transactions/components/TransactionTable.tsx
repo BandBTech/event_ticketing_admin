@@ -87,19 +87,19 @@ export function TransactionTable({
             hour12: true,
           });
           return (
-            <div className="flex flex-col">
+            <div className="flex flex-col min-w-[80px]">
               <span>{formattedDate}</span>
-              <span className="text-xs text-gray-500">at {formattedTime}</span>
+              <span className="text-gray-500">at {formattedTime}</span>
             </div>
           );
         },
       },
       {
         id: "event",
-        header: t("transactions.table.event"),
+        header: t("payouts.table.eventTitle"),
         meta: { sortKey: "event_title" },
         cell: ({ row }) => (
-          <span className="max-w-[200px] text-gray-700 truncate inline-block">
+          <span title={row.original.event.title || "-"} className="max-w-[200px] text-gray-700 truncate inline-block">
             {row.original.event.title || "-"}
           </span>
         ),
@@ -114,10 +114,10 @@ export function TransactionTable({
 
           return (
             <div className="flex flex-col gap-0.5 py-1 max-w-[200px] truncate">
-              <span className="text-sm font-medium text-gray-900 leading-tight">
+              <span title={user} className="text-gray-900 leading-tight">
                 {user}
               </span>
-              <span className="text-xs text-gray-400 leading-tight">
+              <span title={email} className="text-gray-700 leading-tight">
                 {email}
               </span>
             </div>
@@ -129,7 +129,7 @@ export function TransactionTable({
         header: t("transactions.table.ticket"),
         meta: { sortKey: "quantity" },
         cell: ({ row }) => (
-          <span className="px-2 py-1 text-xs font-medium rounded-full flex items-center gap-2">
+          <span className="px-2 py-1 rounded-full flex items-center gap-2">
             {row.original.quantity}
 
             <TooltipProvider>
@@ -157,7 +157,7 @@ export function TransactionTable({
         title: "Amount",
         meta: { sortKey: "amount" },
         cell: ({ row }) => (
-          <span className="px-2 py-1 text-xs font-medium rounded-full flex items-center gap-2">
+          <span className="px-2 py-1 rounded-full flex items-center gap-2">
             {formatCurrency(row.original.amount, row.original.symbol)}
 
             <TooltipProvider>
@@ -208,14 +208,14 @@ export function TransactionTable({
           return (
             <div className="flex flex-col items-start gap-0.5">
               <span
-                className={`px-2 py-0.5 text-xs font-medium rounded-full ${
+                className={`px-2 py-0.5 font-medium rounded-full ${
                   colors[gateway?.toLowerCase()] || "bg-gray-100 text-gray-700"
                 }`}
               >
                 {t("billings.method." + gateway)}
               </span>
               {row.original.gateway_fee > 0 && (
-                <span className="text-[11px] font-medium text-red-600 pl-1">
+                <span className="font-medium text-red-600 pl-1">
                   −
                   {formatCurrency(
                     row.original.gateway_fee,
@@ -244,7 +244,7 @@ export function TransactionTable({
 
           return (
             <span
-              className={`px-2 py-1 text-xs font-semibold rounded-full ${
+              className={`px-2 py-1 font-semibold rounded-full ${
                 statusStyles[status?.toLowerCase()] ||
                 "bg-gray-100 text-gray-700"
               }`}

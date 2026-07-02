@@ -6,6 +6,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { OrganizerService, Organizer } from "@/services/organizerService";
 import { format } from "date-fns";
 import {
+  useApproveOrganizer,
+  usePendingOrganizers,
+  useRejectOrganizer,
+} from "@/hooks/useDashboard";
+import {
   DotsThreeVertical as DotsThreeVerticalIcon,
   ArrowSquareOut as ArrowSquareOutIcon,
   PencilSimple as PencilSimpleIcon,
@@ -32,8 +37,22 @@ import { toast } from "sonner";
 import { queryKeys } from "@/lib/queryKeys";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
-import {formatDateTimeLong} from "@/lib/utils"
+import { formatDateTimeLong } from "@/lib/utils";
 import Image from "next/image";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+interface ModalState {
+  open: boolean;
+  id?: string;
+}
 
 // UI Components
 import {
@@ -526,7 +545,10 @@ function LatestEventsByOrganizer({ id }: { id: string }) {
               </div>
 
               <div className="flex-1 min-w-0">
-                <h3 title={event?.title} className="font-medium text-gray-900 truncate group-hover:text-primary transition-colors">
+                <h3
+                  title={event?.title}
+                  className="font-medium text-gray-900 truncate group-hover:text-primary transition-colors"
+                >
                   {event?.title}
                 </h3>
                 <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
@@ -555,8 +577,21 @@ export default function OrganizerDetailPage() {
 
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [statusAction, setStatusAction] = useState<StatusAction>("approve");
+  const approveOrganizerMutation = useApproveOrganizer();
+  const [approveOrganizerModal, setApproveOrganizerModal] =
+    useState<ModalState>({
+      open: false,
+    });
 
   const { data: organizer, isLoading, isError } = useOrganizerById(id!);
+
+  const handleApproveOrganizer = (organizerId: string) => {
+    approveOrganizerMutation.mutate(organizerId, {
+      onSuccess: () => {
+        toast.success(t("dashboard.toast.organizerApproved"));
+      },
+    });
+  };
 
   if (isLoading) {
     return <DetailPageSkeleton />;
@@ -597,13 +632,15 @@ export default function OrganizerDetailPage() {
   );
   const StatusIcon = statusConfig.icon;
 
-  const formattedCreatedDate = formatDateTimeLong(organizer?.created_at, locale)
+  const formattedCreatedDate =
+    formatDateTimeLong(organizer?.created_at, locale) ??
     // ? format(new Date(organizer.created_at), "MMMM dd, yyyy 'at' hh:mm a")
-    ?? "N/A";
+    "N/A";
 
-  const formattedUpdatedDate = formatDateTimeLong(organizer?.updated_at, locale)
+  const formattedUpdatedDate =
+    formatDateTimeLong(organizer?.updated_at, locale) ??
     // ? format(new Date(organizer.updated_at), "MMMM dd, yyyy 'at' hh:mm a")
-    ?? "N/A";
+    "N/A";
 
   const isPending = organizer?.organizer_status?.toLowerCase() === "pending";
   const isApproved = organizer?.organizer_status?.toLowerCase() === "approved";
@@ -654,7 +691,10 @@ export default function OrganizerDetailPage() {
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0">
                     <div className="flex items-center gap-3 mb-1">
-                      <h1 className="text-2xl font-bold text-gray-900 break-words min-w-0 flex-1" title={organizer?.name}>
+                      <h1
+                        className="text-2xl font-bold text-gray-900 break-words min-w-0 flex-1"
+                        title={organizer?.name}
+                      >
                         {organizer?.name}
                       </h1>
                       <Badge className={accountStatusConfig?.color}>
@@ -691,7 +731,11 @@ export default function OrganizerDetailPage() {
                     <div className="flex gap-2">
                       {!isApproved && (
                         <Button
-                          onClick={() => handleAction("approve")}
+                          // onClick={() => handleAction("approve")}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setApproveOrganizerModal({ open: true, id })
+                          }}
                           className="bg-emerald-600 hover:bg-emerald-700 text-white"
                         >
                           {t("organizer.management.actions.approve", "Approve")}
@@ -810,7 +854,10 @@ export default function OrganizerDetailPage() {
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">
-                      {t("organizer.organizerDetails.emailAddress", "Email Address")}
+                      {t(
+                        "organizer.organizerDetails.emailAddress",
+                        "Email Address",
+                      )}
                     </p>
                     <p className="font-medium text-gray-900">
                       {organizer?.email}
@@ -829,7 +876,10 @@ export default function OrganizerDetailPage() {
                     <div>
                       <p className="text-sm text-gray-500">
                         {/* {t("profile.phone", "Phone Number")} */}
-                         {t("organizer.organizerDetails.phoneNumber", "Phone Number")}
+                        {t(
+                          "organizer.organizerDetails.phoneNumber",
+                          "Phone Number",
+                        )}
                       </p>
                       <p className="font-medium text-gray-900">
                         {formatPhoneNumber(
@@ -849,7 +899,9 @@ export default function OrganizerDetailPage() {
                     />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">{t("organizer.organizerDetails.joined", "Joined")}</p>
+                    <p className="text-sm text-gray-500">
+                      {t("organizer.organizerDetails.joined", "Joined")}
+                    </p>
                     <p className="font-medium text-gray-900">
                       {formattedCreatedDate}
                     </p>
@@ -864,7 +916,13 @@ export default function OrganizerDetailPage() {
                     />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500"> {t("organizer.organizerDetails.lastUpdated", "Last Updated")}</p>
+                    <p className="text-sm text-gray-500">
+                      {" "}
+                      {t(
+                        "organizer.organizerDetails.lastUpdated",
+                        "Last Updated",
+                      )}
+                    </p>
                     <p className="font-medium text-gray-900">
                       {formattedUpdatedDate}
                     </p>
@@ -978,6 +1036,49 @@ export default function OrganizerDetailPage() {
         action={statusAction}
         t={t}
       />
+
+      {/* Approve Organizer Modal */}
+      {approveOrganizerModal.open && (
+        <>
+          <div
+            className="fixed inset-0 bg-black/30 z-40"
+            onClick={() => setApproveOrganizerModal({ open: false })}
+          />
+          <AlertDialog
+            open={approveOrganizerModal.open}
+            onOpenChange={(open) =>
+              setApproveOrganizerModal((prev) => ({ ...prev, open }))
+            }
+          >
+            <AlertDialogContent className="rounded-3xl shadow-2xl border-none bg-white/95 backdrop-blur-xl data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 duration-300">
+              <AlertDialogHeader>
+                <AlertDialogTitle className="text-xl font-bold text-gray-900">
+                  {t("organizer.management.modals.approveTitle", "")}
+                </AlertDialogTitle>
+                <AlertDialogDescription className="text-gray-500 text-base">
+                  {t("organizer.management.modals.approveDesc", "")}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter className="pt-6">
+                <AlertDialogCancel
+                  onClick={() => setApproveOrganizerModal({ open: false })}
+                  className="h-11 px-6 border-gray-200 hover:bg-gray-50 transition-colors"
+                >
+                  {t("common.cancelButton", "Cancel")}
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() =>
+                    handleApproveOrganizer(approveOrganizerModal.id!)
+                  }
+                  className="h-11 px-8 active:scale-95"
+                >
+                  {t("common.confirm", "Confirm")}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </>
+      )}
     </div>
   );
 }

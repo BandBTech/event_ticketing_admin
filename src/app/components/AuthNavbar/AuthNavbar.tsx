@@ -21,7 +21,7 @@ const AuthNavbar: React.FC = () => {
           onClick={() => router.push("/dashboard")}
           src={logo}
           alt="Logo"
-          className="w-40 px-2"
+          className="w-50 px-2"
         />
       </div>
 

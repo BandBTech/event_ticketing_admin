@@ -106,25 +106,25 @@ export function RefundTable({
             hour12: true,
           });
           return (
-            <div className="flex flex-col">
+            <div className="flex flex-col min-w-[80px]">
               <span>{formattedDate}</span>
-              <span className="text-xs text-gray-500">at {formattedTime}</span>
+              <span className="text-gray-500">at {formattedTime}</span>
             </div>
           );
         },
       },
       {
         id: "event",
-        header: t("refunds.refundDetail.event", "Event"),
-        cell: ({ row }) => {
-          const eventName = row.original.event.title || "-";
-          return (
-            <div className="flex flex-col">
-              <span>{eventName}</span>
-            </div>
-          );
-        },
+        header: t("payouts.table.eventTitle"),
         meta: { sortKey: "event_title" },
+        cell: ({ row }) => (
+          <span
+            title={row.original.event.title}
+            className="max-w-[180px] truncate inline-block"
+          >
+            {row.original.event.title}
+          </span>
+        ),
       },
       {
         id: "initiated_by",
@@ -134,8 +134,10 @@ export function RefundTable({
           const initiatorEmail = row.original.initiated_by.email || "-";
           return (
             <div className="flex flex-col">
-              <span>{initiatorName}</span>
-              <span className="text-xs text-gray-500 italic">{initiatorEmail}</span>
+              <span title={initiatorName} className="">{initiatorName}</span>
+              <span title={initiatorEmail} className="text-gray-700">
+                {initiatorEmail}
+              </span>
             </div>
           );
         },
@@ -148,11 +150,7 @@ export function RefundTable({
         cell: ({ row }) => {
           const type = row.original.refund_type;
 
-          return (
-            <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-700">
-              {t("refunds.refundType." + type)}
-            </span>
-          );
+          return <span className="">{t("refunds.refundType." + type)}</span>;
         },
       },
       {
@@ -161,7 +159,7 @@ export function RefundTable({
         accessorKey: "amount",
         meta: { sortKey: "amount" },
         cell: ({ row }) => (
-          <span className="px-2 py-1 text-xs font-medium rounded-full">
+          <span className="px-2 py-1 rounded-full">
             {formatCurrency(row.original.amount, row.original.event.symbol)}
           </span>
         ),
@@ -183,7 +181,7 @@ export function RefundTable({
 
           return (
             <span
-              className={`px-2 py-1 text-xs font-semibold rounded-full ${
+              className={`px-2 py-1 font-semibold rounded-full ${
                 statusStyles[status?.toLowerCase()] ||
                 "bg-gray-100 text-gray-700"
               }`}
