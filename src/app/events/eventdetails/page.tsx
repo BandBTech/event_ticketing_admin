@@ -287,12 +287,21 @@ export default function EventDetailsPage() {
   const mappedStatusHistory = (historyList as StatusHistoryItem[]).map((h) => ({
     id: h.id,
     event_id: h.event_id,
-    old_status: h.from_status || h.old_status || "unknown",
-    new_status: h.to_status || h.new_status || "unknown",
+    old_status:
+      h.from_status ||
+      h.old_status ||
+      `${t("organizer.management.status.unknown", "Unknown")}`,
+    new_status:
+      h.to_status ||
+      h.new_status ||
+      `${t("organizer.management.status.unknown", "Unknown")}`,
     status_type: h.status_type || "approval",
     remark: h.reason || h.remark || "",
     changed_by: h.changed_by,
-    changed_by_name: h.changed_by_name || h.changed_by || "Unknown",
+    changed_by_name:
+      h.changed_by_name ||
+      h.changed_by ||
+      `${t("organizer.management.status.unknown", "Unknown")}`,
     created_at: h.created_at,
   }));
 
@@ -693,14 +702,14 @@ export default function EventDetailsPage() {
             {/* Ticket Analytics (Renamed from Ticket Tiers as in Organizer, but retaining our logic) */}
             <div className="glass-card-lower rounded-2xl p-6 border border-gray-100 @container">
               <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                {t("event.sections.ticketAnalytics", "Ticket Analytics")}
+                {t("events.sections.ticketAnalytics", "Ticket Analytics")}
               </h2>
               <div className="space-y-6">
                 {/* Sales Progress */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-500">
-                      {t("event.analytics.progress", "Sales Progress")}
+                      {t("events.analytics.progress", "Sales Progress")}
                     </span>
                     <span className="font-medium text-gray-900">
                       {Math.round(progress)}%
@@ -944,7 +953,6 @@ export default function EventDetailsPage() {
         />
       )} */}
 
-
       {/* Approve Event Cancellation Modal */}
       {showApproveCancellationModal && (
         <>
@@ -982,7 +990,10 @@ export default function EventDetailsPage() {
                   onClick={(data) => {
                     if (!cancellationRequest?.id) return;
                     approveCancellationMutation.mutate(
-                      { eventId: cancellationRequest.id, adminRemark: "Event cancellation approved by admin." },
+                      {
+                        eventId: cancellationRequest.id,
+                        adminRemark: "Event cancellation approved by admin.",
+                      },
                       {
                         onSuccess: () => {
                           toast.success(

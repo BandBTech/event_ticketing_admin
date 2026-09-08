@@ -144,10 +144,7 @@ export default function EventPerformance({
             />
             <MetricCard
               label={t("reports.eventPerformance.organizerEarnings")}
-              value={formatCurrency(
-                data?.organizer_earnings || 0,
-                undefined
-              )}
+              value={formatCurrency(data?.organizer_earnings || 0, undefined)}
               sub={`${organizerPct}% ${t("reports.eventPerformance.ofRevenue")}`}
               // valueColor="text-emerald-600"
             />
@@ -159,11 +156,8 @@ export default function EventPerformance({
             />
             <MetricCard
               label={t("reports.eventPerformance.avgTicketPrice")}
-              value={formatCurrency(
-                data?.average_ticket_price || 0,
-                undefined
-              )}
-              sub={`${data?.total_transactions} ${t("reports.eventPerformance.transactions")}`}
+              value={formatCurrency(data?.average_ticket_price || 0, undefined)}
+              sub={`${data?.total_transactions || 0} ${t("reports.eventPerformance.transactions")}`}
             />
           </div>
 
@@ -177,7 +171,8 @@ export default function EventPerformance({
                     {t("reports.eventPerformance.capacityFill")}
                   </span>
                   <span className="text-sm font-semibold text-black">
-                    {data?.tickets_sold} / {data?.capacity}
+                    {data?.tickets_sold}
+                    {/* / {data?.capacity} */}
                   </span>
                 </div>
                 <div className="h-3 bg-gray-100 rounded-full overflow-hidden mb-1.5">
@@ -190,9 +185,10 @@ export default function EventPerformance({
                 </div>
                 <div className="text-[11px] text-black">
                   {(data?.sold_percentage ?? 0).toFixed(1)}%{" "}
-                  {t("reports.eventPerformance.sold")} ·{" "}
-                  {(data?.capacity || 0) - (data?.tickets_sold || 0)}{" "}
-                  {t("reports.eventPerformance.remaining")}
+                  {t("reports.eventPerformance.sold")}
+                  {/* ·{" "} */}
+                  {/* {(data?.capacity || 0) - (data?.tickets_sold || 0)}{" "}
+                  {t("reports.eventPerformance.remaining")} */}
                 </div>
               </div>
 
@@ -205,11 +201,11 @@ export default function EventPerformance({
                   label={t("reports.eventPerformance.totalCapacity")}
                   value={data?.capacity || 0}
                 />
-                <StatRow
+                {/* <StatRow
                   label={t("reports.eventPerformance.remaining")}
                   value={(data?.capacity || 0) - (data?.tickets_sold || 0)}
                   badge={{ bg: "bg-gray-100", text: "text-black" }}
-                />
+                /> */}
                 <StatRow
                   label={t("reports.eventPerformance.transactions")}
                   value={data?.total_transactions || 0}
@@ -251,16 +247,13 @@ export default function EventPerformance({
                   label={t("reports.eventPerformance.organizerEarnings")}
                   value={formatCurrency(
                     data?.organizer_earnings || 0,
-                    undefined
+                    undefined,
                   )}
                   // badge={{ bg: "bg-emerald-50", text: "text-emerald-700" }}
                 />
                 <StatRow
                   label={t("reports.eventPerformance.commission")}
-                  value={formatCurrency(
-                    data?.commission || 0,
-                    undefined
-                  )}
+                  value={formatCurrency(data?.commission || 0, undefined)}
                   // badge={{ bg: "bg-amber-50", text: "text-amber-700" }}
                 />
               </div>
@@ -293,11 +286,8 @@ export default function EventPerformance({
                             {/* {t("reports.eventPerformance." + tier.tier_name)} */}
                           </span>
                           <span className="ml-2 text-xs text-black">
-                            {formatCurrency(
-                              tier.ticket_price,
-                              undefined
-                            )}{" "}
-                            / {t("reports.eventPerformance.ticket")}
+                            {formatCurrency(tier.ticket_price, undefined)} /{" "}
+                            {t("reports.eventPerformance.ticket")}
                           </span>
                         </div>
                         <span
@@ -334,9 +324,7 @@ export default function EventPerformance({
                       <div>
                         <div className="flex justify-between text-[11px] text-black mb-1">
                           <span>{t("reports.eventPerformance.revenue")}</span>
-                          <span>
-                            {formatCurrency(tier.revenue, undefined)}
-                          </span>
+                          <span>{formatCurrency(tier.revenue, undefined)}</span>
                         </div>
                         <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                           <div

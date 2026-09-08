@@ -319,7 +319,7 @@ export default function EventsPage() {
         <div className="text-center text-sm text-muted-foreground">
           {t("pagination.showing")} {(currentPage - 1) * itemsPerPage + 1}-
           {Math.min(currentPage * itemsPerPage, totalItems)}{" "}
-          {t("pagination.of")} {totalItems} {t("", "Events")}
+          {t("pagination.of")} {totalItems} {t("pagination.events", "Events")}
         </div>
       )}
     </div>

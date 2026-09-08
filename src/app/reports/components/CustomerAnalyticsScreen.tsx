@@ -62,7 +62,7 @@ export default function CustomerAnalytics({ data }: CustomerAnalyticsProps) {
         <MetricCard
           label={t("reports.customerAnalytics.registeredUsers")}
           value={data?.registered_users || 0}
-          sub={`${data?.guest_purchases} ${t("reports.customerAnalytics.guestPurchases")}`}
+          sub={`${data?.guest_purchases || 0} ${t("reports.customerAnalytics.guestPurchases")}`}
           valueColor="text-black"
         />
         <MetricCard
@@ -73,10 +73,7 @@ export default function CustomerAnalytics({ data }: CustomerAnalyticsProps) {
         />
         <MetricCard
           label={t("reports.customerAnalytics.avgOrderValue")}
-          value={formatCurrency(
-            data?.average_order_value || 0,
-            undefined
-          )}
+          value={formatCurrency(data?.average_order_value || 0, undefined)}
           sub={t("reports.customerAnalytics.perTransaction")}
         />
       </div>
@@ -148,12 +145,12 @@ export default function CustomerAnalytics({ data }: CustomerAnalyticsProps) {
           />
           <StatRowCAS
             label={t("reports.customerAnalytics.retentionRate")}
-            value={`${r?.retention_rate.toFixed(2)}%`}
+            value={`${r?.retention_rate.toFixed(2) || 0} %`}
             badge={{ bg: "bg-gray-100", text: "text-black" }}
           />
           <StatRowCAS
             label={t("reports.customerAnalytics.churnRate")}
-            value={`${r?.churn_rate.toFixed(2)}%`}
+            value={`${r?.churn_rate.toFixed(2) || 0} %`}
             badge={{ bg: "bg-gray-100", text: "text-black" }}
           />
         </SectionCard>

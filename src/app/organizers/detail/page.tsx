@@ -734,7 +734,7 @@ export default function OrganizerDetailPage() {
                           // onClick={() => handleAction("approve")}
                           onClick={(e) => {
                             e.stopPropagation();
-                            setApproveOrganizerModal({ open: true, id })
+                            setApproveOrganizerModal({ open: true, id });
                           }}
                           className="bg-emerald-600 hover:bg-emerald-700 text-white"
                         >
@@ -755,7 +755,7 @@ export default function OrganizerDetailPage() {
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <button
-                          title="dropdown-manager"
+                          // title="dropdown-manager"
                           className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors border border-gray-200"
                         >
                           <DotsThreeVerticalIcon
