@@ -290,18 +290,18 @@ export default function EventDetailsPage() {
     old_status:
       h.from_status ||
       h.old_status ||
-      `${t("organizer.management.status.unknown", "Unknown")}`,
+      `${t("events.history.systemAutomatic", "System (Automatic)")}`,
     new_status:
       h.to_status ||
       h.new_status ||
-      `${t("organizer.management.status.unknown", "Unknown")}`,
+      `${t("events.history.systemAutomatic", "System (Automatic)")}`,
     status_type: h.status_type || "approval",
     remark: h.reason || h.remark || "",
     changed_by: h.changed_by,
     changed_by_name:
       h.changed_by_name ||
       h.changed_by ||
-      `${t("organizer.management.status.unknown", "Unknown")}`,
+      `${t("events.history.systemAutomatic", "System (Automatic)")}`,
     created_at: h.created_at,
   }));
 
