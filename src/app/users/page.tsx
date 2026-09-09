@@ -48,12 +48,23 @@ export default function TransactionsPage() {
   const roleFilter = searchParams.get("role") || "";
   const statusFilter = searchParams.get("status") || "";
   const accountStatusFilter = searchParams.get("account_status") || "";
+  const debouncedSearch = useDebounce(searchInput, 500);
+
+  const isFirstRender = React.useRef(true);
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if (currentPage !== 1) {
+      handlePageChange(1);
+    }
+  }, [debouncedSearch]);
 
   const [isToggleConfirmDialog, setIsToggleConfirmDialog] =
     React.useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
-  const debouncedSearch = useDebounce(searchInput, 500);
   const queryClient = useQueryClient();
   // Sorting state
   const [sortBy, setSortBy] = useState<string | undefined>(undefined);
@@ -61,7 +72,7 @@ export default function TransactionsPage() {
     undefined,
   );
 
-    useEffect(() => {
+  useEffect(() => {
     document.title = `${t("webTitle.users")} | Timro-Ticket`;
   }, [locale]);
 
@@ -188,7 +199,10 @@ export default function TransactionsPage() {
         <div className="relative w-full sm:w-auto flex-1 max-w-[50%]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
           <Input
-            placeholder={t("users.searchUsers", "Search By Full Name / Email / Phone")}
+            placeholder={t(
+              "users.searchUsers",
+              "Search By Full Name / Email / Phone",
+            )}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             className="pl-9 shadow-sm"

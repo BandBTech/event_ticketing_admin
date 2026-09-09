@@ -109,6 +109,14 @@ export default function TransactionsPage() {
     [handlePageChange],
   );
 
+  const handleApplyFilters = useCallback(
+    (filters: BillingFilters) => {
+      setAppliedFilters(filters);
+      handlePageChange(1);
+    },
+    [handlePageChange],
+  );
+
   const totalItems = response?.pagination.total ?? 0;
   const totalPages = Math.ceil(totalItems / limit);
   const hasNextPage = response?.pagination.has_next ?? currentPage < totalPages;
@@ -182,7 +190,7 @@ export default function TransactionsPage() {
             open={filterSheetOpen}
             onOpenChange={setFilterSheetOpen}
             filters={appliedFilters}
-            onApplyFilters={setAppliedFilters}
+            onApplyFilters={handleApplyFilters}
           />
         </React.Suspense>
       </div>

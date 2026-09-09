@@ -48,6 +48,17 @@ export default function TransactionsPage() {
     undefined,
   );
 
+  const isFirstRender = React.useRef(true);
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if (currentPage !== 1) {
+      handlePageChange(1);
+    }
+  }, [debouncedSearch]);
+
   useEffect(() => {
     document.title = `${t("webTitle.payouts")} | Timro-Ticket`;
   }, [locale]);
@@ -119,7 +130,10 @@ export default function TransactionsPage() {
         <div className="relative  w-full sm:w-auto flex-1 max-w-[50%]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
           <Input
-            placeholder={t("payouts.searchPayout", "Search By Request Number / Organizer Name / Organizer Email / Event Title")}
+            placeholder={t(
+              "payouts.searchPayout",
+              "Search By Request Number / Organizer Name / Organizer Email / Event Title",
+            )}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             className="pl-9 shadow-sm"

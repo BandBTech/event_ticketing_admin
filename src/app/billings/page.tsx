@@ -68,13 +68,14 @@ export default function BillingsPage() {
   const filterCount = useMemo(() => {
     let count = 0;
 
-   if (appliedFilters.organizer_ids && appliedFilters.organizer_ids.length > 0) count++;
+    if (appliedFilters.organizer_ids && appliedFilters.organizer_ids.length > 0)
+      count++;
     if (appliedFilters.status) count++;
     if (appliedFilters.start_date) count++;
     if (appliedFilters.end_date) count++;
 
     return count;
-  }, [appliedFilters]);  
+  }, [appliedFilters]);
 
   const debouncedSearch = useDebounce(searchInput, 500);
 
@@ -83,6 +84,17 @@ export default function BillingsPage() {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | undefined>(
     undefined,
   );
+
+  const isFirstRender = React.useRef(true);
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if (currentPage !== 1) {
+      handlePageChange(1);
+    }
+  }, [debouncedSearch]);
 
   useEffect(() => {
     document.title = `${t("webTitle.billings")} | Timro-Ticket`;
@@ -129,6 +141,14 @@ export default function BillingsPage() {
     [handlePageChange],
   );
 
+  const handleApplyFilters = useCallback(
+    (filters: BillingFilters) => {
+      setAppliedFilters(filters);
+      handlePageChange(1);
+    },
+    [handlePageChange],
+  );
+
   const totalItems = response?.pagination?.total || mockUserData.length;
   const totalPages = Math.ceil(totalItems / limit);
   const hasNextPage =
@@ -154,7 +174,10 @@ export default function BillingsPage() {
         <div className="relative  w-full sm:w-auto flex-1 max-w-[50%]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
           <Input
-            placeholder={t("billings.searchBillings", "Search By Event Title / Organizer Name / Business Name")}
+            placeholder={t(
+              "billings.searchBillings",
+              "Search By Event Title / Organizer Name / Business Name",
+            )}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             className="pl-9 shadow-sm"
@@ -226,7 +249,7 @@ export default function BillingsPage() {
           open={filterSheetOpen}
           onOpenChange={setFilterSheetOpen}
           filters={appliedFilters}
-          onApplyFilters={setAppliedFilters}
+          onApplyFilters={handleApplyFilters}
         />
       </React.Suspense>
 

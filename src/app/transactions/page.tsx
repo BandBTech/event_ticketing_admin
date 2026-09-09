@@ -38,6 +38,17 @@ export default function TransactionsPage() {
     undefined,
   );
 
+  const isFirstRender = React.useRef(true);
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if (currentPage !== 1) {
+      handlePageChange(1);
+    }
+  }, [debouncedSearch]);
+
   useEffect(() => {
     document.title = `${t("webTitle.transactions")} | Timro-Ticket`;
   }, [locale]);
@@ -101,6 +112,14 @@ export default function TransactionsPage() {
     ) => {
       setSortBy(newSortBy);
       setSortOrder(newSortOrder);
+      handlePageChange(1);
+    },
+    [handlePageChange],
+  );
+
+  const handleApplyFilters = useCallback(
+    (filters: TransactionFilters) => {
+      setAppliedFilters(filters);
       handlePageChange(1);
     },
     [handlePageChange],
@@ -186,7 +205,7 @@ export default function TransactionsPage() {
           open={filterSheetOpen}
           onOpenChange={setFilterSheetOpen}
           filters={appliedFilters}
-          onApplyFilters={setAppliedFilters}
+          onApplyFilters={handleApplyFilters}
         />
       </React.Suspense>
     </div>

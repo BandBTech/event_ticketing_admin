@@ -46,21 +46,23 @@ export default function TransactionsPage() {
   const { currentPage, limit, handlePageChange, handleLimitChange } =
     usePaginationSync();
 
-const transactionIdFromParams = searchParams.get("id") || undefined;
-const [transactionId, setTransactionId] = useState<string | undefined>(undefined);
+  const transactionIdFromParams = searchParams.get("id") || undefined;
+  const [transactionId, setTransactionId] = useState<string | undefined>(
+    undefined,
+  );
 
-// Consume ?id= once, then strip from URL
-React.useEffect(() => {
-  if (transactionIdFromParams) {
-    setTransactionId(transactionIdFromParams);
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete("id");
-    const query = params.toString();
-    router.replace(`${pathname}${query ? `?${query}` : ""}`, {
-      scroll: false,
-    });
-  }
-}, [transactionIdFromParams]);
+  // Consume ?id= once, then strip from URL
+  React.useEffect(() => {
+    if (transactionIdFromParams) {
+      setTransactionId(transactionIdFromParams);
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete("id");
+      const query = params.toString();
+      router.replace(`${pathname}${query ? `?${query}` : ""}`, {
+        scroll: false,
+      });
+    }
+  }, [transactionIdFromParams]);
   const [searchInput, setSearchInput] = React.useState("");
   const [status, setStatus] = useState<string>("");
   const [isRejectDialogOpen, setIsRejectDialogOpen] = React.useState(false);
@@ -76,6 +78,17 @@ React.useEffect(() => {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | undefined>(
     undefined,
   );
+
+  const isFirstRender = React.useRef(true);
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if (currentPage !== 1) {
+      handlePageChange(1);
+    }
+  }, [debouncedSearch]);
 
   useEffect(() => {
     document.title = `${t("webTitle.refunds")} | Timro-Ticket`;
@@ -173,7 +186,10 @@ React.useEffect(() => {
         <div className="relative  w-full sm:w-auto flex-1 max-w-[50%]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
           <Input
-            placeholder={t("refunds.searchRefunds", "Search By Refund Number / Initiator Full Name")}
+            placeholder={t(
+              "refunds.searchRefunds",
+              "Search By Refund Number / Initiator Full Name",
+            )}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             className="pl-9 shadow-sm"
