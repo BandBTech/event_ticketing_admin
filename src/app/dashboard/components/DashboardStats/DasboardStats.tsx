@@ -146,7 +146,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
   return (
     <main className="flex-1 overflow-y-auto space-y-4 p-0">
       {/* ── Top KPI Cards ── */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <KPICard
           label={t("dashboard.dataDisplay.users")}
           value={data?.users.total ?? 0}
@@ -185,7 +185,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
             />
           )}
         </div>
-        <div className="grid grid-cols-5 gap-4">
+        <div className="grid grid-cols-3 md:grid-cols-5 gap-4">
           <KPICard
             label={t("dashboard.dataDisplay.grossRevenue") ?? "Gross Revenue"}
             value={formatCurrency(
