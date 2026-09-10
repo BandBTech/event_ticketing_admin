@@ -143,7 +143,7 @@ export function PayoutTable({
       {
         id: "amount",
         header: t("payouts.table.amount"),
-        meta: { sortKey: "amount" },
+        // meta: { sortKey: "amount" },
         cell: ({ row }) => (
           <span className="px-1 py-1 rounded-full">
             {formatCurrency(row.original.amount, row.original.event.symbol)}

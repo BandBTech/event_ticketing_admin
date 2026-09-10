@@ -157,7 +157,7 @@ export function RefundTable({
         id: "amount",
         header: t("transactions.table.amount"),
         accessorKey: "amount",
-        meta: { sortKey: "amount" },
+        // meta: { sortKey: "amount" },
         cell: ({ row }) => (
           <span className="px-2 py-1 rounded-full">
             {formatCurrency(row.original.amount, row.original.event.symbol)}

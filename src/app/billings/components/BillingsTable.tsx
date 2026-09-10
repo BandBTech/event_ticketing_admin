@@ -155,7 +155,7 @@ export function BillingTable({
       },
       {
         id: "billed_amount",
-        meta: { sortKey: "billed_amount" },
+        // meta: { sortKey: "billed_amount" },
         header: t("billings.table.billedAmount"),
         cell: ({ row }) => (
           <div className="grid items-center">

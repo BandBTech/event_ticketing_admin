@@ -155,7 +155,7 @@ export function TransactionTable({
         id: "amount",
         header: t("transactions.table.amount"),
         title: "Amount",
-        meta: { sortKey: "amount" },
+        // meta: { sortKey: "amount" },
         cell: ({ row }) => (
           <span className="px-2 py-1 rounded-full flex items-center gap-2">
             {formatCurrency(row.original.amount, row.original.symbol)}
