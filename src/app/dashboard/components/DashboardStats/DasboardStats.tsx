@@ -65,7 +65,6 @@ function StatRow({
   );
 }
 
-
 // ── Card Container ────────────────────────────────────────────────────────────
 function Card({
   title,
@@ -186,16 +185,27 @@ export default function DashboardPage({ data }: DashboardPageProps) {
             />
           )}
         </div>
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-5 gap-4">
           <KPICard
             label={t("dashboard.dataDisplay.grossRevenue") ?? "Gross Revenue"}
             value={formatCurrency(
               activeEarning?.gross_revenue ?? 0,
-              activeEarning?.symbol
+              activeEarning?.symbol,
             )}
             subtitle={`${t("dashboard.dataDisplay.netRevenue") ?? "Net"}: ${formatCurrency(
               activeEarning?.net_revenue ?? 0,
-              activeEarning?.symbol
+              activeEarning?.symbol,
+            )}`}
+          />
+          <KPICard
+            label={t("dashboard.dataDisplay.paidOut") ?? "Paid Out"}
+            value={formatCurrency(
+              activeEarning?.paid_out ?? 0,
+              activeEarning?.symbol,
+            )}
+            subtitle={`${t("dashboard.dataDisplay.pendingPayout") ?? "Pending"}: ${formatCurrency(
+              activeEarning?.pending_payout ?? 0,
+              activeEarning?.symbol,
             )}`}
           />
           <KPICard
@@ -204,29 +214,23 @@ export default function DashboardPage({ data }: DashboardPageProps) {
             }
             value={formatCurrency(
               activeEarning?.platform_commission ?? 0,
-              activeEarning?.symbol
+              activeEarning?.symbol,
             )}
-            subtitle={`${t("dashboard.dataDisplay.gatewayFee") ?? "Gateway Fee"}: ${formatCurrency(
-              activeEarning?.gateway_fee ?? 0,
-              activeEarning?.symbol
-            )}`}
+            subtitle=""
           />
           <KPICard
-            label={t("dashboard.dataDisplay.paidOut") ?? "Paid Out"}
+            label={t("dashboard.dataDisplay.gatewayFee") ?? "Gateway Fee"}
             value={formatCurrency(
-              activeEarning?.paid_out ?? 0,
-              activeEarning?.symbol
+              activeEarning?.gateway_fee ?? 0,
+              activeEarning?.symbol,
             )}
-            subtitle={`${t("dashboard.dataDisplay.pendingPayout") ?? "Pending"}: ${formatCurrency(
-              activeEarning?.pending_payout ?? 0,
-              activeEarning?.symbol
-            )}`}
+            subtitle=""
           />
           <KPICard
             label={t("dashboard.dataDisplay.refundAmount") ?? "Refunds"}
             value={formatCurrency(
               activeEarning?.refund_amount ?? 0,
-              activeEarning?.symbol
+              activeEarning?.symbol,
             )}
             subtitle=""
           />
@@ -245,9 +249,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
       {/* ── Organizers + Payout Requests + Payout Bills ── */}
       <div className="grid grid-cols-3 gap-4">
         {/* Payout Requests */}
-        <Card
-          title={t("dashboard.dataDisplay.payoutRequest")}
-        >
+        <Card title={t("dashboard.dataDisplay.payoutRequest")}>
           <StatRow
             label={t("dashboard.dataDisplay.approved")}
             count={data?.payout_requests.approved ?? 0}
@@ -299,8 +301,8 @@ export default function DashboardPage({ data }: DashboardPageProps) {
           />
         </Card>
 
-          {/* Refunds */}
-                <Card title={t("dashboard.dataDisplay.refunds")}>
+        {/* Refunds */}
+        <Card title={t("dashboard.dataDisplay.refunds")}>
           <StatRow
             label={t("dashboard.dataDisplay.completed")}
             count={completedRefunds}
