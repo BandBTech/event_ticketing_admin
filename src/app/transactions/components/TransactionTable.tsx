@@ -80,11 +80,14 @@ export function TransactionTable({
         header: t("transactions.table.date"),
         cell: ({ row }) => {
           const date = new Date(row.original.created_at);
-          const formattedDate = date.toLocaleDateString("en-CA");
+          const formattedDate = date.toLocaleDateString("en-CA", {
+            timeZone: "UTC",
+          });
           const formattedTime = date.toLocaleTimeString("en-US", {
             hour: "numeric",
             minute: "2-digit",
             hour12: true,
+            timeZone: "UTC",
           });
           return (
             <div className="flex flex-col min-w-[80px]">

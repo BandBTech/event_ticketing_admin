@@ -1,6 +1,7 @@
 import { api } from "../lib/apiClient";
 import { API_ENDPOINTS } from "@/app/config/api";
 import { Transaction, TransactionListResponse } from "@/types/transaction";
+import { format } from "date-fns";
 import {
   ApiResponse as PaymentDetailApiResponse,
   TransactionPaymentData,
@@ -58,10 +59,10 @@ export class TransactionService {
       if (filters.start_date)
         params.append(
           "start_date",
-          filters.start_date.toISOString().split("T")[0],
+          format(filters.start_date, "yyyy-MM-dd"),
         );
       if (filters.end_date)
-        params.append("end_date", filters.end_date.toISOString().split("T")[0]);
+        params.append("end_date", format(filters.end_date, "yyyy-MM-dd"));
       if (filters.sort_by) params.append("sort_by", filters.sort_by);
       if (filters.sort_order) params.append("sort_order", filters.sort_order);
     }
