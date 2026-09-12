@@ -148,6 +148,7 @@ export default function ApproveModal({
   const isPending = createMutation.isPending;
 
   const handleOpenChange = (open: boolean) => {
+    if (!open && isPending) return;
     onOpenChange(open);
   };
 

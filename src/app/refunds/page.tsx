@@ -264,7 +264,10 @@ export default function TransactionsPage() {
         {/* Approve Refund Confirmation Dialog */}
         <AlertDialog
           open={openApproveDialog}
-          onOpenChange={setOpenApproveDialog}
+          onOpenChange={(open) => {
+            if (!open && createMutation.isPending) return;
+            setOpenApproveDialog(open);
+          }}
         >
           <AlertDialogContent className="rounded-3xl shadow-2xl border-none bg-white/95 backdrop-blur-xl data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 duration-300">
             <AlertDialogHeader>
@@ -289,7 +292,8 @@ export default function TransactionsPage() {
               </AlertDialogCancel>
               <AlertDialogAction
                 disabled={createMutation.isPending}
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
                   createMutation.mutate({
                     refundId: selectedRefund?.id || "",
                   });
@@ -306,7 +310,13 @@ export default function TransactionsPage() {
         </AlertDialog>
 
         {/* Retry Confirmation Dialog */}
-        <AlertDialog open={openRetryDialog} onOpenChange={setOpenRetryDialog}>
+        <AlertDialog 
+          open={openRetryDialog} 
+          onOpenChange={(open) => {
+            if (!open && retryMutation.isPending) return;
+            setOpenRetryDialog(open);
+          }}
+        >
           <AlertDialogContent className="rounded-3xl shadow-2xl border-none bg-white/95 backdrop-blur-xl data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-bottom-2 duration-300">
             <AlertDialogHeader>
               <AlertDialogTitle className="text-xl font-bold text-gray-900">
@@ -328,7 +338,8 @@ export default function TransactionsPage() {
               </AlertDialogCancel>
               <AlertDialogAction
                 disabled={retryMutation.isPending}
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
                   retryMutation.mutate({
                     refundId: selectedRefund?.id || "",
                   });

@@ -87,7 +87,7 @@ export default function RejectModal({
 
   // Prevent dialog dismissal (overlay/Escape) while mutation is in-flight
   const handleOpenChange = (open: boolean) => {
-    // if (!open && isPending) return;
+    if (!open && isPending) return;
     onOpenChange(open);
   };
 
