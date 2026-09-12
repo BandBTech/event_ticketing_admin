@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { EnvelopeIcon } from "@phosphor-icons/react/dist/ssr";
+import { EnvelopeIcon, SpinnerIcon } from "@phosphor-icons/react/dist/ssr";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLanguageStore } from "@/store/languageStore";
@@ -218,9 +218,11 @@ export default function ForgotPasswordPage() {
                               "bg-blue-600 hover:bg-blue-700 text-white",
                               "shadow-lg hover:shadow-xl",
                               "disabled:opacity-50 disabled:cursor-not-allowed",
-                              isLoading && "animate-pulse",
                             )}
                           >
+                            {isLoading && (
+                              <SpinnerIcon className="mr-2 h-4 w-4 animate-spin" />
+                            )}
                             {isLoading
                               ? t("auth.forgotPassword.sending", "Sending...")
                               : t(

@@ -77,7 +77,7 @@ export function TransactionFilterSheet({
         return filtered.map((event) => ({
           value: event.id,
           label: event.title,
-        }));
+        })).sort((a, b) => a.label.localeCompare(b.label));
       } catch (error) {
         console.error("Failed to fetch events:", error);
         return [];
@@ -100,7 +100,7 @@ export function TransactionFilterSheet({
         return filtered.map((user) => ({
           value: user.id,
           label: user.name,
-        }));
+        })).sort((a, b) => a.label.localeCompare(b.label));
       } catch (error) {
         console.error("Failed to fetch users:", error);
         return [];
@@ -198,10 +198,7 @@ export function TransactionFilterSheet({
                       selected={localFilters.start_date}
                       onSelect={(date) => {
                         if (date) {
-                          const normalized = new Date(
-                            format(date, "yyyy-MM-dd"),
-                          );
-                          handleDateChange("start_date", normalized);
+                          handleDateChange("start_date", startOfDay(date));
                         } else {
                           handleDateChange("start_date", undefined);
                         }
@@ -243,10 +240,7 @@ export function TransactionFilterSheet({
                       selected={localFilters.end_date}
                       onSelect={(date) => {
                         if (date) {
-                          const normalized = new Date(
-                            format(date, "yyyy-MM-dd"),
-                          );
-                          handleDateChange("end_date", normalized);
+                          handleDateChange("end_date", startOfDay(date));
                         } else {
                           handleDateChange("end_date", undefined);
                         }

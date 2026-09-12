@@ -8,6 +8,7 @@ import {
   EnvelopeIcon,
   KeyIcon,
   EyeClosedIcon,
+  SpinnerIcon,
 } from "@phosphor-icons/react/dist/ssr";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -315,9 +316,11 @@ export default function LoginPage() {
                           "bg-blue-600 hover:bg-blue-700 text-white",
                           "shadow-lg hover:shadow-xl",
                           "disabled:opacity-50 disabled:cursor-not-allowed",
-                          isLoading && "animate-pulse",
                         )}
                       >
+                        {isLoading && (
+                          <SpinnerIcon className="mr-2 h-4 w-4 animate-spin" />
+                        )}
                         {isLoading
                           ? t("auth.login.signingIn")
                           : t("auth.login.loginButton")}

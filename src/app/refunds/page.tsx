@@ -16,7 +16,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Funnel as FunnelIcon } from "@phosphor-icons/react";
+import { Funnel as FunnelIcon, SpinnerIcon } from "@phosphor-icons/react";
 import {
   Select,
   SelectContent,
@@ -288,6 +288,7 @@ export default function TransactionsPage() {
                 {t("common.cancelButton", "Cancel")}
               </AlertDialogCancel>
               <AlertDialogAction
+                disabled={createMutation.isPending}
                 onClick={() => {
                   createMutation.mutate({
                     refundId: selectedRefund?.id || "",
@@ -295,6 +296,9 @@ export default function TransactionsPage() {
                 }}
                 className="h-11 px-8 active:scale-95 bg-primary text-white hover:bg-primary/90 focus:bg-primary/90 transition-colors"
               >
+                {createMutation.isPending && (
+                  <SpinnerIcon className="mr-2 h-4 w-4 animate-spin" />
+                )}
                 {t("common.confirm", "Confirm")}
               </AlertDialogAction>
             </AlertDialogFooter>
@@ -323,6 +327,7 @@ export default function TransactionsPage() {
                 {t("common.cancelButton", "Cancel")}
               </AlertDialogCancel>
               <AlertDialogAction
+                disabled={retryMutation.isPending}
                 onClick={() => {
                   retryMutation.mutate({
                     refundId: selectedRefund?.id || "",
@@ -330,6 +335,9 @@ export default function TransactionsPage() {
                 }}
                 className="h-11 px-8 active:scale-95 bg-primary text-white hover:bg-primary/90 focus:bg-primary/90 transition-colors"
               >
+                {retryMutation.isPending && (
+                  <SpinnerIcon className="mr-2 h-4 w-4 animate-spin" />
+                )}
                 {t("refunds.modal.retry", "Retry")}
               </AlertDialogAction>
             </AlertDialogFooter>
