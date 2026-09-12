@@ -1024,7 +1024,7 @@
     "subtitle": "組織の取引を管理します。",
     "searchTransactions": "イベントタイトル／顧客氏名／顧客メールアドレスで検索",
     "backToTransactions": "取引履歴に戻る",
-    "searchRefunds": "払い戻し番号／申請者の氏名で検索",
+    "searchRefunds": "返金番号 / イベント名 / 申請者氏名で検索",
     "searchAuditLogs": "監査ログを検索",
     "searchCheckoutSessions": "検索チェックアウトセッション",
     "searchPayouts": "リクエスト番号／主催者名／主催者メールアドレス／イベントタイトルで検索",
@@ -1113,7 +1113,7 @@
   "refunds": {
     "title": "返金管理",
     "subtitle": "組織の返金を管理します。",
-    "searchRefunds": "払い戻し番号／申請者の氏名で検索",
+    "searchRefunds": "返金番号 / イベント名 / 申請者氏名で検索",
     "table": {
       "refundNumber": "返金番号",
       "initiatedBy": "申請者",

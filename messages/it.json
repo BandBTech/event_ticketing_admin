@@ -1011,7 +1011,7 @@
     "subtitle": "Gestisci le transazioni della tua organizzazione.",
     "searchTransactions": "Cerca per titolo dell'evento / nome completo del cliente / indirizzo email del cliente",
     "backToTransactions": "Torna alle transazioni",
-    "searchRefunds": "Ricerca per numero di rimborso / nome completo dell'iniziatore",
+    "searchRefunds": "Cerca per numero di rimborso / titolo dell'evento / nome completo del promotore",
     "searchAuditLogs": "Ricerca nei registri di controllo",
     "searchCheckoutSessions": "Ricerca nei sessioni di checkout",
     "searchPayouts": "Ricerca per numero di richiesta / nome dell'organizzatore / email dell'organizzatore / titolo dell'evento",
@@ -1100,7 +1100,7 @@
   "refunds": {
     "title": "Gestione Rimborsi",
     "subtitle": "Gestisci i rimborsi della tua organizzazione.",
-    "searchRefunds": "Ricerca per numero di rimborso / nome completo dell'iniziatore",
+    "searchRefunds": "Cerca per numero di rimborso / titolo dell'evento / nome completo del promotore",
     "table": {
       "refundNumber": "Numero Rimborso",
       "initiatedBy": "Iniziato Da",

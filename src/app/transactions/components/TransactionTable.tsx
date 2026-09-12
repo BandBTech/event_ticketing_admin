@@ -197,7 +197,7 @@ export function TransactionTable({
       {
         id: "gateway",
         header: t("transactions.table.gateway"),
-        meta: { sortKey: "payment_gateway" },
+        // meta: { sortKey: "payment_gateway" },
         cell: ({ row }) => {
           const gateway = row.original.payment_gateway;
 

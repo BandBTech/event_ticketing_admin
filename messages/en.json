@@ -1057,7 +1057,7 @@
     "subtitle": "Manage your organization's transactions.",
     "searchTransactions": "Search By Event Title / Customer Full Name / Customer Email",
     "backToTransactions": "Back to Transactions",
-    "searchRefunds": "Search By Refund Number / Initiator Full Name",
+    "searchRefunds": "Search By Refund Number / Event Title / Initiator Full Name",
     "searchAuditLogs": "Search Audit Logs",
     "searchCheckoutSessions": "Search Checkout Sessions",
     "searchPayouts": "Search By Request Number / Organizer Name / Organizer Email / Event Title",
@@ -1146,7 +1146,7 @@
   "refunds": {
     "title": "Refund Management",
     "subtitle": "Manage your organization's refunds.",
-    "searchRefunds": "Search By Refund Number / Initiator Full Name",
+    "searchRefunds": "Search By Refund Number / Event Title / Initiator Full Name",
     "table": {
       "refundNumber": "Refund Number",
       "initiatedBy": "Initiated By",

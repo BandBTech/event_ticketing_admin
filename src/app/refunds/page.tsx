@@ -188,7 +188,7 @@ export default function TransactionsPage() {
           <Input
             placeholder={t(
               "refunds.searchRefunds",
-              "Search By Refund Number / Initiator Full Name",
+              "Search By Refund Number / Event Title / Initiator Full Name",
             )}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
