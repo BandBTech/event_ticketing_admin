@@ -42,15 +42,20 @@ export class AuditlogService {
       if (filters.search) params.append("search", filters.search);
       if (filters.event_id)
         params.append("event_id", filters.event_id.toString());
-      if (filters.user_id) params.append("actor_id", filters.user_id.toString());
-      if (filters.entity_type) params.append("entity_type", filters.entity_type.toString());
+      if (filters.user_id)
+        params.append("actor_id", filters.user_id.toString());
+      if (filters.entity_type)
+        params.append("entity_type", filters.entity_type.toString());
       if (filters.start_date)
         params.append(
           "start_date",
-          filters.start_date.toISOString().split("T")[0],
+          filters.start_date.toISOString().replace(".000Z", "Z"),
         );
       if (filters.end_date)
-        params.append("end_date", filters.end_date.toISOString().split("T")[0]);
+        params.append(
+          "end_date",
+          filters.end_date.toISOString().replace(".000Z", "Z"),
+        );
       if (filters.sort) params.append("sort", filters.sort);
     }
 

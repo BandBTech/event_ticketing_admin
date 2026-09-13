@@ -35,6 +35,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toUtcStartOfDay, toUtcEndOfDay } from "@/lib/utils";
 
 interface TransactionFilterSheetProps {
   open: boolean;
@@ -52,8 +53,8 @@ export function TransactionFilterSheet({
   const [localFilters, setLocalFilters] =
     React.useState<TransactionFilters>(filters);
   const [dateError, setDateError] = React.useState<string | null>(null);
-    const { locale } = useLanguageStore();
-    const { t } = useTranslation(locale);
+  const { locale } = useLanguageStore();
+  const { t } = useTranslation(locale);
 
   React.useEffect(() => {
     if (open) {
@@ -74,10 +75,12 @@ export function TransactionFilterSheet({
             )
           : response;
 
-        return filtered.map((event) => ({
-          value: event.id,
-          label: event.title,
-        })).sort((a, b) => a.label.localeCompare(b.label));
+        return filtered
+          .map((event) => ({
+            value: event.id,
+            label: event.title,
+          }))
+          .sort((a, b) => a.label.localeCompare(b.label));
       } catch (error) {
         console.error("Failed to fetch events:", error);
         return [];
@@ -97,10 +100,12 @@ export function TransactionFilterSheet({
             )
           : response;
 
-        return filtered.map((user) => ({
-          value: user.id,
-          label: user.name,
-        })).sort((a, b) => a.label.localeCompare(b.label));
+        return filtered
+          .map((user) => ({
+            value: user.id,
+            label: user.name,
+          }))
+          .sort((a, b) => a.label.localeCompare(b.label));
       } catch (error) {
         console.error("Failed to fetch users:", error);
         return [];
@@ -134,7 +139,17 @@ export function TransactionFilterSheet({
   };
 
   const handleApply = () => {
-    onApplyFilters(localFilters);
+    const payload: TransactionFilters = {
+      ...localFilters,
+      start_date: localFilters.start_date
+        ? toUtcStartOfDay(localFilters.start_date)
+        : localFilters.start_date,
+      end_date: localFilters.end_date
+        ? toUtcEndOfDay(localFilters.end_date)
+        : localFilters.end_date,
+    };
+
+    onApplyFilters(payload);
     onOpenChange(false);
   };
 
@@ -215,7 +230,7 @@ export function TransactionFilterSheet({
               </div>
 
               <div className="space-y-2">
-               <Label>{t("billings.filter.endDate")}</Label>
+                <Label>{t("billings.filter.endDate")}</Label>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button
@@ -230,7 +245,7 @@ export function TransactionFilterSheet({
                       {localFilters.end_date ? (
                         format(localFilters.end_date, "LLL dd, y")
                       ) : (
-                       <span>{t("billings.filter.pickDate")}</span>
+                        <span>{t("billings.filter.pickDate")}</span>
                       )}
                     </Button>
                   </PopoverTrigger>
@@ -277,8 +292,12 @@ export function TransactionFilterSheet({
                 />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="konbini">{t("billings.method.konbini")}</SelectItem>
-                <SelectItem value="stripe">{t("billings.method.stripe")}</SelectItem>
+                <SelectItem value="konbini">
+                  {t("billings.method.konbini")}
+                </SelectItem>
+                <SelectItem value="stripe">
+                  {t("billings.method.stripe")}
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -335,12 +354,24 @@ export function TransactionFilterSheet({
                 />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="cancelled">{t("transactions.transactionStatus.cancelled")}</SelectItem>
-                <SelectItem value="expired">{t("transactions.transactionStatus.expired")}</SelectItem>
-                <SelectItem value="failed">{t("transactions.transactionStatus.failed")}</SelectItem>
-                <SelectItem value="pending">{t("transactions.transactionStatus.pending")}</SelectItem>
-                <SelectItem value="processing">{t("transactions.transactionStatus.processing")}</SelectItem>
-                <SelectItem value="succeeded">{t("transactions.transactionStatus.succeeded")}</SelectItem>
+                <SelectItem value="cancelled">
+                  {t("transactions.transactionStatus.cancelled")}
+                </SelectItem>
+                <SelectItem value="expired">
+                  {t("transactions.transactionStatus.expired")}
+                </SelectItem>
+                <SelectItem value="failed">
+                  {t("transactions.transactionStatus.failed")}
+                </SelectItem>
+                <SelectItem value="pending">
+                  {t("transactions.transactionStatus.pending")}
+                </SelectItem>
+                <SelectItem value="processing">
+                  {t("transactions.transactionStatus.processing")}
+                </SelectItem>
+                <SelectItem value="succeeded">
+                  {t("transactions.transactionStatus.succeeded")}
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>

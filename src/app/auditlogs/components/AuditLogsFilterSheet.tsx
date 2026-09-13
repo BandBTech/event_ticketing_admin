@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/async-combobox";
 import { adminService } from "@/services/adminService";
 import { BillingFilters, getDefaultFilters } from "@/types/auditlogs";
+import { toUtcStartOfDay, toUtcEndOfDay } from "@/lib/utils";
 
 interface BillingFilterSheetProps {
   open: boolean;
@@ -132,10 +133,19 @@ export function AuditLogsFilterSheet({
   };
 
   const handleApply = () => {
-    onApplyFilters(localFilters);
+    const payload: BillingFilters = {
+      ...localFilters,
+      start_date: localFilters.start_date
+        ? toUtcStartOfDay(localFilters.start_date)
+        : localFilters.start_date,
+      end_date: localFilters.end_date
+        ? toUtcEndOfDay(localFilters.end_date)
+        : localFilters.end_date,
+    };
+
+    onApplyFilters(payload);
     onOpenChange(false);
   };
-
   const handleClear = () => {
     const defaultFilters = getDefaultFilters();
     setLocalFilters(defaultFilters);
@@ -150,7 +160,7 @@ export function AuditLogsFilterSheet({
     if (localFilters.entity_type) count++;
     if (localFilters.event_id) count++;
     return count;
-  }, [localFilters]);  
+  }, [localFilters]);
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -300,11 +310,21 @@ export function AuditLogsFilterSheet({
                 />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="payment_bill">{t("auditLogs.filterAuditLogs.entityType.payment_bill")}</SelectItem>
-                <SelectItem value="payout_request">{t("auditLogs.filterAuditLogs.entityType.payout_request")}</SelectItem>
-                <SelectItem value="refund">{t("auditLogs.filterAuditLogs.entityType.refund")}</SelectItem>
-                <SelectItem value="ticket">{t("auditLogs.filterAuditLogs.entityType.ticket")}</SelectItem>
-                <SelectItem value="transaction">{t("auditLogs.filterAuditLogs.entityType.transaction")}</SelectItem>
+                <SelectItem value="payment_bill">
+                  {t("auditLogs.filterAuditLogs.entityType.payment_bill")}
+                </SelectItem>
+                <SelectItem value="payout_request">
+                  {t("auditLogs.filterAuditLogs.entityType.payout_request")}
+                </SelectItem>
+                <SelectItem value="refund">
+                  {t("auditLogs.filterAuditLogs.entityType.refund")}
+                </SelectItem>
+                <SelectItem value="ticket">
+                  {t("auditLogs.filterAuditLogs.entityType.ticket")}
+                </SelectItem>
+                <SelectItem value="transaction">
+                  {t("auditLogs.filterAuditLogs.entityType.transaction")}
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>

@@ -35,6 +35,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguageStore } from "@/store/languageStore";
 import { adminService } from "@/services/adminService";
 import { BillingFilters, getDefaultFilters } from "@/types/billings";
+import { toUtcStartOfDay, toUtcEndOfDay } from "@/lib/utils";
 
 interface BillingFilterSheetProps {
   open: boolean;
@@ -53,7 +54,7 @@ export function BillingFilterSheet({
     React.useState<BillingFilters>(filters);
   const [dateError, setDateError] = React.useState<string | null>(null);
   const { locale } = useLanguageStore();
-  const { t } = useTranslation(locale);  
+  const { t } = useTranslation(locale);
 
   React.useEffect(() => {
     if (open) {
@@ -106,7 +107,18 @@ export function BillingFilterSheet({
   };
 
   const handleApply = () => {
-    onApplyFilters(localFilters);
+    const payload: BillingFilters = {
+      ...localFilters,
+      start_date: localFilters.start_date
+        ? toUtcStartOfDay(localFilters.start_date)
+        : localFilters.start_date,
+      end_date: localFilters.end_date
+        ? toUtcEndOfDay(localFilters.end_date)
+        : localFilters.end_date,
+    };
+    console.log("payload", payload);
+
+    onApplyFilters(payload);
     onOpenChange(false);
   };
 
@@ -121,10 +133,7 @@ export function BillingFilterSheet({
     if (localFilters.start_date) count++;
     if (localFilters.end_date) count++;
     // Count multi-select organizer_ids
-    if (
-      localFilters.organizer_ids &&
-      localFilters.organizer_ids.length > 0
-    )
+    if (localFilters.organizer_ids && localFilters.organizer_ids.length > 0)
       count++;
     if (localFilters.status !== "") count++;
     return count;

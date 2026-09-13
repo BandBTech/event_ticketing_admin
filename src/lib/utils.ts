@@ -230,3 +230,28 @@ export const formatCurrency = (amount: number, symbol?: string) => {
   }).format(amount);
   return symbol ? `${symbol} ${formatted}` : formatted;
 };
+
+// toISOString() then correctly converts that local instant to UTC.
+export function toUtcEndOfDay(date: Date): Date {
+  return new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+    23,
+    59,
+    59,
+    999,
+  );
+}
+
+export function toUtcStartOfDay(date: Date): Date {
+  return new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+    0,
+    0,
+    0,
+    0,
+  );
+}
