@@ -70,12 +70,20 @@ export interface PaymentBillsStats {
 
 export interface EarningsStats {
   currency: string;
-  gateway_fee: number;
+  gateway_fee: {
+    gross: number;
+    net: number;
+    refunded: number;
+  };
   gross_revenue: number;
   net_revenue: number;
   paid_out: number;
   pending_payout: number;
-  platform_commission: number;
+  platform_commission: {
+    gross: number;
+    net: number;
+    refunded: number;
+  };
   refund_amount: number;
   symbol: string;
 }

@@ -173,7 +173,7 @@ export default function DashboardPage({ data }: DashboardPageProps) {
       <div>
         <div className="flex items-center justify-start gap-5 mb-3 ml-1">
           <h2 className="text-sm font-semibold text-black">
-            {t("dashboard.dataDisplay.earnings") ?? "Earnings"}{" "}
+            {t("dashboard.dataDisplay.earnings", "Earnings")}{" "}
             {activeEarning?.symbol && `(${activeEarning.symbol})`}
           </h2>
           {currencies.length > 1 && (
@@ -187,47 +187,57 @@ export default function DashboardPage({ data }: DashboardPageProps) {
         </div>
         <div className="grid grid-cols-3 md:grid-cols-5 gap-4">
           <KPICard
-            label={t("dashboard.dataDisplay.grossRevenue") ?? "Gross Revenue"}
+            label={t("dashboard.dataDisplay.grossRevenue", "Gross Revenue")}
             value={formatCurrency(
               activeEarning?.gross_revenue ?? 0,
               activeEarning?.symbol,
             )}
-            subtitle={`${t("dashboard.dataDisplay.netRevenue") ?? "Net"}: ${formatCurrency(
+            subtitle={`${t("dashboard.dataDisplay.netRevenue", "Net")}: ${formatCurrency(
               activeEarning?.net_revenue ?? 0,
               activeEarning?.symbol,
             )}`}
           />
           <KPICard
-            label={t("dashboard.dataDisplay.paidOut") ?? "Paid Out"}
+            label={t("dashboard.dataDisplay.paidOut", "Paid Out")}
             value={formatCurrency(
               activeEarning?.paid_out ?? 0,
               activeEarning?.symbol,
             )}
-            subtitle={`${t("dashboard.dataDisplay.pendingPayout") ?? "Pending"}: ${formatCurrency(
+            subtitle={`${t("dashboard.dataDisplay.pendingPayout", "Pending")}: ${formatCurrency(
               activeEarning?.pending_payout ?? 0,
               activeEarning?.symbol,
             )}`}
           />
           <KPICard
-            label={
-              t("dashboard.dataDisplay.platformCommission") ?? "Commission"
-            }
+            label={t(
+              "dashboard.dataDisplay.grossCommission",
+              "Gross Commission",
+            )}
             value={formatCurrency(
-              activeEarning?.platform_commission ?? 0,
+              activeEarning?.platform_commission.gross ?? 0,
               activeEarning?.symbol,
             )}
-            subtitle=""
+            subtitle={`${t("dashboard.dataDisplay.netCommission", "Net Commission")}: ${formatCurrency(
+              activeEarning?.platform_commission.net ?? 0,
+              activeEarning?.symbol,
+            )}`}
           />
           <KPICard
-            label={t("dashboard.dataDisplay.gatewayFee") ?? "Gateway Fee"}
+            label={t(
+              "dashboard.dataDisplay.grossGatewayFee",
+              "Gross Gateway Fee",
+            )}
             value={formatCurrency(
-              activeEarning?.gateway_fee ?? 0,
+              activeEarning?.gateway_fee.gross ?? 0,
               activeEarning?.symbol,
             )}
-            subtitle=""
+            subtitle={`${t("dashboard.dataDisplay.netGatewayFee", "Net Gateway Fee")}: ${formatCurrency(
+              activeEarning?.gateway_fee.net ?? 0,
+              activeEarning?.symbol,
+            )}`}
           />
           <KPICard
-            label={t("dashboard.dataDisplay.refundAmount") ?? "Refunds"}
+            label={t("dashboard.dataDisplay.refundAmount", "Refunds")}
             value={formatCurrency(
               activeEarning?.refund_amount ?? 0,
               activeEarning?.symbol,
