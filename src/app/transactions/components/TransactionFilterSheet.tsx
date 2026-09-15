@@ -211,6 +211,7 @@ export function TransactionFilterSheet({
                     <Calendar
                       mode="single"
                       selected={localFilters.start_date}
+                      defaultMonth={localFilters.start_date ?? new Date()}
                       onSelect={(date) => {
                         if (date) {
                           handleDateChange("start_date", startOfDay(date));
@@ -253,6 +254,7 @@ export function TransactionFilterSheet({
                     <Calendar
                       mode="single"
                       selected={localFilters.end_date}
+                      defaultMonth={localFilters.end_date ?? new Date()}
                       onSelect={(date) => {
                         if (date) {
                           handleDateChange("end_date", startOfDay(date));
